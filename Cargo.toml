@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/ICP-Ambassador-Program-backend"
+]
+resolver = "2"

@@ -1,0 +1,27 @@
+{
+  "canisters": {
+    "ICP-Ambassador-Program-backend": {
+      "candid": "src/ICP-Ambassador-Program-backend/ICP-Ambassador-Program-backend.did",
+      "package": "ICP-Ambassador-Program-backend",
+      "type": "rust"
+    },
+    "ICP-Ambassador-Program-frontend": {
+      "dependencies": [
+        "ICP-Ambassador-Program-backend"
+      ],
+      "source": [
+        "src/ICP-Ambassador-Program-frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "ICP-Ambassador-Program-frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
