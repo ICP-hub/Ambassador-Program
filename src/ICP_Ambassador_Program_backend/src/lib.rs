@@ -5,18 +5,18 @@ use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
 
-// Define the UserProfile struct
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-pub struct UserProfile {
+struct UserProfile {
     user_id: u64,
     discord_id: String,
     username: String,
     referral_code: Option<String>,
-    referred_by: Option<String>,
     joined_discord_server: bool,
+    wallet: Option<Principal>,
+    points: u64,
+    level: u64,
 }
 
-// Implement the Storable trait for UserProfile
 impl Storable for UserProfile {
     const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 
@@ -30,36 +30,40 @@ impl Storable for UserProfile {
     }
 }
 
-// Define the State struct to hold user profiles with StableBTreeMap
 thread_local! {
     static STATE: RefCell<State> = RefCell::new(State::new());
 }
 
-// Use DefaultMemoryImpl for stable memory
 pub struct State {
     pub user_profiles: StableBTreeMap<u64, UserProfile, DefaultMemoryImpl>,
 }
 
 impl State {
-    // Constructor for initializing State
     pub fn new() -> Self {
         State {
-            user_profiles: StableBTreeMap::new(DefaultMemoryImpl::default()), // Only one argument is needed here
+            user_profiles: StableBTreeMap::new(DefaultMemoryImpl::default()),
         }
     }
 }
 
-
-// Add user CRUD operations as canister functions
 #[update]
-fn create_user(user_id: u64, discord_id: String, username: String, referral_code: Option<String>, referred_by: Option<String>, joined_discord_server: bool) {
+fn create_user(
+    user_id: u64,
+    discord_id: String,
+    username: String,
+    referral_code: Option<String>,
+    joined_discord_server: bool,
+    wallet: Option<Principal>
+) {
     let user_profile = UserProfile {
         user_id,
         discord_id,
         username,
         referral_code,
-        referred_by,
         joined_discord_server,
+        wallet,
+        points: 1,
+        level: 1,
     };
 
     STATE.with(|state| {
@@ -68,36 +72,83 @@ fn create_user(user_id: u64, discord_id: String, username: String, referral_code
 }
 
 #[query]
-fn get_user(user_id: u64) -> Option<UserProfile> {
+fn get_user(user_id: String) -> Option<UserProfile> {
+    let user_id = match user_id.parse::<u64>() {
+        Ok(id) => id,
+        Err(_) => {
+            ic_cdk::trap("Failed to parse user_id as u64");
+            return None;
+        }
+    };
+
     STATE.with(|state| {
-        state.borrow().user_profiles.get(&user_id).map(|user| user.clone())
+        state.borrow().user_profiles.get(&user_id).clone()
     })
 }
 
-
 #[update]
-fn update_user(user_id: u64, discord_id: String, username: String, referral_code: Option<String>, referred_by: Option<String>, joined_discord_server: bool) {
+fn update_user(
+    user_id: u64,
+    discord_id: String,
+    username: String,
+    referral_code: Option<String>,
+    joined_discord_server: bool,
+    wallet: Option<Principal>
+) {
     STATE.with(|state| {
-        if let Some(_) = state.borrow().user_profiles.get(&user_id) {
+        let user_opt = state.borrow().user_profiles.get(&user_id).clone();
+
+        if let Some(user) = user_opt {
             let updated_profile = UserProfile {
                 user_id,
                 discord_id,
                 username,
                 referral_code,
-                referred_by,
                 joined_discord_server,
+                wallet,
+                points: user.points,
+                level: user.level,
             };
+
             state.borrow_mut().user_profiles.insert(user_id, updated_profile);
         }
     });
 }
 
 #[update]
-fn delete_user(user_id: u64) {
+fn add_points(user_id: u64, points: u64) {
     STATE.with(|state| {
-        state.borrow_mut().user_profiles.remove(&user_id);
+        let user_opt = state.borrow().user_profiles.get(&user_id).clone();
+
+        if let Some(mut user) = user_opt {
+            user.points += points;
+
+            user.level = match user.points {
+                0..=99 => 1,
+                100..=999 => 2,
+                1000..=9999 => 3,
+                10000..=99999 => 4,
+                _ => 5,
+            };
+
+            state.borrow_mut().user_profiles.insert(user_id, user);
+        }
     });
 }
+
+#[query]
+fn get_user_level(user_id: u64) -> Option<(u64, u64)> {
+    STATE.with(|state| {
+        state.borrow().user_profiles.get(&user_id).map(|user| (user.level, user.points))
+    })
+}
+
+#[init]
+fn init() {
+    ic_cdk::println!("Canister initialized");
+}
+
+
 
 // // Test function to add a default user for demonstration
 // #[init]

@@ -1,14 +1,17 @@
 type UserProfile = record {
   username : text;
   joined_discord_server : bool;
-  referred_by : opt text;
   user_id : nat64;
+  level : nat64;
   referral_code : opt text;
   discord_id : text;
+  wallet : opt principal;
+  points : nat64;
 };
-service : {
-  create_user : (nat64, text, text, opt text, opt text, bool) -> ();
-  delete_user : (nat64) -> ();
-  get_user : (nat64) -> (opt UserProfile) query;
-  update_user : (nat64, text, text, opt text, opt text, bool) -> ();
+service : () -> {
+  add_points : (nat64, nat64) -> ();
+  create_user : (nat64, text, text, opt text, bool, opt principal) -> ();
+  get_user : (text) -> (opt UserProfile) query;
+  get_user_level : (nat64) -> (opt record { nat64; nat64 }) query;
+  update_user : (nat64, text, text, opt text, bool, opt principal) -> ();
 }
