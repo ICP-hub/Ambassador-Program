@@ -1,30 +1,27 @@
 import { useState } from 'react';
 import { ICP_Ambassador_Program_backend } from 'declarations/ICP-Ambassador-Program-backend';
+import {BrowserRouter,Routes,Route} from 'react-router-dom'
+import Home from './Components/pages/Home';
+
 
 function App() {
-  const [greeting, setGreeting] = useState('');
+  // const [greeting, setGreeting] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    ICP_Ambassador_Program_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   const name = event.target.elements.name.value;
+  //   ICP_Ambassador_Program_backend.greet(name).then((greeting) => {
+  //     setGreeting(greeting);
+  //   });
+  //   return false;
+  // }
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path ='/' element={<Home/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
