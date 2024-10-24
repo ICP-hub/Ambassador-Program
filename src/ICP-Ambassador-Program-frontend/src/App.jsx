@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ICP_Ambassador_Program_backend } from 'declarations/ICP-Ambassador-Program-backend';
+import { ICP_Ambassador_Program_backend } from 'declarations/ICP_Ambassador_Program_backend';
 
 function App() {
   const [greeting, setGreeting] = useState('');

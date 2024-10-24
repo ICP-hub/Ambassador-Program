@@ -1,0 +1,14 @@
+type UserProfile = record {
+  username : text;
+  joined_discord_server : bool;
+  referred_by : opt text;
+  user_id : nat64;
+  referral_code : opt text;
+  discord_id : text;
+};
+service : {
+  create_user : (nat64, text, text, opt text, opt text, bool) -> ();
+  delete_user : (nat64) -> ();
+  get_user : (nat64) -> (opt UserProfile) query;
+  update_user : (nat64, text, text, opt text, opt text, bool) -> ();
+}

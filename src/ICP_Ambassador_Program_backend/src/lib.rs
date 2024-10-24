@@ -7,7 +7,7 @@ use std::borrow::Cow;
 
 // Define the UserProfile struct
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-struct UserProfile {
+pub struct UserProfile {
     user_id: u64,
     discord_id: String,
     username: String,
@@ -114,3 +114,5 @@ fn delete_user(user_id: u64) {
 //         state.borrow_mut().user_profiles.insert(default_user.user_id, default_user);
 //     });
 // }
+
+ic_cdk::export_candid!();
