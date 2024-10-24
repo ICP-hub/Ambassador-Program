@@ -1,5 +1,4 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom'
 import { FaXTwitter } from "react-icons/fa6";
 import { GrTransaction } from "react-icons/gr";
 import { FaDiscord } from "react-icons/fa";
@@ -9,7 +8,7 @@ import { FaFileUpload } from "react-icons/fa";
 
 const Card = ({ contest }) => {
   const { reward, status, title, image, social_platforms, icons } = contest;
-  const navigate=useNavigate();
+
   const iconMap = {
     Twitter: FaXTwitter,
     Discord: FaDiscord,
@@ -20,14 +19,8 @@ const Card = ({ contest }) => {
     
   };
 
-  const handleCard = () => {
-    console.log("Contest",contest)
-    navigate('/contest_details', { state: { contest } });
-  };
-
-
   return (
-    <div className=" text-white p-4 rounded-lg shadow-lg " style={{backgroundColor:'#1d1d21'}} onClick={handleCard}>
+    <div className=" text-white p-4 rounded-lg shadow-lg " style={{backgroundColor:'#1d1d21'}}>
 
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{reward}</span>
