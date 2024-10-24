@@ -18,21 +18,31 @@ const Navbar = () => {
     const [isModelOpen,setModelOpen]=useState(false);
     const [isSideBarOpen,setSideBarOpen]=useState(false);
     const [isSideBar,setIsSideBar]=useState(false);
+    const [userEmail, setUserEmail] = useState(null);
+
+
+    useEffect(() => {
+        const email = localStorage.getItem('userEmail');
+        console.log("Email ==>",email)
+        if (email) {
+          setUserEmail(email);
+        }
+      }, []);
 
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
-              setIsSideBar(false); // Automatically close sidebar on large screens
+              setIsSideBar(false); 
             }
           };
       
-          // Add event listener for resize
+          
           window.addEventListener('resize', handleResize);
       
-          // Call the function initially to handle the current window size
+          
           handleResize();
       
-          // Cleanup the event listener on component unmount
+          
           return () => window.removeEventListener('resize', handleResize);
       }, []);
     
@@ -49,8 +59,6 @@ const Navbar = () => {
                     <input className='text-white bg-transparent outline-none border-none placeholder:font-bold'  placeholder='Search'/>
                 </div>
             </div>
-            
-
         </div>
         <div className='flex items-center gap-3'>
             <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
@@ -87,11 +95,24 @@ const Navbar = () => {
                 <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`}
                     style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div>
-            <div className='lg:block sm:hidden'>
-                <div className=' bg-white text-black py-1 px-7 rounded-md text-sm font-semibold cursor-pointer' style={{boxShadow:'rgba(255, 255, 255, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 63px 60px -50px'}} onClick={()=>{setModelOpen(true)}}>
-                    Log In
-                </div>  
+            {userEmail ? (
+          <div className='lg:block sm:hidden'>
+            <div className='bg-white text-black py-1 px-4 rounded-md text-sm font-semibold cursor-pointer'>
+              {userEmail} {/* Display user email */}
+              <button onClick={handleLogout} className="ml-4 text-red-500">Logout</button>
             </div>
+          </div>
+        ) : (
+          // Show login button if not logged in
+          <div className='lg:block sm:hidden'>
+            <button
+              className='bg-white text-black py-1 px-8 rounded-md text-sm font-semibold cursor-pointer'
+              onClick={() => setModelOpen(true)}
+            >
+              Login
+            </button>
+          </div>
+        )}
             
         </div>
 
