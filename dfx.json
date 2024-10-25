@@ -16,15 +16,15 @@
       "type": "assets",
       "workspace": "ICP-Ambassador-Program-frontend"
     },
-    "ICP-Ambassador-Program-frontend-builder": {
+    "ICP-Ambassador-Program-builder": {
       "dependencies": [
         "ICP-Ambassador-Program-backend"
       ],
       "source": [
-        "src/ICP-Ambassador-Program-frontend-builder/dist"
+        "src/ICP-Ambassador-Program-frontend-builder/builder/dist"
       ],
       "type": "assets",
-      "workspace": "ICP-Ambassador-Program-frontend"
+      "workspace": "ICP-Ambassador-Program-builder/builder"
     }
   },
   "defaults": {
