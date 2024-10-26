@@ -26,16 +26,31 @@ const Spaces = () => {
 
   return (
     <div>
-      <div className='flex justify-between items-center p-16'>
-        <div className='text-4xl font-medium'>Spaces</div>
-        <div
-          className='bg-black text-white font-semibold shadow-md text-sm rounded py-2 px-6 flex justify-center cursor-pointer items-center hover:bg-blue-700'
-          onClick={handleModalToggle}
-        >
-          CREATE SPACE
+      <div className='flex flex-col gap-10 px-16 py-10 h-screen'>
+        <div className='flex justify-between items-center '>
+          <div className='text-4xl font-medium'>Spaces</div>
+          <div
+            className='bg-black text-white font-semibold shadow-md text-sm rounded py-2 px-6 flex justify-center cursor-pointer items-center hover:bg-blue-700'
+            onClick={handleModalToggle}
+          >
+            CREATE SPACE
+          </div>
         </div>
+
+        <div 
+          className="border border-gray-300 rounded-lg w-80 h-72 bg-[#fbfcff] hover:bg-blue-500 transition-colors duration-300 cursor-pointer"
+          style={{backgroundColor:'#fbfcff'}}>
+               <div className='text-black text-sm font-semibold flex justify-center mx-auto mt-4 w-32 py-3 px-4 rounded-full  ' style={{boxShadow: 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px'}} >
+                Not visible
+               </div>
+               <div className='px-3'>
+                <div className='text-sm font-bold'>Sample test space</div>
+                <div className='text-sm font-semibold text-gray-500'>testing the create space</div>
+               </div>
+        </div>        
       </div>
 
+      
       
       {isModalOpen && (
         <div className='fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-10'>
@@ -78,20 +93,20 @@ const Spaces = () => {
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Space chain type</label>
                 <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Select</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={chain}
-          label="chain"
-          onChange={handleChange}
-        >
-          <MenuItem value={'cosmos'}>Cosmos</MenuItem>
-          <MenuItem value={'EVM'}>EVM</MenuItem>
-          <MenuItem value={'polkadot'}>PolkaDot</MenuItem>
-          <MenuItem value={'Solana'}>Solana</MenuItem>
-        </Select>
-      </FormControl>
+                  <InputLabel id="demo-simple-select-label">Select</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={chain}
+                    label="chain"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={'cosmos'}>Cosmos</MenuItem>
+                    <MenuItem value={'EVM'}>EVM</MenuItem>
+                    <MenuItem value={'polkadot'}>PolkaDot</MenuItem>
+                    <MenuItem value={'Solana'}>Solana</MenuItem>
+                  </Select>
+                </FormControl>
                 <p className='text-sm text-gray-500'>Please select what type is used by this chain</p>
               </div>
 
