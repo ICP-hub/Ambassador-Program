@@ -1,14 +1,19 @@
+type Result = variant { Ok; Err : UserErrors };
+type Result_1 = variant { Ok : UserProfile; Err : UserErrors };
+type UpdateUser = record {
+  username : text;
+  discord_id : text;
+  wallet_id : opt principal;
+};
+type UserErrors = variant { NoUserFound };
 type UserProfile = record {
   username : text;
-  joined_discord_server : bool;
-  referred_by : opt text;
-  user_id : nat64;
   referral_code : opt text;
   discord_id : text;
+  wallet_id : opt principal;
 };
 service : {
-  create_user : (nat64, text, text, opt text, opt text, bool) -> ();
-  delete_user : (nat64) -> ();
-  get_user : (nat64) -> (opt UserProfile) query;
-  update_user : (nat64, text, text, opt text, opt text, bool) -> ();
+  create_user : (UserProfile) -> (opt UserProfile);
+  edit_user : (UpdateUser) -> (Result);
+  get_user : (text) -> (Result_1) query;
 }
