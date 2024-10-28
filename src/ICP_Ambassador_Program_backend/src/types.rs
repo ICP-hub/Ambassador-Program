@@ -50,6 +50,9 @@ pub enum AdminErrors{
     NotASuperAdmin,
     NotOwnerOrSuperAdmin,
     NotRegisteredAsAdmin,
+    AlreadyAdmin,
+    AlreadySuperAdmin,
+    ErrorUpdatingAdmin,
     NoSpaceFound,
     SpaceUpdateError
 }
