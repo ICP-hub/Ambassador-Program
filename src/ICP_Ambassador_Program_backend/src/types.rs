@@ -54,5 +54,5 @@ pub enum AdminErrors{
     AlreadySuperAdmin,
     ErrorUpdatingAdmin,
     NoSpaceFound,
-    SpaceUpdateError
+    SpaceUpdateError,
 }

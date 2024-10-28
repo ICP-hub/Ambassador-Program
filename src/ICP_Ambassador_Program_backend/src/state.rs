@@ -1,5 +1,5 @@
 use ic_stable_structures::memory_manager::{MemoryId, MemoryManager,VirtualMemory};
-use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable,StableVec};
+use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable,StableVec,storable::Bound::{self,Unbounded}};
 use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
@@ -40,7 +40,7 @@ pub struct UserProfile {
 
 // Implement the Storable trait for UserProfile
 impl Storable for UserProfile {
-    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
+    const BOUND: Bound = Unbounded;
 
     fn to_bytes(&self) -> Cow<[u8]> {
         let serialized = serde_cbor::to_vec(self).expect("Failed to serialize UserProfile");
@@ -55,11 +55,12 @@ impl Storable for UserProfile {
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct Admin{
     pub wallet_id:Principal,
-    pub role:types::AdminRole
+    pub role:types::AdminRole,
+    pub spaces:Vec<String>
 }
 
 impl Storable for Admin{
-    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
+    const BOUND: Bound = Unbounded;
 
     fn to_bytes(&self) -> Cow<[u8]> {
         let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Admin");
@@ -87,7 +88,7 @@ pub struct Space{
 }
 
 impl Storable for Space{
-    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
+    const BOUND: Bound = Unbounded;
 
     fn to_bytes(&self) -> Cow<[u8]> {
         let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Spaces");

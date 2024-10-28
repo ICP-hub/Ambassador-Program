@@ -13,7 +13,8 @@ pub fn register_admin()->Result<(),AdminErrors>{
 
     let new_admin:Admin=Admin { 
         wallet_id: caller(),
-        role:AdminRole::HubLeader  
+        role:AdminRole::HubLeader,
+        spaces:vec![]  
     };
 
     ADMIN_MAP.with(|map| map.borrow_mut().insert(caller(), new_admin));
@@ -22,6 +23,11 @@ pub fn register_admin()->Result<(),AdminErrors>{
 
 #[ic_cdk::update]
 pub fn add_admin_by_super_admin(id:Principal)->Result<(),AdminErrors>{
+
+    if !is_super_admin(caller()) {
+        return Err(AdminErrors::NotASuperAdmin)
+    }
+
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
     
     if admin.is_some(){
@@ -30,7 +36,8 @@ pub fn add_admin_by_super_admin(id:Principal)->Result<(),AdminErrors>{
 
     let new_admin:Admin=Admin { 
         wallet_id: id,
-        role:AdminRole::HubLeader  
+        role:AdminRole::HubLeader,
+        spaces:vec![]    
     };
 
     ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
@@ -39,11 +46,18 @@ pub fn add_admin_by_super_admin(id:Principal)->Result<(),AdminErrors>{
 
 #[ic_cdk::update]
 pub fn promote_to_super_admin(id:Principal)->Result<(), AdminErrors>{
+
+    if !is_super_admin(caller()) {
+        return Err(AdminErrors::NotASuperAdmin)
+    }
+
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
-    
-    if admin.is_none(){
-        return Err(AdminErrors::NotRegisteredAsAdmin);
-    };
+    let old_admin:Admin;
+
+    match admin {
+        Some(value) => old_admin=value,
+        None => return Err(AdminErrors::NotRegisteredAsAdmin)
+    }
 
     let super_admins=SUPER_ADMIN.with(|map| map.borrow().iter().any(|el| el==id));
     if super_admins{
@@ -52,7 +66,8 @@ pub fn promote_to_super_admin(id:Principal)->Result<(), AdminErrors>{
 
     let new_admin:Admin=Admin { 
         wallet_id: id,
-        role:AdminRole::SuperAdmin  
+        role:AdminRole::SuperAdmin,
+        spaces:old_admin.spaces
     };
     let inserted = SUPER_ADMIN.with(|arr| arr.borrow_mut().push(&id));
 
@@ -71,9 +86,14 @@ pub fn promote_to_super_admin(id:Principal)->Result<(), AdminErrors>{
 
 
 #[ic_cdk::query]
-pub fn get_all_super_admins()->Vec<Principal>{
+pub fn get_all_super_admins()->Result<Vec<Principal>,AdminErrors>{
+
+    if !is_super_admin(caller()) {
+        return Err(AdminErrors::NotASuperAdmin)
+    }
+
     let super_admins:Vec<Principal> =  SUPER_ADMIN.with(|vec| vec.borrow().iter().collect());
-    return  super_admins;
+    return  Ok(super_admins);
 }
 
 #[ic_cdk::query]
@@ -88,10 +108,36 @@ pub fn get_admin()->Result<Admin,AdminErrors>{
 
 #[ic_cdk::query]
 pub fn get_admin_by_principal(id:Principal)->Result<Admin,AdminErrors>{
+
+    if !is_super_admin(caller()) {
+        return Err(AdminErrors::NotASuperAdmin)
+    }
+
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
     
     match admin{
         Some(value) => Ok(value),
         None => Err(AdminErrors::NotRegisteredAsAdmin)
     }
+}
+
+
+
+pub fn is_super_admin(caller:Principal)->bool{
+    let contains=SUPER_ADMIN.with(|arr| arr.borrow().iter().find(|&p| p==caller));
+
+    if contains.is_none(){
+        return false
+    }
+
+    return true
+}
+
+pub fn is_valid_admin(caller:Principal)->bool{
+    let admin=ADMIN_MAP.with(|map| map.borrow().get(&caller));
+
+    if admin.is_none(){
+        return false
+    }
+    return true;
 }
