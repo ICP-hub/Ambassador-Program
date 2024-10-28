@@ -2,11 +2,11 @@ use candid::Principal;
 use ic_cdk::caller;
 // use uuid::Uuid;
 
-use crate::{Admin, AdminErrors, CreateSpace, Space, SpaceURLs, ADMIN_MAP, SPACE_MAP};
+use crate::{Admin, AdminErrors, CreateSpace, Space, SpaceURLs, ADMIN_MAP, SPACE_MAP,check_anonymous};
 
 use super::{is_super_admin, is_valid_admin};
 
-#[ic_cdk::update]
+#[ic_cdk::update(guard = check_anonymous)]
 pub fn create_space(space:CreateSpace)->Result<Option<Space>,AdminErrors>{
 
     if !is_valid_admin(caller()){
@@ -47,7 +47,7 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,AdminErrors>{
     return Ok(inserted);
 }
 
-#[ic_cdk::update]
+#[ic_cdk::update(guard = check_anonymous)]
 pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
 
     if !is_valid_admin(caller()){
@@ -76,7 +76,7 @@ pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
 
 }
 
-#[ic_cdk::query]
+#[ic_cdk::query(guard = check_anonymous)]
 pub fn get_space(space_id:String)->Result<Space,AdminErrors>{
 
     if !is_valid_admin(caller()){
@@ -91,7 +91,7 @@ pub fn get_space(space_id:String)->Result<Space,AdminErrors>{
     }
 }
 
-#[ic_cdk::query]
+#[ic_cdk::query(guard = check_anonymous)]
 pub fn get_all_admin_spaces()->Result<Vec<String>,AdminErrors>{
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
     if admin.is_none(){
@@ -100,7 +100,7 @@ pub fn get_all_admin_spaces()->Result<Vec<String>,AdminErrors>{
     return Ok(admin.unwrap().spaces);
 }
 
-#[ic_cdk::query]
+#[ic_cdk::query(guard = check_anonymous)]
 pub fn get_all_spaces()->Result<Vec<(String,Space)>,AdminErrors>{
 
     if !is_super_admin(caller()) {
