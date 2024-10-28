@@ -62,6 +62,6 @@ thread_local! {
     ).unwrap());
 
     pub static ADMIN_MAP:RefCell<StableBTreeMap<String,Admin,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(2)))
     ));
 }
