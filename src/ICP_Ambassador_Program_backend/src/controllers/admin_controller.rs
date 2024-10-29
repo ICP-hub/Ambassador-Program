@@ -1,9 +1,9 @@
 use candid::Principal;
-use ic_cdk::caller;
+use ic_cdk::{caller,update,query};
 
 use crate::{Admin, AdminErrors, AdminRole, ADMIN_MAP, SUPER_ADMIN,check_anonymous};
 
-#[ic_cdk::update(guard = check_anonymous)]
+#[update(guard = check_anonymous)]
 pub fn register_admin()->Result<(),AdminErrors>{
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
     
@@ -21,7 +21,7 @@ pub fn register_admin()->Result<(),AdminErrors>{
     return Ok(());
 }
 
-#[ic_cdk::update(guard = check_anonymous)]
+#[update(guard = check_anonymous)]
 pub fn add_admin_by_super_admin(id:Principal)->Result<(),AdminErrors>{
 
     if !is_super_admin(caller()) {
@@ -44,7 +44,7 @@ pub fn add_admin_by_super_admin(id:Principal)->Result<(),AdminErrors>{
     return Ok(());
 }
 
-#[ic_cdk::update(guard = check_anonymous)]
+#[update(guard = check_anonymous)]
 pub fn promote_to_super_admin(id:Principal)->Result<(), AdminErrors>{
 
     if !is_super_admin(caller()) {
@@ -85,7 +85,7 @@ pub fn promote_to_super_admin(id:Principal)->Result<(), AdminErrors>{
 }
 
 
-#[ic_cdk::query(guard = check_anonymous)]
+#[query(guard = check_anonymous)]
 pub fn get_all_super_admins()->Result<Vec<Principal>,AdminErrors>{
 
     if !is_super_admin(caller()) {
@@ -96,7 +96,7 @@ pub fn get_all_super_admins()->Result<Vec<Principal>,AdminErrors>{
     return  Ok(super_admins);
 }
 
-#[ic_cdk::query(guard = check_anonymous)]
+#[query(guard = check_anonymous)]
 pub fn get_admin()->Result<Admin,AdminErrors>{
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
     
@@ -106,7 +106,7 @@ pub fn get_admin()->Result<Admin,AdminErrors>{
     }
 }
 
-#[ic_cdk::query(guard = check_anonymous)]
+#[query(guard = check_anonymous)]
 pub fn get_admin_by_principal(id:Principal)->Result<Admin,AdminErrors>{
 
     if !is_super_admin(caller()) {
