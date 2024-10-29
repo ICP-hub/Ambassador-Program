@@ -16,6 +16,25 @@ pub enum AdminRole{
     HubLeader
 }
 
+// spaces
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub struct SpaceURLs{
+    pub telegram:Option<String>,
+    pub website:Option<String>,
+    pub twitter:Option<String>,
+    pub discord:Option<String>,
+    pub medium:Option<String>,
+    pub github:Option<String>
+}
+
+#[derive(CandidType,Deserialize)]
+pub struct CreateSpace{
+    pub name:String,
+    pub slug:String,
+    pub description:String,
+    pub chain:String
+}
 
 
 // errors 
@@ -26,7 +45,14 @@ pub enum UserErrors {
 
 }
 
+#[derive(CandidType,Deserialize)]
 pub enum AdminErrors{
     NotASuperAdmin,
-    NotAnAdmin,
+    NotOwnerOrSuperAdmin,
+    NotRegisteredAsAdmin,
+    AlreadyAdmin,
+    AlreadySuperAdmin,
+    ErrorUpdatingAdmin,
+    NoSpaceFound,
+    SpaceUpdateError,
 }

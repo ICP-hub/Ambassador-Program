@@ -1,5 +1,55 @@
-type Result = variant { Ok; Err : UserErrors };
-type Result_1 = variant { Ok : UserProfile; Err : UserErrors };
+type Admin = record {
+  role : AdminRole;
+  spaces : vec text;
+  wallet_id : principal;
+};
+type AdminErrors = variant {
+  ErrorUpdatingAdmin;
+  NoSpaceFound;
+  NotRegisteredAsAdmin;
+  NotASuperAdmin;
+  SpaceUpdateError;
+  NotOwnerOrSuperAdmin;
+  AlreadyAdmin;
+  AlreadySuperAdmin;
+};
+type AdminRole = variant { HubLeader; SuperAdmin };
+type CreateSpace = record {
+  chain : text;
+  name : text;
+  slug : text;
+  description : text;
+};
+type Result = variant { Ok; Err : AdminErrors };
+type Result_1 = variant { Ok : opt Space; Err : AdminErrors };
+type Result_2 = variant { Ok; Err : UserErrors };
+type Result_3 = variant { Ok : Admin; Err : AdminErrors };
+type Result_4 = variant { Ok : vec text; Err : AdminErrors };
+type Result_5 = variant { Ok : vec record { text; Space }; Err : AdminErrors };
+type Result_6 = variant { Ok : vec principal; Err : AdminErrors };
+type Result_7 = variant { Ok : Space; Err : AdminErrors };
+type Result_8 = variant { Ok : UserProfile; Err : UserErrors };
+type Space = record {
+  owner : principal;
+  shor_description : opt text;
+  chain : text;
+  logo : opt text;
+  name : text;
+  slug : text;
+  urls : SpaceURLs;
+  description : text;
+  bg_css : opt text;
+  bg_img : opt text;
+  space_id : text;
+};
+type SpaceURLs = record {
+  twitter : opt text;
+  website : opt text;
+  discord : opt text;
+  telegram : opt text;
+  github : opt text;
+  medium : opt text;
+};
 type UpdateUser = record {
   username : text;
   discord_id : text;
@@ -13,7 +63,18 @@ type UserProfile = record {
   wallet_id : opt principal;
 };
 service : {
+  add_admin_by_super_admin : (principal) -> (Result);
+  create_space : (CreateSpace) -> (Result_1);
   create_user : (UserProfile) -> (opt UserProfile);
-  edit_user : (UpdateUser) -> (Result);
-  get_user : (text) -> (Result_1) query;
+  edit_user : (UpdateUser) -> (Result_2);
+  get_admin : () -> (Result_3) query;
+  get_admin_by_principal : (principal) -> (Result_3) query;
+  get_all_admin_spaces : () -> (Result_4) query;
+  get_all_spaces : () -> (Result_5) query;
+  get_all_super_admins : () -> (Result_6) query;
+  get_space : (text) -> (Result_7) query;
+  get_user : (text) -> (Result_8) query;
+  promote_to_super_admin : (principal) -> (Result);
+  register_admin : () -> (Result);
+  update_space : (Space) -> (Result);
 }
