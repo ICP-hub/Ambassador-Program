@@ -4,6 +4,7 @@ use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
+use crate::types::UserLevel;
 use crate::types;
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
@@ -32,11 +33,16 @@ thread_local! {
 
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct UserProfile {
-    pub wallet_id: Option<Principal>,
+    pub user_id: String,            // Set user_id to discord_id
     pub discord_id: String,
     pub username: String,
-    pub referral_code: Option<String>,
+    pub referral_code: Option<String>, // Make this field public
+    pub wallet: Option<Principal>,
+    pub xp_points: u64,             // Make this field public
+    pub redeem_points: u64,         // Make this field public
+    pub level: UserLevel,           // Level of the user
 }
+
 
 // Implement the Storable trait for UserProfile
 impl Storable for UserProfile {

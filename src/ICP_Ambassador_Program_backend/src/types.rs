@@ -1,13 +1,20 @@
 use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 
-#[derive(CandidType,Deserialize)]
-pub struct UpdateUser{
-    pub wallet_id:Option<Principal>,
-    pub discord_id:String,
-    pub username:String
+// #[derive(CandidType,Deserialize)]
+// pub struct UpdateUser{
+//     pub wallet_id:Option<Principal>,
+//     pub discord_id:String,
+//     pub username:String
+// }
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum UserLevel {
+    Initiate,    // Level 1
+    Padawan,     // Level 2
+    Knight,      // Level 3
+    Master,      // Level 4
+    GrandMaster, // Level 5
 }
-
 // admin
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
