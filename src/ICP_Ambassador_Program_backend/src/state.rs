@@ -4,7 +4,7 @@ use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
-use crate::types;
+use crate::{types, Tasks};
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
 
@@ -25,7 +25,12 @@ thread_local! {
 
     pub static SPACE_MAP:RefCell<StableBTreeMap<String,Space,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
-    ))
+    ));
+
+    pub static MISSION_MAP:RefCell<StableBTreeMap<String,Mission,Memory>>=RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
+    ));
+
 }
 
 // storables
@@ -97,5 +102,56 @@ impl Storable for Space{
 
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_cbor::from_slice(&bytes).expect("Failed to deserialize Spaces")
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Mission{
+    pub mission_id:String,
+    pub space_id:String,
+    pub owner:Principal,
+    pub title:String,
+    pub status:types::MissionStatus,
+    pub img:String,
+    pub description:String,
+    pub reward:u64,
+    pub reward_currency:types::RewardCurrency,
+    pub start_date:String,
+    pub end_date:String,
+    pub tasks:Vec<Tasks>
+}
+
+impl Storable for Mission{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize missions");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize mission")
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Submission{
+    pub submission_id:String,
+    pub user:String,
+    pub mission_id:String,
+    pub tasks_completed:Vec<u8>,
+    //needs to be optimized based on user inputs provided at frontend
+}
+
+impl Storable for Submission{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize submissions");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize submissions")
     }
 }
