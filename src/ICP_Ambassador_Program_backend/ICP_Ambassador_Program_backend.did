@@ -6,20 +6,50 @@ type Admin = record {
 type AdminErrors = variant {
   ErrorUpdatingAdmin;
   NoSpaceFound;
+  ErrUpdatingMissionCount;
   NotRegisteredAsAdmin;
   NotASuperAdmin;
   SpaceUpdateError;
+  ErrUpdatingMission;
   NotOwnerOrSuperAdmin;
+  MissionNotFound;
+  MissionInActive;
   AlreadyAdmin;
   AlreadySuperAdmin;
 };
 type AdminRole = variant { HubLeader; SuperAdmin };
+type CheckCodeType = variant { ReUsable; OneTime };
+type CreateMission = record {
+  status : MissionStatus;
+  reward : nat64;
+  title : text;
+  description : text;
+  end_date : text;
+  start_date : text;
+  reward_currency : RewardCurrency;
+  space_id : text;
+};
 type CreateSpace = record {
   chain : text;
   name : text;
   slug : text;
   description : text;
 };
+type Mission = record {
+  img : opt text;
+  status : MissionStatus;
+  tasks : vec Tasks;
+  reward : nat64;
+  title : text;
+  owner : principal;
+  description : text;
+  end_date : text;
+  start_date : text;
+  reward_currency : RewardCurrency;
+  space_id : text;
+  mission_id : text;
+};
+type MissionStatus = variant { UnActive; Active; Draft };
 type Result = variant { Ok; Err : AdminErrors };
 type Result_1 = variant { Ok : opt Space; Err : AdminErrors };
 type Result_2 = variant { Ok; Err : UserErrors };
@@ -29,6 +59,7 @@ type Result_5 = variant { Ok : vec record { text; Space }; Err : AdminErrors };
 type Result_6 = variant { Ok : vec principal; Err : AdminErrors };
 type Result_7 = variant { Ok : Space; Err : AdminErrors };
 type Result_8 = variant { Ok : UserProfile; Err : UserErrors };
+type RewardCurrency = variant { ICP; CKBTC; CKETH };
 type Space = record {
   owner : principal;
   shor_description : opt text;
@@ -38,6 +69,7 @@ type Space = record {
   slug : text;
   urls : SpaceURLs;
   description : text;
+  mission_count : nat16;
   bg_css : opt text;
   bg_img : opt text;
   space_id : text;
@@ -49,6 +81,39 @@ type SpaceURLs = record {
   telegram : opt text;
   github : opt text;
   medium : opt text;
+};
+type Tasks = variant {
+  FollowTwitter : record { title : text; body : text; account : text };
+  SendImage : record { img : text; title : text; body : text };
+  PuzzleText : record {
+    description : text;
+    score : nat32;
+    item_length : nat16;
+    items : vec text;
+  };
+  JoinTelegram : record {
+    title : text;
+    body : text;
+    link : text;
+    channel : text;
+  };
+  CheckCode : record {
+    code_type : CheckCodeType;
+    title : text;
+    body : text;
+    code_list : vec text;
+  };
+  SendUrl : record { title : text; body : text };
+  SendTweet : record { url : text; title : text; body : text };
+  GoToLink : record { title : text; link : text; btn_text : text };
+  SendText : record {
+    title : text;
+    validation_rule : text;
+    sample : text;
+    body : text;
+    max_len : nat16;
+  };
+  CheckMission : record { title : text; body : text; mission_id : text };
 };
 type UpdateUser = record {
   username : text;
@@ -64,8 +129,10 @@ type UserProfile = record {
 };
 service : {
   add_admin_by_super_admin : (principal) -> (Result);
+  create_mission : (CreateMission) -> (Result);
   create_space : (CreateSpace) -> (Result_1);
   create_user : (UserProfile) -> (opt UserProfile);
+  edit_mission : (Mission) -> (Result);
   edit_user : (UpdateUser) -> (Result_2);
   get_admin : () -> (Result_3) query;
   get_admin_by_principal : (principal) -> (Result_3) query;
