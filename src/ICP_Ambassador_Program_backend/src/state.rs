@@ -28,8 +28,12 @@ thread_local! {
     ));
 
     pub static MISSION_MAP:RefCell<StableBTreeMap<String,Mission,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(4)))
     ));
+
+    pub static SUBMISSION_MAP:RefCell<StableBTreeMap<String,Submission,Memory>>=RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
+    ))
 
 }
 
@@ -89,7 +93,8 @@ pub struct Space{
     pub bg_img:Option<String>,
     pub shor_description:Option<String>,
     pub bg_css:Option<String>,
-    pub urls:types::SpaceURLs
+    pub urls:types::SpaceURLs,
+    pub mission_count:u16
 }
 
 impl Storable for Space{
@@ -112,7 +117,7 @@ pub struct Mission{
     pub owner:Principal,
     pub title:String,
     pub status:types::MissionStatus,
-    pub img:String,
+    pub img:Option<String>,
     pub description:String,
     pub reward:u64,
     pub reward_currency:types::RewardCurrency,

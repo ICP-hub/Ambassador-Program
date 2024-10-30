@@ -40,7 +40,8 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,AdminErrors>{
             twitter:None,
             discord:None,
             github:None
-        }
+        },
+        mission_count:0
     };
 
     let inserted=SPACE_MAP.with(|map| map.borrow_mut().insert(new_space.space_id.clone(), new_space));

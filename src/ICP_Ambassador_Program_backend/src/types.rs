@@ -110,6 +110,18 @@ pub enum Tasks{
 }
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub struct CreateMission{
+    pub space_id:String,
+    pub status:MissionStatus,
+    pub title:String,
+    pub description:String,
+    pub reward:u64,
+    pub reward_currency:RewardCurrency,
+    pub start_date:String,
+    pub end_date:String,
+}
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum CheckCodeType{
     OneTime,
     ReUsable
@@ -133,4 +145,9 @@ pub enum AdminErrors{
     ErrorUpdatingAdmin,
     NoSpaceFound,
     SpaceUpdateError,
+    ErrUpdatingMissionCount,
+    MissionNotFound,
+    MissionInActive,
+    ErrUpdatingMission,
+    
 }
