@@ -1,21 +1,21 @@
 type Result = variant { Ok : text; Err : text };
 type UserLevel = variant { GrandMaster; Initiate; Knight; Padawan; Master };
 type UserProfile = record {
+  hub : opt text;
+  referrer : opt principal;
   username : text;
   redeem_points : nat64;
-  joined_discord_server : bool;
   xp_points : nat64;
+  referrals : vec principal;
   user_id : text;
   level : UserLevel;
-  referral_code : opt text;
   discord_id : text;
   wallet : opt principal;
 };
 service : () -> {
   add_points : (text, nat64) -> ();
-  create_user : (text, text, text, opt text, bool, opt principal) -> ();
-  get_user : (text) -> (opt UserProfile) query;
-  get_user_level : (text) -> (opt record { UserLevel; nat64; nat64 }) query;
+  create_user : (text, text, opt principal, opt text, opt principal) -> ();
+  get_all_users : () -> (vec UserProfile) query;
+  get_user_data : (text) -> (opt UserProfile) query;
   redeem_points_for_icp : (text, nat64) -> (Result);
-  update_user : (text, text, text, opt text, bool, opt principal) -> ();
 }
