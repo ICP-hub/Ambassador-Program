@@ -4,8 +4,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import {useNavigate} from 'react-router-dom'
 
 const Spaces = () => {
+  const navigate=useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [chain, setchain] = useState('');
@@ -24,6 +26,10 @@ const Spaces = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const handleSpace = () =>{
+    navigate('/slug_url/mission')
+  }
+
   return (
     <div>
       <div className='flex flex-col gap-10 px-16 py-10 h-screen'>
@@ -38,9 +44,9 @@ const Spaces = () => {
         </div>
 
         <div 
-          className="border border-gray-300 rounded-lg w-80 h-72 bg-[#fbfcff] hover:bg-blue-500 transition-colors duration-300 cursor-pointer"
-          style={{backgroundColor:'#fbfcff'}}>
-               <div className='text-black text-sm font-semibold flex justify-center mx-auto mt-4 w-32 py-3 px-4 rounded-full  ' style={{boxShadow: 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px'}} >
+          className="border border-gray-300 bg-[#fbfcff] rounded-lg w-80 h-72 hover:bg-blue-100 transition-colors duration-300 cursor-pointer"
+           onClick={handleSpace}>
+               <div className='text-black text-sm font-semibold flex justify-center mx-auto mt-4 w-32 py-3 px-4 rounded-full bg-[#fbfcff] ' style={{boxShadow: 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px'}} >
                 Not visible
                </div>
                <div className='px-3'>
@@ -53,8 +59,8 @@ const Spaces = () => {
       
       
       {isModalOpen && (
-        <div className='fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-10'>
-          <div className='bg-white p-8 rounded-md shadow-lg max-w-lg w-full'>
+        <div className='fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center  overflow-y-scroll '>
+          <div className='bg-white px-8 py-2 rounded-md shadow-lg max-w-lg w-full max-h-fit mt-20 '>
             <h2 className='text-2xl font-semibold mb-4'>Create space</h2>
 
             
@@ -117,8 +123,8 @@ const Spaces = () => {
               </div>
             </div>
 
-            {/* Buttons */}
-            <div className='flex justify-end space-x-2 mt-6'>
+            
+            <div className='flex justify-end space-x-2 mt-2'>
             <button
                 className={`${
                   isClicked ? 'bg-blue-200' : 'bg-transparent'

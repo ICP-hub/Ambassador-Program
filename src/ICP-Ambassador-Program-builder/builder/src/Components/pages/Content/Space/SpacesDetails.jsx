@@ -42,6 +42,18 @@ const SpacesDetails = () => {
     navigate('/space_details')
   }
 
+  const handleRole = () =>{
+    navigate('/slug_url/role')
+  }
+
+  const handleBalance = () =>{
+    navigate('/slug_url/balance')
+  }
+
+  const handleMission = () =>{
+    navigate('/slug_url/mission/223/edit')
+  }
+
   const filteredRows = statusFilter === 'all' ? rows : rows.filter(row => row.status === 'active');
 
   return (
@@ -51,9 +63,9 @@ const SpacesDetails = () => {
         <div className='flex justify-between items-center'>
           <div className='flex gap-3 items-center '>
             <div className='font-semibold text-md'>Sample_space space</div>
-            <div className='text-sm text-white bg-black hover:bg-blue-700 py-2 px-4 rounded shadow-2xl' onClick={handleEdit}>EDIT</div>
-            <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded shadow-2xl'>ROLES</div>
-            <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded shadow-2xl'>BALANCE</div>
+            <div className='text-sm text-white bg-black hover:bg-blue-700 py-2 px-4 rounded cursor-pointer shadow-2xl' onClick={handleEdit}>EDIT</div>
+            <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl' onClick={handleRole}>ROLES</div>
+            <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl'onClick={handleBalance}>BALANCE</div>
           </div>
           <div className='text-sm text-white bg-black py-2 px-2 lg:px-6 rounded shadow-2xl'>CREATE MISSION</div>
         </div>
@@ -75,7 +87,10 @@ const SpacesDetails = () => {
                 </TableCell>
                 <TableCell align="center" style={{ cursor: 'pointer', width: '150px' }} onClick={toggleExpireFilter}>
                   <Box display="flex" alignItems="center" justifyContent="center">
-                    Expired
+                    <div style={{
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s, transform 0.2s',
+                      }}>Expired</div>
                     {expireFilter ? <ArrowDropDownIcon fontSize="small" /> : <ArrowDropUpIcon fontSize="small" />}
                   </Box>
                 </TableCell>
@@ -97,13 +112,13 @@ const SpacesDetails = () => {
               </TableRow>
             </TableHead>
 
-            <TableBody>
+            <TableBody >
               {filteredRows.length > 0 ? (
                 filteredRows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell align="center">
-                      <Avatar variant="rounded" sx={{ width: 40, height: 40 }}>M</Avatar>
-                    </TableCell>
+                  <TableRow key={row.id} className='hover:bg-blue-100 cursor-pointer '>
+                  <TableCell align="center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Avatar variant="rounded" sx={{ width: 40, height: 40 }} onClick={handleMission}>M</Avatar>
+                  </TableCell>
                     <TableCell align="center"> - </TableCell>
                     <TableCell align="center"> - </TableCell>
                     <TableCell align="center"> - </TableCell>

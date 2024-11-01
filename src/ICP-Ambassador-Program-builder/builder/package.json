@@ -13,10 +13,20 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@iconify/react": "^5.0.2",
     "@mui/icons-material": "^6.1.5",
+    "@mui/lab": "^6.0.0-beta.13",
     "@mui/material": "^6.1.5",
+    "@mui/x-date-pickers": "^7.22.0",
+    "date-fns": "^4.1.0",
+    "moment-timezone": "^0.5.46",
     "quill": "^2.0.2",
     "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-datepicker": "^7.5.0",
+    "react-datetime": "^3.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
   },
@@ -25,11 +35,14 @@
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.13",
     "globals": "^15.11.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
     "vite": "^5.4.9"
   }
 }

@@ -6,7 +6,7 @@ export default function SortDescription ({initialDescription}) {
 
     const editorRef = useRef(null);
   const quillRef = useRef(null);
-  const [description, setDescription] = useState(initialDescription || ''); // Set initial description
+  const [description, setDescription] = useState(initialDescription || ''); 
 
   useEffect(() => {
     if (!quillRef.current) {
