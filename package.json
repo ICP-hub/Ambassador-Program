@@ -13,6 +13,8 @@
   },
   "type": "module",
   "workspaces": [
-    "src/ICP-Ambassador-Program-frontend"
+    "src/ICP-Ambassador-Program-frontend",
+    "src/ICP-Ambassador-Program-builder"
+
   ]
 }

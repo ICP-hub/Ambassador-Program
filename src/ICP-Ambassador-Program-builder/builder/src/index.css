@@ -1,0 +1,36 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+   background-color: #ffffff;
+}
+
+
+
+html, body {
+ 
+}
+
+
+html {
+  scrollbar-width: none;  
+}
+
+
+html::-webkit-scrollbar {
+  display: none;  
+}
+
+
+.scrollbar-hide {
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  
