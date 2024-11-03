@@ -36,6 +36,96 @@ pub struct CreateSpace{
     pub chain:String
 }
 
+// missions 
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum MissionStatus{
+    Draft,
+    Active,
+    UnActive
+}
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum RewardCurrency{
+    ICP,
+    CKBTC,
+    CKETH
+}
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum Tasks{
+    SendTweet{
+        title:String,
+        body:String,
+        url:String
+    },
+    FollowTwitter{
+        title:String,
+        body:String,
+        account:String
+    },
+    JoinTelegram{
+        title:String,
+        body:String,
+        link:String,
+        channel:String
+    },
+    PuzzleText{
+        description:String,
+        score:u32,
+        item_length:u16,
+        items:Vec<String>
+    },
+    SendImage{
+        title:String,
+        body:String,
+        img:String
+    },
+    SendText{
+        title:String,
+        body:String,
+        sample:String,
+        validation_rule:String,
+        max_len:u16
+    },
+    SendUrl{
+        title:String,
+        body:String
+    },
+    CheckCode{
+        title:String,
+        body:String,
+        code_type:CheckCodeType,
+        code_list:Vec<String>
+    },
+    // API type not added
+    GoToLink{
+        title:String,
+        link:String,
+        btn_text:String
+    },
+    CheckMission{
+        title:String,
+        body:String,
+        mission_id:String
+    }
+}
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub struct CreateMission{
+    pub space_id:String,
+    pub status:MissionStatus,
+    pub title:String,
+    pub description:String,
+    pub reward:u64,
+    pub reward_currency:RewardCurrency,
+    pub start_date:String,
+    pub end_date:String,
+}
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum CheckCodeType{
+    OneTime,
+    ReUsable
+}
 
 // errors 
 
@@ -55,4 +145,9 @@ pub enum AdminErrors{
     ErrorUpdatingAdmin,
     NoSpaceFound,
     SpaceUpdateError,
+    ErrUpdatingMissionCount,
+    MissionNotFound,
+    MissionInActive,
+    ErrUpdatingMission,
+    
 }
