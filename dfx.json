@@ -1,14 +1,14 @@
 {
   "canisters": {
-    "ICP-Ambassador-Program-backend": {
-      "candid": "src/ICP-Ambassador-Program-backend/ICP-Ambassador-Program-backend.did",
-      "package": "ICP-Ambassador-Program-backend",
+    "ICP_Ambassador_Program_backend": {
+      "candid": "src/ICP_Ambassador_Program_backend/ICP_Ambassador_Program_backend.did",
+      "package": "ICP_Ambassador_Program_backend",
       "crate": "ICP_Ambassador_Program_backend",
       "type": "rust"
     },
     "ICP-Ambassador-Program-frontend": {
       "dependencies": [
-        "ICP-Ambassador-Program-backend"
+        "ICP_Ambassador_Program_backend"
       ],
       "source": [
         "src/ICP-Ambassador-Program-frontend/dist"
