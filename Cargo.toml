@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "src/ICP-Ambassador-Program-backend"
+    "src/ICP_Ambassador_Program_backend"
 ]
 resolver = "2"
