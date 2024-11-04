@@ -11,6 +11,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaDiscord } from "react-icons/fa";
 import Sidebar from './SideBar';
 import { MdClose } from "react-icons/md";
+import ProfileDrawer from './ProfileDrawer';
 
 import { HiMenu } from 'react-icons/hi'; 
 const Navbar = () => {
@@ -19,14 +20,20 @@ const Navbar = () => {
     const [isSideBarOpen,setSideBarOpen]=useState(false);
     const [isSideBar,setIsSideBar]=useState(false);
     const [userEmail, setUserEmail] = useState(null);
-
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [discordl_user,setDiscord_user]=useState('')
+   
 
     useEffect(() => {
-        const email = localStorage.getItem('userEmail');
-        console.log("Email ==>",email)
+        const user = JSON.parse(localStorage.getItem('discord_user'));
+        const email = user ? user.email : undefined;
+        console.log("user ==>", user);
+        console.log("Email ==>", email);
+        setDiscord_user(user);
         if (email) {
           setUserEmail(email);
         }
+        
       }, []);
 
     useEffect(() => {
@@ -45,6 +52,16 @@ const Navbar = () => {
           
           return () => window.removeEventListener('resize', handleResize);
       }, []);
+
+
+      const handleProfileClick = () => {
+        setIsDrawerOpen(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
+    };
+
     
     
   return (
@@ -96,14 +113,19 @@ const Navbar = () => {
                     style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div>
             {userEmail ? (
-          <div className='lg:block sm:hidden'>
-            <div className='bg-white text-black py-1 px-4 rounded-md text-sm font-semibold cursor-pointer'>
-              {userEmail} {/* Display user email */}
-              <button onClick={handleLogout} className="ml-4 text-red-500">Logout</button>
+          <div className='lg:block sm:hidden' onClick={handleProfileClick}>
+            <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
+              {/* {userEmail} 
+              <button className="ml-4 text-red-500">Logout</button> */}
+              <img
+                        src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
+                        alt="not found"
+                        className="w-10 h-10 rounded-full"
+                        />
             </div>
           </div>
         ) : (
-          // Show login button if not logged in
+          
           <div className='lg:block sm:hidden'>
             <button
               className='bg-white text-black py-1 px-8 rounded-md text-sm font-semibold cursor-pointer'
@@ -167,8 +189,15 @@ const Navbar = () => {
                     </div>    
                 </div>
             )}
-        <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)} />
+        <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)}  />
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)} />
+        {isDrawerOpen && (
+                <ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} />
+            )}
+            {/* <HubConnectionModal 
+        isOpen={isHubModalOpen} 
+        onClose={() => setIsHubModalOpen(false)} 
+      /> */}
     </div>
   )
 }
