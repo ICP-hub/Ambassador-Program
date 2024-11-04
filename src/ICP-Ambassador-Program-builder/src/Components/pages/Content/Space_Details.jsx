@@ -15,6 +15,13 @@ const Space_Details = () => {
     const [spaceName,setSpaceName]=useState('testing')
     const [slug,setSlug]=useState('kljeiceicjnceiucnj')
     const [description,setDescription]=useState('testing create space')
+    const [websitURl,setWebsitURl]=useState('')
+    const [twitterURL,setTwitterURL]=useState('');
+    const [gitURL,setGitURL]=useState('');
+    const [midumURL,setMidumURL]=useState('')
+    const [telegramURL,setTelegramURL]=useState('');
+    const [discordURL,setDiscordURL]=useState('');
+    const [backgroundColor,setBackgroundColor]=useState('');
 
     const handleChange = (event) => {
         setchain(event.target.value);
@@ -111,6 +118,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Space name..."
+                        onChange={(e)=>{setSpaceName(e.target.value)}}
                         />
 
                     </div>
@@ -126,6 +134,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Slug with lowercase, e.g. blocked"
+                        onChange={(e)=>{setSlug(e.target.value)}}
                         />
                         <p className=' text-gray-500' style={{fontSize:'10px'}}>
                         Will be used as URL, e.g. https://app.blocked.cc/blocked
@@ -173,6 +182,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the official website"
+                        onChange={(e)=>{setWebsitURl(e.target.value)}}
                         />
 
                     </div>
@@ -186,6 +196,8 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the twitter..."
+
+                        onChange={(e)=>{setTwitterURL(e.target.value)}}
                         />
 
                     </div>
@@ -199,6 +211,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Telegram URL"
+                        onChange={(e)=>{setTelegramURL(e.target.value)}}
                         />
 
                     </div>
@@ -212,6 +225,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the discord channel"
+                        onChange={(e)=>{setDiscordURL(e.target.value)}}
                         />
 
                     </div>
@@ -225,6 +239,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the medium..."
+                        onChange={(e)=>{setMidumURL(e.target.value)}}
                         />
 
                     </div>
@@ -238,6 +253,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the Github"
+                        onChange={(e)=>{setGitURL(e.target.value)}}
                         />
 
                     </div>
@@ -253,6 +269,7 @@ const Space_Details = () => {
                                       
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="CSS for background"
+                        onChange={(e)=>setBackgroundColor(e.target.value)}
                         />
 
                     </div>

@@ -21,10 +21,10 @@
         "ICP-Ambassador-Program-backend"
       ],
       "source": [
-        "src/ICP-Ambassador-Program-frontend-builder/builder/dist"
+        "src/ICP-Ambassador-Program-builder/dist"
       ],
       "type": "assets",
-      "workspace": "ICP-Ambassador-Program-builder/builder"
+      "workspace": "ICP-Ambassador-Program-builder"
     }
   },
   "defaults": {

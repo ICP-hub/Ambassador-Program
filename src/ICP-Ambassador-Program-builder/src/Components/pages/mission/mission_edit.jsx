@@ -66,6 +66,7 @@ const MissionEdit = () => {
   const [endDate, setEndDate] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [title,setTitle]=useState('')
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -132,7 +133,7 @@ const MissionEdit = () => {
             </div>
           </div>
 
-          <TextField label="Mission title" placeholder="Title..." size="small" />
+          <TextField label="Mission title" placeholder="Title..." size="small" onChange={(e)=>{setTitle(e.target.value)}}/>
 
           <AutocompleteSearchInput noOptionsText="No spaces found" label="Type space name for adding a cohost" isMultiple={true} />
 
