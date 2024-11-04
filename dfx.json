@@ -18,13 +18,13 @@
     },
     "ICP-Ambassador-Program-builder": {
       "dependencies": [
-        "ICP-Ambassador-Program-backend"
+        "ICP_Ambassador_Program_backend"
       ],
       "source": [
-        "src/ICP-Ambassador-Program-frontend-builder/builder/dist"
+        "src/ICP-Ambassador-Program-builder/builder/dist"
       ],
       "type": "assets",
-      "workspace": "ICP-Ambassador-Program-builder/builder"
+      "workspace": "ICP-Ambassador-Program-builder"
     }
   },
   "defaults": {
