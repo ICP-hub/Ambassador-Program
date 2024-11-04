@@ -7,6 +7,16 @@ pub struct UpdateUser{
     pub discord_id:String,
     pub username:String
 }
+//
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType, PartialEq)]
+pub enum UserLevel {
+    Initiate,    // Level 1
+    Padawan,     // Level 2
+    Knight,      // Level 3
+    Master,      // Level 4
+    GrandMaster, // Level 5
+}
+//
 
 // admin
 

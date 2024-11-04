@@ -51,14 +51,13 @@ type Mission = record {
 };
 type MissionStatus = variant { UnActive; Active; Draft };
 type Result = variant { Ok; Err : AdminErrors };
-type Result_1 = variant { Ok : opt Space; Err : AdminErrors };
-type Result_2 = variant { Ok; Err : UserErrors };
+type Result_1 = variant { Ok : text; Err : text };
+type Result_2 = variant { Ok : opt Space; Err : AdminErrors };
 type Result_3 = variant { Ok : Admin; Err : AdminErrors };
 type Result_4 = variant { Ok : vec text; Err : AdminErrors };
 type Result_5 = variant { Ok : vec record { text; Space }; Err : AdminErrors };
 type Result_6 = variant { Ok : vec principal; Err : AdminErrors };
 type Result_7 = variant { Ok : Space; Err : AdminErrors };
-type Result_8 = variant { Ok : UserProfile; Err : UserErrors };
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
 type Space = record {
   owner : principal;
@@ -115,33 +114,39 @@ type Tasks = variant {
   };
   CheckMission : record { title : text; body : text; mission_id : text };
 };
-type UpdateUser = record {
-  username : text;
-  discord_id : text;
-  wallet_id : opt principal;
-};
-type UserErrors = variant { NoUserFound };
+type UserLevel = variant { GrandMaster; Initiate; Knight; Padawan; Master };
 type UserProfile = record {
+  hub : opt text;
+  referrer : opt principal;
   username : text;
-  referral_code : opt text;
+  redeem_points : nat64;
+  xp_points : nat64;
+  referrals : vec principal;
+  user_id : text;
+  level : UserLevel;
   discord_id : text;
-  wallet_id : opt principal;
+  wallet : opt principal;
 };
-service : {
+service : () -> {
   add_admin_by_super_admin : (principal) -> (Result);
+  add_points : (text, nat64) -> (Result_1);
   create_mission : (CreateMission) -> (Result);
-  create_space : (CreateSpace) -> (Result_1);
-  create_user : (UserProfile) -> (opt UserProfile);
+  create_space : (CreateSpace) -> (Result_2);
+  create_user : (text, text, opt principal, opt text, opt principal) -> (
+      Result_1,
+    );
   edit_mission : (Mission) -> (Result);
-  edit_user : (UpdateUser) -> (Result_2);
   get_admin : () -> (Result_3) query;
   get_admin_by_principal : (principal) -> (Result_3) query;
   get_all_admin_spaces : () -> (Result_4) query;
+  get_all_referrals : (principal, nat64) -> (vec principal) query;
   get_all_spaces : () -> (Result_5) query;
   get_all_super_admins : () -> (Result_6) query;
+  get_all_users : () -> (vec UserProfile) query;
   get_space : (text) -> (Result_7) query;
-  get_user : (text) -> (Result_8) query;
+  get_user_data : (text) -> (opt UserProfile) query;
   promote_to_super_admin : (principal) -> (Result);
+  redeem_points_for_icp : (text, nat64) -> (Result_1);
   register_admin : () -> (Result);
   update_space : (Space) -> (Result);
 }
