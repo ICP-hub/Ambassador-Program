@@ -1,16 +1,88 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RichTextEditor from './TextEditor';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import {useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import SpaceCard from './SpaceCard';
+import { useDispatch } from 'react-redux';
+import { updateSpace } from '../../../redux/spaces/spaceSlice';
 
 const Spaces = () => {
   const navigate=useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [chain, setchain] = useState('');
+  const [spaces,setSpaces]=useState([])
+  const actor=useSelector(state=>state.actor.value)
+  const admin=useSelector(state=>state.admin.value)
+  const dispatch=useDispatch()
+  const [newSpace,setNewSpace]=useState({
+    name:"",
+    slug:"",
+    description:"THis is a sample description",
+    chain:chain
+  })
+
+  async function createNewSpace(){
+    try {
+      let res = await actor?.backendActor?.create_space(newSpace)
+      console.log("space creation response : ",res)
+      if(res!=undefined && res!=null ){
+        window.location.reload()
+        handleModalToggle()
+      }
+    } catch (error) {
+      console.log("space creation error : ",error)
+    }
+  }
+  
+  async function fetchSpaces(){
+    try {
+      console.log("fetching spaces")
+      let key_arr=[]
+      let val_arr=[]
+      for(let i=0;i<admin?.spaces?.length;i++){
+        let res = await actor?.backendActor?.get_space(admin?.spaces[i])
+        let x= JSON.parse(JSON.stringify(res?.Ok))
+        // console.log(`space item ${i} response :  ${typeof JSON.stringify(x)}`)
+        // console.dir(x)
+        if(res?.Ok!=null && res?.Ok!=undefined){
+          if(i==0){
+            key_arr.push(Object.keys(res?.Ok))
+            val_arr.push(Object.values(res?.Ok)||null)
+          }
+          key_arr.push(Object.keys(res?.Ok))
+          val_arr.push(Object.entries(res?.Ok)||null)
+        }
+      }
+      // console.log(`key array : ${key_arr}\n\nkey array length: ${key_arr.length} \n\n\n\nvalue array : ${val_arr}\n\nvalue array length : ${val_arr.length}`)
+      let main_arr=[]
+      for(let i=0;i<val_arr.length;i++){
+        let el_obj=new Object()
+        for(let j=0;j<key_arr[0].length;j++){
+          // console.log(val_arr[i][j])
+          if(i==0){
+            el_obj[key_arr[0][j]]=val_arr[i][j]
+          }else{
+            el_obj[key_arr[0][j]]=val_arr[i][j][1]
+          }
+        }
+        // console.log(el_obj)
+        main_arr.push(el_obj)
+      }
+      console.log("final spaces : ",main_arr)
+      setSpaces(main_arr)
+    } catch (error) {
+      console.log("error fetching spaces : ",error)
+    }
+  }
+
+  useEffect(()=>{
+    fetchSpaces()
+  },[admin])
 
   const handleChange = (event) => {
     setchain(event.target.value);
@@ -26,7 +98,8 @@ const Spaces = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleSpace = () =>{
+  const handleSpace = (item) =>{
+    dispatch(updateSpace(item))
     navigate('/slug_url/mission')
   }
 
@@ -42,18 +115,14 @@ const Spaces = () => {
             CREATE SPACE
           </div>
         </div>
+        <div className='w-[70vw] flex items-center justify-start gap-6'>
+        {
+          spaces?.map((item,index)=>(
+            <SpaceCard item={item} handleSpace={handleSpace} key={index}/>
+          ))
+        }
+        </div>
 
-        <div 
-          className="border border-gray-300 bg-[#fbfcff] rounded-lg w-80 h-72 hover:bg-blue-100 transition-colors duration-300 cursor-pointer"
-           onClick={handleSpace}>
-               <div className='text-black text-sm font-semibold flex justify-center mx-auto mt-4 w-32 py-3 px-4 rounded-full bg-[#fbfcff] ' style={{boxShadow: 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px'}} >
-                Not visible
-               </div>
-               <div className='px-3'>
-                <div className='text-sm font-bold'>Sample test space</div>
-                <div className='text-sm font-semibold text-gray-500'>testing the create space</div>
-               </div>
-        </div>        
       </div>
 
       
@@ -75,6 +144,7 @@ const Spaces = () => {
                             hover:border-black
                             focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Space name..."
+                  onChange={(e)=>setNewSpace({...newSpace,name:e.target.value})}
                 />
 
               </div>
@@ -89,6 +159,7 @@ const Spaces = () => {
                             hover:border-black
                             focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Slug with lowercase, e.g. blocked"
+                  onChange={(e)=>setNewSpace({...newSpace,slug:e.target.value})}
                 />
                 <p className='text-sm text-gray-500'>
                   Will be used as URL, e.g. https://app.blocked.cc/blocked
@@ -133,7 +204,7 @@ const Spaces = () => {
               >
                 Cancel
               </button>
-              <button className='bg-blue-600 text-white py-2 px-4 rounded-md'>
+              <button className='bg-blue-600 text-white py-2 px-4 rounded-md' onClick={createNewSpace}>
                 Save
               </button>
             </div>
