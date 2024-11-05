@@ -4,7 +4,9 @@ use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
-use crate::{types, Tasks};
+
+use std::collections::HashMap;
+use crate::{types, Tasks,UserLevel};
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
 
@@ -33,7 +35,9 @@ thread_local! {
 
     pub static SUBMISSION_MAP:RefCell<StableBTreeMap<String,Submission,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
-    ))
+    ));
+    pub static REFERRAL_TREE: RefCell<HashMap<Principal, Vec<Principal>>> = RefCell::new(HashMap::new());
+    
 
 }
 
@@ -41,10 +45,16 @@ thread_local! {
 
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct UserProfile {
-    pub wallet_id: Option<Principal>,
-    pub discord_id: String,
-    pub username: String,
-    pub referral_code: Option<String>,
+   pub user_id: String,                    // user_id is derived from discord_id
+   pub discord_id: String,
+   pub username: String,
+   pub wallet: Option<Principal>,
+   pub referrer: Option<Principal>,        // Principal of the user who referred them
+   pub hub: Option<String>,                // Selected Hub (instead of KYC)
+   pub xp_points: u64,                     // Cumulative XP points earned by the user
+   pub redeem_points: u64,                 // Redeemable points available to the user
+   pub level: UserLevel,                   // Level of the user
+   pub referrals: Vec<Principal>,          // List of direct referrals
 }
 
 // Implement the Storable trait for UserProfile
