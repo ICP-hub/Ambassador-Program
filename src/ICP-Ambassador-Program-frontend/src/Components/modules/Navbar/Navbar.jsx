@@ -12,6 +12,7 @@ import { FaDiscord } from "react-icons/fa";
 import Sidebar from './SideBar';
 import { MdClose } from "react-icons/md";
 import ProfileDrawer from './ProfileDrawer';
+import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
 
 import { HiMenu } from 'react-icons/hi'; 
 const Navbar = () => {
@@ -22,7 +23,7 @@ const Navbar = () => {
     const [userEmail, setUserEmail] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [discordl_user,setDiscord_user]=useState('')
-   
+    
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('discord_user'));
@@ -33,8 +34,22 @@ const Navbar = () => {
         if (email) {
           setUserEmail(email);
         }
-        
+        if(user){
+        getUser(user.id);
+        }
       }, []);
+
+
+      const getUser = async(userId)=>{
+        try{
+
+            const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+            console.log("Details from backend ==>",details)
+            setDiscord_user(details[0])
+        }catch(e){
+            console.log("Error ==>",e)
+        }
+      }
 
     useEffect(() => {
         const handleResize = () => {
@@ -112,7 +127,7 @@ const Navbar = () => {
                 <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`}
                     style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div>
-            {userEmail ? (
+            {discordl_user ? (
           <div className='lg:block sm:hidden' onClick={handleProfileClick}>
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail} 

@@ -11,19 +11,37 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaDiscord } from "react-icons/fa";
 import Sidebar from './SideBar';
 import { MdClose } from "react-icons/md";
+import ProfileDrawer from './ProfileDrawer';
+import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import { HiMenu } from 'react-icons/hi';
 const Navbar = () => {
     const [isModelOpen, setModelOpen] = useState(false);
     const [isSideBarOpen, setSideBarOpen] = useState(false);
     const [isSideBar, setIsSideBar] = useState(false);
     const [userEmail, setUserEmail] = useState(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [discordl_user, setDiscord_user] = useState('');
+    const [userDetails, setUserDetails] = useState('');
     useEffect(() => {
-        const email = localStorage.getItem('userEmail');
+        const user = JSON.parse(localStorage.getItem('discord_user'));
+        const email = user ? user.email : undefined;
+        console.log("user ==>", user);
         console.log("Email ==>", email);
+        setDiscord_user(user);
         if (email) {
             setUserEmail(email);
         }
+        getUser(user.id);
     }, []);
+    const getUser = async (userId) => {
+        try {
+            const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+            console.log("Details from backend ==>", details);
+        }
+        catch (e) {
+            console.log("Error ==>", e);
+        }
+    };
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
@@ -34,6 +52,12 @@ const Navbar = () => {
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+    const handleProfileClick = () => {
+        setIsDrawerOpen(true);
+    };
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
+    };
     return (<div className='mt-4 flex justify-between items-center mx-3'>
         <div className='flex items-center gap-5 '>
             <div>
@@ -80,14 +104,13 @@ const Navbar = () => {
                 <IoNotificationsOutline className='text-white' style={{ fontSize: '20px' }}/>   
                 <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`} style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div>
-            {userEmail ? (<div className='lg:block sm:hidden'>
-            <div className='bg-white text-black py-1 px-4 rounded-md text-sm font-semibold cursor-pointer'>
-              {userEmail} {/* Display user email */}
-              <button onClick={handleLogout} className="ml-4 text-red-500">Logout</button>
+            {userEmail ? (<div className='lg:block sm:hidden' onClick={handleProfileClick}>
+            <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
+              {/* {userEmail}
+            <button className="ml-4 text-red-500">Logout</button> */}
+              <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png" alt="not found" className="w-10 h-10 rounded-full"/>
             </div>
-          </div>) : (
-        // Show login button if not logged in
-        <div className='lg:block sm:hidden'>
+          </div>) : (<div className='lg:block sm:hidden'>
             <button className='bg-white text-black py-1 px-8 rounded-md text-sm font-semibold cursor-pointer' onClick={() => setModelOpen(true)}>
               Login
             </button>
@@ -143,6 +166,11 @@ const Navbar = () => {
                 </div>)}
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)}/>
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)}/>
+        {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen}/>)}
+            {/* <HubConnectionModal
+    isOpen={isHubModalOpen}
+    onClose={() => setIsHubModalOpen(false)}
+  /> */}
     </div>);
 };
 export default Navbar;

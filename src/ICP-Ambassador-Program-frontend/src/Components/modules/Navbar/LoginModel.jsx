@@ -38,11 +38,7 @@ const LoginModel = ({ isOpen, onClose  }) => {
           const data = await response.json();
           setUserData(data);
           localStorage.setItem('discord_user', JSON.stringify(data));
-          localStorage.setItem('isLoggedIn', 'true');
-        
-          setTimeout(() => {
-            localStorage.removeItem('isLoggedIn');
-          }, 2 * 60 * 1000);
+          Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
          
           window.history.replaceState({}, document.title, window.location.pathname);
         }

@@ -2,11 +2,12 @@ import React, { useState,useEffect } from 'react';
 import { MdClose } from "react-icons/md";
 import { MdOutlineQuestionMark } from "react-icons/md";
 const ProfileDrawer = ({ user, onClose, isOpen }) => {
+    // console.log("user ==>",user)
     const [hub,setHub]=useState('')
     useEffect(()=>{
         const HUB=localStorage.getItem('selectedHub')
         setHub(HUB)
-    })
+    },[])
     const handlelogout =() =>{
         localStorage.removeItem('discord_user')
     }
@@ -31,9 +32,9 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                         />
             </div>
             <div className='flex flex-col gap-3'>
-                <p className=' mt-3 border-b border-gray-500 pb-4'><strong >Discord ID:</strong> {user.id}</p>
+                <p className=' mt-3 border-b border-gray-500 pb-4'><strong >Discord ID:</strong> {user.discord_id}</p>
                 <p className=' mt-3 border-b border-gray-500 pb-4'><strong>Username:</strong> {user.username}</p>
-                <p className=' mt-3'><strong>Hub Connected To:</strong> {hub}</p>
+                <p className=' mt-3'><strong>Hub Connected To:</strong> ICP Community Hub</p>
             </div>
            
             <div className='flex flex-col gap-3'>
@@ -44,12 +45,12 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                 <div className='flex flex-col justify-center  gap-3'>
                     <div className='flex  justify-around mt-4'>
                         <div className='flex flex-col justify-center items-center'>
-                            <div className='text-[#503cb6] text-2xl font-semibold'>17 567</div>
-                            <div className='text-[#0d033e] text-sm font-semibold'>Avios</div>
+                            <div className='text-[#503cb6] text-2xl font-semibold'>{user.xp_points.toString()}</div>
+                            <div className='text-[#0d033e] text-sm font-semibold'>XP Points</div>
                         </div>
                         <div className='flex flex-col justify-center items-center'>
-                            <div className='text-[#503cb6] text-2xl font-semibold'>45 567</div>
-                            <div className='text-[#0d033e] text-sm font-semibold'>Tier Points</div>
+                            <div className='text-[#503cb6] text-2xl font-semibold'>{user.redeem_points.toString()}</div>
+                            <div className='text-[#0d033e] text-sm font-semibold'>Redeemable Points</div>
                         </div>
 
                         
@@ -62,7 +63,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                     <div className='flex gap-3 py-2 px-4 bg-gray-100 rounded-lg mb-5'>
                         <div className='bg-black h-5 w-9 flex justify-center items-center rounded-full'><div className='text-white text-sm font-semibold'>i</div></div>
                         <div className='flex flex-col gap-3'>
-                            <div className='font-semibold text-sm'>Your Avios are valid until 31.01.2036</div>
+                            <div className='font-semibold text-sm'>Your XP points are valid until 31.01.2036</div>
                             <div className='text-sm'>Collect,use or buy Avios at least once every 18 months to keep them from expiring.</div>
                         </div>
                     </div>

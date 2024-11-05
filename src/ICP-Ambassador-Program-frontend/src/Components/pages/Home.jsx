@@ -4,7 +4,7 @@ import Filter from '../modules/Filter/Filter';
 import Contests from '../modules/Contests/Contests';
 import { FilterProvider } from '../Context/FilterContext';
 import HubConnectionModal from '../modules/Navbar/HubConnectionModel';
-
+import Cookies from 'js-cookie';
 const Home = () => {
 
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const Home = () => {
  
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const isLoggedIn = Cookies.get('isLoggedIn');
     if (isLoggedIn) {
       setIsHubModalOpen(true);
     }
