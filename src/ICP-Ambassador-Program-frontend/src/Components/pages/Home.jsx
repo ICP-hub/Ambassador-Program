@@ -18,7 +18,7 @@ const Home = () => {
     }
   }, []);
   
- 
+  
   return (
     <div className="flex flex-col h-lvh rounded-md m-3 " style={{backgroundColor:'#16161a'}}> 
       <Navbar  />
