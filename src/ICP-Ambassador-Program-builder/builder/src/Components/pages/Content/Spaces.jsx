@@ -115,7 +115,7 @@ const Spaces = () => {
             CREATE SPACE
           </div>
         </div>
-        <div className='w-[70vw] flex items-center justify-start gap-6'>
+        <div className='w-[80vw] flex flex-wrap items-center justify-start gap-6'>
         {
           spaces?.map((item,index)=>(
             <SpaceCard item={item} handleSpace={handleSpace} key={index}/>

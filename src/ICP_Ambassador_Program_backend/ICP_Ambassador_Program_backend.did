@@ -55,10 +55,11 @@ type Result_1 = variant { Ok : opt Space; Err : AdminErrors };
 type Result_2 = variant { Ok; Err : UserErrors };
 type Result_3 = variant { Ok : Admin; Err : AdminErrors };
 type Result_4 = variant { Ok : vec text; Err : AdminErrors };
-type Result_5 = variant { Ok : vec record { text; Space }; Err : AdminErrors };
-type Result_6 = variant { Ok : vec principal; Err : AdminErrors };
-type Result_7 = variant { Ok : Space; Err : AdminErrors };
-type Result_8 = variant { Ok : UserProfile; Err : UserErrors };
+type Result_5 = variant { Ok : vec Mission; Err : AdminErrors };
+type Result_6 = variant { Ok : vec record { text; Space }; Err : AdminErrors };
+type Result_7 = variant { Ok : vec principal; Err : AdminErrors };
+type Result_8 = variant { Ok : Space; Err : AdminErrors };
+type Result_9 = variant { Ok : UserProfile; Err : UserErrors };
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
 type Space = record {
   owner : principal;
@@ -129,6 +130,7 @@ type UserProfile = record {
 };
 service : {
   add_admin_by_super_admin : (principal) -> (Result);
+  create_draft_mission : (text) -> (Result);
   create_mission : (CreateMission) -> (Result);
   create_space : (CreateSpace) -> (Result_1);
   create_user : (UserProfile) -> (opt UserProfile);
@@ -137,10 +139,11 @@ service : {
   get_admin : () -> (Result_3) query;
   get_admin_by_principal : (principal) -> (Result_3) query;
   get_all_admin_spaces : () -> (Result_4) query;
-  get_all_spaces : () -> (Result_5) query;
-  get_all_super_admins : () -> (Result_6) query;
-  get_space : (text) -> (Result_7) query;
-  get_user : (text) -> (Result_8) query;
+  get_all_space_missions : (text) -> (Result_5) query;
+  get_all_spaces : () -> (Result_6) query;
+  get_all_super_admins : () -> (Result_7) query;
+  get_space : (text) -> (Result_8) query;
+  get_user : (text) -> (Result_9) query;
   promote_to_super_admin : (principal) -> (Result);
   register_admin : () -> (Result);
   update_space : (Space) -> (Result);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Navbar/Navbar';
 import Footer from '../../Footer/Footer';
@@ -7,12 +7,44 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { useSelector } from 'react-redux';
 
 const SpacesDetails = () => {
     const navigate=useNavigate();
   const [statusFilter, setStatusFilter] = useState('all');
   const [expireFilter, setExpireFilter] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+  const spaces=useSelector(state=>state.spaces.value)
+  const actors=useSelector(state=>state.actor.value)
+
+  async function fetchMissions(){
+    try {
+      const res=await actors?.backendActor.get_all_space_missions(spaces?.space_id)
+      console.log("fetch mission response : ",res)
+    } catch (error) {
+      console.log("error fetching missions : ",error)
+    }
+  }
+
+  async function createDraftMission(){
+    try {
+      const res=await actors?.backendActor.create_draft_mission(spaces.space_id)
+      console.log(res)
+      if(res?.Ok==null && res!=undefined && res!=null){
+        alert("Mission added as a draft successfully")
+        window.location.reload()
+      }
+    } catch (error) {
+      console.log("error creating draft mission : ",error)
+    }
+  }
+
+  useEffect(()=>{
+    if(spaces.space_id==undefined){
+      navigate('/')
+    }
+    fetchMissions()
+  },[actors])
 
   const rows = [
     { id: 1, status: 'draft', expired: '---' },
@@ -67,7 +99,7 @@ const SpacesDetails = () => {
             <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl' onClick={handleRole}>ROLES</div>
             <div className='text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl'onClick={handleBalance}>BALANCE</div>
           </div>
-          <div className='text-sm text-white bg-black py-2 px-2 lg:px-6 rounded shadow-2xl'>CREATE MISSION</div>
+          <div className='text-sm text-white bg-black py-2 px-2 lg:px-6 rounded shadow-2xl cursor-pointer' onClick={createDraftMission}>CREATE MISSION</div>
         </div>
 
         <TableContainer component={Paper}>
