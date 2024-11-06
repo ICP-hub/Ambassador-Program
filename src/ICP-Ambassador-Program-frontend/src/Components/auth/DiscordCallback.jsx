@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '../../Util/file';
-
+import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 const DiscordCallback = () => {
   const navigate = useNavigate();
 
@@ -15,7 +15,6 @@ const DiscordCallback = () => {
         navigate('/');
         return;
       }
-
       try {
         const accessToken = await exchangeCodeForToken(code);
 
@@ -30,7 +29,9 @@ const DiscordCallback = () => {
         const userData = await response.json();
         
         Cookies.set('discord_user', JSON.stringify(userData), { expires: 10 });
-        Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
+        const user=JSON.parse(userData);
+        getUser(user.id);
+        
 
         setTimeout(() => {
             navigate('/');
@@ -43,6 +44,22 @@ const DiscordCallback = () => {
 
     handleDiscordLogin();
   }, [navigate]);
+
+
+  const getUser = async(userId)=>{
+    try{
+        //console.log(userId)
+        const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+        if(details){
+          Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
+        }
+        else{
+          console.log("user not found")
+        }
+    }catch(e){
+        console.log("Error ==>",e)
+    }
+  }
 
   const exchangeCodeForToken = async (code) => {
     const params = new URLSearchParams();
