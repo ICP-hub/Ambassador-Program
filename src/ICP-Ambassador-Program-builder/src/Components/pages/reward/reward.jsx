@@ -2,24 +2,32 @@ import React, { useState } from 'react';
 import { MenuItem, Select, FormControl, TextField, Box, Typography, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Rewards = () => {
+const Rewards = ({ onRewardsChange, onParticipantsChange }) => {
   const [rewards, setRewards] = useState([]);
+  const [participantsCount, setParticipantsCount] = useState(''); 
 
-  
   const handleAddReward = () => {
-    setRewards([...rewards, { tokenAmount: '', rewardType: '' }]);
+    const updatedRewards = [...rewards, { tokenAmount: '', rewardType: '' }];
+    setRewards(updatedRewards);
+    onRewardsChange(updatedRewards);
   };
 
-  
   const handleRemoveReward = (index) => {
-    setRewards(rewards.filter((_, i) => i !== index));
+    const updatedRewards = rewards.filter((_, i) => i !== index);
+    setRewards(updatedRewards);
+    onRewardsChange(updatedRewards); 
   };
 
-  
   const handleRewardChange = (index, field, value) => {
     const updatedRewards = [...rewards];
     updatedRewards[index][field] = value;
     setRewards(updatedRewards);
+    onRewardsChange(updatedRewards); 
+  };
+
+  const handleParticipantsChange = (e) => {
+    setParticipantsCount(e.target.value);
+    onParticipantsChange(e.target.value); 
   };
 
   return (
@@ -32,12 +40,12 @@ const Rewards = () => {
             label='How many participants will be rewarded?'
             size='small'
             style={{ fontSize: '10px' }}
+            value={participantsCount} 
+            onChange={handleParticipantsChange} 
           />
         </Box>
       </FormControl>
-      
 
-      
       {rewards.map((reward, index) => (
         <Box key={index} display='flex' alignItems='center' gap={1} mb={2}>
           <Box display='flex' flexDirection='column' flex='1'>
