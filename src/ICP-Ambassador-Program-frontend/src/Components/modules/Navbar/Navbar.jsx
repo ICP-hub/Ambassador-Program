@@ -13,7 +13,7 @@ import Sidebar from './SideBar';
 import { MdClose } from "react-icons/md";
 import ProfileDrawer from './ProfileDrawer';
 import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
-
+import Cookies from 'js-cookie';
 import { HiMenu } from 'react-icons/hi'; 
 const Navbar = () => {
 
@@ -26,23 +26,31 @@ const Navbar = () => {
     
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('discord_user'));
-        const email = user ? user.email : undefined;
-        console.log("user ==>", user);
-        console.log("Email ==>", email);
-        setDiscord_user(user);
-        if (email) {
-          setUserEmail(email);
+        if (Cookies.get('discord_user')) {
+            try {
+                const user = JSON.parse(Cookies.get('discord_user'));
+                const email = user ? user.email : undefined;
+                
+                setDiscord_user(user);
+                
+                if (email) {
+                    setUserEmail(email);
+                }
+                
+                if (user && user.id) {
+                    getUser(user.id);
+                }
+            } catch (error) {
+                console.error("Error parsing discord_user cookie:", error);
+            }
         }
-        if(user){
-        getUser(user.id);
-        }
-      }, []);
+    }, []);
+    
 
 
       const getUser = async(userId)=>{
         try{
-
+            //console.log(userId)
             const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
             console.log("Details from backend ==>",details)
             setDiscord_user(details[0])

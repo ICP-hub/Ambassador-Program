@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
 import { Principal } from '@dfinity/principal';
-
+import Cookies from 'js-cookie';
 const HubConnectionModal = ({ isOpen, onClose }) => {
     const [referralCode, setReferralCode] = useState('');
     const [selectedHub, setSelectedHub] = useState('');
@@ -10,7 +10,7 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
         
         localStorage.setItem('selectedHub', selectedHub);
         localStorage.setItem('referralCode', referralCode);
-        const user = JSON.parse(localStorage.getItem('discord_user'));
+        const user = Cookies.get('discord_user');
         // console.log("user ==>",user)
         const user_data={
             discord_id:user.id,
