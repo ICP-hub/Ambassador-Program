@@ -50,10 +50,6 @@ const Spaces = () => {
         // console.log(`space item ${i} response :  ${typeof JSON.stringify(x)}`)
         // console.dir(x)
         if(res?.Ok!=null && res?.Ok!=undefined){
-          if(i==0){
-            key_arr.push(Object.keys(res?.Ok))
-            val_arr.push(Object.values(res?.Ok)||null)
-          }
           key_arr.push(Object.keys(res?.Ok))
           val_arr.push(Object.entries(res?.Ok)||null)
         }
@@ -64,11 +60,7 @@ const Spaces = () => {
         let el_obj=new Object()
         for(let j=0;j<key_arr[0].length;j++){
           // console.log(val_arr[i][j])
-          if(i==0){
-            el_obj[key_arr[0][j]]=val_arr[i][j]
-          }else{
-            el_obj[key_arr[0][j]]=val_arr[i][j][1]
-          }
+          el_obj[key_arr[0][j]]=val_arr[i][j][1]
         }
         // console.log(el_obj)
         main_arr.push(el_obj)

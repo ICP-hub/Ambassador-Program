@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAuthClient } from '../../../utils/useAuthClient'
 import { AuthClient } from '@dfinity/auth-client';
-import { createActor } from '../../../../../../declarations/ICP_Ambassador_Program_backend';
+import { createActor } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import { useDispatch } from 'react-redux';
 import { updateActor } from '../../../redux/actors/actorSlice';
 import { updateAdmin } from '../../../redux/admin/adminSlice';

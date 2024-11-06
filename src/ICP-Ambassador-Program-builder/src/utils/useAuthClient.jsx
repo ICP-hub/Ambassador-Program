@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from '../../../../declarations/ICP_Ambassador_Program_backend';
+import { createActor } from '../../../declarations/ICP_Ambassador_Program_backend';
 import { Principal } from '@dfinity/principal';
 import { Provider, useDispatch } from 'react-redux';
 import { updateActor } from '../redux/actors/actorSlice';

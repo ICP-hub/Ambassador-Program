@@ -16,11 +16,16 @@ const SpacesDetails = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const spaces=useSelector(state=>state.spaces.value)
   const actors=useSelector(state=>state.actor.value)
+  const [missionList,setMissionList]=useState([])
+  
 
   async function fetchMissions(){
     try {
       const res=await actors?.backendActor.get_all_space_missions(spaces?.space_id)
-      console.log("fetch mission response : ",res)
+      console.log("fetch mission response : ",res,res?.Ok?.length)
+      if(res!=undefined && res!=null && res?.ok!=undefined){
+        setMissionList(new Array(res?.Ok?.length).fill({ id: 1, status: 'draft', expired: '---' }))
+      }
     } catch (error) {
       console.log("error fetching missions : ",error)
     }
@@ -87,6 +92,7 @@ const SpacesDetails = () => {
   }
 
   const filteredRows = statusFilter === 'all' ? rows : rows.filter(row => row.status === 'active');
+  // const fil
 
   return (
     <div className=''>
