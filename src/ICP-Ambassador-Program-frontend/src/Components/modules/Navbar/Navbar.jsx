@@ -12,7 +12,8 @@ import { FaDiscord } from "react-icons/fa";
 import Sidebar from './SideBar';
 import { MdClose } from "react-icons/md";
 import ProfileDrawer from './ProfileDrawer';
-
+import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
+import Cookies from 'js-cookie';
 import { HiMenu } from 'react-icons/hi'; 
 const Navbar = () => {
 
@@ -22,19 +23,41 @@ const Navbar = () => {
     const [userEmail, setUserEmail] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [discordl_user,setDiscord_user]=useState('')
-   
+    
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('discord_user'));
-        const email = user ? user.email : undefined;
-        console.log("user ==>", user);
-        console.log("Email ==>", email);
-        setDiscord_user(user);
-        if (email) {
-          setUserEmail(email);
+        if (Cookies.get('discord_user')) {
+            try {
+                const user = JSON.parse(Cookies.get('discord_user'));
+                const email = user ? user.email : undefined;
+                
+                setDiscord_user(user);
+                
+                if (email) {
+                    setUserEmail(email);
+                }
+                
+                if (user && user.id) {
+                    getUser(user.id);
+                }
+            } catch (error) {
+                console.error("Error parsing discord_user cookie:", error);
+            }
         }
-        
-      }, []);
+    }, []);
+    
+
+
+      const getUser = async(userId)=>{
+        try{
+            //console.log(userId)
+            const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+            console.log("Details from backend ==>",details)
+            setDiscord_user(details[0])
+        }catch(e){
+            console.log("Error ==>",e)
+        }
+      }
 
     useEffect(() => {
         const handleResize = () => {
@@ -112,7 +135,7 @@ const Navbar = () => {
                 <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`}
                     style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div>
-            {userEmail ? (
+            {discordl_user ? (
           <div className='lg:block sm:hidden' onClick={handleProfileClick}>
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail} 

@@ -16,43 +16,44 @@ export const AutocompleteSearchInput = ({
   const [options, setOptions] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  
+  const fallbackOptions = [
+    { id: '1', name: 'Space Alpha' },
+    { id: '2', name: 'Space Beta' },
+    { id: '3', name: 'Space Gamma' },
+    { id: '4', name: 'Space Delta' },
+    { id: '5', name: 'Space Epsilon' },
+  ];
+
   const fetch = React.useMemo(
     () =>
       debounce((request, callback) => {
-        searchFunction(request.input).then((results) => {
-          callback(results);
-        });
+        try {
+          searchFunction(request.input).then((results) => {
+            callback(results.length ? results : fallbackOptions); 
+          });
+        } catch (error) {
+          console.error("Search function error:", error);
+          callback(fallbackOptions); 
+        }
       }, 400),
-    [searchFunction],
+    [searchFunction]
   );
 
   React.useEffect(() => {
     let active = true;
 
     if (inputValue === '') {
-      setOptions(isMultiple && Array.isArray(value) ? value : []);
+      
+      setOptions(fallbackOptions);
       return undefined;
     }
 
     setIsLoading(true);
     fetch({ input: inputValue }, (results) => {
       if (active) {
-        let newOptions = [];
-
-        if (isMultiple) {
-          if (Array.isArray(value)) {
-            newOptions = [...value];
-          }
-        } else {
-          if (value) {
-            newOptions = [value];
-          }
-        }
-
-        if (results) {
-          newOptions = [...newOptions, ...results];
-        }
-
+        let newOptions = isMultiple ? [...(Array.isArray(value) ? value : [])] : value ? [value] : [];
+        newOptions = [...newOptions, ...results];
         setOptions(newOptions);
       }
       setIsLoading(false);
@@ -66,17 +67,15 @@ export const AutocompleteSearchInput = ({
   React.useEffect(() => {
     if (!open) {
       setOptions([]);
+    } else if (inputValue === '') {
+      
+      setOptions(fallbackOptions);
     }
-  }, [open]);
+  }, [open, inputValue]);
 
   const handleOnChange = (event, newValue) => {
-    if (isMultiple) {
-      setValue(newValue);
-      onSelected(newValue);
-    } else {
-      setValue(newValue);
-      onSelected(newValue);
-    }
+    setValue(newValue);
+    onSelected(newValue);
   };
 
   return (
@@ -105,26 +104,18 @@ export const AutocompleteSearchInput = ({
           InputProps={{
             ...params.InputProps,
             endAdornment: (
-              <React.Fragment>
-                {isLoading ? <CircularProgress color='inherit' size={20} /> : null}
+              <>
+                {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             ),
           }}
         />
       )}
       renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
-          const { key, ...tagProps } = getTagProps({ index });
-          return (
-            <Chip
-              variant='outlined'
-              label={option.userName ?? option.name ?? ''}
-              key={key}
-              {...tagProps}
-            />
-          );
-        })
+        value.map((option, index) => (
+          <Chip variant="outlined" label={option.userName ?? option.name ?? ''} {...getTagProps({ index })} />
+        ))
       }
       getOptionDisabled={(option) =>
         Array.isArray(value) && (value.length > 5 || value.some((v) => v.name === option.name))

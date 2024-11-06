@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ICP_Ambassador_Program_backend } from 'declarations/ICP-Ambassador-Program-backend';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Components/pages/Home';
 import CardDetails from './Components/modules/Contests/CardDetails';
+import { ICP_Ambassador_Program_backend } from 'declarations/ICP_Ambassador_Program_backend';
 function App() {
     // const [greeting, setGreeting] = useState('');
     // function handleSubmit(event) {

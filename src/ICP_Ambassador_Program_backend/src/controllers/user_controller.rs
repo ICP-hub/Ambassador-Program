@@ -20,8 +20,8 @@ fn create_user(
         return Err("Discord ID and Username cannot be empty".to_string());
     }
 
-    let wallet = wallet.ok_or("Wallet is a required field")?;
-    let hub = hub.ok_or("Hub is a required field")?;
+    // let wallet = wallet.ok_or("Wallet is a required field")?;
+    // let hub = hub.ok_or("Hub is a required field")?;
 
     let user_exists = USER_PROFILE_MAP.with(|map| map.borrow().contains_key(&discord_id));
 
@@ -29,13 +29,13 @@ fn create_user(
         return Err("A user with this Discord ID already exists".to_string());
     }
 
-    let wallet_exists = USER_PROFILE_MAP.with(|map| {
-        map.borrow().iter().any(|(_, profile)| profile.wallet == Some(wallet))
-    });
+    // let wallet_exists = USER_PROFILE_MAP.with(|map| {
+    //     map.borrow().iter().any(|(_, profile)| profile.wallet == Some(wallet))
+    // });
 
-    if wallet_exists {
-        return Err("This wallet principal is already associated with another account".to_string());
-    }
+    // if wallet_exists {
+    //     return Err("This wallet principal is already associated with another account".to_string());
+    // }
 
     let referrer = referrer_principal.and_then(|principal| {
         USER_PROFILE_MAP.with(|map| {
@@ -47,9 +47,9 @@ fn create_user(
         user_id: discord_id.clone(),
         discord_id: discord_id.clone(),
         username,
-        wallet: Some(wallet),
+        wallet: None,
         referrer: referrer.clone(),
-        hub: Some(hub),
+        hub: None,
         xp_points: 0,
         redeem_points: 0,
         level: UserLevel::Initiate,
@@ -59,9 +59,9 @@ fn create_user(
     USER_PROFILE_MAP.with(|map| {
         map.borrow_mut().insert(discord_id.clone(), user_profile);
 
-        if let Some(referrer_principal) = referrer {
-            add_referral(&referrer_principal, wallet);
-        }
+        // if let Some(referrer_principal) = referrer {
+        //     add_referral(&referrer_principal, wallet);
+        // }
     });
 
     Ok("User created successfully".to_string())
