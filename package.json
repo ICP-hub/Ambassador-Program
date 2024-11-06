@@ -14,7 +14,10 @@
   "type": "module",
   "workspaces": [
     "src/ICP-Ambassador-Program-frontend",
-    "src/ICP-Ambassador-Program-builder/builder"
-
-  ]
+    "src/ICP-Ambassador-Program-builder"
+  ],
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.3.0",
+    "react-redux": "^9.1.2"
+  }
 }
