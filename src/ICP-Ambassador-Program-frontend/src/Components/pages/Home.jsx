@@ -44,7 +44,7 @@ const Home = () => {
     <div className="flex flex-col h-lvh rounded-md m-3 " style={{ backgroundColor: '#16161a' }}>
       <Navbar />
       <FilterProvider>
-        <div className="flex flex-grow p-2 m-2 rounded-md">
+        <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide ">
           <div className="w-1/6 h-full">
             <Filter />
           </div>
