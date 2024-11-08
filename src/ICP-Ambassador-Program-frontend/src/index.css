@@ -1,20 +1,22 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 body{
    background-color: #000000;
+   
 }
 
 
 
-html, body {
- 
-}
+
 
 
 html {
-  scrollbar-width: none;  
+  scrollbar-width: none; 
+ 
 }
 
 
@@ -31,5 +33,25 @@ html::-webkit-scrollbar {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+
+ /* Target the toolbar icons in the Quill editor */
+/* .ql-toolbar .ql-stroke,
+.ql-toolbar .ql-fill,
+.ql-toolbar .ql-even {
+  stroke: white !important;
+  fill: white !important;
+}
+
+.ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-item {
+  color: white !important;
+} */
+
+
+
+
+ 
+
   
   
