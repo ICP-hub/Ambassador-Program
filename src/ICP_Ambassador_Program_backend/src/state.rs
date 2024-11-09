@@ -36,12 +36,36 @@ thread_local! {
     pub static SUBMISSION_MAP:RefCell<StableBTreeMap<String,Submission,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
     ));
+    pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
+    ));
+
     pub static REFERRAL_TREE: RefCell<HashMap<Principal, Vec<Principal>>> = RefCell::new(HashMap::new());
     
 
 }
 
 // storables
+
+
+#[derive(CandidType, Deserialize, Serialize, Clone)]
+pub struct ImageIdWrapper {
+    pub image_id: String,
+}
+
+impl Storable for ImageIdWrapper {
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize IMAGEID");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize IMAGEID")
+    }
+    
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct UserProfile {

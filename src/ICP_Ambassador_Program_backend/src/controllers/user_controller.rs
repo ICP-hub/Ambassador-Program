@@ -266,3 +266,58 @@ fn get_all_referrals(principal: Principal, depth: usize) -> Vec<Principal> {
 fn init() {
     ic_cdk::println!("Canister initialized");
 }
+
+// #[ic_cdk::update]
+// pub async fn upload_profile_image(
+//     asset_canister_id: String,
+//     discord_id: String,
+//     image_data: ProfileImageData,
+// ) -> Result<String, String> {
+//     let principal = ic_cdk::api::caller();
+
+//     // Prepare the file input
+//     let input = CreateFileInput {
+//         name: "profile_image.png".to_string(),
+//         content_type: "image/png".to_string(),
+//         size: None,
+//         content: image_data.content.clone(),
+//         status: Some(1),
+//         hash: None,
+//         ert: None,
+//         crc32: None,
+//     };
+
+//     // Call the asset canister to store the profile image
+//     let response: CallResult<(Result<String, String>,)> = ic_cdk::call(
+//         Principal::from_text(asset_canister_id.clone()).unwrap(),
+//         "create_file",
+//         (input,)
+//     ).await;
+
+//     match response {
+//         Ok((Ok(image_id),)) => {
+//             // Update the image ID in the user's profile identified by discord_id
+//             USER_PROFILE_MAP.with(|map| {
+//                 let mut map = map.borrow_mut();
+//                 if let Some(mut profile) = map.get_mut(&discord_id) {
+//                     // Ensure the principal calling the function matches the wallet in the profile
+//                     if let Some(profile_wallet) = profile.wallet {
+//                         if profile_wallet == principal {
+//                             profile.profile_image_id = Some(image_id.clone());
+//                         }
+//                     }
+//                 }
+//             });
+//             Ok(format!("Profile image uploaded and updated with ID: {}", image_id))
+//         },
+//         Ok((Err(err),)) => Err(err),
+//         Err((code, message)) => match code {
+//             RejectionCode::NoError => Err("NoError".to_string()),
+//             RejectionCode::SysFatal => Err("SysFatal".to_string()),
+//             RejectionCode::SysTransient => Err("SysTransient".to_string()),
+//             RejectionCode::DestinationInvalid => Err("DestinationInvalid".to_string()),
+//             RejectionCode::CanisterReject => Err("CanisterReject".to_string()),
+//             _ => Err(format!("Unknown rejection code: {:?}: {}", code, message)),
+//         }
+//     }
+// }

@@ -1,5 +1,8 @@
 use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
+use serde_bytes::ByteBuf;
+use candid::Nat;
+
 
 #[derive(CandidType,Deserialize)]
 pub struct UpdateUser{
@@ -17,6 +20,37 @@ pub enum UserLevel {
     GrandMaster, // Level 5
 }
 //
+#[derive(Clone, CandidType, Serialize, Deserialize)]
+pub struct CoverImageData {
+    pub content: Option<ByteBuf>,  // The image content for the cover image
+    pub ledger_id: Principal,      // Ledger ID associated with the cover image
+    // Additional parameters specific to cover images can be added here if needed
+}
+
+#[derive(CandidType, Clone, Debug, Default, Deserialize, Serialize)]
+pub struct CreateFileInput {
+    // pub parent: u32,
+    pub name: String,
+    pub content_type: String,
+    pub size: Option<Nat>, // if provided, can be used to detect the file is fully filled
+    pub content: Option<ByteBuf>, // should <= 1024 * 1024 * 2 - 1024
+    pub status: Option<i8>, // when set to 1, the file must be fully filled, and hash must be provided
+    pub hash: Option<ByteBuf>, // recommend sha3 256
+    pub ert: Option<String>,
+    pub crc32: Option<u32>,
+}
+
+
+
+#[derive(Clone, CandidType, Serialize, Deserialize)]
+pub struct ProfileImageData {
+    pub content: Option<ByteBuf>,
+    // You can add more fields if necessary
+}
+
+pub type ReturnResult = Result<u32, String>;
+
+
 
 // admin
 

@@ -12,3 +12,6 @@ pub use mission_controller::*;
 
 mod submission_controller;
 pub use submission_controller::*;
+
+mod api_update;
+pub use api_update::*;

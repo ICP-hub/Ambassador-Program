@@ -6,6 +6,13 @@
       "crate": "ICP_Ambassador_Program_backend",
       "type": "rust"
     },
+    "ic_asset_handler": {
+      "main": "src/ic_asset_handler/src/lib.rs",
+      "candid": "src/ic_asset_handler/ic_asset_handler.did",
+      "package": "ic_asset_handler",
+      "crate": "ic_asset_handler",
+      "type": "rust"
+    },
     "ICP-Ambassador-Program-frontend": {
       "dependencies": [
         "ICP_Ambassador_Program_backend"
