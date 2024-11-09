@@ -54,7 +54,7 @@ const BalanceList = () => {
     amount: '',
     reason: '',
   });
-
+  
   const handleClose = () => {
     setEditBalanceId(null);
     setAddNewBalanceForm({ tokenId: '', amount: '', reason: '' });
@@ -155,6 +155,7 @@ const BalanceList = () => {
           <CircularProgress />
         </Box>
       )}
+
       <Dialog open={addNewBalanceForm.tokenId !== ''} onClose={handleClose}>
         <DialogTitle>Add new token to the space</DialogTitle>
         <DialogContent>
