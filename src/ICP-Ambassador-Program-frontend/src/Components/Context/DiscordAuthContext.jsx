@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 
 export const DiscordAuthContext = createContext();
+import { DISCORD_CLIENT_ID,DISCORD_CLIENT_SECRET } from '../auth/authdata';
 
 export const DiscordAuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
@@ -49,11 +50,11 @@ export const DiscordAuthProvider = ({ children }) => {
 
   const exchangeCodeForToken = async (code) => {
     const params = new URLSearchParams();
-    params.append('client_id', CLIENT_ID);
-    params.append('client_secret', process.env.REACT_APP_DISCORD_CLIENT_SECRET); 
+    params.append('client_id', DISCORD_CLIENT_ID);
+    params.append('client_secret',DISCORD_CLIENT_SECRET); 
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
-    params.append('redirect_uri', REDIRECT_URI);
+    params.append('redirect_uri', "http://localhost:3000/auth/discord/callback");
 
     const response = await fetch('https://discord.com/api/oauth2/token', {
       method: 'POST',

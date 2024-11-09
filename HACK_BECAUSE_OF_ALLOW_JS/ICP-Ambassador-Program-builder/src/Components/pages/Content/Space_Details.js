@@ -8,13 +8,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import SortDescription from './sortDescription';
+import { useSelector } from 'react-redux';
 const Space_Details = () => {
+    const spaces = useSelector(state => state.spaces.value);
     const [logoImage, setLogoImage] = useState(null);
     const [backgroundImage, setBackgroundImage] = useState(null);
     const [chain, setchain] = useState('EVM');
-    const [spaceName, setSpaceName] = useState('testing');
-    const [slug, setSlug] = useState('kljeiceicjnceiucnj');
-    const [description, setDescription] = useState('testing create space');
+    const [spaceName, setSpaceName] = useState(spaces?.name);
+    const [slug, setSlug] = useState(spaces?.slug);
+    const [description, setDescription] = useState(spaces?.description);
     const [websitURl, setWebsitURl] = useState('');
     const [twitterURL, setTwitterURL] = useState('');
     const [gitURL, setGitURL] = useState('');
@@ -49,11 +51,11 @@ const Space_Details = () => {
         <Navbar />
             <div className='px-10 lg:px-44 py-3 flex flex-col '>
                 <div className='text-4xl font-semibold border-b-2 border-slate-600 pb-4 '>
-                    Space
+                    {spaces?.name}
                 </div>
                 <div className='flex justify-between mt-1 text-sm font-semibold'>
                     <div>ID</div>
-                    <div>630223-bb334455-3456783-b3543863</div>
+                    <div>{spaces?.space_id}</div>
                 </div>
 
 

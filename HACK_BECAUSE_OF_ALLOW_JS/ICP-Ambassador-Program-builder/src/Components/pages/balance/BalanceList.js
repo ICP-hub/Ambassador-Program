@@ -107,6 +107,7 @@ const BalanceList = () => {
       {isBalanceUpdating && (<Box position='absolute' top='50%' left='50%'>
           <CircularProgress />
         </Box>)}
+
       <Dialog open={addNewBalanceForm.tokenId !== ''} onClose={handleClose}>
         <DialogTitle>Add new token to the space</DialogTitle>
         <DialogContent>

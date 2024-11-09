@@ -18,19 +18,24 @@ const DiscordCallback = () => {
       try {
         const accessToken = await exchangeCodeForToken(code);
 
+        console.log("access token : ",accessToken)
         const response = await fetch('https://discord.com/api/users/@me', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
 
+        console.log("login re :",response)
+
         if (!response.ok) throw new Error('Failed to fetch user data');
 
         const userData = await response.json();
+
+        console.log("userdata : ",userData)
         
         Cookies.set('discord_user', JSON.stringify(userData), { expires: 10 });
-        const user=JSON.parse(userData);
-        getUser(user.id);
+        // const user=JSON.parse(userData);
+        getUser(userData.id);
         
 
         setTimeout(() => {
@@ -70,13 +75,14 @@ const DiscordCallback = () => {
     params.append('code', code);
     params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
 
-    const response = await fetch('https://discord.com/api/oauth2/token', {
+    const response = await fetch('https://discord.com/api/v10/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: params,
     });
+    console.log("exchange token res:",response)
 
     if (!response.ok) throw new Error('Failed to exchange code for access token');
 
