@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useAuthClient } from '../../../utils/useAuthClient';
 const Navbar = () => {
     const [showLogout, setShowLogout] = useState(false);
+    const admin = useSelector(state => state.admin.value);
+    const { logout, setIsAuthenticated } = useAuthClient();
     const handleToggle = () => {
         setShowLogout(!showLogout);
     };
@@ -12,11 +16,17 @@ const Navbar = () => {
             <div className='flex flex-col items-end gap-1'>
 
                 <div className='text-sm font-serif '>Singed in as</div>
-                <div className='font-bold'>Pioneering Cyan Cipher</div>
+                <div className='font-bold'>{admin?.wallet?.substr(0, 20)}...{`  ( ${admin?.role} )`}</div>
 
             </div>
-                <div onClick={handleToggle} className="relative cursor-pointer">
-                    {showLogout ? (<div className="bg-blue-300 text-blue-600 py-2 px-4 rounded-md">
+                <div onClick={showLogout ? handleToggle : () => {
+            logout();
+            setIsAuthenticated();
+        }} className="relative cursor-pointer">
+                    {showLogout ? (<div className="bg-blue-300 text-blue-600 py-2 px-4 rounded-md" onClick={() => {
+                logout();
+                setIsAuthenticated();
+            }}>
                         Log Out
                         </div>) : (<img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png" alt="not found" className="w-10 h-10 rounded-full"/>)}
                 </div>

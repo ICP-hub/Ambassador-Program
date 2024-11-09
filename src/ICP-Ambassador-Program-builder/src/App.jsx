@@ -8,7 +8,7 @@ import Role from './Components/pages/Content/role/role';
 import Balance from './Components/pages/balance/Balance';
 import MissionEdit from './Components/pages/mission/mission_edit';
 import Mission_Task from './Components/pages/mission/Mission_Task'
-import { useAuthClient } from './utils/useAuthClient';
+import { AuthProvider, useAuthClient } from './utils/useAuthClient';
 import Login from './Components/pages/authComponents/Login';
 function App() {
   const {isAuthenticated}=useAuthClient()
@@ -18,6 +18,7 @@ function App() {
   return (
     
     <BrowserRouter>
+    <AuthProvider>
       <Routes>
         <Route path='/login' element={<Login/>}/>
         <Route path ='/' element={<Home/>}/>
@@ -27,6 +28,7 @@ function App() {
         <Route path='/slug_url/balance' element={<Balance/>}/>
         <Route path='/slug_url/mission/223/edit'element={<Mission_Task/>}/>
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

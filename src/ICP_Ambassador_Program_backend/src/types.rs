@@ -62,28 +62,7 @@ pub enum RewardCurrency{
 }
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum Tasks{
-    SendTweet{
-        title:String,
-        body:String,
-        url:String
-    },
-    FollowTwitter{
-        title:String,
-        body:String,
-        account:String
-    },
-    JoinTelegram{
-        title:String,
-        body:String,
-        link:String,
-        channel:String
-    },
-    PuzzleText{
-        description:String,
-        score:u32,
-        item_length:u16,
-        items:Vec<String>
-    },
+    
     SendImage{
         title:String,
         body:String,
@@ -100,23 +79,48 @@ pub enum Tasks{
         title:String,
         body:String
     },
-    CheckCode{
-        title:String,
-        body:String,
-        code_type:CheckCodeType,
-        code_list:Vec<String>
-    },
-    // API type not added
-    GoToLink{
-        title:String,
-        link:String,
-        btn_text:String
-    },
-    CheckMission{
-        title:String,
-        body:String,
-        mission_id:String
-    }
+ 
+    // These might be needed in future for implementation
+
+    // SendTweet{
+    //     title:String,
+    //     body:String,
+    //     url:String
+    // },
+    // FollowTwitter{
+    //     title:String,
+    //     body:String,
+    //     account:String
+    // },
+    // JoinTelegram{
+    //     title:String,
+    //     body:String,
+    //     link:String,
+    //     channel:String
+    // },
+    // PuzzleText{
+    //     description:String,
+    //     score:u32,
+    //     item_length:u16,
+    //     items:Vec<String>
+    // },
+    // CheckCode{
+    //     title:String,
+    //     body:String,
+    //     code_type:CheckCodeType,
+    //     code_list:Vec<String>
+    // },
+    // // API type not added
+    // GoToLink{
+    //     title:String,
+    //     link:String,
+    //     btn_text:String
+    // },
+    // CheckMission{
+    //     title:String,
+    //     body:String,
+    //     mission_id:String
+    // }
 }
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
@@ -135,6 +139,19 @@ pub struct CreateMission{
 pub enum CheckCodeType{
     OneTime,
     ReUsable
+}
+
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+pub enum TaskSubmitted{
+    SendText{
+        text:String
+    },
+    SendImage{
+        img:String
+    },
+    SendUrl{
+        url:String
+    }
 }
 
 // errors 
@@ -159,5 +176,7 @@ pub enum AdminErrors{
     MissionNotFound,
     MissionInActive,
     ErrUpdatingMission,
-    
+    NoUserFound,
+    ErrUpdatingSubmission,
+    NoSubmissionFound
 }

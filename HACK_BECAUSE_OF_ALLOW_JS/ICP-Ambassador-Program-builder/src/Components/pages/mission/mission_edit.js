@@ -15,7 +15,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 const ItemTypes = {
     TASK: 'task',
 };
-const DraggableTask = ({ task, index, moveTask, onDelete }) => {
+const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField }) => {
     const [, ref] = useDrag({
         type: ItemTypes.TASK,
         item: { index },
@@ -29,13 +29,14 @@ const DraggableTask = ({ task, index, moveTask, onDelete }) => {
             }
         },
     });
-    return (<div ref={(node) => ref(drop(node))} className="mb-2 flex gap-3 items-start  p-2">
-       <IconButton style={{ cursor: 'grab', padding: 0 }} ref={ref}>
+    return (<div ref={(node) => ref(drop(node))} className="mb-2 flex gap-3 items-start p-2">
+      <IconButton style={{ cursor: 'grab', padding: 0 }} ref={ref}>
         <DragIndicatorIcon />
       </IconButton>
-      {task.type === 'API' && <ApiTask onDelete={() => onDelete(task.id)}/>}
-      {task.type === 'Image' && <ImageTask onDelete={() => onDelete(task.id)}/>}
-      {task.type === 'SendURL' && <SendURL onDelete={() => onDelete(task.id)}/>}
+  
+      {task.type === 'API' && (<ApiTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'Image' && (<ImageTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'SendURL' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };
 const MissionEdit = () => {
@@ -46,6 +47,26 @@ const MissionEdit = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [title, setTitle] = useState('');
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [missionType, setMissionType] = useState('');
+    const [space, setSpace] = useState([]);
+    const [description, setDescription] = useState('');
+    const [rewardsData, setRewardsData] = useState([]);
+    const [participantsCount, setParticipantsCount] = useState('');
+    const handlesave = () => {
+        const draft_data = {
+            Title: title,
+            Image: logoImage,
+            tasks: tasks,
+            Start_Date: startDate,
+            End_Date: endDate,
+            Selected_Space: space,
+            Description: description,
+            Reward_data: rewardsData,
+            participants_count: participantsCount
+        };
+        console.log("data ==>", draft_data);
+    };
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
@@ -72,6 +93,15 @@ const MissionEdit = () => {
         setTasks([...tasks, { type: taskType, id: Date.now() }]);
         setSidebarOpen(false);
     };
+    const handleUpdateTaskField = (field, value, taskId) => {
+        //console.log(taskId,field,value)
+        setTasks((prevTasks) => {
+            const updatedTasks = prevTasks.map((task) => task.id === field ? { ...task, [value]: taskId } : task);
+            // console.log(`Updated Task ID: ${taskId}, Field: ${field}, New Value: ${value}`);
+            // console.log('Updated Task:', updatedTasks.find(task => task.id === field));
+            return updatedTasks;
+        });
+    };
     const handleDeleteTask = (taskId) => {
         setTasks(tasks.filter((task) => task.id !== taskId));
     };
@@ -80,6 +110,31 @@ const MissionEdit = () => {
         const [movedTask] = updatedTasks.splice(fromIndex, 1);
         updatedTasks.splice(toIndex, 0, movedTask);
         setTasks(updatedTasks);
+    };
+    const sampleSearchFunction = async (input) => {
+        const sampleSpaces = [
+            { id: '1', name: 'Space Alpha' },
+            { id: '2', name: 'Space Beta' },
+            { id: '3', name: 'Space Gamma' },
+            { id: '4', name: 'Space Delta' },
+            { id: '5', name: 'Space Epsilon' },
+        ];
+        return sampleSpaces.filter((space) => space.name.toLowerCase().includes(input.toLowerCase()));
+    };
+    const handleSelectedCohosts = (selectedCohosts) => {
+        //console.log("Selected Cohosts:", selectedCohosts);
+        setSpace(selectedCohosts);
+    };
+    const handleDescriptionChange = (newDescription) => {
+        setDescription(newDescription);
+    };
+    const handleRewardsChange = (updatedRewards) => {
+        setRewardsData(updatedRewards);
+        //console.log('Updated Rewards:', updatedRewards);
+    };
+    const handleParticipantsChange = (updatedParticipantsCount) => {
+        setParticipantsCount(updatedParticipantsCount);
+        //console.log('Updated Participants Count:', updatedParticipantsCount);
     };
     return (<DndProvider backend={HTML5Backend}>
       <div className="flex justify-center items-center mx-auto mb-3">
@@ -100,7 +155,7 @@ const MissionEdit = () => {
 
           <TextField label="Mission title" placeholder="Title..." size="small" onChange={(e) => { setTitle(e.target.value); }}/>
 
-          <AutocompleteSearchInput noOptionsText="No spaces found" label="Type space name for adding a cohost" isMultiple={true}/>
+          <AutocompleteSearchInput searchFunction={sampleSearchFunction} label="Type space name for adding a cohost" isMultiple={true} onSelected={handleSelectedCohosts}/>
 
           <FormControl>
             <TextField label="Current status" disabled/>
@@ -108,20 +163,20 @@ const MissionEdit = () => {
 
           <FormControl>
             <FormLabel>Description</FormLabel>
-            <SortDescription />
+            <SortDescription value={description} onChange={handleDescriptionChange}/>
           </FormControl>
 
           <FormControl>
-            <FormControlLabel control={<Checkbox sx={{ flexDirection: 'row-reverse', gap: 1, alignItems: 'center' }}/>} label="Private (accessible only via direct link)"/>
+            <FormControlLabel control={<Checkbox checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} sx={{ flexDirection: 'row-reverse', gap: 1, alignItems: 'center' }}/>} label="Private (accessible only via direct link)"/>
           </FormControl>
 
           <FormControl>
             <FormLabel>Mission type</FormLabel>
-            <RadioGroup row>
+            <RadioGroup row value={missionType} onChange={(e) => setMissionType(e.target.value)}>
               <FormControlLabel value="reward" control={<Radio />} label="Instant reward"/>
               <FormControlLabel value="raffle" control={<Radio />} label="Raffle"/>
             </RadioGroup>
-          </FormControl>
+        </FormControl>
 
           <FormControl className="">
             <Typography variant="body2">Start date</Typography>
@@ -143,18 +198,18 @@ const MissionEdit = () => {
             </Box>
           </FormControl>
 
-          <Rewards />
+          <Rewards onRewardsChange={handleRewardsChange} onParticipantsChange={handleParticipantsChange}/>
           <div className=''>
             {tasks.length > 0 && (<div className="text-4xl border-b-2 border-gray-300 mb-4 py-2">Tasks</div>)}
             
-            {tasks.map((task, index) => (<DraggableTask key={task.id} index={index} task={task} moveTask={moveTask} onDelete={handleDeleteTask}/>))}
+            {tasks.map((task, index) => (<DraggableTask key={task.id} index={index} task={task} moveTask={moveTask} onDelete={handleDeleteTask} handleUpdateTaskField={handleUpdateTaskField}/>))}
           </div>
           
           <div className='flex justify-between'>
             <Button variant="outlined" className="w-44 mt-2 mb-5" onClick={handleTaskbar}>
               ADD TASK
             </Button>
-            <Button variant="contained">Save Draft</Button>
+            <Button variant="contained" onClick={handlesave}>Save Draft</Button>
           </div>
           
 

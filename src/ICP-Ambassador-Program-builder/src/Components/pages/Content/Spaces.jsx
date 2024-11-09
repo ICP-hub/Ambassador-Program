@@ -48,7 +48,7 @@ const Spaces = () => {
         let res = await actor?.backendActor?.get_space(admin?.spaces[i])
         let x= JSON.parse(JSON.stringify(res?.Ok))
         // console.log(`space item ${i} response :  ${typeof JSON.stringify(x)}`)
-        // console.dir(x)
+        console.dir(x)
         if(res?.Ok!=null && res?.Ok!=undefined){
           key_arr.push(Object.keys(res?.Ok))
           val_arr.push(Object.entries(res?.Ok)||null)

@@ -130,9 +130,11 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,AdminErrors>
 
     match space {
         Some(value) => {
-            if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(AdminErrors::NotOwnerOrSuperAdmin);
-            }
+            // commented this as unauthenticated users on client side also need to see this
+            
+            // if value.owner!=caller() && !is_super_admin(caller()) {
+            //     return Err(AdminErrors::NotOwnerOrSuperAdmin);
+            // }
             space_val=value;
         },
         None => return Err(AdminErrors::NoSpaceFound)
@@ -159,25 +161,18 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,AdminErrors>
     return Ok(mission_list)
 }
 
-// pub fn add_task(){
-
-// }
-// pub fn mark_as_complete(){
-
-// }
-// pub fn get_mission(){
-
-// }
-// pub fn get_all_missions(){
-
-// }
+#[query]
+pub fn get_mission(mission_id:String)-> Result<Mission,AdminErrors>{
+    let mission=MISSION_MAP.with(|map| map.borrow().get(&mission_id));
+    match mission {
+        Some(value) => return Ok(value),
+        None => return Err(AdminErrors::MissionNotFound)
+    }
+}
 // pub fn get_all_active_missions(){
 
 // }
 // pub fn get_all_inactive_missions(){
-
-// }
-// pub fn add_submission(){
 
 // }
 

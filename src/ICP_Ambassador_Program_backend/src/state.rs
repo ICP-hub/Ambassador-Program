@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::borrow::Cow;
 
 use std::collections::HashMap;
-use crate::{types, Tasks,UserLevel};
+use crate::{types, TaskSubmitted, Tasks, UserLevel};
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
 
@@ -154,7 +154,7 @@ pub struct Submission{
     pub submission_id:String,
     pub user:String,
     pub mission_id:String,
-    pub tasks_completed:Vec<u8>,
+    pub tasks_submitted:Vec<TaskSubmitted>,
     //needs to be optimized based on user inputs provided at frontend
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '../../Util/file';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from './authdata';
 import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 const DiscordCallback = () => {
   const navigate = useNavigate();
@@ -63,6 +63,7 @@ const DiscordCallback = () => {
 
   const exchangeCodeForToken = async (code) => {
     const params = new URLSearchParams();
+    console.log("DISCORD IDS : ",DISCORD_CLIENT_ID,DISCORD_CLIENT_SECRET)
     params.append('client_id', DISCORD_CLIENT_ID);
     params.append('client_secret', DISCORD_CLIENT_SECRET);
     params.append('grant_type', 'authorization_code');

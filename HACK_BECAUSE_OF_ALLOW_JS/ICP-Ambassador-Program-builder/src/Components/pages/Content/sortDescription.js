@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
-export default function SortDescription({ initialDescription }) {
+export default function SortDescription({ initialDescription, onChange }) {
     const editorRef = useRef(null);
     const quillRef = useRef(null);
     const [description, setDescription] = useState(initialDescription || '');
@@ -25,13 +25,17 @@ export default function SortDescription({ initialDescription }) {
             });
             quillRef.current.clipboard.dangerouslyPasteHTML(description);
             quillRef.current.on('text-change', () => {
-                setDescription(quillRef.current.root.innerHTML);
+                const newDescription = quillRef.current.getText().replace(/\n/g, '');
+                setDescription(newDescription);
+                if (onChange) {
+                    onChange(newDescription);
+                }
             });
         }
-    }, [description]);
+    }, [description, onChange]);
     return (<div className="mt-2">
       <div className="border border-gray-300 rounded-md shadow-sm mt-2">
-        <div ref={editorRef} className="p-2 " style={{ height: '200px' }}></div>
+        <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
       </div>
     </div>);
 }
