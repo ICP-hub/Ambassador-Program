@@ -9,6 +9,7 @@ const Contests = () => {
     useEffect(()=>{
         const HUB=localStorage.getItem('selectedHub')
         setHub(HUB)
+       
     },[])
   const contests=[]
   const sample_contest=   {
@@ -34,6 +35,8 @@ const Contests = () => {
       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
     }
   }
+
+  
   // const contests=[
     // {
     //   reward: "10 ICP",

@@ -103,7 +103,7 @@
 import React from 'react';
 import { MdClose } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa";
-import { DISCORD_CLIENT_ID } from '../../auth/authdata';
+import { DISCORD_CLIENT_ID } from '../../../Util/file';
 
 const LoginModel = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

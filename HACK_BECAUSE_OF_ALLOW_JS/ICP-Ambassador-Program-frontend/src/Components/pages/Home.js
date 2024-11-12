@@ -33,9 +33,17 @@ const Home = () => {
         const timer = setTimeout(() => {
             const cookieUser = Cookies.get('discord_user');
             setUser(cookieUser ? JSON.parse(cookieUser) : null);
+            if (cookieUser) {
+                console.log("passing user id so that user space related missions can be fetch");
+                getUser(cookieUser?.id);
+                // user_space_mission()
+            }
+            else {
+                console.log("Fetch all missions");
+                list_of_contests();
+            }
             const isLoggedIn = Cookies.get('isLoggedIn');
             console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
-            // getUser(cookieUser?.id)
             if (isLoggedIn) {
                 setIsHubModalOpen(true);
             }
@@ -45,6 +53,15 @@ const Home = () => {
     }, []);
     const handleFilterMobile = () => {
         setFilterMobile(true);
+    };
+    const list_of_contests = async () => {
+        try {
+            const contests = await ICP_Ambassador_Program_backend.get_all_spaces();
+            console.log("Default Contests ===>", contests);
+        }
+        catch (e) {
+            console.log("Error ===>", e);
+        }
     };
     if (loading) {
         return (<div className='flex justify-center items-center h-screen'>
