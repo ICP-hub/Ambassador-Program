@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, FormControl, FormLabel, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SortDescription from '../../Content/sortDescription';
-import upload_background from '../../../../assets/images/upload_background.png';
+// import upload_background from '../../../../assets/images/upload_background.png';
 
 const ApiTask = ({ task, onDelete, onUpdateField }) => {
 
@@ -131,7 +131,7 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
         {logoImage ? (
           <img src={logoImage} alt="Uploaded" className="object-contain h-full w-full" />
         ) : (
-          <img src={upload_background} alt="Upload background" className="w-80" />
+          <img src={'upload_background.png'} alt="Upload background" className="w-80" />
         )}
         <div>Drag file here or</div>
         <label className="mt-4 w-full bg-blue-500 rounded">

@@ -7,21 +7,40 @@ import HubConnectionModal from '../modules/Navbar/HubConnectionModel';
 import FilterMobile from '../modules/Filter/FilterMobile';
 import Cookies from 'js-cookie';
 import { MdOutlineTune } from "react-icons/md";
+import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 const Home = () => {
     const [isHubModalOpen, setIsHubModalOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [filterMobile, setFilterMobile] = useState(false);
+    const getUser = async (userId) => {
+        try {
+            //console.log(userId)
+            const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+            console.log(details, "dd");
+            if (details && details != []) {
+            }
+            else {
+                setIsHubModalOpen(true);
+                console.log("user not found");
+            }
+        }
+        catch (e) {
+            console.log("Error ==>", e);
+        }
+    };
     useEffect(() => {
         const timer = setTimeout(() => {
             const cookieUser = Cookies.get('discord_user');
             setUser(cookieUser ? JSON.parse(cookieUser) : null);
             const isLoggedIn = Cookies.get('isLoggedIn');
+            console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
+            // getUser(cookieUser?.id)
             if (isLoggedIn) {
                 setIsHubModalOpen(true);
             }
             setLoading(false);
-        }, 2000);
+        }, 5000);
         return () => clearTimeout(timer);
     }, []);
     const handleFilterMobile = () => {

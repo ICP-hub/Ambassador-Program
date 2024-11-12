@@ -101,12 +101,13 @@ pub fn get_all_admin_spaces()->Result<Vec<String>,AdminErrors>{
     return Ok(admin.unwrap().spaces);
 }
 
-#[query(guard = check_anonymous)]
+// #[query(guard = check_anonymous)]
+#[query]
 pub fn get_all_spaces()->Result<Vec<(String,Space)>,AdminErrors>{
 
-    if !is_super_admin(caller()) {
-        return Err(AdminErrors::NotASuperAdmin)
-    }
+    // if !is_super_admin(caller()) {
+    //     return Err(AdminErrors::NotASuperAdmin)
+    // }
 
     let spaces:Vec<(String,Space)>=SPACE_MAP.with(|map| map.borrow().iter().collect());
     return Ok(Vec::from_iter(spaces));

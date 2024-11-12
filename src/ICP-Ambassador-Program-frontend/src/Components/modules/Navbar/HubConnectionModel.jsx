@@ -10,8 +10,8 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
         
         localStorage.setItem('selectedHub', selectedHub);
         localStorage.setItem('referralCode', referralCode);
-        const user = Cookies.get('discord_user');
-        // console.log("user ==>",user)
+        const user = JSON.parse(Cookies.get('discord_user'));
+        console.log("user ==>",user)
         const user_data={
             discord_id:user.id,
             username:user.username,
@@ -19,6 +19,7 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
             hub:[],
             referrer_principal: []
         }
+        console.log(user_data)
         createUserInBackend(user_data);
         
         onClose();
@@ -37,6 +38,8 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
                 referrer_principal
             );
             console.log("Result  ===>", result);
+            Cookies.remove('needReg')
+            window?.location?.reload()
         } catch (e) {
             console.log("Error ==>", e);
         }
@@ -61,8 +64,9 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
                     className="border rounded p-2 w-full mb-4"
                 >
                     <option value="">Select a Hub</option>
-                    <option value="ICP Hub">ICP Hub</option>
-                    <option value="ICP Community Hub">ICP Community Hub</option>
+                    <option value="ICP Hub India">ICP Hub India</option>
+                    <option value="ICP Hub Indonesia">ICP Hub Indonesia</option>
+                    <option value="ICP Hub China">ICP Hub China</option>
                 </select>
                 <div className="flex justify-end">
                     <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">

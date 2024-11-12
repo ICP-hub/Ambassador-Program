@@ -8,6 +8,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { updateMission } from '../../../../redux/mission/missionSlice';
 const SpacesDetails = () => {
     const navigate = useNavigate();
     const [statusFilter, setStatusFilter] = useState('all');
@@ -16,11 +18,14 @@ const SpacesDetails = () => {
     const spaces = useSelector(state => state.spaces.value);
     const actors = useSelector(state => state.actor.value);
     const [missionList, setMissionList] = useState([]);
+    const [missionArr, setMissionArr] = useState([]);
+    const dispatch = useDispatch();
     async function fetchMissions() {
         try {
             const res = await actors?.backendActor.get_all_space_missions(spaces?.space_id);
             console.log("fetch mission response : ", res, res?.Ok?.length);
             if (res != undefined && res != null && res?.Ok != undefined) {
+                setMissionArr(res?.Ok);
                 console.log(new Array(res?.Ok?.length).fill({ id: 1, status: 'draft', expired: '---' }));
                 setMissionList(new Array(res?.Ok?.length).fill({ id: 1, status: 'draft', expired: '---' }));
             }
@@ -76,7 +81,8 @@ const SpacesDetails = () => {
     const handleBalance = () => {
         navigate('/slug_url/balance');
     };
-    const handleMission = () => {
+    const handleMission = (index) => {
+        dispatch(updateMission(missionArr[index]));
         navigate('/slug_url/mission/223/edit');
     };
     const filteredRows = statusFilter === 'all' ? rows : rows.filter(row => row.status === 'active');
@@ -137,7 +143,7 @@ const SpacesDetails = () => {
             console.log("filter : ", missionList);
             return (<TableRow key={index} className='hover:bg-blue-100 cursor-pointer '>
                   <TableCell align="center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Avatar variant="rounded" sx={{ width: 40, height: 40 }} onClick={handleMission}>M</Avatar>
+                    <Avatar variant="rounded" sx={{ width: 40, height: 40 }} onClick={() => handleMission(index)}>M</Avatar>
                   </TableCell>
                     <TableCell align="center"> - </TableCell>
                     <TableCell align="center"> - </TableCell>

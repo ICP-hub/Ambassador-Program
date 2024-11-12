@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from './authdata';
 import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
-const DiscordCallback = () => {
+const DiscordCallback = ({setOpen}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,11 +55,15 @@ const DiscordCallback = () => {
     try{
         //console.log(userId)
         const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
-        if(details){
+        console.log(details,"dd")
+        if(details && details!=[]){
           Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
         }
         else{
           console.log("user not found")
+          Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
+          // Cookies.set('needReg', 'true', { expires: 1 / 1440 });
+          setOpen(true)
         }
     }catch(e){
         console.log("Error ==>",e)
@@ -73,7 +77,7 @@ const DiscordCallback = () => {
     params.append('client_secret', DISCORD_CLIENT_SECRET);
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
-    params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
+    params.append('redirect_uri', 'https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback');
 
     const response = await fetch('https://discord.com/api/v10/oauth2/token', {
       method: 'POST',

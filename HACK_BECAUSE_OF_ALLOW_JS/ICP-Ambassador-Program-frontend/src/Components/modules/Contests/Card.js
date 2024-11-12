@@ -5,7 +5,7 @@ import { GrTransaction } from "react-icons/gr";
 import { FaDiscord } from "react-icons/fa";
 import { BiLogoTelegram } from "react-icons/bi";
 import { FaFileUpload } from "react-icons/fa";
-const Card = ({ contest }) => {
+const Card = ({ contest, hub }) => {
     const { reward, status, title, image, social_platforms, icons } = contest;
     const navigate = useNavigate();
     const iconMap = {

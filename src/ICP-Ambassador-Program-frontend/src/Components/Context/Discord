@@ -6,8 +6,8 @@ export const DiscordAuthContext = createContext();
 export const DiscordAuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const CLIENT_ID = process.env.REACT_APP_DISCORD_CLIENT_ID;  
-  const REDIRECT_URI = "http://localhost:3000/";  
-  const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify+email+connections`;
+  const REDIRECT_URI = "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/";  
+  const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=1303682602825158676&response_type=code&redirect_uri=https%3A%2F%2Fkgmyp-myaaa-aaaao-a3u4a-cai.icp0.io%2Fauth%2Fdiscord%2Fcallback&scope=identify+email+connections`;
 
   useEffect(() => {
     const checkUserData = async () => {
