@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import upload_background from '../../../assets/images/upload_background.png';
+import React, { useEffect, useState } from 'react';
+// import upload_background from '../../../assets/images/upload_background.png';
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography, IconButton } from '@mui/material';
 import DateTime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -12,6 +12,8 @@ import { ApiTask, ImageTask, SendURL } from './task/TaskList';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const ItemTypes = {
     TASK: 'task',
 };
@@ -40,20 +42,23 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
     </div>);
 };
 const MissionEdit = () => {
+    const actor = useSelector(state => state.actor.value);
+    const mission = useSelector(state => state.mission.value);
     const timezone = 'Asia/Calcutta';
     const [logoImage, setLogoImage] = useState(null);
     const [startDate, setStartDate] = useState(moment().tz(timezone));
     const [endDate, setEndDate] = useState(null);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState(mission?.title);
     const [isPrivate, setIsPrivate] = useState(false);
     const [missionType, setMissionType] = useState('');
     const [space, setSpace] = useState([]);
-    const [description, setDescription] = useState('');
+    const [description, setDescription] = useState(mission?.description);
     const [rewardsData, setRewardsData] = useState([]);
     const [participantsCount, setParticipantsCount] = useState('');
-    const handlesave = () => {
+    const nav = useNavigate();
+    const handlesave = async () => {
         const draft_data = {
             Title: title,
             Image: logoImage,
@@ -65,8 +70,22 @@ const MissionEdit = () => {
             Reward_data: rewardsData,
             participants_count: participantsCount
         };
-        console.log("data ==>", draft_data);
+        console.log("data ==>", draft_data, mission, actor);
+        const updatedMission = { ...mission, title: title, description: description, status: { Active: null } };
+        console.log("final updated mission : ", updatedMission);
+        const res = await actor?.backendActor?.edit_mission(updatedMission);
+        console.log(res);
+        if (res != null && res != undefined && res?.Err == undefined) {
+            alert('Mission updated successfully');
+            nav('/');
+        }
     };
+    useEffect(() => {
+        if (mission?.mission_id == undefined) {
+            nav('/');
+        }
+        console.log(mission, "mission", actor);
+    }, [mission]);
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
@@ -142,7 +161,7 @@ const MissionEdit = () => {
           <div className="mt-4 w-full ">
             <div className="text-xl font-medium">Mission Image</div>
             <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
-              {logoImage ? (<img src={logoImage} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={upload_background} alt="" className="w-80"/>)}
+              {logoImage ? (<img src={logoImage} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt="" className="w-80"/>)}
               <div>drag file here or</div>
               <label className="mt-4 w-full bg-blue-500 rounded">
                 <input type="file" className="hidden" onChange={handleFileChange}/>
@@ -155,10 +174,16 @@ const MissionEdit = () => {
 
           <TextField label="Mission title" placeholder="Title..." size="small" onChange={(e) => { setTitle(e.target.value); }}/>
 
-          <AutocompleteSearchInput searchFunction={sampleSearchFunction} label="Type space name for adding a cohost" isMultiple={true} onSelected={handleSelectedCohosts}/>
+          {/* <AutocompleteSearchInput
+          searchFunction={sampleSearchFunction}
+         
+          label="Type space name for adding a cohost"
+          isMultiple={true}
+          onSelected={handleSelectedCohosts}
+        /> */}
 
           <FormControl>
-            <TextField label="Current status" disabled/>
+            {/* <TextField label="Current status"  /> */}
           </FormControl>
 
           <FormControl>
@@ -209,7 +234,7 @@ const MissionEdit = () => {
             <Button variant="outlined" className="w-44 mt-2 mb-5" onClick={handleTaskbar}>
               ADD TASK
             </Button>
-            <Button variant="contained" onClick={handlesave}>Save Draft</Button>
+            <Button variant="contained" onClick={handlesave}>Save</Button>
           </div>
           
 

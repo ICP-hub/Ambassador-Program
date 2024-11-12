@@ -1,7 +1,7 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import Footer from '../Footer/Footer'
 import Navbar from '../Navbar/Navbar'
-import upload_backgroud from '../../../assets/images/upload_background.png'
+// import upload_backgroud from '../../../assets/images/upload_background.png'
 import RichTextEditor from './TextEditor'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,8 +9,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import SortDescription from './sortDescription'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 const Space_Details = () => {
     const spaces=useSelector(state=>state.spaces.value)
+    const admin=useSelector(state=>state.admin.value)
+    const actor=useSelector(state=>state.actor.value)
     const [logoImage,setLogoImage]=useState(null);
     const [backgroundImage,setBackgroundImage] = useState(null);
     const [chain, setchain] = useState('EVM');
@@ -24,6 +27,28 @@ const Space_Details = () => {
     const [telegramURL,setTelegramURL]=useState('');
     const [discordURL,setDiscordURL]=useState('');
     const [backgroundColor,setBackgroundColor]=useState('');
+    const [updatedSpace,setUpdatedSpace]=useState(spaces)
+    const nav=useNavigate()
+
+    useEffect(()=>{
+        if(spaces?.space_id==undefined){
+            nav('/')
+        }
+    },[])
+
+    async function editSpace(){
+        try {
+            console.log("updated space : ",updatedSpace)
+            let res = await actor?.backendActor?.update_space(updatedSpace)
+            console.log(res,"response uodating space")
+            if(res!=null && res?.Err==undefined && res!=undefined){
+                alert('Space updated successfully')
+                window?.location?.reload()
+            }
+        } catch (error) {
+            console.log("error updating the space : ",error)
+        }
+    }
 
     const handleChange = (event) => {
         setchain(event.target.value);
@@ -67,9 +92,9 @@ const Space_Details = () => {
                     <div className='text-xl font-medium'>Logo Image</div>
                     <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full  h-80 mx-auto">
                         {logoImage ? (
-                            <img src={logoImage} alt="Uploaded" className="object-contain h-full w-full" />
+                            <img src={'upload_background.png'} alt="Uploaded" className="object-contain h-full w-full" />
                         ) : (
-                            <img src={upload_backgroud} alt='' className='w-80'/>
+                            <img src={'upload_background.png'} alt='' className='w-80'/>
                         )}
                         <div >drag file here or</div>
                         <label className="mt-4 w-full bg-blue-500 rounded">
@@ -90,9 +115,9 @@ const Space_Details = () => {
                     <div className='text-xl  font-medium '>Background image</div>
                     <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full  h-80 mx-auto">
                         {backgroundImage ? (
-                            <img src={backgroundImage} alt="Uploaded" className="object-contain h-full w-full" />
+                            <img src={'upload_background.png'} alt="Uploaded" className="object-contain h-full w-full" />
                         ) : (
-                            <img src={upload_backgroud} alt='' className='w-80'/>
+                            <img src={'upload_background.png'} alt='' className='w-80'/>
                         )}
                         <div>drag file here or</div>
                         <label className="mt-4 w-full bg-blue-500 rounded">
@@ -120,7 +145,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Space name..."
-                        onChange={(e)=>{setSpaceName(e.target.value)}}
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,name:e.target.value})}}
                         />
 
                     </div>
@@ -136,7 +161,7 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Slug with lowercase, e.g. blocked"
-                        onChange={(e)=>{setSlug(e.target.value)}}
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,slug:e.target.value})}}
                         />
                         <p className=' text-gray-500' style={{fontSize:'10px'}}>
                         Will be used as URL, e.g. https://app.blocked.cc/blocked
@@ -184,7 +209,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the official website"
-                        onChange={(e)=>{setWebsitURl(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.website?.length==0
+                            ||
+                            updatedSpace?.urls?.website?.length==undefined?
+                            "" : updatedSpace?.urls?.website[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,website:[e.target.value]}})}}
                         />
 
                     </div>
@@ -198,8 +229,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the twitter..."
-
-                        onChange={(e)=>{setTwitterURL(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.twitter?.length==0
+                            ||
+                            updatedSpace?.urls?.twitter?.length==undefined?
+                            "" : updatedSpace?.urls?.twitter[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,twitter:[e.target.value]}})}}
                         />
 
                     </div>
@@ -213,7 +249,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Telegram URL"
-                        onChange={(e)=>{setTelegramURL(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.telegram?.length==0
+                            ||
+                            updatedSpace?.urls?.telegram?.length==undefined?
+                            "" : updatedSpace?.urls?.telegram[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,telegram:[e.target.value]}})}}
                         />
 
                     </div>
@@ -227,7 +269,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the discord channel"
-                        onChange={(e)=>{setDiscordURL(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.discord?.length==0
+                            ||
+                            updatedSpace?.urls?.discord?.length==undefined?
+                            "" : updatedSpace?.urls?.discord[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,discord:[e.target.value]}})}}
                         />
 
                     </div>
@@ -241,7 +289,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the medium..."
-                        onChange={(e)=>{setMidumURL(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.medium?.length==0
+                            ||
+                            updatedSpace?.urls?.medium?.length==undefined?
+                            "" : updatedSpace?.urls?.medium[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,medium:[e.target.value]}})}}
                         />
 
                     </div>
@@ -255,7 +309,13 @@ const Space_Details = () => {
                                     hover:border-black
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Link to the Github"
-                        onChange={(e)=>{setGitURL(e.target.value)}}
+                        value={
+                            updatedSpace?.urls?.github?.length==0
+                            ||
+                            updatedSpace?.urls?.github?.length==undefined?
+                            "" : updatedSpace?.urls?.github[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,urls:{...updatedSpace.urls,github:[e.target.value]}})}}
                         />
 
                     </div>
@@ -271,12 +331,18 @@ const Space_Details = () => {
                                       
                                     focus:border-blue-500 focus:ring-blue-500"
                         placeholder="CSS for background"
-                        onChange={(e)=>setBackgroundColor(e.target.value)}
+                        value={
+                            updatedSpace?.bg_css?.length==0
+                            ||
+                            updatedSpace?.bg_css?.length==undefined?
+                            "" : updatedSpace?.bg_css[0]
+                        }
+                        onChange={(e)=>{setUpdatedSpace({...updatedSpace,bg_css:[e.target.value]})}}
                         />
 
                     </div>
 
-                    <div className=' flex justify-center items-center bg-blue-600 text-white w-20 rounded shadow-2xl h-8 cursor-pointer'>SAVE</div>
+                    <div className=' flex justify-center items-center bg-blue-600 text-white w-20 rounded shadow-2xl h-8 cursor-pointer' onClick={editSpace}>SAVE</div>
 
                 </div>
 

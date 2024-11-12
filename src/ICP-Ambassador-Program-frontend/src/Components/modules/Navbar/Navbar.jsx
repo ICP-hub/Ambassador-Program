@@ -22,7 +22,7 @@ const Navbar = () => {
     const [isSideBar,setIsSideBar]=useState(false);
     const [userEmail, setUserEmail] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [discordl_user,setDiscord_user]=useState('')
+    const [discordl_user,setDiscord_user]=useState()
     
 
     useEffect(() => {

@@ -1,14 +1,17 @@
+"use strict";
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
     content: [
         "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
+        "./src/**/*.{js,ts,jsx,tsx}", // Include all files in the src directory
     ],
     theme: {
-        extend: {
-            boxShadow: {
-                'custom-white': 'rgba(255, 255, 255, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 30px 60px -30px',
-            },
+        extend: {},
+        screens: {
+            sm: '640px',
+            md: '768px',
+            lg: '1024px', // Ensure this is here
+            xl: '1280px',
         },
     },
     plugins: [],

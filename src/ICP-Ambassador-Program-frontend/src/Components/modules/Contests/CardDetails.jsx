@@ -1,5 +1,5 @@
 import React,{useState,useRef,useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ContestNavbar from '../Navbar/ContestNavbar';
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineArrowOutward } from "react-icons/md";
@@ -11,17 +11,20 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
-import upload_background from '../../../assets/images/upload_background.png'
+// import upload_background from '../../../assets/images/upload_background.png'
+import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
+import Cookies from 'js-cookie'
 
 const CardDetails = () => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
   const location = useLocation();
   const { contest } = location.state || {};
   const [description, setDescription] = useState(''); 
+  const nav=useNavigate()
   const [tasks, setTasks] = useState([
-    { id: 'text', label: 'Send Text', content: '', submitted: false },
-    { id: 'url', label: 'Send URL', content: '', submitted: false },
-    { id: 'image', label: 'Send Image', content: '', submitted: false, image: null }
+    { id: 'text', label: 'submit your data', content: 'please submit your text as per the suggested format', submitted: false },
+    // { id: 'url', label: 'Send URL', content: '', submitted: false },
+    // { id: 'image', label: 'Send Image', content: '', submitted: false, image: null }
   ]);
 
   const handleInputChange = (e, taskId) => {
@@ -38,12 +41,17 @@ const CardDetails = () => {
     ));
   };
 
-  const handleSubmit = (e, taskId) => {
+  const handleSubmit =async (e, taskId) => {
     e.preventDefault();
     setTasks(prevTasks => prevTasks.map(task =>
       task.id === taskId ? { ...task, submitted: true } : task
     ));
     console.log("Updated tasks:", tasks);
+    let user=JSON.parse(Cookies.get('discord_user'))
+    const res=await ICP_Ambassador_Program_backend.add_points(String(user?.id),100)
+    console.log(res)
+    alert(`task submitted by ${user?.username} !`)
+    nav('/')
   };
   console.log(location)
   if (!contest) {
@@ -193,7 +201,7 @@ const CardDetails = () => {
                                 {task.image ? (
                                     <img src={URL.createObjectURL(task.image)} alt="Uploaded" className="object-contain h-full w-full" />
                                 ) : (
-                                    <img src={upload_background} alt="" className="w-80" />
+                                    <img src={'upload_background.png'} alt="" className="w-80" />
                                 )}
                                 <div>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
@@ -225,7 +233,7 @@ const CardDetails = () => {
     
         
         
-        <div className='flex flex-col gap-3 relative rounded-xl' style={{backgroundColor:'#1d1d21'}} >
+        {/* <div className='flex flex-col gap-3 relative rounded-xl' style={{backgroundColor:'#1d1d21'}} >
   
             <div 
                 className='relative rounded-lg'
@@ -242,19 +250,19 @@ const CardDetails = () => {
                     
                     
                     <div className='text-white font-semibold text-lg'>Register on Luma</div>
-                    <div className='h-6 w-6 rounded-full' style={{backgroundColor:'#29292c'}}>
+                    <div className='h-6 w-6 rounded-full' style={{backgroundColor:'#29292c'}}> */}
 
-                    </div> 
+                    {/* </div> 
                 </div>
                 
                 <div className='flex justify-center items-center max-w-full rounded bg-white text-sm font-semibold h-9 m-3' style={{backgroundColor:'#303033',color:'#5f5d5c'}}>
                     Register 
                 </div>
             </div>   
-        </div>
+        </div> */}
         <div className='flex flex-col gap-3 relative rounded-xl' style={{backgroundColor:'#1d1d21'}} >
   
-            <div 
+            {/* <div 
                 className='relative rounded-lg'
                 style={{
                 borderTop: `2px solid ${randomColor}`,   
@@ -275,7 +283,7 @@ const CardDetails = () => {
                 <div className='flex justify-center items-center max-w-full rounded bg-white text-sm font-semibold h-9 m-3' style={{backgroundColor:'#303033',color:'#5f5d5c'}}>
                     Submit
                 </div>
-            </div>   
+            </div>    */}
         </div>
         </div>
       </div>

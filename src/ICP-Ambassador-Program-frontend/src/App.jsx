@@ -6,13 +6,13 @@ import { ICP_Ambassador_Program_backend } from 'declarations/ICP_Ambassador_Prog
 import DiscordCallback from './Components/auth/DiscordCallback';
 
 function App() {
- 
+  const [open,setOpen]=useState(false)
   return (
     <BrowserRouter>
       <Routes>
         <Route path ='/' element={<Home/>}/>
-        <Route path='/contest_details' element={<CardDetails/>}/>
-        <Route path='/auth/discord/callback' element={<DiscordCallback />} />
+        <Route path='/contest_details' element={<CardDetails open={open} setOpen={setOpen}/>}/>
+        <Route path='/auth/discord/callback' element={<DiscordCallback setOpen={setOpen} />} />
       </Routes>
     </BrowserRouter>
   );
