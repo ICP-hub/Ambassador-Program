@@ -53,7 +53,7 @@ const Navbar = () => {
         try{
             //console.log(userId)
             const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
-            //console.log("Details from backend ==>",details)
+            console.log("Details from backend ==>",details)
             setDiscord_user(details[0])
         }catch(e){
             console.log("Error ==>",e)

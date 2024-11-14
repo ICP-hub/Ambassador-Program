@@ -10,7 +10,7 @@ const Contests = () => {
   const [displayedContests, setDisplayedContests] = useState(contests);
   const [hub,setHub]=useState('')
     useEffect(()=>{
-        const HUB=Cookies.get('selectedHub')
+        const HUB=Cookies.get('selectedHubName')
         const space_id=Cookies.get('selectedHub')
         //console.log(space_id)
         setHub(HUB)
@@ -502,13 +502,16 @@ const Contests = () => {
   async function getMissions(){
     try {
       const res=await ICP_Ambassador_Program_backend.get_all_spaces()
-      console.log(res)
+      //console.log(res)
 
       if(res!=undefined && res!=null && res?.Ok!=undefined){
         let space_1=res?.Ok[1][0]
-        console.log(space_1)
+        //console.log(space_1);
+        const space_details=await ICP_Ambassador_Program_backend.get_space(space_1);
+        //console.log("Space Details ==>",space_details.Ok.name)
+        setHub(space_details.Ok.name)
         const mis_res=await ICP_Ambassador_Program_backend.get_all_space_missions(space_1)
-        console.log(mis_res)
+        //console.log(mis_res);
 
         if (mis_res?.Ok) {
           // mis_res.Ok.forEach((item, index) => {
@@ -520,7 +523,7 @@ const Contests = () => {
         }));
         
         setDisplayedContests(updatedContests);
-        console.log("Updated displayedContests:", updatedContests);
+        //console.log("Updated displayedContests:", updatedContests);
         
       }
     } catch (error) {

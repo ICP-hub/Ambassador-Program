@@ -34,6 +34,9 @@ html::-webkit-scrollbar {
     display: none;
   }
 
+  .ql-editor.ql-blank::before {
+    color: white; 
+  }
 
  /* Target the toolbar icons in the Quill editor */
 /* .ql-toolbar .ql-stroke,
