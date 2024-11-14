@@ -1,6 +1,6 @@
 import React,{useState,useRef,useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ContestNavbar from '../Navbar/ContestNavbar';
+import Navbar from '../Navbar/Navbar';
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -128,7 +128,7 @@ const CardDetails = () => {
         
       }}
       className="h-full pt-3" >
-      <ContestNavbar />
+      <Navbar />
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">

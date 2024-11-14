@@ -22,13 +22,13 @@ const Card = ({ contest,hub }) => {
   const reward ='100PC'
 
   const updatedContest = {
-    ...contest, // spread existing properties from contest
-    reward,     // add new reward property
-    icons,      // add icons object
-    HUB         // add HUB
+    ...contest, 
+    reward,     
+    icons,      
+    HUB         
   };
   
-  console.log(updatedContest);
+  //console.log(updatedContest);
   
 
 
