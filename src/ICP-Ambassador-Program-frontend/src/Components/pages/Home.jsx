@@ -15,16 +15,54 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [filterMobile, setFilterMobile] = useState(false);
 
+  const [space,setSpaces]=useState('');
+    useEffect(()=>{
+      if(Cookies.get('discord_user')){
+        const user = JSON.parse(Cookies.get('discord_user'));
+        //console.log("user ==>",user)
+        if(user){
+            Get_All_Spaces();
+        }
+      }else{
+        Get_All_Spaces();
+      }
+    },[])
+    const Get_All_Spaces = async() =>{
+        try{
+
+            const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
+            //console.log("Spaces ==>",spaces.Ok);
+            const spacesObject = spaces.Ok.map(space => {
+              const [spaceId, details] = space;
+              return {
+                  space_id: spaceId,
+                  name: details.name
+              };
+          });
+
+          setSpaces(spacesObject);
+          //console.log(space)
+  
+          //console.log("Transformed Spaces Object:", spacesObject);
+
+    
+
+        }catch(e){
+            console.log("Error ==> ",e);
+        }
+    }
+
   const getUser = async(userId)=>{
     try{
         //console.log(userId)
         const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
         console.log(details,"dd")
         if(details && details!=[]){
+          
         }
         else{
           setIsHubModalOpen(true)
-          console.log("user not found")
+          //console.log("user not found")
         }
     }catch(e){
         console.log("Error ==>",e)
@@ -35,14 +73,7 @@ const Home = () => {
     const timer = setTimeout(() => {
       const cookieUser = Cookies.get('discord_user');
       setUser(cookieUser ? JSON.parse(cookieUser) : null);
-      if(cookieUser){
-          console.log("passing user id so that user space related missions can be fetch")
-           getUser(cookieUser?.id)
-          // user_space_mission()
-      }else{
-        console.log("Fetch all missions")
-        list_of_contests();
-      }
+      
       const isLoggedIn = Cookies.get('isLoggedIn');
       
       console.log(cookieUser && !isLoggedIn,!cookieUser,!isLoggedIn)
@@ -51,6 +82,7 @@ const Home = () => {
         setIsHubModalOpen(true);
       }
 
+      //setIsHubModalOpen(true);
       setLoading(false);
     }, 5000); 
 
@@ -60,17 +92,6 @@ const Home = () => {
   const handleFilterMobile = () => {
     setFilterMobile(true);
   }
-
-
-  const list_of_contests = async ()=>{
-    try{
-      const contests = await ICP_Ambassador_Program_backend.get_all_spaces();
-      console.log("Default Contests ===>",contests )
-    }catch(e){
-      console.log("Error ===>",e);
-    }
-  }
-
 
   if (loading) {
     return (
@@ -99,6 +120,7 @@ const Home = () => {
         <HubConnectionModal
           isOpen={isHubModalOpen}
           onClose={() => setIsHubModalOpen(false)}
+          spaces={space}
         />
       )}
 

@@ -30,9 +30,9 @@ const Navbar = () => {
             try {
                 const user = JSON.parse(Cookies.get('discord_user'));
                 const email = user ? user.email : undefined;
-                
+                // console.log("user ==>",user)
                 setDiscord_user(user);
-                
+                // console.log("Discord user ==>",discordl_user)
                 if (email) {
                     setUserEmail(email);
                 }
@@ -46,13 +46,14 @@ const Navbar = () => {
         }
     }, []);
     
+    
 
 
       const getUser = async(userId)=>{
         try{
             //console.log(userId)
             const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
-            console.log("Details from backend ==>",details)
+            //console.log("Details from backend ==>",details)
             setDiscord_user(details[0])
         }catch(e){
             console.log("Error ==>",e)

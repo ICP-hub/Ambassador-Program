@@ -1,10 +1,23 @@
 {
   "canisters": {
+    
+    "internet_identity": {
+  "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+  "frontend": {},
+  "remote": {
+    "id": {
+      "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+    }
+  },
+  "type": "custom",
+  "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+},
     "ICP_Ambassador_Program_backend": {
       "candid": "src/ICP_Ambassador_Program_backend/ICP_Ambassador_Program_backend.did",
       "package": "ICP_Ambassador_Program_backend",
       "crate": "ICP_Ambassador_Program_backend",
       "type": "rust"
+      
     },
     "ICP-Ambassador-Program-frontend": {
       "dependencies": [
@@ -26,7 +39,9 @@
       "type": "assets",
       "workspace": "ICP-Ambassador-Program-builder"
     }
+    
   },
+  
   "defaults": {
     "build": {
       "args": "",

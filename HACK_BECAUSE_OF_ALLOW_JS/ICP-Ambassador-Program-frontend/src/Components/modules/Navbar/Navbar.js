@@ -27,7 +27,9 @@ const Navbar = () => {
             try {
                 const user = JSON.parse(Cookies.get('discord_user'));
                 const email = user ? user.email : undefined;
+                // console.log("user ==>",user)
                 setDiscord_user(user);
+                // console.log("Discord user ==>",discordl_user)
                 if (email) {
                     setUserEmail(email);
                 }

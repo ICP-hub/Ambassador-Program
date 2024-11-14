@@ -2,18 +2,48 @@ import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import { useFilterContext } from '../../Context/FilterContext';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
+import Cookies from 'js-cookie';
 const Contests = () => {
     const { selectedPlatform } = useFilterContext();
+    const contests = [];
+    const [displayedContests, setDisplayedContests] = useState(contests);
     const [hub, setHub] = useState('');
     useEffect(() => {
         const HUB = localStorage.getItem('selectedHub');
         setHub(HUB);
+        const cookieUser = Cookies.get('discord_user');
+        if (cookieUser) {
+            //console.log("user space details")
+            get_user_mission('rrdyk-epqbb-6t4pa-ry3cz-56tdu-6yv7s-qtvae-3mqfl-lvt4g-n3abk-bqe_0');
+        }
+        else {
+            //console.log("all missions")
+            getMissions();
+        }
     }, []);
-    const contests = [];
+    const get_user_mission = async (spaceId) => {
+        try {
+            const user_contest = await ICP_Ambassador_Program_backend.get_space(spaceId);
+            //console.log("user contest ==>",user_contest);
+            if (user_contest?.Ok) {
+                const contestsArray = Array.isArray(user_contest.Ok) ? user_contest.Ok : [user_contest.Ok];
+                // contestsArray.forEach((item, index) => {
+                //   console.log(`${index}th element in result:`, item);
+                // });
+                const updatedContests = contestsArray.map(contest => ({
+                    ...contest
+                }));
+                setDisplayedContests(updatedContests);
+            }
+        }
+        catch (e) {
+            console.log("Error ==>", e);
+        }
+    };
     const sample_contest = {
         reward: "100 Points",
         status: "Active",
-        title: "Submit a description of our hub",
+        title: "Submit a description of our hub5",
         image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
         description: hub,
         social_platforms: [
@@ -413,18 +443,25 @@ const Contests = () => {
     //     }
     //   },
     // ];
-    const [displayedContests, setDisplayedContests] = useState(contests);
     async function getMissions() {
         try {
             const res = await ICP_Ambassador_Program_backend.get_all_spaces();
-            console.log(res);
+            //console.log(res)
             if (res != undefined && res != null && res?.Ok != undefined) {
                 let space_1 = res?.Ok[0][0];
-                console.log(space_1);
-                const mis_res = await ICP_Ambassador_Program_backend.get_all_space_missions(space_1);
+                //console.log(space_1)
+                const mis_res = await ICP_Ambassador_Program_backend.get_all_spaces();
                 console.log(mis_res);
-                let arr = new Array(mis_res?.Ok?.length).fill({ ...sample_contest, id: mis_res?.Ok[0]?.mission_id });
-                setDisplayedContests(arr);
+                if (mis_res?.Ok) {
+                    // mis_res.Ok.forEach((item, index) => {
+                    //   console.log(`${index}th element in result:`, item);
+                    // });
+                }
+                const updatedContests = mis_res.Ok.map(contest => ({
+                    ...contest
+                }));
+                setDisplayedContests(updatedContests);
+                //console.log("Updated displayedContests:", updatedContests);
             }
         }
         catch (error) {
@@ -433,7 +470,7 @@ const Contests = () => {
     }
     // let displayedContests =contests
     useEffect(() => {
-        getMissions();
+        //getMissions()
         const filteredContests = contests.filter(contest => {
             // console.log('Current Contest:', contest); 
             // console.log('Contest Social Platforms:', contest.social_platforms); 

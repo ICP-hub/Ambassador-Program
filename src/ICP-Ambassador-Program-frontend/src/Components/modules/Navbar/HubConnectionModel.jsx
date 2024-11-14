@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
 import { Principal } from '@dfinity/principal';
 import Cookies from 'js-cookie';
-const HubConnectionModal = ({ isOpen, onClose }) => {
+const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
+    //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
     const [selectedHub, setSelectedHub] = useState('');
+
+    
     
     const handleSubmit = () => {
         
@@ -30,6 +33,7 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
     const createUserInBackend = async (user_data) => {
         try {
             const { discord_id, username, wallet, hub, referrer_principal } = user_data;
+            // console.log("passing data ==>",user_data);
             const result = await ICP_Ambassador_Program_backend.create_user(
                 discord_id,
                 username,
@@ -43,6 +47,24 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
         } catch (e) {
             console.log("Error ==>", e);
         }
+    };
+
+
+    const handleSelectChange = (e) => {
+        const selectedSpaceId = e.target.value;
+    
+        
+        const selectedSpace = spaces.find(space => space.space_id === selectedSpaceId);
+        
+        
+        if (selectedSpace) {
+            console.log("Selected ===>",selectedSpace.name)
+            Cookies.set('selectedHub', selectedSpaceId);
+            Cookies.set('selectedHubName', selectedSpace.name);  
+        }
+    
+        
+        setSelectedHub(selectedSpaceId);
     };
     
     
@@ -60,13 +82,15 @@ const HubConnectionModal = ({ isOpen, onClose }) => {
                 />
                 <select
                     value={selectedHub}
-                    onChange={(e) => setSelectedHub(e.target.value)}
+                    onChange={handleSelectChange}
                     className="border rounded p-2 w-full mb-4"
                 >
                     <option value="">Select a Hub</option>
-                    <option value="ICP Hub India">ICP Hub India</option>
-                    <option value="ICP Hub Indonesia">ICP Hub Indonesia</option>
-                    <option value="ICP Hub China">ICP Hub China</option>
+                    {spaces.map(space => (
+                        <option key={space.space_id} value={space.space_id}>
+                            {space.name}
+                        </option>
+                    ))}
                 </select>
                 <div className="flex justify-end">
                     <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">
