@@ -15,12 +15,16 @@ const Home = () => {
     const [filterMobile, setFilterMobile] = useState(false);
     const [space, setSpaces] = useState('');
     useEffect(() => {
-        const user = JSON.parse(Cookies.get('discord_user'));
-        //console.log("user ==>",user)
-        if (user) {
+        if (Cookies.get('discord_user')) {
+            const user = JSON.parse(Cookies.get('discord_user'));
+            //console.log("user ==>",user)
+            if (user) {
+                Get_All_Spaces();
+            }
+        }
+        else {
             Get_All_Spaces();
         }
-        else { }
     }, []);
     const Get_All_Spaces = async () => {
         try {
@@ -63,10 +67,10 @@ const Home = () => {
             setUser(cookieUser ? JSON.parse(cookieUser) : null);
             const isLoggedIn = Cookies.get('isLoggedIn');
             console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
-            // if (isLoggedIn) {
-            //   setIsHubModalOpen(true);
-            // }
-            setIsHubModalOpen(true);
+            if (isLoggedIn) {
+                setIsHubModalOpen(true);
+            }
+            //setIsHubModalOpen(true);
             setLoading(false);
         }, 5000);
         return () => clearTimeout(timer);

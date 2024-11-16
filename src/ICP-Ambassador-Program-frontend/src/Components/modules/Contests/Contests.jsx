@@ -29,7 +29,7 @@ const Contests = () => {
       try{
         
         const user_contest= await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId)
-        //console.log("user contest ==>",user_contest);
+        console.log("user contest ==>",user_contest);
         if (user_contest?.Ok) {
           const contestsArray = Array.isArray(user_contest.Ok) ? user_contest.Ok : [user_contest.Ok];
         
