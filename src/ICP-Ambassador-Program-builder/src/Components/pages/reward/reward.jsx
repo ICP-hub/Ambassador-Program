@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { MenuItem, Select, FormControl, TextField, Box, Typography, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Rewards = ({ onRewardsChange, onParticipantsChange }) => {
-  const [rewards, setRewards] = useState([]);
+const Rewards = ({ onRewardsChange, onParticipantsChange,initialReward }) => {
+  const [rewards, setRewards] = useState(initialReward);
   const [participantsCount, setParticipantsCount] = useState(''); 
 
   const handleAddReward = () => {
@@ -26,7 +26,7 @@ const Rewards = ({ onRewardsChange, onParticipantsChange }) => {
   };
 
   const handleParticipantsChange = (e) => {
-    setParticipantsCount(e.target.value);
+    setRewards(e.target.value);
     onParticipantsChange(e.target.value); 
   };
 
@@ -35,18 +35,18 @@ const Rewards = ({ onRewardsChange, onParticipantsChange }) => {
       <Typography variant='h4'>Rewards</Typography>
       <FormControl className='flex gap-3'>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} gap={2}>
-          <Box>Amount of participants</Box>
+          <Box>Amount of reward points</Box>
           <TextField
-            label='How many participants will be rewarded?'
+            label='How many points will be rewarded?'
             size='small'
             style={{ fontSize: '10px' }}
-            value={participantsCount} 
+            value={rewards} 
             onChange={handleParticipantsChange} 
           />
         </Box>
       </FormControl>
 
-      {rewards.map((reward, index) => (
+      {/* {rewards.map((reward, index) => (
         <Box key={index} display='flex' alignItems='center' gap={1} mb={2}>
           <Box display='flex' flexDirection='column' flex='1'>
             <Box display='flex' alignItems='center' gap={2} flexWrap='wrap'>
@@ -72,10 +72,10 @@ const Rewards = ({ onRewardsChange, onParticipantsChange }) => {
             <DeleteIcon />
           </IconButton>
         </Box>
-      ))}
-      <Button variant='outlined' className='w-full mt-2' onClick={handleAddReward}>
+      ))} */}
+      {/* <Button variant='outlined' className='w-full mt-2' onClick={handleAddReward}>
         Add reward
-      </Button>
+      </Button> */}
     </div>
   );
 };
