@@ -30,7 +30,8 @@ const SpacesDetails = () => {
       if(res!=undefined && res!=null && res?.Ok!=undefined){
         setMissionArr(res?.Ok)
         console.log(new Array(res?.Ok?.length).fill({ id: 1, status: 'draft', expired: '---' }))
-        setMissionList(new Array(res?.Ok?.length).fill({ id: 1, status: 'draft', expired: '---' }))
+        // setMissionList(new Array(res?.Ok).fill({ id: 1, status: 'draft', expired: '---' }))
+        setMissionList(res?.Ok)
       }
     } catch (error) {
       console.log("error fetching missions : ",error)
@@ -161,18 +162,18 @@ const SpacesDetails = () => {
               {missionList.length > 0 ? (
                 
                 missionList.map((row,index) => {
-                  console.log("filter : ",missionList)
+                  console.log("filter : ",row)
                   return(
                   <TableRow key={index} className='hover:bg-blue-100 cursor-pointer '>
                   <TableCell align="center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Avatar variant="rounded" sx={{ width: 40, height: 40 }} onClick={()=>handleMission(index)}>M</Avatar>
                   </TableCell>
+                    <TableCell align="center">{row?.title}</TableCell>
+                    <TableCell align="center">{parseInt(row?.reward)} </TableCell>
                     <TableCell align="center"> - </TableCell>
-                    <TableCell align="center"> - </TableCell>
-                    <TableCell align="center"> - </TableCell>
-                    <TableCell align="center"> - </TableCell>
-                    <TableCell align="center">{row.status}</TableCell>
-                    <TableCell align="center">{row.expired}</TableCell>
+                    <TableCell align="center"> XP </TableCell>
+                    <TableCell align="center">{Object.keys(row?.status)[0]}</TableCell>
+                    <TableCell align="center">{"----"}</TableCell>
                     <TableCell align="center"></TableCell>
                   </TableRow>
                 )})
