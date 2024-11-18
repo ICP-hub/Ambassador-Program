@@ -2,6 +2,7 @@ import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './Components/pages/Home';
 import CardDetails from './Components/modules/Contests/CardDetails';
 import { ICP_Ambassador_Program_backend } from 'declarations/ICP_Ambassador_Program_backend';
+import UploadProfileImage from './Components/image';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path ='/' element={<Home/>}/>
         <Route path='/contest_details' element={<CardDetails/>}/>
+        <Route path='/image' element={<UploadProfileImage/>}/>
       </Routes>
     </BrowserRouter>
   );
