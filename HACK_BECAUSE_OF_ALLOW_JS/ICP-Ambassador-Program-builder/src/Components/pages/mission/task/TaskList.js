@@ -4,11 +4,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SortDescription from '../../Content/sortDescription';
 // import upload_background from '../../../../assets/images/upload_background.png';
 const ApiTask = ({ task, onDelete, onUpdateField }) => {
-    const [validationInput, setValidationInput] = useState(task.validationInput || '');
+    const [validationInput, setValidationInput] = useState(task.validation_rule || '');
     const [validationError, setValidationError] = useState(false);
     const [apiTitle, setApiTitle] = useState(task.title || '');
-    const [apiDescription, setApiDescription] = useState(task.description || '');
-    const [apisample, setApisample] = useState('');
+    const [apiDescription, setApiDescription] = useState(task.body || '');
+    const [apisample, setApisample] = useState(task.sample || '');
     const maxLen = 50;
     const validationRegex = /^[a-zA-Z0-9]*$/;
     const handleValidationChange = (event) => {
@@ -16,7 +16,7 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
         if (value.length <= maxLen && (validationRegex.test(value) || value === '')) {
             setValidationInput(value);
             setValidationError(false);
-            const field = 'validationInput';
+            const field = 'validation_rule';
             onUpdateField(field, event.target.value, task.id);
         }
         else {
@@ -32,12 +32,12 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
     const handleSampleChange = (event) => {
         const value = event.target.value;
         setApisample(value);
-        const field = 'Sample';
+        const field = 'sample';
         onUpdateField(field, event.target.value, task.id);
     };
     const handleDescriptionChange = (newDescription) => {
         setApiDescription(newDescription);
-        const field = 'description';
+        const field = 'body';
         onUpdateField(field, newDescription, task.id);
     };
     return (<Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
@@ -52,21 +52,21 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
       <TextField label="Sample" placeholder="Sample..." size="small" value={apisample} onChange={handleSampleChange}/>
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <SortDescription value={apiDescription} onChange={handleDescriptionChange}/> 
+        <SortDescription initialDescription={apiDescription} value={apiDescription} onChange={handleDescriptionChange}/> 
       </FormControl>
     </Box>);
 };
 const ImageTask = ({ task, onDelete, onUpdateField }) => {
-    const [logoImage, setLogoImage] = useState(task.logoImage || null);
+    const [logoImage, setLogoImage] = useState(task.img || null);
     const [imageTitle, setImageTitle] = useState(task.title || '');
-    const [imageDescription, setImageDescription] = useState(task.description || '');
+    const [imageDescription, setImageDescription] = useState(task.body || '');
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setLogoImage(reader.result);
-                const field = 'logoImage';
+                const field = 'img';
                 onUpdateField(field, reader.result, task.id);
             };
             reader.readAsDataURL(file);
@@ -79,7 +79,7 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
     };
     const handleDescriptionChange = (newDescription) => {
         setImageDescription(newDescription);
-        const field = 'description';
+        const field = 'body';
         onUpdateField(field, newDescription, task.id);
     };
     return (<Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
@@ -102,13 +102,13 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
       <TextField label="Task Title" placeholder="Title..." size="small" value={imageTitle} onChange={handleTitleChange}/>
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <SortDescription value={imageDescription} onChange={handleDescriptionChange}/>
+        <SortDescription initialDescription={imageDescription} value={imageDescription} onChange={handleDescriptionChange}/>
       </FormControl>
     </Box>);
 };
 const SendURL = ({ task, onDelete, onUpdateField }) => {
     const [sendTitle, setSendTitle] = useState(task.title || '');
-    const [sendDescription, setSendDescription] = useState(task.description || '');
+    const [sendDescription, setSendDescription] = useState(task.body || '');
     const handleTitleChange = (e) => {
         console.log(task);
         setSendTitle(e.target.value);
@@ -117,7 +117,7 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
     };
     const handleDescriptionChange = (newDescription) => {
         setSendDescription(newDescription);
-        const field = 'description';
+        const field = 'body';
         onUpdateField(field, newDescription, task.id); // Update the parent state
     };
     return (<Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
@@ -130,7 +130,7 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
       <TextField label="Task title" placeholder="Title..." size="small" value={sendTitle} onChange={handleTitleChange}/>
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <SortDescription value={sendDescription} onChange={handleDescriptionChange}/>
+        <SortDescription initialDescription={sendDescription} value={sendDescription} onChange={handleDescriptionChange}/>
       </FormControl>
     </Box>);
 };

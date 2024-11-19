@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { updateMission } from '../../../../redux/mission/missionSlice';
 
-const SpacesDetails = () => {
+const SpacesDetails = ({setLoading}) => {
     const navigate=useNavigate();
   const [statusFilter, setStatusFilter] = useState('all');
   const [expireFilter, setExpireFilter] = useState(true);
@@ -40,13 +40,18 @@ const SpacesDetails = () => {
 
   async function createDraftMission(){
     try {
+      setLoading(true)
       const res=await actors?.backendActor.create_draft_mission(spaces.space_id)
       console.log(res)
       if(res?.Ok==null && res!=undefined && res!=null){
         alert("Mission added as a draft successfully")
         window.location.reload()
+      }else{
+        alert('Some error occurred!')
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       console.log("error creating draft mission : ",error)
     }
   }
@@ -104,7 +109,7 @@ const SpacesDetails = () => {
 
   return (
     <div className=''>
-      <Navbar />
+      <Navbar nav={navigate}/>
       <div className='py-3 px-5 lg:px-20 h-screen'>
         <div className='flex justify-between items-center'>
           <div className='flex gap-3 items-center '>

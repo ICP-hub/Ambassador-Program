@@ -12,25 +12,36 @@ import { AuthProvider, useAuthClient } from './utils/useAuthClient';
 import Login from './Components/pages/authComponents/Login';
 function App() {
   const {isAuthenticated}=useAuthClient()
+  const [loading,setLoading]=useState(false)
   useEffect(()=>{
     console.log(isAuthenticated)
   },[])
-  return (
+  if(loading){
+    return(
+      <div className='flex justify-center items-center h-screen'>
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black" />
+      </div>
+    )
+  }
+  else{
+    return (
     
-    <BrowserRouter>
-    <AuthProvider>
-      <Routes>
-        <Route path='/login' element={<Login/>}/>
-        <Route path ='/' element={<Home/>}/>
-        <Route path='/space_details' element={<Space_Details/>}/>
-        <Route path='/slug_url/mission' element={<SpacesDetails/>}/>
-        <Route path='/slug_url/role' element={<Role/>}/>
-        <Route path='/slug_url/balance' element={<Balance/>}/>
-        <Route path='/slug_url/mission/223/edit'element={<Mission_Task/>}/>
-      </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  );
+      <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path='/login' element={<Login/>}/>
+          <Route path ='/' element={<Home setLoading={setLoading}/>}/>
+          <Route path='/space_details' element={<Space_Details setLoading={setLoading}/>}/>
+          <Route path='/slug_url/mission' element={<SpacesDetails setLoading={setLoading}/>}/>
+          <Route path='/slug_url/role' element={<Role/>}/>
+          <Route path='/slug_url/balance' element={<Balance/>}/>
+          <Route path='/slug_url/mission/223/edit'element={<Mission_Task setLoading={setLoading}/>}/>
+        </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+  }
+  
 }
 
 export default App;

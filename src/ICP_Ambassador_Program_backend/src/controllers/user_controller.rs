@@ -21,7 +21,7 @@ fn create_user(
     }
 
     // let wallet = wallet.ok_or("Wallet is a required field")?;
-    // let hub = hub.ok_or("Hub is a required field")?;
+    let hub = hub.ok_or("Hub is a required field")?;
 
     let user_exists = USER_PROFILE_MAP.with(|map| map.borrow().contains_key(&discord_id));
 
@@ -32,6 +32,7 @@ fn create_user(
     // let wallet_exists = USER_PROFILE_MAP.with(|map| {
     //     map.borrow().iter().any(|(_, profile)| profile.wallet == Some(wallet))
     // });
+    // match 
 
     // if wallet_exists {
     //     return Err("This wallet principal is already associated with another account".to_string());
@@ -49,7 +50,7 @@ fn create_user(
         username,
         wallet: None,
         referrer: referrer.clone(),
-        hub: None,
+        hub: Some(hub),
         xp_points: 0,
         redeem_points: 0,
         level: UserLevel::Initiate,

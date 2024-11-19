@@ -6,6 +6,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
     // console.log("user ==>",user)
     const [points,setPoints]=useState(0)
     const [hub,setHub]=useState('')
+    const baseReferral=`http://localhost:3000/ref?ref=`
     useEffect(()=>{
         const HUB=Cookies.get('selectedHubName')
         setHub(HUB)
@@ -77,6 +78,20 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                         <div className='text-md font-semibold'>14 days</div>
                         <div className='font-light text-sm'>left to gain next tier</div>
                     </div> */}
+                </div>
+            </div>
+            <div className='flex flex-col gap-3 mt-4'>
+                <div className='flex gap-4 items-center mt-4'>
+                    <div className='text-[#0d033e] text-sm font-semibold'>Referrals</div>
+                    <hr className='flex-grow h-3/6 bg-black' />
+                </div>
+                <div className=''>
+                    <p className='text-xs mb-3'>
+                        Share this referral with others and grow your referral tree and earn rewards! You can refer upto 10 people
+                    </p>
+                    <a href={baseReferral+user.discord_id} target='blank' className='text-blue-600 text-sm font-bold cursor-pointer'>
+                        {baseReferral+user.discord_id}
+                    </a>
                 </div>
             </div>
             <div className='flex justify-center items-center mt-4'>

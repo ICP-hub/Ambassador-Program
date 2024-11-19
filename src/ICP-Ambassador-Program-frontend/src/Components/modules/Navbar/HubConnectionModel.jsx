@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
 import { Principal } from '@dfinity/principal';
 import Cookies from 'js-cookie';
-const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
+const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
     const [selectedHub, setSelectedHub] = useState('');
@@ -19,10 +19,11 @@ const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
             discord_id:user.id,
             username:user.username,
             wallet:[], 
-            hub:[],
+            hub:[selectedHub],
             referrer_principal: []
         }
         console.log(user_data)
+        setLoading(true)
         createUserInBackend(user_data);
         
         onClose();

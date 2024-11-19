@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 
 const Card = ({ contest,hub }) => {
   //console.log(hub)
-  //console.log("contest ==>",contest)
+  console.log("contest ==>",contest)
   const {  status, title,  description, image } = contest;
   
   const HUB=Cookies.get('selectedHubName')
@@ -57,7 +57,7 @@ const Card = ({ contest,hub }) => {
     <div className=" text-white p-4 rounded-lg shadow-lg " style={{backgroundColor:'#1d1d21'}} onClick={handleCard}>
 
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{reward}</span>
+        <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{parseInt(contest?.reward)+" "}points </span>
         <span
           className={`text-sm py-1 px-2 rounded-md font-bold`}
           style={{

@@ -10,7 +10,7 @@ import SpaceCard from './SpaceCard';
 import { useDispatch } from 'react-redux';
 import { updateSpace } from '../../../redux/spaces/spaceSlice';
 
-const Spaces = () => {
+const Spaces = ({setLoading}) => {
   const navigate=useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -28,13 +28,19 @@ const Spaces = () => {
 
   async function createNewSpace(){
     try {
+      setLoading(true)
       let res = await actor?.backendActor?.create_space(newSpace)
       console.log("space creation response : ",res)
       if(res!=undefined && res!=null ){
         window.location.reload()
         handleModalToggle()
+      }else{
+        setLoading(false)
+        alert('Some error occurred!')
       }
     } catch (error) {
+      setLoading(false)
+      alert('Some error occurred!')
       console.log("space creation error : ",error)
     }
   }

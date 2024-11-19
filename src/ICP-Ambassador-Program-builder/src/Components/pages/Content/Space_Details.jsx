@@ -10,7 +10,7 @@ import Select from '@mui/material/Select';
 import SortDescription from './sortDescription'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-const Space_Details = () => {
+const Space_Details = ({setLoading}) => {
     const spaces=useSelector(state=>state.spaces.value)
     const admin=useSelector(state=>state.admin.value)
     const actor=useSelector(state=>state.actor.value)
@@ -39,14 +39,20 @@ const Space_Details = () => {
     async function editSpace(){
         try {
             console.log("updated space : ",updatedSpace)
+            setLoading(true)
             let res = await actor?.backendActor?.update_space(updatedSpace)
             console.log(res,"response uodating space")
+            
             if(res!=null && res?.Err==undefined && res!=undefined){
                 alert('Space updated successfully')
                 window?.location?.reload()
+            }else{
+                alert('Some error occurred')
+                setLoading(false)
             }
         } catch (error) {
             console.log("error updating the space : ",error)
+            setLoading(false)
         }
     }
 
@@ -77,7 +83,7 @@ const Space_Details = () => {
     
   return (
     <div className=''>
-        <Navbar/>
+        <Navbar nav={nav}/>
             <div className='px-10 lg:px-44 py-3 flex flex-col '>
                 <div className='text-4xl font-semibold border-b-2 border-slate-600 pb-4 '>
                     {spaces?.name}
@@ -139,7 +145,7 @@ const Space_Details = () => {
                         <label className='block text-sm font-medium text-gray-700'>Space name</label>
                         <input
                         type="text"
-                        value={spaceName}
+                        value={updatedSpace?.name}
                         className="mt-1 block w-full border-2 outline-none border-gray-300 rounded-md shadow-sm p-3
                                     placeholder-gray-500
                                     hover:border-black
@@ -155,7 +161,7 @@ const Space_Details = () => {
                         <label className='block text-sm font-medium text-gray-700'>Space slug</label>
                         <input
                         type="text"
-                        value={slug}
+                        value={updatedSpace?.slug}
                         className="mt-1 block w-full border-2 outline-none border-gray-300 rounded-md shadow-sm p-3 
                                     placeholder-gray-500
                                     hover:border-black

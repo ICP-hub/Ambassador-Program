@@ -128,7 +128,7 @@ const CardDetails = () => {
         
       }}
       className="h-full pt-3" >
-      <Navbar />
+      <Navbar nav={nav} />
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
