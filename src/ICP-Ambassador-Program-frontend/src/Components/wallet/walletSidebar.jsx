@@ -32,8 +32,6 @@ const WalletSidebar = ({onClose, isOpen}) => {
                 </div>
                 <div className='border py-3 w-full border-gray-300 hover:bg-black hover:text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded'>Enter amount of points to be withdrawed</div>
                 <div className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded'>Withdraw amount</div>
-                
-            
         </div>
    </div> 
     

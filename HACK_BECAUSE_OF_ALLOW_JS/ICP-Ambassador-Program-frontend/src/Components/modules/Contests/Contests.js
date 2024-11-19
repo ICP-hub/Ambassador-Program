@@ -456,7 +456,7 @@ const Contests = () => {
                 //console.log("Space Details ==>",space_details.Ok.name)
                 setHub(space_details.Ok.name);
                 const mis_res = await ICP_Ambassador_Program_backend.get_all_space_missions(space_1);
-                //console.log(mis_res);
+                console.log(mis_res);
                 if (mis_res?.Ok) {
                     // mis_res.Ok.forEach((item, index) => {
                     //   console.log(`${index}th element in result:`, item);

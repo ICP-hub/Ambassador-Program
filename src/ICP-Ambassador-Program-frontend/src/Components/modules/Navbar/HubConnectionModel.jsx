@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
-    const [selectedHub, setSelectedHub] = useState('');
+    const [selectedHub, setSelectedHub] = useState([]);
 
     
     
@@ -54,7 +54,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     const handleSelectChange = (e) => {
         const selectedSpaceId = e.target.value;
     
-        
+        const selectedSpaceIds = [selectedSpaceId];
         const selectedSpace = spaces.find(space => space.space_id === selectedSpaceId);
         
         
@@ -65,7 +65,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
         }
     
         
-        setSelectedHub(selectedSpaceId);
+        setSelectedHub(selectedSpaceIds);
     };
     
     
