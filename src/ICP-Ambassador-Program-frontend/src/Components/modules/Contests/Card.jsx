@@ -10,7 +10,26 @@ import Cookies from 'js-cookie';
 const Card = ({ contest,hub }) => {
   //console.log(hub)
   //console.log("contest ==>",contest)
-  const {  status, title,  description, image } = contest;
+  const {  status, title,  description, image,reward } = contest;
+  
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    if (contest?.tasks) {
+      const formattedTasks = contest.tasks.map((task) => {
+        const taskKey = Object.keys(task)[0]; 
+        return {
+          id: taskKey,
+          title: task[taskKey]?.title || taskKey, 
+          description: task[taskKey]?.body || '', 
+          submitted: false,
+          image: task[taskKey]?.img || null,
+          validation_rule:task[taskKey]?.validation_rule || ''
+        };
+      });
+      setTasks(formattedTasks);
+    }
+  }, [contest]);
   
   const HUB=Cookies.get('selectedHubName')
   const icons={
@@ -19,11 +38,11 @@ const Card = ({ contest,hub }) => {
           platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
      
   }
-  const reward ='100PC'
+  
 
   const updatedContest = {
     ...contest, 
-    reward,     
+     tasks,   
     icons,      
     HUB         
   };
@@ -57,7 +76,7 @@ const Card = ({ contest,hub }) => {
     <div className=" text-white p-4 rounded-lg shadow-lg " style={{backgroundColor:'#1d1d21'}} onClick={handleCard}>
 
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{reward}</span>
+        <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}> {reward.toString()}</span>
         <span
           className={`text-sm py-1 px-2 rounded-md font-bold`}
           style={{

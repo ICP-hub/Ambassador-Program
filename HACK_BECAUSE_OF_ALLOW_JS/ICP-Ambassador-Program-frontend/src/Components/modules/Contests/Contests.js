@@ -26,7 +26,7 @@ const Contests = () => {
     const get_user_mission = async (spaceId) => {
         try {
             const user_contest = await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
-            //console.log("user contest ==>",user_contest);
+            console.log("user contest ==>", user_contest);
             if (user_contest?.Ok) {
                 const contestsArray = Array.isArray(user_contest.Ok) ? user_contest.Ok : [user_contest.Ok];
                 // contestsArray.forEach((item, index) => {
@@ -456,7 +456,7 @@ const Contests = () => {
                 //console.log("Space Details ==>",space_details.Ok.name)
                 setHub(space_details.Ok.name);
                 const mis_res = await ICP_Ambassador_Program_backend.get_all_space_missions(space_1);
-                //console.log(mis_res);
+                console.log(mis_res);
                 if (mis_res?.Ok) {
                     // mis_res.Ok.forEach((item, index) => {
                     //   console.log(`${index}th element in result:`, item);

@@ -21,16 +21,18 @@ const CardDetails = () => {
   const { updatedContest } = location.state || {};
   const [description, setDescription] = useState(''); 
   const nav=useNavigate()
-  const [tasks, setTasks] = useState([
-    { id: 'text', label: 'submit your data', content: 'please submit your text as per the suggested format', submitted: false },
-    { id: 'url', label: 'Send URL', content: '', submitted: false },
-    { id: 'image', label: 'Send Image', content: '', submitted: false, image: null }
-  ]);
+  const [tasks, setTasks] = useState(
+    updatedContest.tasks
+  );
+
+
+  
 
   const handleInputChange = (e, taskId) => {
+    
     const value = e.target.value;
     setTasks(prevTasks => prevTasks.map(task => 
-      task.id === taskId ? { ...task, content: value } : task
+      task.id === taskId ? { ...task, title: value } : task
     ));
   };
 
@@ -41,6 +43,7 @@ const CardDetails = () => {
     ));
   };
 
+  
   const handleSubmit =async (e, taskId) => {
     e.preventDefault();
     setTasks(prevTasks => prevTasks.map(task =>
@@ -53,7 +56,7 @@ const CardDetails = () => {
     alert(`task submitted by ${user?.username} !`)
     nav('/')
   };
-  console.log(location)
+  //console.log(location)
   if (!updatedContest) {
     return <p className='text-white'>No contest data available</p>;
   }
@@ -76,6 +79,7 @@ const CardDetails = () => {
   }, []);
 
   const { reward, status, title, image, social_platforms, icons } = updatedContest;
+  //console.log("Updated contest ==>",updatedContest)
   const statusKey = Object.keys(status)[0]; 
   const statusValue = status[statusKey]; 
   
@@ -83,7 +87,7 @@ const CardDetails = () => {
   const quillRef = useRef(null);
 
   useEffect(() => {
-    if (!quillRef.current) {
+    if (editorRef.current && !quillRef.current) {
       quillRef.current = new Quill(editorRef.current, {
         theme: 'snow',
         modules: {
@@ -104,18 +108,14 @@ const CardDetails = () => {
       quillRef.current.clipboard.dangerouslyPasteHTML(description);
 
       quillRef.current.on('text-change', () => {
-        const textContent = quillRef.current.getText().replace(/\n/g, '');  
-
-        
+        const textContent = quillRef.current.getText().replace(/\n/g, '');
         if (adminRegex.test(textContent)) {
-          
-          setTasks(prevTasks =>
-            prevTasks.map(task =>
-              task.id === 'text' ? { ...task, textContent } : task
+          setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+              task.id === 'SendText' ? { ...task,description: textContent } : task
             )
           );
         } else {
-          
           console.log('Invalid content detected');
         }
       });
@@ -189,35 +189,62 @@ const CardDetails = () => {
                 }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
-                        {task.label}
+                        {task.id}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         {!task.submitted ? (
                         <form onSubmit={(e) => handleSubmit(e, task.id)} className="flex flex-col gap-3 mt-3">
-                            {task.id === 'text' && (
+                            {task.id === 'SendText' && (
                             <>
+
+                                <div className='flex flex-col gap-3'>
+
+                                <label className='text-lg ml-1 font-semibold'>Title</label>
+                                <input
+                                type='SendURL'
+                                value={task.title}
+                                placeholder={task.title}
+                                onChange={(e) => handleInputChange(e, task.id)}
+                                className='outline-none p-3 rounded text-black'
+                                />
+
+                                </div>
                                 <div className="text-white font-semibold text-md">Description</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
                                 </div>
                             </>
                             )}
-                            {task.id === 'url' && (
-                            <input
-                                type='text'
-                                value={task.content}
-                                placeholder='Enter URL...'
-                                onChange={(e) => handleInputChange(e, task.id)}
-                                className='outline-none p-3 rounded text-black'
-                            />
+                            {task.id === 'SendUrl' && (
+                              <>
+                              <div className='flex flex-col gap-3'>
+
+                                  <label className='text-lg ml-1 font-semibold'>Title</label>
+                                  <input
+                                  type='SendURL'
+                                  value={task.title}
+                                  placeholder={task.title}
+                                  onChange={(e) => handleInputChange(e, task.id)}
+                                  className='outline-none p-3 rounded text-black'
+                              />
+
+                              </div>
+                            <div className='flex flex-col gap-3'>
+                              <label className='text-lg ml-1 font-semibold'>Description</label>
+                              <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
+                                    <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
+                                </div>
+                            </div>  
+                            
+                            </>
                             )}
-                            {task.id === 'image' && (
+                            {task.id === 'SendImage' && (
                             <div className="mt-4 w-full ">
                                 <div className="text-white font-semibold text-md">Sample Image</div>
                                 <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
                                 {task.image ? (
-                                    <img src={URL.createObjectURL(task.image)} alt="Uploaded" className="object-contain h-full w-full" />
+                                    <img src={task.image} alt="Uploaded" className="object-contain h-full w-full" />
                                 ) : (
                                     <img src={'upload_background.png'} alt="" className="w-80" />
                                 )}
@@ -251,57 +278,10 @@ const CardDetails = () => {
     
         
         
-        {/* <div className='flex flex-col gap-3 relative rounded-xl' style={{backgroundColor:'#1d1d21'}} >
-  
-            <div 
-                className='relative rounded-lg'
-                style={{
-                borderTop: `2px solid ${randomColor}`,   
-                borderLeft: `2px solid ${randomColor}`,  
-                borderRight: `2px solid ${randomColor}`, 
-                borderBottom: 'none',                    
-                borderRadius: '0.5rem', 
-                
-                }}
-            >
-                <div className='flex p-3 justify-between'>
-                    
-                    
-                    <div className='text-white font-semibold text-lg'>Register on Luma</div>
-                    <div className='h-6 w-6 rounded-full' style={{backgroundColor:'#29292c'}}> */}
-
-                    {/* </div> 
-                </div>
-                
-                <div className='flex justify-center items-center max-w-full rounded bg-white text-sm font-semibold h-9 m-3' style={{backgroundColor:'#303033',color:'#5f5d5c'}}>
-                    Register 
-                </div>
-            </div>   
-        </div> */}
+       
         <div className='flex flex-col gap-3 relative rounded-xl' style={{backgroundColor:'#1d1d21'}} >
   
-            {/* <div 
-                className='relative rounded-lg'
-                style={{
-                borderTop: `2px solid ${randomColor}`,   
-                borderLeft: `2px solid ${randomColor}`,  
-                borderRight: `2px solid ${randomColor}`, 
-                borderBottom: 'none',                   
-                borderRadius: '0.5rem',
-                }}
-            >
-                <div className='flex p-3 justify-between'>
-                    
-                    
-                    <div className='text-white font-semibold text-lg'>Submit your attedance</div>
-                    <div className='h-6 w-6 rounded-full' style={{backgroundColor:'#29292c'}}>
-
-                    </div> 
-                </div>
-                <div className='flex justify-center items-center max-w-full rounded bg-white text-sm font-semibold h-9 m-3' style={{backgroundColor:'#303033',color:'#5f5d5c'}}>
-                    Submit
-                </div>
-            </div>    */}
+           
         </div>
         </div>
       </div>

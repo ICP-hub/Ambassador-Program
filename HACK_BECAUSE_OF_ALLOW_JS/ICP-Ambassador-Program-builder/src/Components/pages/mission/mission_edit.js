@@ -36,9 +36,9 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
         <DragIndicatorIcon />
       </IconButton>
   
-      {task.type === 'API' && (<ApiTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
-      {task.type === 'Image' && (<ImageTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
-      {task.type === 'SendURL' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'text' && (<ApiTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'img' && (<ImageTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'url' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };
 const MissionEdit = () => {
@@ -55,7 +55,7 @@ const MissionEdit = () => {
     const [missionType, setMissionType] = useState('');
     const [space, setSpace] = useState([]);
     const [description, setDescription] = useState(mission?.description);
-    const [rewardsData, setRewardsData] = useState([]);
+    const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
     const [participantsCount, setParticipantsCount] = useState('');
     const nav = useNavigate();
     const handlesave = async () => {
@@ -70,9 +70,47 @@ const MissionEdit = () => {
             Reward_data: rewardsData,
             participants_count: participantsCount
         };
-        console.log("data ==>", draft_data, mission, actor);
-        const updatedMission = { ...mission, title: title, description: description, status: { Active: null } };
-        console.log("final updated mission : ", updatedMission);
+        let finalTasks = [];
+        for (let i = 0; i < tasks?.length; i++) {
+            if (tasks[i]?.type == "text") {
+                finalTasks.push({
+                    SendText: {
+                        title: tasks[i]?.title,
+                        body: tasks[i]?.body,
+                        sample: tasks[i]?.sample,
+                        validation_rule: tasks[i]?.validation_rule,
+                        max_len: tasks[i]?.max_len,
+                    }
+                });
+            }
+            if (tasks[i]?.type == "url") {
+                finalTasks.push({
+                    SendUrl: {
+                        title: tasks[i]?.title,
+                        body: tasks[i]?.body,
+                    }
+                });
+            }
+            if (tasks[i]?.type == "img") {
+                finalTasks.push({
+                    SendImage: {
+                        title: tasks[i]?.title,
+                        body: tasks[i]?.body,
+                        img: tasks[i]?.img
+                    }
+                });
+            }
+        }
+        console.log("data ==>", draft_data, mission, actor, finalTasks);
+        const updatedMission = {
+            ...mission,
+            title: title,
+            description: description,
+            status: { Active: null },
+            reward: parseInt(rewardsData),
+            tasks: finalTasks
+        };
+        console.log("final updated mission : ", updatedMission, tasks);
         const res = await actor?.backendActor?.edit_mission(updatedMission);
         console.log(res);
         if (res != null && res != undefined && res?.Err == undefined) {
@@ -80,11 +118,40 @@ const MissionEdit = () => {
             nav('/');
         }
     };
+    function parseTasks(oldTasks) {
+        let displayableTasks = [];
+        for (let i = 0; i < oldTasks?.length; i++) {
+            if (oldTasks[i]?.SendText) {
+                displayableTasks.push({
+                    id: i,
+                    type: 'text',
+                    ...oldTasks[i]?.SendText
+                });
+            }
+            if (oldTasks[i]?.SendImage) {
+                displayableTasks.push({
+                    id: i,
+                    type: 'img',
+                    ...oldTasks[i]?.SendImage
+                });
+            }
+            if (oldTasks[i]?.SendUrl) {
+                displayableTasks.push({
+                    id: i,
+                    type: 'url',
+                    ...oldTasks[i]?.SendUrl
+                });
+            }
+        }
+        console.log("parsed tasks : ", displayableTasks);
+        setTasks(displayableTasks);
+    }
     useEffect(() => {
         if (mission?.mission_id == undefined) {
             nav('/');
         }
         console.log(mission, "mission", actor);
+        parseTasks(mission?.tasks);
     }, [mission]);
     const handleStartDateChange = (date) => {
         setStartDate(date);
@@ -109,11 +176,21 @@ const MissionEdit = () => {
         setSidebarOpen(false);
     };
     const handleAddTask = (taskType) => {
-        setTasks([...tasks, { type: taskType, id: Date.now() }]);
+        let taskFields = {};
+        if (taskType == "img") {
+            taskFields = { title: "", body: "", img: "" };
+        }
+        if (taskType == "url") {
+            taskFields = { title: "", body: "" };
+        }
+        if (taskType == "text") {
+            taskFields = { title: "", body: "", sample: "", validation_rule: "", max_len: 100 };
+        }
+        setTasks([...tasks, { type: taskType, id: Date.now(), ...taskFields }]);
         setSidebarOpen(false);
     };
     const handleUpdateTaskField = (field, value, taskId) => {
-        //console.log(taskId,field,value)
+        console.log(taskId, field, value);
         setTasks((prevTasks) => {
             const updatedTasks = prevTasks.map((task) => task.id === field ? { ...task, [value]: taskId } : task);
             // console.log(`Updated Task ID: ${taskId}, Field: ${field}, New Value: ${value}`);
@@ -172,7 +249,7 @@ const MissionEdit = () => {
             </div>
           </div>
 
-          <TextField label="Mission title" placeholder="Title..." size="small" onChange={(e) => { setTitle(e.target.value); }}/>
+          <input className='py-4 border-2 px-4' type="text" value={title} label="Mission title" placeholder="Title..." size="small" onChange={(e) => { setTitle(e.target.value); }}/>
 
           {/* <AutocompleteSearchInput
           searchFunction={sampleSearchFunction}
@@ -188,20 +265,34 @@ const MissionEdit = () => {
 
           <FormControl>
             <FormLabel>Description</FormLabel>
-            <SortDescription value={description} onChange={handleDescriptionChange}/>
+            <SortDescription initialDescription={description} value={description} onChange={handleDescriptionChange}/>
           </FormControl>
 
-          <FormControl>
-            <FormControlLabel control={<Checkbox checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} sx={{ flexDirection: 'row-reverse', gap: 1, alignItems: 'center' }}/>} label="Private (accessible only via direct link)"/>
-          </FormControl>
+          {/* <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+              checked={isPrivate}
+              onChange={(e) => setIsPrivate(e.target.checked)}
+              sx={{ flexDirection: 'row-reverse', gap: 1, alignItems: 'center' }}
+            />
+            }
 
-          <FormControl>
-            <FormLabel>Mission type</FormLabel>
-            <RadioGroup row value={missionType} onChange={(e) => setMissionType(e.target.value)}>
-              <FormControlLabel value="reward" control={<Radio />} label="Instant reward"/>
-              <FormControlLabel value="raffle" control={<Radio />} label="Raffle"/>
-            </RadioGroup>
-        </FormControl>
+            label="Private (accessible only via direct link)"
+          />
+        </FormControl> */}
+
+          {/* <FormControl>
+          <FormLabel>Mission type</FormLabel>
+          <RadioGroup
+            row
+            value={missionType}
+            onChange={(e) => setMissionType(e.target.value)}
+          >
+            <FormControlLabel value="reward" control={<Radio />} label="Instant reward" />
+            <FormControlLabel value="raffle" control={<Radio />} label="Raffle" />
+          </RadioGroup>
+      </FormControl> */}
 
           <FormControl className="">
             <Typography variant="body2">Start date</Typography>
@@ -223,11 +314,11 @@ const MissionEdit = () => {
             </Box>
           </FormControl>
 
-          <Rewards onRewardsChange={handleRewardsChange} onParticipantsChange={handleParticipantsChange}/>
+          <Rewards onRewardsChange={handleRewardsChange} initialReward={rewardsData} onParticipantsChange={(value) => setRewardsData(value)}/>
           <div className=''>
             {tasks.length > 0 && (<div className="text-4xl border-b-2 border-gray-300 mb-4 py-2">Tasks</div>)}
             
-            {tasks.map((task, index) => (<DraggableTask key={task.id} index={index} task={task} moveTask={moveTask} onDelete={handleDeleteTask} handleUpdateTaskField={handleUpdateTaskField}/>))}
+            {tasks.map((task, index) => (<DraggableTask key={index} index={index} task={task} moveTask={moveTask} onDelete={handleDeleteTask} handleUpdateTaskField={handleUpdateTaskField}/>))}
           </div>
           
           <div className='flex justify-between'>

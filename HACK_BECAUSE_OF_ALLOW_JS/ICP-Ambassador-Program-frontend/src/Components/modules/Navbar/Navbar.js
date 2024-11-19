@@ -15,6 +15,7 @@ import ProfileDrawer from './ProfileDrawer';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
 import { HiMenu } from 'react-icons/hi';
+import WalletSidebar from '../../wallet/walletSidebar';
 const Navbar = () => {
     const [isModelOpen, setModelOpen] = useState(false);
     const [isSideBarOpen, setSideBarOpen] = useState(false);
@@ -22,6 +23,7 @@ const Navbar = () => {
     const [userEmail, setUserEmail] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [discordl_user, setDiscord_user] = useState();
+    const [openWallet, setOpenWallet] = useState(false);
     useEffect(() => {
         if (Cookies.get('discord_user')) {
             try {
@@ -69,6 +71,12 @@ const Navbar = () => {
     const handleCloseDrawer = () => {
         setIsDrawerOpen(false);
     };
+    const handleCloseWallet = () => {
+        setOpenWallet(false);
+    };
+    const handleWallet = () => {
+        setOpenWallet(true);
+    };
     return (<div className='mt-4 flex justify-between items-center mx-3'>
         <div className='flex items-center gap-5  '>
             <div>
@@ -101,7 +109,7 @@ const Navbar = () => {
         }}/>
             </div>
 
-            <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer'>
+            <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer' onClick={handleWallet}>
                 
                 <FaWallet className='text-white' style={{ fontSize: '20px' }}/>
                 
@@ -179,6 +187,7 @@ const Navbar = () => {
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)}/>
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)}/>
         {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen}/>)}
+        {openWallet && (<WalletSidebar onClose={handleCloseWallet} isOpen={openWallet}/>)}
            
     </div>);
 };

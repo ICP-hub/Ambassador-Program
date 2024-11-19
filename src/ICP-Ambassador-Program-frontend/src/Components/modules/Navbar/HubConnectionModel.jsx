@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
     //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
-    const [selectedHub, setSelectedHub] = useState('');
+    const [selectedHub, setSelectedHub] = useState([]);
 
     
     
@@ -19,10 +19,10 @@ const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
             discord_id:user.id,
             username:user.username,
             wallet:[], 
-            hub:[],
+            hub:selectedHub,
             referrer_principal: []
         }
-        console.log(user_data)
+        //console.log(user_data)
         createUserInBackend(user_data);
         
         onClose();
@@ -53,7 +53,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
     const handleSelectChange = (e) => {
         const selectedSpaceId = e.target.value;
     
-        
+        const selectedSpaceIds = [selectedSpaceId];
         const selectedSpace = spaces.find(space => space.space_id === selectedSpaceId);
         
         
@@ -64,7 +64,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces }) => {
         }
     
         
-        setSelectedHub(selectedSpaceId);
+        setSelectedHub(selectedSpaceIds);
     };
     
     

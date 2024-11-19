@@ -70,7 +70,7 @@ const Home = () => {
             if (isLoggedIn) {
                 setIsHubModalOpen(true);
             }
-            //setIsHubModalOpen(true);
+            setIsHubModalOpen(true);
             setLoading(false);
         }, 5000);
         return () => clearTimeout(timer);

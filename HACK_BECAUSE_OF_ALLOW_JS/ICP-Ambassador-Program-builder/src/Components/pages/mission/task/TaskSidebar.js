@@ -6,9 +6,9 @@ import ApiIcon from '@mui/icons-material/Api';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import SendIcon from '@mui/icons-material/Send';
 const tasks = [
-    { name: 'API Task', type: 'API', icon: <ApiIcon />, color: '#3f51b5' },
-    { name: 'Image Task', type: 'Image', icon: <InsertPhotoIcon />, color: '#008bb9' },
-    { name: 'SendURL Task', type: 'SendURL', icon: <SendIcon />, color: '#1da1f2' },
+    { name: 'Text Task', type: 'text', icon: <ApiIcon />, color: '#3f51b5' },
+    { name: 'Image Task', type: 'img', icon: <InsertPhotoIcon />, color: '#008bb9' },
+    { name: 'SendURL Task', type: 'url', icon: <SendIcon />, color: '#1da1f2' },
 ];
 const TaskSidebar = ({ open, onClose, onSelectTask }) => {
     return (<Drawer anchor="right" open={open} onClose={onClose} sx={{
