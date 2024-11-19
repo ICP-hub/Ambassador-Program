@@ -49,7 +49,7 @@ fn create_user(
         username,
         wallet: None,
         referrer: referrer.clone(),
-        hub: None,
+        hub,
         xp_points: 0,
         redeem_points: 0,
         level: UserLevel::Initiate,

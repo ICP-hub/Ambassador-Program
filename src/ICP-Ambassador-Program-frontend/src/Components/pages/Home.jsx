@@ -82,7 +82,7 @@ const Home = () => {
         setIsHubModalOpen(true);
       }
 
-      //setIsHubModalOpen(true);
+      setIsHubModalOpen(true);
       setLoading(false);
     }, 5000); 
 
