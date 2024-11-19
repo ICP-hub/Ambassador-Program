@@ -189,7 +189,7 @@ const CardDetails = () => {
                 }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
-                        {task.id}
+                        {task.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
@@ -198,18 +198,8 @@ const CardDetails = () => {
                             {task.id === 'SendText' && (
                             <>
 
-                                <div className='flex flex-col gap-3'>
-
-                                <label className='text-lg ml-1 font-semibold'>Title</label>
-                                <input
-                                type='SendURL'
-                                value={task.title}
-                                placeholder={task.title}
-                                onChange={(e) => handleInputChange(e, task.id)}
-                                className='outline-none p-3 rounded text-black'
-                                />
-
-                                </div>
+                                
+                                
                                 <div className="text-white font-semibold text-md">Description</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
@@ -220,22 +210,17 @@ const CardDetails = () => {
                               <>
                               <div className='flex flex-col gap-3'>
 
-                                  <label className='text-lg ml-1 font-semibold'>Title</label>
+                                 
                                   <input
                                   type='SendURL'
-                                  value={task.title}
-                                  placeholder={task.title}
+                                  
+                                  placeholder='Enter URL'
                                   onChange={(e) => handleInputChange(e, task.id)}
                                   className='outline-none p-3 rounded text-black'
                               />
 
                               </div>
-                            <div className='flex flex-col gap-3'>
-                              <label className='text-lg ml-1 font-semibold'>Description</label>
-                              <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
-                                    <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
-                                </div>
-                            </div>  
+                            
                             
                             </>
                             )}
