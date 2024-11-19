@@ -77,12 +77,13 @@ pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
 
 }
 
-#[query(guard = check_anonymous)]
+// #[query(guard = check_anonymous)]
+#[query]
 pub fn get_space(space_id:String)->Result<Space,AdminErrors>{
 
-    if !is_valid_admin(caller()){
-        return Err(AdminErrors::NotRegisteredAsAdmin)
-    }
+    // if !is_valid_admin(caller()){
+    //     return Err(AdminErrors::NotRegisteredAsAdmin)
+    // }
 
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
 

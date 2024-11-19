@@ -7,7 +7,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
     const [points,setPoints]=useState(0)
     const [hub,setHub]=useState('')
     useEffect(()=>{
-        const HUB=localStorage.getItem('selectedHub')
+        const HUB=Cookies.get('selectedHubName')
         setHub(HUB)
     },[])
     const handlelogout =() =>{

@@ -1,6 +1,6 @@
 import React,{useState,useRef,useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ContestNavbar from '../Navbar/ContestNavbar';
+import Navbar from '../Navbar/Navbar';
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -18,13 +18,13 @@ import Cookies from 'js-cookie'
 const CardDetails = () => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
   const location = useLocation();
-  const { contest } = location.state || {};
+  const { updatedContest } = location.state || {};
   const [description, setDescription] = useState(''); 
   const nav=useNavigate()
   const [tasks, setTasks] = useState([
     { id: 'text', label: 'submit your data', content: 'please submit your text as per the suggested format', submitted: false },
-    // { id: 'url', label: 'Send URL', content: '', submitted: false },
-    // { id: 'image', label: 'Send Image', content: '', submitted: false, image: null }
+    { id: 'url', label: 'Send URL', content: '', submitted: false },
+    { id: 'image', label: 'Send Image', content: '', submitted: false, image: null }
   ]);
 
   const handleInputChange = (e, taskId) => {
@@ -54,7 +54,7 @@ const CardDetails = () => {
     nav('/')
   };
   console.log(location)
-  if (!contest) {
+  if (!updatedContest) {
     return <p className='text-white'>No contest data available</p>;
   }
 
@@ -75,8 +75,9 @@ const CardDetails = () => {
     setRandomColor(getRandomDarkColor()); 
   }, []);
 
-  const { reward, status, title, image, social_platforms, icons } = contest;
-
+  const { reward, status, title, image, social_platforms, icons } = updatedContest;
+  const statusKey = Object.keys(status)[0]; 
+  const statusValue = status[statusKey]; 
   
   const editorRef = useRef(null);
   const quillRef = useRef(null);
@@ -127,7 +128,7 @@ const CardDetails = () => {
         
       }}
       className="h-full pt-3" >
-      <ContestNavbar />
+      <Navbar />
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
@@ -136,16 +137,33 @@ const CardDetails = () => {
                 {image ? (
                     <img src={image} alt={title} className="w-44 h-44 object-cover rounded-lg" />
                 ) : (
-                    <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
-                    <span>No Image</span>
-                    </div>
+                    // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
+                    // <span>No Image</span>
+                    // </div>
+                    <img
+                      src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
+                      alt={title}
+                      className="w-24 h-24 object-cover rounded"
+                    />
                 )}
                 </div>
             </div>
             <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className='font-bold text-sm' style={{
-                        color:status ==='Active' ? '#1db851' : status === 'Draft' ? '#b8b8b8': '#e20203'
-                    }}>{status}</div>
+                <div className='font-bold text-sm' 
+                        style={{
+                          
+                          color:
+                            statusKey === 'Active'
+                              ? '#1db851'
+                              : statusKey === 'Draft'
+                              ? '#b8b8b8'
+                              : statusValue === 'In Active' 
+                              ? '#a0a0a0'
+                              : '#e20203',
+                        }}
+                    >{statusValue === null || statusValue === undefined
+                      ? statusKey
+                      : statusValue}</div>
                 <div>
                     <div className='text-white text-xl font-bold'>{title}</div>
                 </div>

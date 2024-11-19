@@ -13,6 +13,38 @@ const Home = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [filterMobile, setFilterMobile] = useState(false);
+    const [space, setSpaces] = useState('');
+    useEffect(() => {
+        if (Cookies.get('discord_user')) {
+            const user = JSON.parse(Cookies.get('discord_user'));
+            //console.log("user ==>",user)
+            if (user) {
+                Get_All_Spaces();
+            }
+        }
+        else {
+            Get_All_Spaces();
+        }
+    }, []);
+    const Get_All_Spaces = async () => {
+        try {
+            const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
+            //console.log("Spaces ==>",spaces.Ok);
+            const spacesObject = spaces.Ok.map(space => {
+                const [spaceId, details] = space;
+                return {
+                    space_id: spaceId,
+                    name: details.name
+                };
+            });
+            setSpaces(spacesObject);
+            //console.log(space)
+            //console.log("Transformed Spaces Object:", spacesObject);
+        }
+        catch (e) {
+            console.log("Error ==> ", e);
+        }
+    };
     const getUser = async (userId) => {
         try {
             //console.log(userId)
@@ -22,7 +54,7 @@ const Home = () => {
             }
             else {
                 setIsHubModalOpen(true);
-                console.log("user not found");
+                //console.log("user not found")
             }
         }
         catch (e) {
@@ -35,10 +67,10 @@ const Home = () => {
             setUser(cookieUser ? JSON.parse(cookieUser) : null);
             const isLoggedIn = Cookies.get('isLoggedIn');
             console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
-            // getUser(cookieUser?.id)
             if (isLoggedIn) {
                 setIsHubModalOpen(true);
             }
+            //setIsHubModalOpen(true);
             setLoading(false);
         }, 5000);
         return () => clearTimeout(timer);
@@ -65,7 +97,7 @@ const Home = () => {
         </div>
       </FilterProvider>
 
-      {isHubModalOpen && (<HubConnectionModal isOpen={isHubModalOpen} onClose={() => setIsHubModalOpen(false)}/>)}
+      {isHubModalOpen && (<HubConnectionModal isOpen={isHubModalOpen} onClose={() => setIsHubModalOpen(false)} spaces={space}/>)}
 
       
       <div className='relative'>
