@@ -448,9 +448,9 @@ const Contests = () => {
     async function getMissions() {
         try {
             const res = await ICP_Ambassador_Program_backend.get_all_spaces();
-            //console.log(res)
+            console.log(res);
             if (res != undefined && res != null && res?.Ok != undefined) {
-                let space_1 = res?.Ok[1][0];
+                let space_1 = res?.Ok[0][0];
                 //console.log(space_1);
                 const space_details = await ICP_Ambassador_Program_backend.get_space(space_1);
                 //console.log("Space Details ==>",space_details.Ok.name)

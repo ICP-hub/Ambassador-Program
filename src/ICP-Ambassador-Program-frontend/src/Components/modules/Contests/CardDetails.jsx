@@ -32,7 +32,7 @@ const CardDetails = () => {
     
     const value = e.target.value;
     setTasks(prevTasks => prevTasks.map(task => 
-      task.id === taskId ? { ...task, title: value } : task
+      task.id === taskId ? { ...task, content: value } : task
     ));
   };
 
@@ -102,7 +102,7 @@ const CardDetails = () => {
             ['hr'],
           ],
         },
-        placeholder: 'Type your description here...',
+        placeholder: 'Enter your submittion...',
       });
 
       quillRef.current.clipboard.dangerouslyPasteHTML(description);
@@ -112,7 +112,7 @@ const CardDetails = () => {
         if (adminRegex.test(textContent)) {
           setTasks((prevTasks) =>
             prevTasks.map((task) =>
-              task.id === 'SendText' ? { ...task,description: textContent } : task
+              task.id === 'SendText' ? { ...task,content: textContent } : task
             )
           );
         } else {
@@ -199,8 +199,7 @@ const CardDetails = () => {
                             <>
 
                                 
-                                
-                                <div className="text-white font-semibold text-md">Description</div>
+                                <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
                                 </div>
@@ -210,10 +209,9 @@ const CardDetails = () => {
                               <>
                               <div className='flex flex-col gap-3'>
 
-                                 
+                              <div className="text-white font-semibold text-md">{task.description}</div>
                                   <input
                                   type='SendURL'
-                                  
                                   placeholder='Enter URL'
                                   onChange={(e) => handleInputChange(e, task.id)}
                                   className='outline-none p-3 rounded text-black'
@@ -226,17 +224,22 @@ const CardDetails = () => {
                             )}
                             {task.id === 'SendImage' && (
                             <div className="mt-4 w-full ">
-                                <div className="text-white font-semibold text-md">Sample Image</div>
+                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className='flex gap-5 my-5'>
+                                <div className="text-white font-semibold text-md mt-4">Sample Image</div>
+                                <img src={task.image} className='w-40 h-40' alt=''/>
+                              </div>
+                                
                                 <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
                                 {task.image ? (
-                                    <img src={task.image} alt="Uploaded" className="object-contain h-full w-full" />
+                                    <img src={task.imagye} alt="Uploaded" className="object-contain h-full w-full" />
                                 ) : (
                                     <img src={'upload_background.png'} alt="" className="w-80" />
                                 )}
                                 <div>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
                                     <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.id)} />
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
+                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
                                     BROWSE
                                     </div>
                                 </label>

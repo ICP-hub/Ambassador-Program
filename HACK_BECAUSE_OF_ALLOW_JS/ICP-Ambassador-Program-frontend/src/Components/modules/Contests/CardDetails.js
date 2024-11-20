@@ -18,6 +18,7 @@ const CardDetails = () => {
     const adminRegex = /^[A-Za-z0-9\s]+$/;
     const location = useLocation();
     const { updatedContest } = location.state || {};
+    console.log(updatedContest);
     const [description, setDescription] = useState('');
     const nav = useNavigate();
     const [tasks, setTasks] = useState(updatedContest.tasks);
@@ -77,7 +78,7 @@ const CardDetails = () => {
                         ['hr'],
                     ],
                 },
-                placeholder: 'Type your description here...',
+                placeholder: 'Enter your submittion...',
             });
             quillRef.current.clipboard.dangerouslyPasteHTML(description);
             quillRef.current.on('text-change', () => {
@@ -143,20 +144,15 @@ const CardDetails = () => {
             }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white"/>} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
-                        {task.id}
+                        {task.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         {!task.submitted ? (<form onSubmit={(e) => handleSubmit(e, task.id)} className="flex flex-col gap-3 mt-3">
                             {task.id === 'SendText' && (<>
 
-                                <div className='flex flex-col gap-3'>
-
-                                <label className='text-lg ml-1 font-semibold'>Title</label>
-                                <input type='SendURL' value={task.title} placeholder={task.title} onChange={(e) => handleInputChange(e, task.id)} className='outline-none p-3 rounded text-black'/>
-
-                                </div>
-                                <div className="text-white font-semibold text-md">Description</div>
+                                
+                                <div className="text-white font-semibold text-md">{updatedContest.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
                                 </div>
@@ -164,16 +160,11 @@ const CardDetails = () => {
                             {task.id === 'SendUrl' && (<>
                               <div className='flex flex-col gap-3'>
 
-                                  <label className='text-lg ml-1 font-semibold'>Title</label>
-                                  <input type='SendURL' value={task.title} placeholder={task.title} onChange={(e) => handleInputChange(e, task.id)} className='outline-none p-3 rounded text-black'/>
+                                 
+                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.id)} className='outline-none p-3 rounded text-black'/>
 
                               </div>
-                            <div className='flex flex-col gap-3'>
-                              <label className='text-lg ml-1 font-semibold'>Description</label>
-                              <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
-                                    <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
-                                </div>
-                            </div>  
+                            
                             
                             </>)}
                             {task.id === 'SendImage' && (<div className="mt-4 w-full ">
