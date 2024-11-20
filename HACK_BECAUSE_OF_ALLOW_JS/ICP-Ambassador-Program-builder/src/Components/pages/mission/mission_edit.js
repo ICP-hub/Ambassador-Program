@@ -41,7 +41,7 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
       {task.type === 'url' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };
-const MissionEdit = () => {
+const MissionEdit = ({ setLoading }) => {
     const actor = useSelector(state => state.actor.value);
     const mission = useSelector(state => state.mission.value);
     const timezone = 'Asia/Calcutta';
@@ -111,11 +111,17 @@ const MissionEdit = () => {
             tasks: finalTasks
         };
         console.log("final updated mission : ", updatedMission, tasks);
+        setLoading(true);
         const res = await actor?.backendActor?.edit_mission(updatedMission);
         console.log(res);
         if (res != null && res != undefined && res?.Err == undefined) {
+            setLoading(false);
             alert('Mission updated successfully');
             nav('/');
+        }
+        else {
+            setLoading(false);
+            alert('Some error occurred');
         }
     };
     function parseTasks(oldTasks) {

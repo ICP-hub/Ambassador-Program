@@ -57,7 +57,7 @@ const Card = ({ contest, hub }) => {
     return (<div className=" text-white p-4 rounded-lg shadow-lg " style={{ backgroundColor: '#1d1d21' }} onClick={handleCard}>
 
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm font-semibold py-1 px-2 rounded" style={{ backgroundColor: '#29292c' }}> {reward.toString()}</span>
+        <span className="text-sm font-semibold py-1 px-2 rounded" style={{ backgroundColor: '#29292c' }}>{parseInt(contest?.reward) + " "}points </span>
         <span className={`text-sm py-1 px-2 rounded-md font-bold`} style={{
             backgroundColor: statusKey === 'Active'
                 ? '#1d2d27'
