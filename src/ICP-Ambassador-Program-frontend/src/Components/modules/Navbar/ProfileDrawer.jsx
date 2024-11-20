@@ -85,13 +85,16 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                     <div className='text-[#0d033e] text-sm font-semibold'>Referrals</div>
                     <hr className='flex-grow h-3/6 bg-black' />
                 </div>
-                <div className=''>
+                <div className='flex flex-col items-center'>
                     <p className='text-xs mb-3'>
                         Share this referral with others and grow your referral tree and earn rewards! You can refer upto 10 people
                     </p>
                     <a href={baseReferral+user.discord_id} target='blank' className='text-blue-600 text-sm font-bold cursor-pointer'>
                         {baseReferral+user.discord_id}
                     </a>
+                    <p className='mt-3 text-sm underline font-semibold cursor-pointer'>
+                        View people referred by You
+                    </p>
                 </div>
             </div>
             <div className='flex justify-center items-center mt-4'>
