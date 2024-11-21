@@ -6,8 +6,8 @@ const Task_Details = () => {
     const location = useLocation();
     const row = location.state?.row;
     const [tasks,setTasks]=useState(row.tasks)
-    const [selectedUser, setSelectedUser] = useState(null); // To track selected user
-    const [isModalOpen, setIsModalOpen] = useState(false); // To control modal visibility
+    const [selectedUser, setSelectedUser] = useState(null); 
+    const [isModalOpen, setIsModalOpen] = useState(false); 
     const [users] = useState([
         { id: 1, name: "rjx25349", description: "User description for rjx25349" },
         { id: 2, name: "abc12345", description: "User description for abc12345" },
