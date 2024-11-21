@@ -58,6 +58,7 @@ const DiscordCallback = ({setOpen}) => {
         console.log(details,"dd")
         if(details.length ===0){
           // Cookies.set('isLoggedIn', 'false', { expires: 1 / 1440 });
+          console.log("setting isloggedin")
           Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
         }
         else{

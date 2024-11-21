@@ -16,6 +16,7 @@ const Card = ({ contest,hub }) => {
 
   useEffect(() => {
     if (contest?.tasks) {
+      console.log("contest tasks : ",contest)
       const formattedTasks = contest.tasks.map((task) => {
         const taskKey = Object.keys(task)[0]; 
         return {
@@ -24,7 +25,8 @@ const Card = ({ contest,hub }) => {
           description: task[taskKey]?.body || '', 
           submitted: false,
           image: task[taskKey]?.img || null,
-          validation_rule:task[taskKey]?.validation_rule || ''
+          validation_rule:task[taskKey]?.validation_rule || '',
+          task_id:task[taskKey]?.id
         };
       });
       setTasks(formattedTasks);

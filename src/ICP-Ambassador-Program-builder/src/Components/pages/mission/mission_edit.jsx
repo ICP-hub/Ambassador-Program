@@ -26,6 +26,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 const ItemTypes = {
   TASK: 'task',
 };
@@ -96,72 +97,82 @@ const MissionEdit = ({setLoading}) => {
   const [participantsCount, setParticipantsCount] = useState('');
   const nav=useNavigate()
   const handlesave = async() =>{
-    const draft_data ={
-      Title:title,
-      Image:logoImage,
-      tasks:tasks,
-      Start_Date: startDate,
-      End_Date:endDate,
-      Selected_Space:space,
-      Description:description,
-      Reward_data:rewardsData,
-      participants_count:participantsCount
-
-    }
-
-    let finalTasks=[]
-    for(let i=0;i<tasks?.length;i++){
-      if(tasks[i]?.type=="text"){
-        finalTasks.push({
-          SendText:{
-            title:tasks[i]?.title,
-            body:tasks[i]?.body,
-            sample:tasks[i]?.sample,
-            validation_rule:tasks[i]?.validation_rule,
-            max_len:tasks[i]?.max_len,
-          }
-        })
+    try{
+      const draft_data ={
+        Title:title,
+        Image:logoImage,
+        tasks:tasks,
+        Start_Date: startDate,
+        End_Date:endDate,
+        Selected_Space:space,
+        Description:description,
+        Reward_data:rewardsData,
+        participants_count:participantsCount
+  
       }
-      if(tasks[i]?.type=="url"){
-        finalTasks.push({
-          SendUrl:{
-            title:tasks[i]?.title,
-            body:tasks[i]?.body,
-          }
-        })
+  
+      let finalTasks=[]
+      for(let i=0;i<tasks?.length;i++){
+        if(tasks[i]?.type=="text"){
+          finalTasks.push({
+            SendText:{
+              id:finalTasks?.length,
+              title:tasks[i]?.title,
+              body:tasks[i]?.body,
+              sample:tasks[i]?.sample,
+              validation_rule:tasks[i]?.validation_rule,
+              max_len:tasks[i]?.max_len,
+            }
+          })
+        }
+        if(tasks[i]?.type=="url"){
+          finalTasks.push({
+            SendUrl:{
+              id:finalTasks?.length,
+              title:tasks[i]?.title,
+              body:tasks[i]?.body,
+            }
+          })
+        }
+        if(tasks[i]?.type=="img"){
+          finalTasks.push({
+            SendImage:{
+              id:finalTasks?.length,
+              title:tasks[i]?.title,
+              body:tasks[i]?.body,
+              img:tasks[i]?.img
+            } 
+          })
+        }
       }
-      if(tasks[i]?.type=="img"){
-        finalTasks.push({
-          SendImage:{
-            title:tasks[i]?.title,
-            body:tasks[i]?.body,
-            img:tasks[i]?.img
-          } 
-        })
+  
+      console.log("data ==>",draft_data,mission,actor,finalTasks)
+      const updatedMission={
+        ...mission,
+        title:title,
+        description:description,
+        status:{Active:null},
+        reward:parseInt(rewardsData),
+        tasks:finalTasks
       }
-    }
-
-    console.log("data ==>",draft_data,mission,actor,finalTasks)
-    const updatedMission={
-      ...mission,
-      title:title,
-      description:description,
-      status:{Active:null},
-      reward:parseInt(rewardsData),
-      tasks:finalTasks
-    }
-    console.log("final updated mission : ",updatedMission,tasks)
-    setLoading(true)
-    const res=await actor?.backendActor?.edit_mission(updatedMission)
-    console.log(res)
-    if(res!=null && res!=undefined && res?.Err==undefined){
+      console.log("final updated mission : ",updatedMission,tasks)
+      setLoading(true)
+      const res=await actor?.backendActor?.edit_mission(updatedMission)
+      console.log(res)
+      if(res!=null && res!=undefined && res?.Err==undefined){
+        setLoading(false)
+        toast.success('Mission updated successfully')
+        nav('/')
+      }else{
+        setLoading(false)
+        toast.error('Some error occurred')
+      }
+    }catch(err){
+      console.log("err updating mission : ",err)
+      toast.error("some error occurred!")
       setLoading(false)
-      alert('Mission updated successfully')
-      nav('/')
-    }else{
-      setLoading(false)
-      alert('Some error occurred')
     }
+    
   }
 
   function parseTasks(oldTasks){

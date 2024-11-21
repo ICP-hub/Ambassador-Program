@@ -29,8 +29,9 @@ const Home = () => {
         const user = JSON.parse(Cookies.get('discord_user'));
         const details = await ICP_Ambassador_Program_backend.get_user_data(user.id);
         console.log(details,"dd")
-        if(details && details!=[]){
+        if(details && details?.length!==0){
           dispatch(updateUser(details[0]))
+          console.log("dispatching user")
           // registered=true
         }
         else{
@@ -91,6 +92,7 @@ const Home = () => {
       setUser(cookieUser ? JSON.parse(cookieUser) : null);
       
       const isLoggedIn = Cookies.get('isLoggedIn');
+      console.log("passing is logged in : ",isLoggedIn)
       getUser(isLoggedIn)
       
       console.log(cookieUser && !isLoggedIn,!cookieUser,!isLoggedIn)

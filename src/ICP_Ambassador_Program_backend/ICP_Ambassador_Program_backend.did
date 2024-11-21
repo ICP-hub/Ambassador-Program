@@ -93,14 +93,15 @@ type Submission = record {
   mission_id : text;
 };
 type TaskSubmitted = variant {
-  SendImage : record { img : text };
-  SendUrl : record { url : text };
-  SendText : record { "text" : text };
+  SendImage : record { id : nat8; img : text };
+  SendUrl : record { id : nat8; url : text };
+  SendText : record { id : nat8; "text" : text };
 };
 type Tasks = variant {
-  SendImage : record { img : text; title : text; body : text };
-  SendUrl : record { title : text; body : text };
+  SendImage : record { id : nat8; img : text; title : text; body : text };
+  SendUrl : record { id : nat8; title : text; body : text };
   SendText : record {
+    id : nat8;
     title : text;
     validation_rule : text;
     sample : text;

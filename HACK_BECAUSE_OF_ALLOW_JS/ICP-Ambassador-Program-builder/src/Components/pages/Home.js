@@ -2,10 +2,12 @@ import React from 'react';
 import Navbar from './Navbar/Navbar';
 import Spaces from './Content/Spaces';
 import Footer from './Footer/Footer';
-const Home = () => {
+import { useNavigate } from 'react-router-dom';
+const Home = ({ setLoading }) => {
+    const nav = useNavigate();
     return (<div> 
-      <Navbar />
-      <Spaces />
+      <Navbar nav={nav}/>
+      <Spaces setLoading={setLoading}/>
       <Footer />
      
     </div>);

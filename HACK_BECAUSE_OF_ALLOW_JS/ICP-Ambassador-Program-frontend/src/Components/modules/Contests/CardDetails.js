@@ -18,21 +18,109 @@ const CardDetails = () => {
     const adminRegex = /^[A-Za-z0-9\s]+$/;
     const location = useLocation();
     const { updatedContest } = location.state || {};
-    console.log(updatedContest);
     const [description, setDescription] = useState('');
+    const [submission, setSubmission] = useState(null);
+    const [loading, setLoading] = useState(false);
     const nav = useNavigate();
     const [tasks, setTasks] = useState(updatedContest.tasks);
+    async function getSubmission() {
+        try {
+            let user = JSON.parse(Cookies.get('discord_user'));
+            let res = await ICP_Ambassador_Program_backend.get_submission(`${updatedContest.mission_id}_${user.id}`);
+            console.log("previous submission : ", res, updatedContest, `${updatedContest.mission_id}_${user.id}`);
+            if (res?.Ok) {
+                setSubmission(res?.Ok);
+            }
+            else {
+                console.log({
+                    submission_id: '',
+                    mission_id: updatedContest.mission_id,
+                    tasks_submitted: [],
+                    user: user?.id
+                });
+                setSubmission({
+                    submission_id: '',
+                    mission_id: updatedContest?.mission_id,
+                    tasks_submitted: [],
+                    user: user?.id
+                });
+            }
+        }
+        catch (error) {
+            console.log("error while fetching submission : ", error);
+        }
+    }
+    async function addSubmission(e) {
+        try {
+            e.preventDefault();
+            console.log("before finaltasks : ", tasks);
+            let user = JSON.parse(Cookies.get('discord_user'));
+            let finalTasks = [];
+            for (let i = 0; i < tasks?.length; i++) {
+                let task = {};
+                if (tasks[i]?.id == "SendText") {
+                    task = {
+                        SendText: {
+                            id: tasks[i]?.task_id,
+                            text: tasks[i]?.content || ""
+                        }
+                    };
+                }
+                if (tasks[i]?.id == "SendImage") {
+                    task = {
+                        SendImage: {
+                            id: tasks[i]?.task_id,
+                            img: tasks[i]?.content || ""
+                        }
+                    };
+                }
+                if (tasks[i]?.id == "SendUrl") {
+                    task = {
+                        SendUrl: {
+                            id: tasks[i]?.task_id,
+                            text: tasks[i]?.content || ""
+                        }
+                    };
+                }
+                finalTasks.push(task);
+            }
+            console.log("final submission : ", {
+                ...submission,
+                tasks_submitted: finalTasks
+            });
+            setLoading(true);
+            let res = await ICP_Ambassador_Program_backend.add_or_update_submission({
+                ...submission,
+                tasks_submitted: finalTasks
+            });
+            console.log(res);
+            if (typeof res == "object" && !res?.Err) {
+                setLoading(false);
+                alert(submission.submission_id == "" ? "Added new submission" : 'Updated the submission');
+                nav('/');
+            }
+            else {
+                setLoading(false);
+                alert('Some error occurred while submitting');
+            }
+        }
+        catch (err) {
+            console.log("err updating submission : ", err);
+            setLoading(false);
+            alert('Something went wrong');
+        }
+    }
     const handleInputChange = (e, taskId) => {
         const value = e.target.value;
-        setTasks(prevTasks => prevTasks.map(task => task.id === taskId ? { ...task, title: value } : task));
+        setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, content: value } : task));
     };
     const handleFileChange = (e, taskId) => {
         const file = e.target.files[0];
-        setTasks(prevTasks => prevTasks.map(task => task.id === taskId ? { ...task, image: file } : task));
+        setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, image: file } : task));
     };
     const handleSubmit = async (e, taskId) => {
         e.preventDefault();
-        setTasks(prevTasks => prevTasks.map(task => task.id === taskId ? { ...task, submitted: true } : task));
+        setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, submitted: true } : task));
         console.log("Updated tasks:", tasks);
         let user = JSON.parse(Cookies.get('discord_user'));
         const res = await ICP_Ambassador_Program_backend.add_points(String(user?.id), 100);
@@ -55,6 +143,7 @@ const CardDetails = () => {
     const [randomColor, setRandomColor] = useState('#000000');
     useEffect(() => {
         setRandomColor(getRandomDarkColor());
+        getSubmission();
     }, []);
     const { reward, status, title, image, social_platforms, icons } = updatedContest;
     //console.log("Updated contest ==>",updatedContest)
@@ -84,7 +173,7 @@ const CardDetails = () => {
             quillRef.current.on('text-change', () => {
                 const textContent = quillRef.current.getText().replace(/\n/g, '');
                 if (adminRegex.test(textContent)) {
-                    setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, description: textContent } : task));
+                    setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, content: textContent } : task));
                 }
                 else {
                     console.log('Invalid content detected');
@@ -92,10 +181,15 @@ const CardDetails = () => {
             });
         }
     }, [description]);
+    if (loading) {
+        return (<div className='flex justify-center items-center h-screen'>
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black"/>
+      </div>);
+    }
     return (<div style={{
             background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
         }} className="h-full pt-3">
-      <Navbar />
+      <Navbar nav={nav}/>
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full '>
         <div className="flex items-center justify-center  gap-10">
@@ -134,7 +228,7 @@ const CardDetails = () => {
         </div>
         
         <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
-            {tasks.map((task) => (<div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={task.id}>
+            {tasks.map((task, index) => (<div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={index}>
                 <div className='relative rounded-lg' style={{
                 borderTop: `2px solid ${randomColor}`,
                 borderLeft: `2px solid ${randomColor}`,
@@ -148,11 +242,11 @@ const CardDetails = () => {
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
-                        {!task.submitted ? (<form onSubmit={(e) => handleSubmit(e, task.id)} className="flex flex-col gap-3 mt-3">
+                        {!task.submitted ? (<form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
                             {task.id === 'SendText' && (<>
 
                                 
-                                <div className="text-white font-semibold text-md">{updatedContest.description}</div>
+                                <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
                                 </div>
@@ -160,21 +254,26 @@ const CardDetails = () => {
                             {task.id === 'SendUrl' && (<>
                               <div className='flex flex-col gap-3'>
 
-                                 
-                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.id)} className='outline-none p-3 rounded text-black'/>
+                              <div className="text-white font-semibold text-md">{task.description}</div>
+                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded text-black'/>
 
                               </div>
                             
                             
                             </>)}
                             {task.id === 'SendImage' && (<div className="mt-4 w-full ">
-                                <div className="text-white font-semibold text-md">Sample Image</div>
+                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className='flex gap-5 my-5'>
+                                <div className="text-white font-semibold text-md mt-4">Sample Image</div>
+                                <img src={task.image} className='w-40 h-40' alt=''/>
+                              </div>
+                                
                                 <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
-                                {task.image ? (<img src={task.image} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt="" className="w-80"/>)}
+                                {task.image ? (<img src={task.imagye} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt="" className="w-80"/>)}
                                 <div>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
-                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.id)}/>
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
+                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)}/>
+                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
                                     BROWSE
                                     </div>
                                 </label>

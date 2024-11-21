@@ -10,6 +10,7 @@ import MissionEdit from './Components/pages/mission/mission_edit';
 import Mission_Task from './Components/pages/mission/Mission_Task'
 import { AuthProvider, useAuthClient } from './utils/useAuthClient';
 import Login from './Components/pages/authComponents/Login';
+import {Toaster} from 'react-hot-toast'
 function App() {
   const {isAuthenticated}=useAuthClient()
   const [loading,setLoading]=useState(false)
@@ -25,7 +26,8 @@ function App() {
   }
   else{
     return (
-    
+      <>
+      <Toaster/>
       <BrowserRouter>
       <AuthProvider>
         <Routes>
@@ -39,6 +41,7 @@ function App() {
         </Routes>
         </AuthProvider>
       </BrowserRouter>
+      </>
     );
   }
   

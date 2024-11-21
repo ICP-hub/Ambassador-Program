@@ -41,7 +41,7 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
       {task.type === 'url' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };
-const MissionEdit = () => {
+const MissionEdit = ({ setLoading }) => {
     const actor = useSelector(state => state.actor.value);
     const mission = useSelector(state => state.mission.value);
     const timezone = 'Asia/Calcutta';
@@ -59,63 +59,79 @@ const MissionEdit = () => {
     const [participantsCount, setParticipantsCount] = useState('');
     const nav = useNavigate();
     const handlesave = async () => {
-        const draft_data = {
-            Title: title,
-            Image: logoImage,
-            tasks: tasks,
-            Start_Date: startDate,
-            End_Date: endDate,
-            Selected_Space: space,
-            Description: description,
-            Reward_data: rewardsData,
-            participants_count: participantsCount
-        };
-        let finalTasks = [];
-        for (let i = 0; i < tasks?.length; i++) {
-            if (tasks[i]?.type == "text") {
-                finalTasks.push({
-                    SendText: {
-                        title: tasks[i]?.title,
-                        body: tasks[i]?.body,
-                        sample: tasks[i]?.sample,
-                        validation_rule: tasks[i]?.validation_rule,
-                        max_len: tasks[i]?.max_len,
-                    }
-                });
+        try {
+            const draft_data = {
+                Title: title,
+                Image: logoImage,
+                tasks: tasks,
+                Start_Date: startDate,
+                End_Date: endDate,
+                Selected_Space: space,
+                Description: description,
+                Reward_data: rewardsData,
+                participants_count: participantsCount
+            };
+            let finalTasks = [];
+            for (let i = 0; i < tasks?.length; i++) {
+                if (tasks[i]?.type == "text") {
+                    finalTasks.push({
+                        SendText: {
+                            id: finalTasks?.length,
+                            title: tasks[i]?.title,
+                            body: tasks[i]?.body,
+                            sample: tasks[i]?.sample,
+                            validation_rule: tasks[i]?.validation_rule,
+                            max_len: tasks[i]?.max_len,
+                        }
+                    });
+                }
+                if (tasks[i]?.type == "url") {
+                    finalTasks.push({
+                        SendUrl: {
+                            id: finalTasks?.length,
+                            title: tasks[i]?.title,
+                            body: tasks[i]?.body,
+                        }
+                    });
+                }
+                if (tasks[i]?.type == "img") {
+                    finalTasks.push({
+                        SendImage: {
+                            id: finalTasks?.length,
+                            title: tasks[i]?.title,
+                            body: tasks[i]?.body,
+                            img: tasks[i]?.img
+                        }
+                    });
+                }
             }
-            if (tasks[i]?.type == "url") {
-                finalTasks.push({
-                    SendUrl: {
-                        title: tasks[i]?.title,
-                        body: tasks[i]?.body,
-                    }
-                });
+            console.log("data ==>", draft_data, mission, actor, finalTasks);
+            const updatedMission = {
+                ...mission,
+                title: title,
+                description: description,
+                status: { Active: null },
+                reward: parseInt(rewardsData),
+                tasks: finalTasks
+            };
+            console.log("final updated mission : ", updatedMission, tasks);
+            setLoading(true);
+            const res = await actor?.backendActor?.edit_mission(updatedMission);
+            console.log(res);
+            if (res != null && res != undefined && res?.Err == undefined) {
+                setLoading(false);
+                alert('Mission updated successfully');
+                nav('/');
             }
-            if (tasks[i]?.type == "img") {
-                finalTasks.push({
-                    SendImage: {
-                        title: tasks[i]?.title,
-                        body: tasks[i]?.body,
-                        img: tasks[i]?.img
-                    }
-                });
+            else {
+                setLoading(false);
+                alert('Some error occurred');
             }
         }
-        console.log("data ==>", draft_data, mission, actor, finalTasks);
-        const updatedMission = {
-            ...mission,
-            title: title,
-            description: description,
-            status: { Active: null },
-            reward: parseInt(rewardsData),
-            tasks: finalTasks
-        };
-        console.log("final updated mission : ", updatedMission, tasks);
-        const res = await actor?.backendActor?.edit_mission(updatedMission);
-        console.log(res);
-        if (res != null && res != undefined && res?.Err == undefined) {
-            alert('Mission updated successfully');
-            nav('/');
+        catch (err) {
+            console.log("err updating mission : ", err);
+            alert("some error occurred!");
+            setLoading(false);
         }
     };
     function parseTasks(oldTasks) {

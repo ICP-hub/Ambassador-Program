@@ -64,11 +64,13 @@ pub enum RewardCurrency{
 pub enum Tasks{
     
     SendImage{
+        id:u8,
         title:String,
         body:String,
         img:String
     },
     SendText{
+        id:u8,
         title:String,
         body:String,
         sample:String,
@@ -76,6 +78,7 @@ pub enum Tasks{
         max_len:u16
     },
     SendUrl{
+        id:u8,
         title:String,
         body:String
     },
@@ -144,12 +147,15 @@ pub enum CheckCodeType{
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum TaskSubmitted{
     SendText{
+        id:u8,
         text:String
     },
     SendImage{
+        id:u8,
         img:String
     },
     SendUrl{
+        id:u8,
         url:String
     }
 }

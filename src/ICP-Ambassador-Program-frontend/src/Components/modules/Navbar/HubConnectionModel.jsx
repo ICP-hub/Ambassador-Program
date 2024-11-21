@@ -19,7 +19,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
             discord_id:user.id,
             username:user.username,
             wallet:[], 
-            hub:[selectedHub],
+            hub:selectedHub,
             referrer_principal: []
         }
         console.log(user_data)
@@ -47,6 +47,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
             window?.location?.reload()
         } catch (e) {
             console.log("Error ==>", e);
+            setLoading(false)
         }
     };
 

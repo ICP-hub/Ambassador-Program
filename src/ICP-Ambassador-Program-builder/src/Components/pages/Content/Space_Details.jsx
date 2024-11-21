@@ -10,6 +10,7 @@ import Select from '@mui/material/Select';
 import SortDescription from './sortDescription'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast';
 const Space_Details = ({setLoading}) => {
     const spaces=useSelector(state=>state.spaces.value)
     const admin=useSelector(state=>state.admin.value)
@@ -44,14 +45,15 @@ const Space_Details = ({setLoading}) => {
             console.log(res,"response uodating space")
             
             if(res!=null && res?.Err==undefined && res!=undefined){
-                alert('Space updated successfully')
+                toast.success('Space updated successfully')
                 window?.location?.reload()
             }else{
-                alert('Some error occurred')
+                toast.error('Some error occurred')
                 setLoading(false)
             }
         } catch (error) {
             console.log("error updating the space : ",error)
+            toast.error('Something went wrong')
             setLoading(false)
         }
     }

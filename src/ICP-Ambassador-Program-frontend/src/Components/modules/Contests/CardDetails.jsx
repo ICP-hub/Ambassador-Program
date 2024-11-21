@@ -14,32 +14,145 @@ import 'quill/dist/quill.snow.css';
 // import upload_background from '../../../assets/images/upload_background.png'
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie'
+import toast from 'react-hot-toast';
 
 const CardDetails = () => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
   const location = useLocation();
   const { updatedContest } = location.state || {};
   const [description, setDescription] = useState(''); 
+  const [submission,setSubmission]=useState(null)
+  const [loading,setLoading]=useState(false)
   const nav=useNavigate()
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
 
+  function parseTasks(mission_tasks,sub_tasks){
+    try {
+      let new_tasks=[]
+      console.log(mission_tasks,sub_tasks)
+      for(let i=0;i<sub_tasks.length;i++){
+        let taskType=Object.keys(sub_tasks[i])[0]
+        console.log(taskType)
+        if(taskType=="SendText"){
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.text})
+        }
+        if(taskType=="SendImage"){
+          new_tasks.push({...mission_tasks[i],image:sub_tasks[i][taskType]?.img})
+        }
+        if(taskType=="SendUrl"){
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.url})
+        }
+      }
+      console.log("parsed mission tasks : ",new_tasks)
+      setTasks(new_tasks)
+    } catch (error) {
+      console.log("err parsing task submission : ",error)
+    }
+  } 
 
-  
+  async function getSubmission() {
+    try {
+      let user=JSON.parse(Cookies.get('discord_user'))
+      let res=await ICP_Ambassador_Program_backend.get_submission(`${updatedContest.mission_id}_${user.id}`)
+      console.log("previous submission : ",res,updatedContest,`${updatedContest.mission_id}_${user.id}`)
+      if(res?.Ok){
+ 
+        setSubmission(res?.Ok)
+        parseTasks(tasks,res?.Ok?.tasks_submitted)
+      }else{
+        console.log({
+          submission_id:'',
+          mission_id:updatedContest.mission_id,
+          tasks_submitted:[],
+          user:user?.id
+        })
+        setSubmission({
+          submission_id:'',
+          mission_id:updatedContest?.mission_id,
+          tasks_submitted:[],
+          user:user?.id
+        })
+      }
+    } catch (error) {
+      console.log("error while fetching submission : ",error)
+    }
+  }
+
+  async function addSubmission(){
+    try{
+      // e.preventDefault();
+      console.log("before finaltasks : ",tasks)
+      let user=JSON.parse(Cookies.get('discord_user'))
+      let finalTasks=[]
+      for(let i=0;i<tasks?.length;i++){
+        let task={}
+        if(tasks[i]?.id=="SendText"){
+          task={
+            SendText:{
+              id:tasks[i]?.task_id,
+              text:tasks[i]?.content || ""
+            }
+          }
+        }
+        if(tasks[i]?.id=="SendImage"){
+          task={
+            SendImage:{
+              id:tasks[i]?.task_id,
+              img:tasks[i]?.content || ""
+            }
+          }
+        }
+        if(tasks[i]?.id=="SendUrl"){
+          task={
+            SendUrl:{
+              id:tasks[i]?.task_id,
+              url:tasks[i]?.content || ""
+            }
+          }
+        }
+        finalTasks.push(task)
+      }
+      console.log("final submission : ",{
+        ...submission,
+        tasks_submitted:finalTasks
+      })
+      setLoading(true)
+      let res=await ICP_Ambassador_Program_backend.add_or_update_submission({
+        ...submission,
+        tasks_submitted:finalTasks
+      })
+      console.log(res)
+      
+      if(typeof res=="object" && !res?.Err){
+        setLoading(false)
+        toast.success(submission.submission_id==""?"Added new submission":'Updated the submission')
+        nav('/')
+      }else{
+        setLoading(false)
+        toast.error("Some error occurred while submitting")
+      }
+
+    }catch(err){
+      console.log("err updating submission : ",err)
+      setLoading(false)
+      toast.error("Something went wrong")
+    }
+  }
 
   const handleInputChange = (e, taskId) => {
     
     const value = e.target.value;
     setTasks(prevTasks => prevTasks.map(task => 
-      task.id === taskId ? { ...task, content: value } : task
+      task.task_id === taskId ? { ...task, content: value } : task
     ));
   };
 
   const handleFileChange = (e, taskId) => {
     const file = e.target.files[0];
     setTasks(prevTasks => prevTasks.map(task => 
-      task.id === taskId ? { ...task, image: file } : task
+      task.task_id === taskId ? { ...task, image: file } : task
     ));
   };
 
@@ -47,7 +160,7 @@ const CardDetails = () => {
   const handleSubmit =async (e, taskId) => {
     e.preventDefault();
     setTasks(prevTasks => prevTasks.map(task =>
-      task.id === taskId ? { ...task, submitted: true } : task
+      task.task_id === taskId ? { ...task, submitted: true } : task
     ));
     console.log("Updated tasks:", tasks);
     let user=JSON.parse(Cookies.get('discord_user'))
@@ -76,6 +189,7 @@ const CardDetails = () => {
 
   useEffect(() => {
     setRandomColor(getRandomDarkColor()); 
+    getSubmission()
   }, []);
 
   const { reward, status, title, image, social_platforms, icons } = updatedContest;
@@ -102,7 +216,7 @@ const CardDetails = () => {
             ['hr'],
           ],
         },
-        placeholder: 'Enter your submittion...',
+        placeholder: 'Enter your submission...',
       });
 
       quillRef.current.clipboard.dangerouslyPasteHTML(description);
@@ -122,6 +236,13 @@ const CardDetails = () => {
     }
   }, [description]);
 
+  if(loading){
+    return(
+      <div className='flex justify-center items-center h-screen'>
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black" />
+      </div>
+    )
+  }
   return (
     <div style={{
         background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
@@ -178,8 +299,8 @@ const CardDetails = () => {
         </div>
         
         <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
-            {tasks.map((task) => (
-                <div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={task.id}>
+            {tasks.map((task,index) => (
+                <div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={index}>
                 <div className='relative rounded-lg' style={{
                     borderTop: `2px solid ${randomColor}`,   
                     borderLeft: `2px solid ${randomColor}`,  
@@ -194,14 +315,20 @@ const CardDetails = () => {
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         {!task.submitted ? (
-                        <form onSubmit={(e) => handleSubmit(e, task.id)} className="flex flex-col gap-3 mt-3">
+                        <form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
                             {task.id === 'SendText' && (
                             <>
 
                                 
                                 <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
-                                    <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
+                                    {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
+                                    <textarea 
+                                      rows={10}
+                                      className='w-full py-2 px-3 bg-[#1d1d21]' 
+                                      onChange={(e)=>handleInputChange(e,task.task_id)}
+                                      value={task.content}
+                                    />
                                 </div>
                             </>
                             )}
@@ -213,8 +340,9 @@ const CardDetails = () => {
                                   <input
                                   type='SendURL'
                                   placeholder='Enter URL'
-                                  onChange={(e) => handleInputChange(e, task.id)}
+                                  onChange={(e) => handleInputChange(e, task.task_id)}
                                   className='outline-none p-3 rounded text-black'
+                                  value={task.content}
                               />
 
                               </div>
@@ -238,7 +366,7 @@ const CardDetails = () => {
                                 )}
                                 <div>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
-                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.id)} />
+                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)} />
                                     <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
                                     BROWSE
                                     </div>
@@ -247,23 +375,34 @@ const CardDetails = () => {
                             </div>
                             )}
                             <div className='flex items-center justify-center'>
-                            <button
+                            {/* <button
                                 type="submit"
                                 className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
                             >
                                 Submit <MdOutlineArrowOutward className="ml-3" size={24} />
-                            </button>
+                            </button> */}
                             </div>
                         </form>
                         ) : (
-                        <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
+                        // <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
+                        <></>
                         )}
+                        
                     </AccordionDetails>
                     </Accordion>
+                    
                 </div>
                 </div>
             ))}
-    
+            <div className='w-full flex justify-center'>
+              <button
+                onClick={addSubmission}
+                className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+              >
+                {submission?.submission_id==""?"Submit":"Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24} />
+              </button>
+            </div>
+           
         
         
        

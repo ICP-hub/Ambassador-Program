@@ -28,7 +28,7 @@ pub fn add_or_update_submission(submission:Submission)->Result<(),AdminErrors>{
             tasks_submitted:submission.tasks_submitted
         };
         
-        SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.mission_id.clone(),new_submission));
+        SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(),new_submission));
         return Ok(());
     }else{
         let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&submission.submission_id));
