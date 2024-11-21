@@ -133,6 +133,10 @@ const MissionEdit = ({ setLoading }) => {
             alert("some error occurred!");
             setLoading(false);
         }
+        else {
+            setLoading(false);
+            alert('Some error occurred');
+        }
     };
     function parseTasks(oldTasks) {
         let displayableTasks = [];

@@ -174,6 +174,7 @@ const CardDetails = () => {
                 const textContent = quillRef.current.getText().replace(/\n/g, '');
                 if (adminRegex.test(textContent)) {
                     setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, content: textContent } : task));
+                    setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, content: textContent } : task));
                 }
                 else {
                     console.log('Invalid content detected');
@@ -189,6 +190,7 @@ const CardDetails = () => {
     return (<div style={{
             background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
         }} className="h-full pt-3">
+      <Navbar nav={nav}/>
       <Navbar nav={nav}/>
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full '>
@@ -246,6 +248,7 @@ const CardDetails = () => {
                             {task.id === 'SendText' && (<>
 
                                 
+                                <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>

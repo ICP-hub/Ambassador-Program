@@ -11,11 +11,16 @@ import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Amb
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../redux/user/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { updateUser } from '../redux/user/userSlice';
 const Home = () => {
     const [isHubModalOpen, setIsHubModalOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [filterMobile, setFilterMobile] = useState(false);
+    const nav = useNavigate();
+    const dispatch = useDispatch();
     const nav = useNavigate();
     const dispatch = useDispatch();
     const [space, setSpaces] = useState('');

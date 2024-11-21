@@ -9,6 +9,7 @@ import Balance from './Components/pages/balance/Balance';
 import MissionEdit from './Components/pages/mission/mission_edit';
 import Mission_Task from './Components/pages/mission/Mission_Task'
 import { AuthProvider, useAuthClient } from './utils/useAuthClient';
+import Task_Details from './Components/pages/Task/Task_Details';
 import Login from './Components/pages/authComponents/Login';
 import {Toaster} from 'react-hot-toast'
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path='/slug_url/role' element={<Role/>}/>
           <Route path='/slug_url/balance' element={<Balance/>}/>
           <Route path='/slug_url/mission/223/edit'element={<Mission_Task setLoading={setLoading}/>}/>
+          <Route path='/mission/223/tasks' element={<Task_Details/>}/>
         </Routes>
         </AuthProvider>
       </BrowserRouter>

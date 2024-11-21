@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Navbar/Navbar';
 import Footer from '../../Footer/Footer';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar, IconButton, Box, Menu, MenuItem } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar,Button, IconButton, Box, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { updateMission } from '../../../../redux/mission/missionSlice';
 import toast from 'react-hot-toast';
 
+import TaskIcon from '@mui/icons-material/Task';
 const SpacesDetails = ({setLoading}) => {
     const navigate=useNavigate();
   const [statusFilter, setStatusFilter] = useState('all');
@@ -106,6 +107,10 @@ const SpacesDetails = ({setLoading}) => {
     navigate('/slug_url/mission/223/edit')
   }
 
+  const handleTasks = (row) =>{
+    navigate('/mission/223/tasks',{ state: { row } });
+  }
+
   const filteredRows = statusFilter === 'all' ? rows : rows.filter(row => row.status === 'active');
   // const fil
 
@@ -123,7 +128,7 @@ const SpacesDetails = ({setLoading}) => {
           <div className='text-sm text-white bg-black py-2 px-2 lg:px-6 rounded shadow-2xl cursor-pointer' onClick={createDraftMission}>CREATE MISSION</div>
         </div>
 
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className='mt-4'>
           <Table>
             <TableHead>
               <TableRow>
@@ -162,6 +167,9 @@ const SpacesDetails = ({setLoading}) => {
                     <MenuItem onClick={handleMenuClose}>Profitability</MenuItem>
                   </Menu>
                 </TableCell>
+                <TableCell align="center">
+                  <TaskIcon />
+                </TableCell>
               </TableRow>
             </TableHead>
 
@@ -182,6 +190,22 @@ const SpacesDetails = ({setLoading}) => {
                     <TableCell align="center">{Object.keys(row?.status)[0]}</TableCell>
                     <TableCell align="center">{"----"}</TableCell>
                     <TableCell align="center"></TableCell>
+                    <TableCell align="center" onClick={()=>{handleTasks(row)}}><Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "black", 
+                        color: "black", 
+                        "&:hover": {
+                          backgroundColor: "black", 
+                          color: "white", 
+                          borderColor: "black", 
+                        },
+                      }}
+
+                    >
+                      View Tasks
+                    </Button>
+                  </TableCell>
                   </TableRow>
                 )})
               ) : (
