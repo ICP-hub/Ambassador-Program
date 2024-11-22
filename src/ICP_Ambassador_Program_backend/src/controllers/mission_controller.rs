@@ -1,22 +1,22 @@
 use ic_cdk::{caller, query, update};
 
-use crate::{check_anonymous, AdminErrors, CreateMission, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_MAP};
+use crate::{check_anonymous, Errors, CreateMission, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_MAP};
 
 use super::is_super_admin;
 
 #[update(guard = check_anonymous)]
-pub fn create_mission(mission:CreateMission)->Result<(),AdminErrors>{
+pub fn create_mission(mission:CreateMission)->Result<(),Errors>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&mission.space_id));
     let mut space_val:Space;
 
     match space {
         Some(value) => {
             if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(AdminErrors::NotOwnerOrSuperAdmin);
+                return Err(Errors::NotOwnerOrSuperAdmin);
             }
             space_val=value;
         },
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     }
 
     let id=format!("{}_{}",mission.space_id,space_val.mission_count);
@@ -44,25 +44,25 @@ pub fn create_mission(mission:CreateMission)->Result<(),AdminErrors>{
             MISSION_MAP.with(|map| map.borrow_mut().insert(new_mission.mission_id.clone(), new_mission));
             return Ok(())
         },
-        None => return Err(AdminErrors::ErrUpdatingMissionCount)
+        None => return Err(Errors::ErrUpdatingMissionCount)
     }
 
     
 }
 
 #[update(guard = check_anonymous)]
-pub fn create_draft_mission(space_id:String)->Result<(),AdminErrors>{
+pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&space_id));
     let mut space_val:Space;
 
     match space {
         Some(value) => {
             if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(AdminErrors::NotOwnerOrSuperAdmin);
+                return Err(Errors::NotOwnerOrSuperAdmin);
             }
             space_val=value;
         },
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     }
 
     let id=format!("{}_{}",space_id,space_val.mission_count);
@@ -90,41 +90,41 @@ pub fn create_draft_mission(space_id:String)->Result<(),AdminErrors>{
             MISSION_MAP.with(|map| map.borrow_mut().insert(new_mission.mission_id.clone(), new_mission));
             return Ok(())
         },
-        None => return Err(AdminErrors::ErrUpdatingMissionCount)
+        None => return Err(Errors::ErrUpdatingMissionCount)
     }
 
     
 }
 
 #[update(guard = check_anonymous)]
-pub fn edit_mission(mission:Mission)->Result<(),AdminErrors>{
+pub fn edit_mission(mission:Mission)->Result<(),Errors>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&mission.space_id));
 
     match space {
         Some(value) => {
             if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(AdminErrors::NotOwnerOrSuperAdmin);
+                return Err(Errors::NotOwnerOrSuperAdmin);
             }
         },
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     };
 
     let old_mission=MISSION_MAP.with(|map| map.borrow().get(&mission.mission_id));
 
     if old_mission.is_none(){
-        return Err(AdminErrors::MissionNotFound)
+        return Err(Errors::MissionNotFound)
     }
     
     let updated=MISSION_MAP.with(|map| map.borrow_mut().insert(mission.mission_id.clone(), mission));
 
     match updated {
         Some(_) => return Ok(()),
-        None => return Err(AdminErrors::ErrUpdatingMission)
+        None => return Err(Errors::ErrUpdatingMission)
     };
 }
 
 #[query]
-pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,AdminErrors>{
+pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,Errors>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&space_id));
     let space_val:Space;
 
@@ -133,11 +133,11 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,AdminErrors>
             // commented this as unauthenticated users on client side also need to see this
             
             // if value.owner!=caller() && !is_super_admin(caller()) {
-            //     return Err(AdminErrors::NotOwnerOrSuperAdmin);
+            //     return Err(Errors::NotOwnerOrSuperAdmin);
             // }
             space_val=value;
         },
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     }
 
     let mut count=0;
@@ -162,11 +162,11 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,AdminErrors>
 }
 
 #[query]
-pub fn get_mission(mission_id:String)-> Result<Mission,AdminErrors>{
+pub fn get_mission(mission_id:String)-> Result<Mission,Errors>{
     let mission=MISSION_MAP.with(|map| map.borrow().get(&mission_id));
     match mission {
         Some(value) => return Ok(value),
-        None => return Err(AdminErrors::MissionNotFound)
+        None => return Err(Errors::MissionNotFound)
     }
 }
 // pub fn get_all_active_missions(){

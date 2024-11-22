@@ -2,15 +2,15 @@ use candid::Principal;
 use ic_cdk::{caller,query,update};
 // use uuid::Uuid;
 
-use crate::{Admin, AdminErrors, CreateSpace, Space, SpaceURLs, ADMIN_MAP, SPACE_MAP,check_anonymous};
+use crate::{Admin, Errors, CreateSpace, Space, SpaceURLs, ADMIN_MAP, SPACE_MAP,check_anonymous};
 
 use super::{is_super_admin, is_valid_admin};
 
 #[update(guard = check_anonymous)]
-pub fn create_space(space:CreateSpace)->Result<Option<Space>,AdminErrors>{
+pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
 
     if !is_valid_admin(caller()){
-        return Err(AdminErrors::NotRegisteredAsAdmin)
+        return Err(Errors::NotRegisteredAsAdmin)
     }
 
     let id=update_admin_spaces(caller());
@@ -49,10 +49,10 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,AdminErrors>{
 }
 
 #[update(guard = check_anonymous)]
-pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
+pub fn update_space(updated_space:Space)->Result<(),Errors>{
 
     if !is_valid_admin(caller()){
-        return Err(AdminErrors::NotRegisteredAsAdmin)
+        return Err(Errors::NotRegisteredAsAdmin)
     }
 
     let old_space=SPACE_MAP.with(|map| map.borrow().get(&updated_space.space_id));
@@ -60,10 +60,10 @@ pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
     match old_space {
         Some(value) => {
             if value.owner != caller() {
-                return Err(AdminErrors::NotOwnerOrSuperAdmin)
+                return Err(Errors::NotOwnerOrSuperAdmin)
             };
         },
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     };
 
    
@@ -71,7 +71,7 @@ pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
     let updated= SPACE_MAP.with(|map| map.borrow_mut().insert(updated_space.space_id.clone(), updated_space));
     match updated {
         Some(_) => return Ok(()),
-        None => return Err(AdminErrors::SpaceUpdateError)
+        None => return Err(Errors::SpaceUpdateError)
     }
 
 
@@ -79,42 +79,42 @@ pub fn update_space(updated_space:Space)->Result<(),AdminErrors>{
 
 // #[query(guard = check_anonymous)]
 #[query]
-pub fn get_space(space_id:String)->Result<Space,AdminErrors>{
+pub fn get_space(space_id:String)->Result<Space,Errors>{
 
     // if !is_valid_admin(caller()){
-    //     return Err(AdminErrors::NotRegisteredAsAdmin)
+    //     return Err(Errors::NotRegisteredAsAdmin)
     // }
 
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
 
     match space {
         Some(value) => return Ok(value),
-        None => return Err(AdminErrors::NoSpaceFound)
+        None => return Err(Errors::NoSpaceFound)
     }
 }
 
 #[query(guard = check_anonymous)]
-pub fn get_all_admin_spaces()->Result<Vec<String>,AdminErrors>{
+pub fn get_all_admin_spaces()->Result<Vec<String>,Errors>{
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
     if admin.is_none(){
-        return Err(AdminErrors::NotRegisteredAsAdmin)
+        return Err(Errors::NotRegisteredAsAdmin)
     }
     return Ok(admin.unwrap().spaces);
 }
 
 // #[query(guard = check_anonymous)]
 #[query]
-pub fn get_all_spaces()->Result<Vec<(String,Space)>,AdminErrors>{
+pub fn get_all_spaces()->Result<Vec<(String,Space)>,Errors>{
 
     // if !is_super_admin(caller()) {
-    //     return Err(AdminErrors::NotASuperAdmin)
+    //     return Err(Errors::NotASuperAdmin)
     // }
 
     let spaces:Vec<(String,Space)>=SPACE_MAP.with(|map| map.borrow().iter().collect());
     return Ok(Vec::from_iter(spaces));
 }
 
-fn update_admin_spaces(id:Principal)->Result<String,AdminErrors>{
+fn update_admin_spaces(id:Principal)->Result<String,Errors>{
     let admin=ADMIN_MAP.with(|map| map.borrow().get(&id));
     let mut new_admin:Admin = admin.unwrap();
     
@@ -125,6 +125,6 @@ fn update_admin_spaces(id:Principal)->Result<String,AdminErrors>{
 
     match updated {
         Some(_) => Ok(space_id),
-        None => Err(AdminErrors::NotRegisteredAsAdmin)
+        None => Err(Errors::NotRegisteredAsAdmin)
     }
 }

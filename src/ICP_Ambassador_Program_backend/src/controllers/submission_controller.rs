@@ -1,21 +1,21 @@
 use ic_cdk::{query, update};
 
-use crate::{AdminErrors, Submission, UserProfile, MISSION_MAP, SPACE_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
+use crate::{Errors, Submission, UserProfile, MISSION_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
 
 #[update]
-pub fn add_or_update_submission(submission:Submission)->Result<(),AdminErrors>{
+pub fn add_or_update_submission(submission:Submission)->Result<(),Errors>{
 
     let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&submission.user));
     let user_val:UserProfile;
     match user{
         Some(value) => user_val=value,
-        None => return Err(AdminErrors::NoUserFound)
+        None => return Err(Errors::NoUserFound)
     }
 
     let mission=MISSION_MAP.with(|map| map.borrow().get(&submission.mission_id));
         match mission {
             Some(_) => (),
-            None=>return Err(AdminErrors::MissionNotFound)
+            None=>return Err(Errors::MissionNotFound)
         }
     
     if submission.submission_id.is_empty() {
@@ -38,24 +38,26 @@ pub fn add_or_update_submission(submission:Submission)->Result<(),AdminErrors>{
                 let updated=SUBMISSION_MAP.with(|map| map.borrow_mut().insert(submission.submission_id, value));
                 match updated{
                     Some(_) => return Ok(()),
-                    None => return Err(AdminErrors::ErrUpdatingSubmission) 
+                    None => return Err(Errors::ErrUpdatingSubmission) 
                 }
             },
-            None => return Err(AdminErrors::NoSubmissionFound)
+            None => return Err(Errors::NoSubmissionFound)
         }
     }
 }
 
 #[query]
-pub fn get_submission(id:String)->Result<Submission,AdminErrors>{
+pub fn get_submission(id:String)->Result<Submission,Errors>{
     let submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id));
 
     match submission {
         Some(val)=>return Ok(val),
-        None=>return Err(AdminErrors::NoSubmissionFound)
+        None=>return Err(Errors::NoSubmissionFound)
     }
 }
 
-pub fn approve_submission(){
-
+#[update]
+pub fn approve_submission(id:String)->Result<String,String>{
+    let submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
+    return Ok("still in development".to_string()); 
 }

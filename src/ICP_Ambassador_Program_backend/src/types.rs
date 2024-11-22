@@ -10,13 +10,12 @@ pub struct UpdateUser{
 //
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType, PartialEq)]
 pub enum UserLevel {
-    Initiate,    // Level 1
-    Padawan,     // Level 2
-    Knight,      // Level 3
-    Master,      // Level 4
-    GrandMaster, // Level 5
+    Initiate, 
+    Padawan,  
+    Knight,   
+    Master,   
+    GrandMaster,
 }
-//
 
 // admin
 
@@ -169,7 +168,7 @@ pub enum UserErrors {
 }
 
 #[derive(CandidType,Deserialize)]
-pub enum AdminErrors{
+pub enum Errors{
     NotASuperAdmin,
     NotOwnerOrSuperAdmin,
     NotRegisteredAsAdmin,
@@ -184,5 +183,6 @@ pub enum AdminErrors{
     ErrUpdatingMission,
     NoUserFound,
     ErrUpdatingSubmission,
-    NoSubmissionFound
+    NoSubmissionFound,
+    ReferrerNotFound
 }

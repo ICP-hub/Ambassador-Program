@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
 
-use std::collections::HashMap;
 use crate::{types, TaskSubmitted, Tasks, UserLevel};
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
@@ -36,25 +35,45 @@ thread_local! {
     pub static SUBMISSION_MAP:RefCell<StableBTreeMap<String,Submission,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
     ));
-    pub static REFERRAL_TREE: RefCell<HashMap<Principal, Vec<Principal>>> = RefCell::new(HashMap::new());
+
+    pub static REFERRAL_BENEFICIARY_MAP:RefCell<StableBTreeMap<String,Benefactors,Memory>>  = RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
+    ));
     
 
 }
 
 // storables
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Benefactors{
+    pub user:String,
+    pub benefactors:Vec<String>
+}
+
+impl Storable for Benefactors{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Benefactors");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Benefactors")
+    }
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct UserProfile {
-   pub user_id: String,                    // user_id is derived from discord_id
    pub discord_id: String,
    pub username: String,
    pub wallet: Option<Principal>,
-   pub referrer: Option<Principal>,        // Principal of the user who referred them
-   pub hub: Option<String>,                // Selected Hub (instead of KYC)
-   pub xp_points: u64,                     // Cumulative XP points earned by the user
-   pub redeem_points: u64,                 // Redeemable points available to the user
-   pub level: UserLevel,                   // Level of the user
-   pub referrals: Vec<Principal>,          // List of direct referrals
+   pub direct_refers: Vec<String>,      
+   pub hub: String,
+   pub xp_points: u64,     
+   pub redeem_points: u64, 
+   pub level: UserLevel,
+   pub referred_by:Option<String>   
 }
 
 // Implement the Storable trait for UserProfile
