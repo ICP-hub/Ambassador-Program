@@ -6,6 +6,7 @@ import { FaDiscord } from "react-icons/fa";
 import { BiLogoTelegram } from "react-icons/bi";
 import { FaFileUpload } from "react-icons/fa";
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 const Card = ({ contest,hub }) => {
   //console.log(hub)
@@ -70,7 +71,12 @@ const Card = ({ contest,hub }) => {
 
   const handleCard = () => {
     //console.log("Contest",contest)
-    navigate('/contest_details', { state: { updatedContest } });
+    let user=Cookies.get('discord_user')
+    if(user){
+      navigate('/contest_details', { state: { updatedContest } });
+    }else{
+      toast.error("Please login to view the details")
+    }
   };
 
 

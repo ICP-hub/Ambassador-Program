@@ -23,6 +23,7 @@ const CardDetails = () => {
   const [description, setDescription] = useState(''); 
   const [submission,setSubmission]=useState(null)
   const [loading,setLoading]=useState(false)
+  const [subStatus,setSubStatus]=useState("")
   const nav=useNavigate()
   const [tasks, setTasks] = useState(
     updatedContest.tasks
@@ -58,22 +59,20 @@ const CardDetails = () => {
       let res=await ICP_Ambassador_Program_backend.get_submission(`${updatedContest.mission_id}_${user.id}`)
       console.log("previous submission : ",res,updatedContest,`${updatedContest.mission_id}_${user.id}`)
       if(res?.Ok){
- 
+        setSubStatus(Object.keys(res?.Ok?.status)[0])
         setSubmission(res?.Ok)
         parseTasks(tasks,res?.Ok?.tasks_submitted)
       }else{
-        console.log({
+        let newSubmission={
           submission_id:'',
           mission_id:updatedContest.mission_id,
           tasks_submitted:[],
-          user:user?.id
-        })
-        setSubmission({
-          submission_id:'',
-          mission_id:updatedContest?.mission_id,
-          tasks_submitted:[],
-          user:user?.id
-        })
+          user:user?.id,
+          status:{Unread:null}
+        }
+        console.log(newSubmission)
+        setSubStatus("Unread")
+        setSubmission(newSubmission)
       }
     } catch (error) {
       console.log("error while fetching submission : ",error)
@@ -395,12 +394,20 @@ const CardDetails = () => {
                 </div>
             ))}
             <div className='w-full flex justify-center'>
-              <button
-                onClick={addSubmission}
-                className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
-              >
-                {submission?.submission_id==""?"Submit":"Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24} />
-              </button>
+              {
+                subStatus=="Unread"?
+                <button
+                  onClick={addSubmission}
+                  className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                >
+                  {submission?.submission_id==""?"Submit":"Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24} />
+                </button>
+                :
+                <p className='w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3'>
+                  {`Submission ${subStatus}`}
+                </p>
+              }
+              
             </div>
            
         

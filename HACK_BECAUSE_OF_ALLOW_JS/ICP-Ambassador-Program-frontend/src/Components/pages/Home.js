@@ -11,16 +11,14 @@ import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Amb
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../redux/user/userSlice';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { updateUser } from '../redux/user/userSlice';
+import ReactModal from 'react-modal';
+import ReferralModal from '../modules/Navbar/ReferralModal';
 const Home = () => {
     const [isHubModalOpen, setIsHubModalOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [filterMobile, setFilterMobile] = useState(false);
-    const nav = useNavigate();
-    const dispatch = useDispatch();
+    const [refModal, openRefModal] = useState(false);
     const nav = useNavigate();
     const dispatch = useDispatch();
     const [space, setSpaces] = useState('');
@@ -105,7 +103,7 @@ const Home = () => {
       </div>);
     }
     return (<div className="flex flex-col rounded-md m-3 h-screen " style={{ backgroundColor: '#16161a' }}>
-      <Navbar nav={nav}/>
+      <Navbar nav={nav} openRefModal={openRefModal}/>
       <FilterProvider>
         <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
           
@@ -131,6 +129,11 @@ const Home = () => {
 
       
       {filterMobile && (<FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)}/>)}
+      <ReactModal isOpen={refModal} className='modal' ariaHideApp={false} style={{
+            overlay: { backdropFilter: 'blur(3px)', zIndex: 50, backgroundColor: 'rbg(0,0,0,0%)' },
+        }}>
+          <ReferralModal setOpen={openRefModal}/>
+        </ReactModal>
     </div>);
 };
 export default Home;

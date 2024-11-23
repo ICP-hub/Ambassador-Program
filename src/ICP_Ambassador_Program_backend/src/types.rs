@@ -159,6 +159,13 @@ pub enum TaskSubmitted{
     }
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType,PartialEq)]
+pub enum SubmissionStatus{
+    Approved,
+    Rejected,
+    Unread
+}
+
 // errors 
 
 #[derive(CandidType,Deserialize)]
@@ -184,5 +191,6 @@ pub enum Errors{
     NoUserFound,
     ErrUpdatingSubmission,
     NoSubmissionFound,
-    ReferrerNotFound
+    ReferrerNotFound,
+    SubmissionAlreadyReviewed
 }

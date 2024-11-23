@@ -10,6 +10,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { updateMission } from '../../../../redux/mission/missionSlice';
+import toast from 'react-hot-toast';
 import TaskIcon from '@mui/icons-material/Task';
 const SpacesDetails = ({ setLoading }) => {
     const navigate = useNavigate();
@@ -42,16 +43,17 @@ const SpacesDetails = ({ setLoading }) => {
             const res = await actors?.backendActor.create_draft_mission(spaces.space_id);
             console.log(res);
             if (res?.Ok == null && res != undefined && res != null) {
-                alert("Mission added as a draft successfully");
+                toast.success("Mission added as a draft successfully");
                 window.location.reload();
             }
             else {
-                alert('Some error occurred!');
+                toast.error('Some error occurred!');
                 setLoading(false);
             }
         }
         catch (error) {
             setLoading(false);
+            toast.error("Something went wrong");
             console.log("error creating draft mission : ", error);
         }
     }

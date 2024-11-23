@@ -83,13 +83,14 @@
 import React from 'react';
 import { MdClose } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa";
-import { DISCORD_CLIENT_ID } from '../../../Util/file';
+import { DISCORD_CLIENT_ID } from '../../auth/authdata';
 const LoginModel = ({ isOpen, onClose }) => {
     if (!isOpen)
         return null;
     // const REDIRECT_URI = "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback";
     const REDIRECT_URI = "http://localhost:3000/auth/discord/callback";
     const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify email connections`;
+    // const DISCORD_OAUTH_URL= `https://discord.com/oauth2/authorize?client_id=1303682602825158676&response_type=code&redirect_uri=https%3A%2F%2Fkgmyp-myaaa-aaaao-a3u4a-cai.icp0.io%2Fauth%2Fdiscord%2Fcallback&scope=identify+email+connections`
     const handleDiscordLogin = () => {
         window.location.href = DISCORD_OAUTH_URL;
     };

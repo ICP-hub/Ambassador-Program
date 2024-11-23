@@ -18,7 +18,7 @@ import { HiMenu } from 'react-icons/hi';
 import WalletSidebar from '../../wallet/walletSidebar';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
-const Navbar = ({ nav }) => {
+const Navbar = ({ nav, openRefModal }) => {
     const [isModelOpen, setModelOpen] = useState(false);
     const [isSideBarOpen, setSideBarOpen] = useState(false);
     const [isSideBar, setIsSideBar] = useState(false);
@@ -190,7 +190,7 @@ const Navbar = ({ nav }) => {
                 </div>)}
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)}/>
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)}/>
-        {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen}/>)}
+        {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal}/>)}
         {openWallet && (<WalletSidebar onClose={handleCloseWallet} isOpen={openWallet}/>)}
            
     </div>);

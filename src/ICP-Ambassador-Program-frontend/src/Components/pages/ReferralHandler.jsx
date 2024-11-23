@@ -11,7 +11,7 @@ const ReferralHandler = () => {
             const referredBy = query.get('ref');
             console.log(`You are being referred by ${referredBy}`)
             if(referredBy!=null){
-                Cookies.set('ref',referredBy)
+                Cookies.set('ref',referredBy,{ expires: 1 / 1440 })
             }
             nav('/')
         }

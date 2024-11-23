@@ -107,6 +107,63 @@ pub fn get_all_user_benefactors(id:String)->Result<Benefactors,String>{
     }
 }
 
+#[query]
+pub fn get_user_data(id:String)->Option<UserProfile>{
+    return USER_PROFILE_MAP.with(|map| map.borrow().get(&id));
+}
+
+pub fn update_points(discord_id: String,points:u64)->Result<(),String>{
+    if points==0{
+        return Ok(())
+    }
+    let old_user=USER_PROFILE_MAP.with(|map| map.borrow().get(&discord_id));
+    let mut new_user:UserProfile;
+
+    match old_user{
+        Some(val)=>new_user=val,
+        None=>return Err("No user found to update points".to_string())
+    }
+
+    new_user.xp_points+=points;
+    new_user.redeem_points+=points;
+
+    let new_level=determine_level(new_user.xp_points);
+    if new_user.level != new_level{
+        new_user.level=new_level.clone();
+        match new_level {
+            UserLevel::Initiate=>{},
+            UserLevel::Padawan=>{
+                new_user.xp_points+=10;
+                new_user.redeem_points+=10
+            },
+            UserLevel::Knight=>{
+                new_user.xp_points+=100;
+                new_user.redeem_points+=100;
+            },
+            UserLevel::Master=>{
+                new_user.xp_points+=1000;
+                new_user.redeem_points+=1000;
+            },
+            UserLevel::GrandMaster=>{
+                new_user.xp_points+=10000;
+                new_user.redeem_points+=10000;
+            }
+        }
+    }
+
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(new_user.discord_id.clone(), new_user));
+    return Ok(());
+}
+
+fn determine_level(points:u64)->UserLevel{
+    match points {
+        0..=99=>UserLevel::Initiate,
+        100..=999=>UserLevel::Padawan,
+        1000..=9999=>UserLevel::Knight,
+        10000..=99999=>UserLevel::Master,
+        _=>UserLevel::GrandMaster
+    }
+}
 
 // #[update]
 // fn add_points(discord_id: String, redeem_points: u64) -> Result<String, String> {

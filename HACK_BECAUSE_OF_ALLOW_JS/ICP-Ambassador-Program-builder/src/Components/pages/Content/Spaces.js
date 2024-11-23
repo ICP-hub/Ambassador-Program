@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import SpaceCard from './SpaceCard';
 import { useDispatch } from 'react-redux';
 import { updateSpace } from '../../../redux/spaces/spaceSlice';
+import toast from 'react-hot-toast';
 const Spaces = ({ setLoading }) => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,12 +36,12 @@ const Spaces = ({ setLoading }) => {
             }
             else {
                 setLoading(false);
-                alert('Some error occurred!');
+                toast.error('Some error occurred!');
             }
         }
         catch (error) {
             setLoading(false);
-            alert('Some error occurred!');
+            toast.error('Something went wrong!');
             console.log("space creation error : ", error);
         }
     }

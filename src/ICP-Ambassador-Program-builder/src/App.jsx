@@ -32,14 +32,14 @@ function App() {
       <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path='/login' element={<Login/>}/>
+          <Route path='/login' element={<Login />}/>
           <Route path ='/' element={<Home setLoading={setLoading}/>}/>
           <Route path='/space_details' element={<Space_Details setLoading={setLoading}/>}/>
           <Route path='/slug_url/mission' element={<SpacesDetails setLoading={setLoading}/>}/>
           <Route path='/slug_url/role' element={<Role/>}/>
           <Route path='/slug_url/balance' element={<Balance/>}/>
           <Route path='/slug_url/mission/223/edit'element={<Mission_Task setLoading={setLoading}/>}/>
-          <Route path='/mission/223/tasks' element={<Task_Details/>}/>
+          <Route path='/mission/223/tasks' element={<Task_Details setLoading={setLoading}/>}/>
         </Routes>
         </AuthProvider>
       </BrowserRouter>

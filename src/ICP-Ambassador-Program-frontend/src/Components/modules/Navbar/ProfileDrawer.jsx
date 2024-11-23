@@ -2,11 +2,12 @@ import React, { useState,useEffect } from 'react';
 import { MdClose } from "react-icons/md";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import Cookies from 'js-cookie'
-const ProfileDrawer = ({ user, onClose, isOpen }) => {
+const ProfileDrawer = ({ user, onClose, isOpen,openRefModal }) => {
     // console.log("user ==>",user)
     const [points,setPoints]=useState(0)
     const [hub,setHub]=useState('')
     const baseReferral=`http://localhost:3000/ref?ref=`
+    // const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
     useEffect(()=>{
         const HUB=Cookies.get('selectedHubName')
         setHub(HUB)
@@ -14,6 +15,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
     const handlelogout =() =>{
         localStorage.removeItem('discord_user')
         Cookies.remove('discord_user')
+        Cookies.remove('ref')
         window?.location?.reload()
     }
 
@@ -29,7 +31,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                 </button>
             </div>
             
-            <h2 className="text-xl font-semibold mb-4">Profile Details</h2>
+            <h2 className="text-xl font-semibold mb-4">{user.username}</h2>
             <div className='flex justify-center items-center mb-3 mt-3'>
             <img
                         src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
@@ -39,7 +41,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
             </div>
             <div className='flex flex-col gap-3'>
                 <p className=' mt-3 border-b border-gray-500 pb-4'><strong >Discord ID:</strong> {user.discord_id}</p>
-                <p className=' mt-3 border-b border-gray-500 pb-4'><strong>Username:</strong> {user.username}</p>
+                <p className=' mt-3 border-b border-gray-500 pb-4'><strong>Current Level :</strong> {' '+Object.keys(user.level)[0]}</p>
                 <p className=' mt-3'><strong>Hub Connected To:</strong> {hub}</p>
             </div>
            
@@ -92,7 +94,7 @@ const ProfileDrawer = ({ user, onClose, isOpen }) => {
                     <a href={baseReferral+user.discord_id} target='blank' className='text-blue-600 text-sm font-bold cursor-pointer'>
                         {baseReferral+user.discord_id}
                     </a>
-                    <p className='mt-3 text-sm underline font-semibold cursor-pointer'>
+                    <p className='mt-3 text-sm underline font-semibold cursor-pointer' onClick={()=>openRefModal(true)}>
                         View people referred by You
                     </p>
                 </div>

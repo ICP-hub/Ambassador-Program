@@ -96,7 +96,7 @@ const MissionEdit = ({setLoading}) => {
   const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
   const [participantsCount, setParticipantsCount] = useState('');
   const nav=useNavigate()
-  const handlesave = async() =>{
+  const handlesave = async(action) =>{
     try{
       const draft_data ={
         Title:title,
@@ -151,7 +151,7 @@ const MissionEdit = ({setLoading}) => {
         ...mission,
         title:title,
         description:description,
-        status:{Active:null},
+        status:action=="save"?{Draft:null}:{Active:null},
         reward:parseInt(rewardsData),
         tasks:finalTasks
       }
@@ -430,11 +430,12 @@ const MissionEdit = ({setLoading}) => {
             ))}
           </div>
           
-          <div className='flex justify-between'>
+          <div className='flex justify-start gap-8'>
             <Button variant="outlined" className="w-44 mt-2 mb-5" onClick={handleTaskbar}>
               ADD TASK
             </Button>
-            <Button variant="contained" onClick={handlesave}>Save</Button>
+            <Button variant="contained" onClick={()=>handlesave("save")}>Save as Draft</Button>
+            <Button variant="contained" onClick={()=>handlesave("publish")}>Publish</Button>
           </div>
           
 

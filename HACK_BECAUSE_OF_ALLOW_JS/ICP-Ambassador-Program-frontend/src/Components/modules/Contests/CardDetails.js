@@ -14,6 +14,7 @@ import 'quill/dist/quill.snow.css';
 // import upload_background from '../../../assets/images/upload_background.png'
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 const CardDetails = () => {
     const adminRegex = /^[A-Za-z0-9\s]+$/;
     const location = useLocation();
@@ -21,38 +22,63 @@ const CardDetails = () => {
     const [description, setDescription] = useState('');
     const [submission, setSubmission] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [subStatus, setSubStatus] = useState("");
     const nav = useNavigate();
     const [tasks, setTasks] = useState(updatedContest.tasks);
+    function parseTasks(mission_tasks, sub_tasks) {
+        try {
+            let new_tasks = [];
+            console.log(mission_tasks, sub_tasks);
+            for (let i = 0; i < sub_tasks.length; i++) {
+                let taskType = Object.keys(sub_tasks[i])[0];
+                console.log(taskType);
+                if (taskType == "SendText") {
+                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.text });
+                }
+                if (taskType == "SendImage") {
+                    new_tasks.push({ ...mission_tasks[i], image: sub_tasks[i][taskType]?.img });
+                }
+                if (taskType == "SendUrl") {
+                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.url });
+                }
+            }
+            console.log("parsed mission tasks : ", new_tasks);
+            setTasks(new_tasks);
+        }
+        catch (error) {
+            console.log("err parsing task submission : ", error);
+        }
+    }
     async function getSubmission() {
         try {
             let user = JSON.parse(Cookies.get('discord_user'));
             let res = await ICP_Ambassador_Program_backend.get_submission(`${updatedContest.mission_id}_${user.id}`);
             console.log("previous submission : ", res, updatedContest, `${updatedContest.mission_id}_${user.id}`);
             if (res?.Ok) {
+                setSubStatus(Object.keys(res?.Ok?.status)[0]);
                 setSubmission(res?.Ok);
+                parseTasks(tasks, res?.Ok?.tasks_submitted);
             }
             else {
-                console.log({
+                let newSubmission = {
                     submission_id: '',
                     mission_id: updatedContest.mission_id,
                     tasks_submitted: [],
-                    user: user?.id
-                });
-                setSubmission({
-                    submission_id: '',
-                    mission_id: updatedContest?.mission_id,
-                    tasks_submitted: [],
-                    user: user?.id
-                });
+                    user: user?.id,
+                    status: { Unread: null }
+                };
+                console.log(newSubmission);
+                setSubStatus("Unread");
+                setSubmission(newSubmission);
             }
         }
         catch (error) {
             console.log("error while fetching submission : ", error);
         }
     }
-    async function addSubmission(e) {
+    async function addSubmission() {
         try {
-            e.preventDefault();
+            // e.preventDefault();
             console.log("before finaltasks : ", tasks);
             let user = JSON.parse(Cookies.get('discord_user'));
             let finalTasks = [];
@@ -78,7 +104,7 @@ const CardDetails = () => {
                     task = {
                         SendUrl: {
                             id: tasks[i]?.task_id,
-                            text: tasks[i]?.content || ""
+                            url: tasks[i]?.content || ""
                         }
                     };
                 }
@@ -96,18 +122,18 @@ const CardDetails = () => {
             console.log(res);
             if (typeof res == "object" && !res?.Err) {
                 setLoading(false);
-                alert(submission.submission_id == "" ? "Added new submission" : 'Updated the submission');
+                toast.success(submission.submission_id == "" ? "Added new submission" : 'Updated the submission');
                 nav('/');
             }
             else {
                 setLoading(false);
-                alert('Some error occurred while submitting');
+                toast.error("Some error occurred while submitting");
             }
         }
         catch (err) {
             console.log("err updating submission : ", err);
             setLoading(false);
-            alert('Something went wrong');
+            toast.error("Something went wrong");
         }
     }
     const handleInputChange = (e, taskId) => {
@@ -167,13 +193,12 @@ const CardDetails = () => {
                         ['hr'],
                     ],
                 },
-                placeholder: 'Enter your submittion...',
+                placeholder: 'Enter your submission...',
             });
             quillRef.current.clipboard.dangerouslyPasteHTML(description);
             quillRef.current.on('text-change', () => {
                 const textContent = quillRef.current.getText().replace(/\n/g, '');
                 if (adminRegex.test(textContent)) {
-                    setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, content: textContent } : task));
                     setTasks((prevTasks) => prevTasks.map((task) => task.id === 'SendText' ? { ...task, content: textContent } : task));
                 }
                 else {
@@ -190,7 +215,6 @@ const CardDetails = () => {
     return (<div style={{
             background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
         }} className="h-full pt-3">
-      <Navbar nav={nav}/>
       <Navbar nav={nav}/>
       <div className='flex justify-center items-center ml-20 '>
       <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full '>
@@ -249,16 +273,16 @@ const CardDetails = () => {
 
                                 
                                 <div className="text-white font-semibold text-md">{task.description}</div>
-                                <div className="text-white font-semibold text-md">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
-                                    <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
+                                    {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
+                                    <textarea rows={10} className='w-full py-2 px-3 bg-[#1d1d21]' onChange={(e) => handleInputChange(e, task.task_id)} value={task.content}/>
                                 </div>
                             </>)}
                             {task.id === 'SendUrl' && (<>
                               <div className='flex flex-col gap-3'>
 
                               <div className="text-white font-semibold text-md">{task.description}</div>
-                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded text-black'/>
+                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded text-black' value={task.content}/>
 
                               </div>
                             
@@ -283,16 +307,34 @@ const CardDetails = () => {
                                 </div>
                             </div>)}
                             <div className='flex items-center justify-center'>
-                            <button type="submit" className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3">
-                                Submit <MdOutlineArrowOutward className="ml-3" size={24}/>
-                            </button>
+                            {/* <button
+                    type="submit"
+                    className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                >
+                    Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                </button> */}
                             </div>
-                        </form>) : (<div className="text-white text-md flex justify-center items-center">Already Submitted</div>)}
+                        </form>) : (
+            // <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
+            <></>)}
+                        
                     </AccordionDetails>
                     </Accordion>
+                    
                 </div>
                 </div>))}
-    
+            <div className='w-full flex justify-center'>
+              {subStatus == "Unread" ?
+            <button onClick={addSubmission} className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3">
+                  {submission?.submission_id == "" ? "Submit" : "Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24}/>
+                </button>
+            :
+                <p className='w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3'>
+                  {`Submission ${subStatus}`}
+                </p>}
+              
+            </div>
+           
         
         
        

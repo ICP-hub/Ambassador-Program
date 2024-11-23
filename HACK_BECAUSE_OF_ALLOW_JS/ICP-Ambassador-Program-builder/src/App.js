@@ -11,6 +11,7 @@ import Mission_Task from './Components/pages/mission/Mission_Task';
 import { AuthProvider, useAuthClient } from './utils/useAuthClient';
 import Task_Details from './Components/pages/Task/Task_Details';
 import Login from './Components/pages/authComponents/Login';
+import { Toaster } from 'react-hot-toast';
 function App() {
     const { isAuthenticated } = useAuthClient();
     const [loading, setLoading] = useState(false);
@@ -23,7 +24,9 @@ function App() {
       </div>);
     }
     else {
-        return (<BrowserRouter>
+        return (<>
+      <Toaster />
+      <BrowserRouter>
       <AuthProvider>
         <Routes>
           <Route path='/login' element={<Login />}/>
@@ -33,10 +36,11 @@ function App() {
           <Route path='/slug_url/role' element={<Role />}/>
           <Route path='/slug_url/balance' element={<Balance />}/>
           <Route path='/slug_url/mission/223/edit' element={<Mission_Task setLoading={setLoading}/>}/>
-          <Route path='/mission/223/tasks' element={<Task_Details />}/>
+          <Route path='/mission/223/tasks' element={<Task_Details setLoading={setLoading}/>}/>
         </Routes>
         </AuthProvider>
-      </BrowserRouter>);
+      </BrowserRouter>
+      </>);
     }
 }
 export default App;

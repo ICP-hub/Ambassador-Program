@@ -14,6 +14,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 const ItemTypes = {
     TASK: 'task',
 };
@@ -58,7 +59,7 @@ const MissionEdit = ({ setLoading }) => {
     const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
     const [participantsCount, setParticipantsCount] = useState('');
     const nav = useNavigate();
-    const handlesave = async () => {
+    const handlesave = async (action) => {
         try {
             const draft_data = {
                 Title: title,
@@ -110,7 +111,7 @@ const MissionEdit = ({ setLoading }) => {
                 ...mission,
                 title: title,
                 description: description,
-                status: { Active: null },
+                status: action == "save" ? { Draft: null } : { Active: null },
                 reward: parseInt(rewardsData),
                 tasks: finalTasks
             };
@@ -120,22 +121,18 @@ const MissionEdit = ({ setLoading }) => {
             console.log(res);
             if (res != null && res != undefined && res?.Err == undefined) {
                 setLoading(false);
-                alert('Mission updated successfully');
+                toast.success('Mission updated successfully');
                 nav('/');
             }
             else {
                 setLoading(false);
-                alert('Some error occurred');
+                toast.error('Some error occurred');
             }
         }
         catch (err) {
             console.log("err updating mission : ", err);
-            alert("some error occurred!");
+            toast.error("some error occurred!");
             setLoading(false);
-        }
-        else {
-            setLoading(false);
-            alert('Some error occurred');
         }
     };
     function parseTasks(oldTasks) {
@@ -341,11 +338,12 @@ const MissionEdit = ({ setLoading }) => {
             {tasks.map((task, index) => (<DraggableTask key={index} index={index} task={task} moveTask={moveTask} onDelete={handleDeleteTask} handleUpdateTaskField={handleUpdateTaskField}/>))}
           </div>
           
-          <div className='flex justify-between'>
+          <div className='flex justify-start gap-8'>
             <Button variant="outlined" className="w-44 mt-2 mb-5" onClick={handleTaskbar}>
               ADD TASK
             </Button>
-            <Button variant="contained" onClick={handlesave}>Save</Button>
+            <Button variant="contained" onClick={() => handlesave("save")}>Save as Draft</Button>
+            <Button variant="contained" onClick={() => handlesave("publish")}>Publish</Button>
           </div>
           
 

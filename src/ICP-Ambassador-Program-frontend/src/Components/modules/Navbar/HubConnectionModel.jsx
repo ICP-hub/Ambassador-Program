@@ -6,21 +6,36 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
     const [selectedHub, setSelectedHub] = useState([]);
+    const [verified,setVerified] = useState(false)
+    const [joined,setJoined]=useState(false)
+    const guildID=1309834458777653279
 
-    
-    
+    async function verifyGuildJoined(){
+        try {
+            let token=Cookies.get('token')
+            const res=await fetch(`https://discord.com/api/guilds/${guildID}/members/search`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              console.log('res from joinguild : ',await res.json())
+        } catch (error) {
+            console.log('err joining guild',error)
+        }
+    }
+
     const handleSubmit = () => {
         
         localStorage.setItem('selectedHub', selectedHub);
         localStorage.setItem('referralCode', referralCode);
+        let referrer=Cookies.get("ref")
         const user = JSON.parse(Cookies.get('discord_user'));
         console.log("user ==>",user)
         const user_data={
             discord_id:user.id,
             username:user.username,
-            wallet:[], 
             hub:selectedHub,
-            referrer_principal: []
+            referrer_principal: referrer?[referrer]:[]
         }
         console.log(user_data)
         setLoading(true)
@@ -33,12 +48,11 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
 
     const createUserInBackend = async (user_data) => {
         try {
-            const { discord_id, username, wallet, hub, referrer_principal } = user_data;
+            const { discord_id, username, hub, referrer_principal } = user_data;
             // console.log("passing data ==>",user_data);
             const result = await ICP_Ambassador_Program_backend.create_user(
                 discord_id,
                 username,
-                wallet,
                 hub,
                 referrer_principal
             );
@@ -55,7 +69,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     const handleSelectChange = (e) => {
         const selectedSpaceId = e.target.value;
     
-        const selectedSpaceIds = [selectedSpaceId];
+        const selectedSpaceIds = selectedSpaceId;
         const selectedSpace = spaces.find(space => space.space_id === selectedSpaceId);
         
         
@@ -74,34 +88,47 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex gap-3 items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-96">
-                <h2 className="text-xl font-semibold mb-4">Connect to a Hub</h2>
-                <input
-                    type="text"
-                    placeholder="Referral Code (optional)"
-                    value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value)}
-                    className="border rounded p-2 w-full mb-4"
-                />
-                <select
-                    value={selectedHub}
-                    onChange={handleSelectChange}
-                    className="border rounded p-2 w-full mb-4"
-                >
-                    <option value="">Select a Hub</option>
-                    {spaces.map(space => (
-                        <option key={space.space_id} value={space.space_id}>
-                            {space.name}
-                        </option>
-                    ))}
-                </select>
-                <div className="flex justify-end">
-                    <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">
-                        Save
-                    </button>
-                    <button onClick={onClose} className="ml-2 bg-gray-300 px-4 py-2 rounded">
-                        Cancel
-                    </button>
-                </div>
+                {
+                    !verified?
+                    <>
+                        <h2 className="text-xl font-semibold mb-4">{joined?'Verify if you have joined':'Join Ambassador program'}</h2>
+                        {
+                            !joined?
+                            <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={()=>{
+                                window.open('https://discord.gg/qqpeDDWV')
+                                setJoined(true)
+                            }} >Join us</button>
+                            :
+                            <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={verifyGuildJoined}>Verify</button>
+                        }
+                        
+                    </>
+                    :
+                    <>
+                    <h2 className="text-xl font-semibold mb-4">Connect to a Hub</h2>
+
+                    <select
+                        value={selectedHub}
+                        onChange={handleSelectChange}
+                        className="border rounded p-2 w-full mb-4"
+                    >
+                        <option value="">Select a Hub</option>
+                        {spaces.map(space => (
+                            <option key={space.space_id} value={space.space_id}>
+                                {space.name}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="flex justify-end">
+                        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">
+                            Save
+                        </button>
+                        <button onClick={onClose} className="ml-2 bg-gray-300 px-4 py-2 rounded">
+                            Cancel
+                        </button>
+                    </div>
+                    </>
+                }
             </div>
         </div>
     );

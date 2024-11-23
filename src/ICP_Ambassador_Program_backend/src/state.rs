@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::borrow::Cow;
 
-use crate::{types, TaskSubmitted, Tasks, UserLevel};
+use crate::{types, SubmissionStatus, TaskSubmitted, Tasks, UserLevel};
 
 type Memory=VirtualMemory<DefaultMemoryImpl>;
 
@@ -39,11 +39,34 @@ thread_local! {
     pub static REFERRAL_BENEFICIARY_MAP:RefCell<StableBTreeMap<String,Benefactors,Memory>>  = RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
     ));
+
+    pub static MISSION_TO_SUBMISSION_MAP:RefCell<StableBTreeMap<String,SubmissionArr,Memory>> = RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
+    ));
     
 
 }
 
 // storables
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct SubmissionArr{
+    pub mission:String,
+    pub submissions:Vec<String>
+}
+
+impl Storable for SubmissionArr{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Submission arr");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Submission arr")
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct Benefactors{
     pub user:String,
@@ -174,6 +197,7 @@ pub struct Submission{
     pub user:String,
     pub mission_id:String,
     pub tasks_submitted:Vec<TaskSubmitted>,
+    pub status:SubmissionStatus
     //needs to be optimized based on user inputs provided at frontend
 }
 
