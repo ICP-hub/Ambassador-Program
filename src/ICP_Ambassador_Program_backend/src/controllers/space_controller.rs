@@ -41,7 +41,8 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
             discord:None,
             github:None
         },
-        mission_count:0
+        mission_count:0,
+        conversion:space.conversion
     };
 
     let inserted=SPACE_MAP.with(|map| map.borrow_mut().insert(new_space.space_id.clone(), new_space));

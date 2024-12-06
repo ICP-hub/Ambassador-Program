@@ -3,8 +3,10 @@ import Card from './Card';
 import { useFilterContext } from '../../Context/FilterContext';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 const Contests = () => {
   const { selectedPlatform } = useFilterContext();
+  const user=useSelector(state=>state.user.value)
   const contests=[]
   
   const [displayedContests, setDisplayedContests] = useState(contests);
@@ -23,7 +25,7 @@ const Contests = () => {
           //console.log("all missions")
           getMissions()
         }
-    },[])
+    },[user])
 
      const get_user_mission = async(spaceId)=>{
       try{
@@ -81,11 +83,17 @@ const Contests = () => {
         const updatedContests = mis_res.Ok.map(contest => ({
           ...contest
         }));
+        let activeContests=[]
+        for(let i=0;i<updatedContests.length;i++){
+          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+            activeContests.push(updatedContests[i])
+          }
+        }
         // let activeMissions=[]
-        console.log("updated contests : ",updatedContests)
+        console.log("updated contests : ",activeContests)
 
         
-        setDisplayedContests(updatedContests);
+        setDisplayedContests(activeContests);
         //console.log("Updated displayedContests:", updatedContests);
         
       }

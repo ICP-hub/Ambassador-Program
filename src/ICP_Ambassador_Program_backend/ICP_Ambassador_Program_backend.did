@@ -6,9 +6,11 @@ type Admin = record {
 type AdminRole = variant { HubLeader; SuperAdmin };
 type Benefactors = record { benefactors : vec text; user : text };
 type CreateMission = record {
+  max_users_rewarded : nat64;
   status : MissionStatus;
   reward : nat64;
   title : text;
+  pool : nat64;
   description : text;
   end_date : text;
   start_date : text;
@@ -20,6 +22,7 @@ type CreateSpace = record {
   name : text;
   slug : text;
   description : text;
+  conversion : nat16;
 };
 type Errors = variant {
   ErrorUpdatingAdmin;
@@ -42,11 +45,13 @@ type Errors = variant {
 };
 type Mission = record {
   img : opt text;
+  max_users_rewarded : nat64;
   status : MissionStatus;
   tasks : vec Tasks;
   reward : nat64;
   title : text;
   owner : principal;
+  pool : nat64;
   description : text;
   end_date : text;
   start_date : text;
@@ -55,6 +60,7 @@ type Mission = record {
   mission_id : text;
 };
 type MissionStatus = variant { UnActive; Active; Draft };
+type ProfileImageData = record { content : opt blob };
 type Result = variant { Ok; Err : Errors };
 type Result_1 = variant { Ok : text; Err : text };
 type Result_10 = variant { Ok : Space; Err : Errors };
@@ -80,6 +86,7 @@ type Space = record {
   mission_count : nat16;
   bg_css : opt text;
   bg_img : opt text;
+  conversion : nat16;
   space_id : text;
 };
 type SpaceURLs = record {
@@ -131,6 +138,7 @@ type UserProfile = record {
 service : {
   add_admin_by_super_admin : (principal) -> (Result);
   add_or_update_submission : (Submission) -> (Result);
+  add_wallet : (text) -> (Result_1);
   approve_submission : (text) -> (Result_1);
   create_draft_mission : (text) -> (Result);
   create_mission : (CreateMission) -> (Result);
@@ -153,4 +161,6 @@ service : {
   register_admin : () -> (Result);
   reject_submission : (text) -> (Result_1);
   update_space : (Space) -> (Result);
+  upload_profile_image : (text, ProfileImageData) -> (Result_1);
+  withdraw_points : (text, nat64) -> (Result_1);
 }

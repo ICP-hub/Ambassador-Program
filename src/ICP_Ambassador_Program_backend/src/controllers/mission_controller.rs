@@ -34,7 +34,9 @@ pub fn create_mission(mission:CreateMission)->Result<(),Errors>{
         reward:mission.reward,
         reward_currency:mission.reward_currency,
         img:None,
-        tasks:vec![]
+        tasks:vec![],
+        max_users_rewarded:mission.max_users_rewarded,
+        pool:mission.pool
     };
 
     let updated=SPACE_MAP.with(|map| map.borrow_mut().insert(space_val.space_id.clone(), space_val));
@@ -80,7 +82,9 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
         reward:0,
         reward_currency:RewardCurrency::ICP,
         img:None,
-        tasks:vec![]
+        tasks:vec![],
+        max_users_rewarded:0,
+        pool:0
     };
 
     let updated=SPACE_MAP.with(|map| map.borrow_mut().insert(space_val.space_id.clone(), space_val));

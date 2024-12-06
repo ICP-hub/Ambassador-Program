@@ -2,6 +2,9 @@ import React, { useState,useEffect } from 'react';
 import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
 import { Principal } from '@dfinity/principal';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
+import { DISCORD_CLIENT_SECRET } from '../../auth/authdata';
+import axios from 'axios';
 const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     //console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
@@ -9,16 +12,35 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     const [verified,setVerified] = useState(false)
     const [joined,setJoined]=useState(false)
     const guildID=1309834458777653279
-
+    const bot="MTMwMzY4MjYwMjgyNTE1ODY3Ng.G_oM-A.Jeyx-0JjQIv8DNGwddj6JJaEm-yHiuOVe3a2xo"
+    const url="https://bondex.kaifoundry.com/api/icp/v1"
     async function verifyGuildJoined(){
         try {
             let token=Cookies.get('token')
-            const res=await fetch(`https://discord.com/api/guilds/${guildID}/members/search`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-              console.log('res from joinguild : ',await res.json())
+            // const res=await fetch(`https://discord.com/api/guilds/${guildID}/members/search`, {
+            //     headers: {
+            //     //   Authorization: `Bearer ${token}`,
+            //     Authorization:`Bot ${bot}`
+            //     },
+            //   });
+            //   console.log('res from joinguild : ',await res.json())
+
+            //   if(true){
+            //     toast.success("Server member Verified!")
+            //     setVerified(true)
+            //   }else{
+            //     toast.error("You have not joined the server")
+            //   }
+            const user=Cookies.get('discord_user')
+            let user_parsed=JSON.parse(user)
+            const res=await axios.get(`${url}/userExists?id=${user_parsed.id}`)
+            if(res?.data?.joined){
+                toast?.success("Thanks for joining us")
+                setVerified(true)
+            }else{
+                toast?.error("Please verify if you have joined correctly")
+            }
+            console.log(res.data,user_parsed.id)
         } catch (error) {
             console.log('err joining guild',error)
         }

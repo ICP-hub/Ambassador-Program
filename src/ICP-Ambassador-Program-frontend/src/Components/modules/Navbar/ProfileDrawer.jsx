@@ -2,12 +2,13 @@ import React, { useState,useEffect } from 'react';
 import { MdClose } from "react-icons/md";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import Cookies from 'js-cookie'
+import { FaUserCircle } from 'react-icons/fa';
 const ProfileDrawer = ({ user, onClose, isOpen,openRefModal }) => {
     // console.log("user ==>",user)
     const [points,setPoints]=useState(0)
     const [hub,setHub]=useState('')
-    const baseReferral=`http://localhost:3000/ref?ref=`
-    // const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
+    // const baseReferral=`http://localhost:3000/ref?ref=`
+    const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
     useEffect(()=>{
         const HUB=Cookies.get('selectedHubName')
         setHub(HUB)
@@ -33,11 +34,12 @@ const ProfileDrawer = ({ user, onClose, isOpen,openRefModal }) => {
             
             <h2 className="text-xl font-semibold mb-4">{user.username}</h2>
             <div className='flex justify-center items-center mb-3 mt-3'>
-            <img
+            {/* <img
                         src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
                         alt="not found"
                         className="w-20 h-20 rounded-full"
-                        />
+                        /> */}
+                <FaUserCircle className='w-20 h-20 rounded-full bg-gray-500'/>
             </div>
             <div className='flex flex-col gap-3'>
                 <p className=' mt-3 border-b border-gray-500 pb-4'><strong >Discord ID:</strong> {user.discord_id}</p>

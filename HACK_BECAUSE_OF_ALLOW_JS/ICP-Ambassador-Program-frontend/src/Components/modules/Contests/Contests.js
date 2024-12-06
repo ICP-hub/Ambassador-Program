@@ -3,8 +3,10 @@ import Card from './Card';
 import { useFilterContext } from '../../Context/FilterContext';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 const Contests = () => {
     const { selectedPlatform } = useFilterContext();
+    const user = useSelector(state => state.user.value);
     const contests = [];
     const [displayedContests, setDisplayedContests] = useState(contests);
     const [hub, setHub] = useState('');
@@ -22,7 +24,7 @@ const Contests = () => {
             //console.log("all missions")
             getMissions();
         }
-    }, []);
+    }, [user]);
     const get_user_mission = async (spaceId) => {
         try {
             const user_contest = await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
@@ -50,27 +52,6 @@ const Contests = () => {
             console.log("Error ==>", e);
         }
     };
-    const sample_contest = {
-        reward: "100 Points",
-        status: "Active",
-        title: "Submit a description of our hub5",
-        image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-        description: hub,
-        social_platforms: [
-            {
-                name: "Twitter",
-                bgcolor: '#1dc0f2'
-            },
-            {
-                name: "Discord",
-                bgcolor: '#5865f2'
-            }
-        ],
-        icons: {
-            platform: hub,
-            platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-        }
-    };
     async function getMissions() {
         try {
             const res = await ICP_Ambassador_Program_backend.get_all_spaces();
@@ -91,9 +72,15 @@ const Contests = () => {
                 const updatedContests = mis_res.Ok.map(contest => ({
                     ...contest
                 }));
+                let activeContests = [];
+                for (let i = 0; i < updatedContests.length; i++) {
+                    if (Object.keys(updatedContests[i]?.status)[0] == "Active") {
+                        activeContests.push(updatedContests[i]);
+                    }
+                }
                 // let activeMissions=[]
-                console.log("updated contests : ", updatedContests);
-                setDisplayedContests(updatedContests);
+                console.log("updated contests : ", activeContests);
+                setDisplayedContests(activeContests);
                 //console.log("Updated displayedContests:", updatedContests);
             }
         }

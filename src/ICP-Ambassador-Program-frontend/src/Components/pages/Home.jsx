@@ -35,6 +35,17 @@ const Home = () => {
         if(details && details?.length!==0){
           dispatch(updateUser(details[0]))
           console.log("dispatching user")
+          const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
+          if(spaces?.Ok){
+            console.log("getuser spaces : ",spaces)
+            for(let i=0;i<spaces?.Ok?.length;i++){
+              if(spaces?.Ok[i][0]==details[0]?.hub){
+                Cookies.set('selectedHub', details[0]?.hub);
+                Cookies.set('selectedHubName', spaces?.Ok[i][1]?.name);
+                dispatch(updateUser(details[0]))
+              }
+            }
+          }
           // registered=true
         }
         else{
@@ -77,6 +88,7 @@ const Home = () => {
           });
 
           setSpaces(spacesObject);
+          
           //console.log(space)
   
           //console.log("Transformed Spaces Object:", spacesObject);

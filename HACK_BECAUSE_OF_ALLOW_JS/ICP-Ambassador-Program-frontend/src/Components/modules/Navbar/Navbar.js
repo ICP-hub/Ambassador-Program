@@ -18,6 +18,7 @@ import { HiMenu } from 'react-icons/hi';
 import WalletSidebar from '../../wallet/walletSidebar';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
+import { FaUserCircle } from "react-icons/fa";
 const Navbar = ({ nav, openRefModal }) => {
     const [isModelOpen, setModelOpen] = useState(false);
     const [isSideBarOpen, setSideBarOpen] = useState(false);
@@ -26,6 +27,7 @@ const Navbar = ({ nav, openRefModal }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [discordl_user, setDiscord_user] = useState();
     const [openWallet, setOpenWallet] = useState(false);
+    const [isReferred, setIsReferred] = useState(false);
     const dispatch = useDispatch();
     useEffect(() => {
         if (Cookies.get('discord_user')) {
@@ -60,6 +62,12 @@ const Navbar = ({ nav, openRefModal }) => {
         }
     };
     useEffect(() => {
+        let ref = Cookies.get('ref');
+        if (ref) {
+            console.log("ref");
+            setModelOpen(true);
+            setIsReferred(true);
+        }
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
                 setIsSideBar(false);
@@ -132,7 +140,12 @@ const Navbar = ({ nav, openRefModal }) => {
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail}
             <button className="ml-4 text-red-500">Logout</button> */}
-              <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png" alt="not found" className="w-10 h-10 rounded-full"/>
+              <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/>
+              {/* <img
+                      src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
+                      alt="not found"
+                      className="w-10 h-10 rounded-full"
+                      /> */}
             </div>
           </div>) : (<div className='lg:block sm:hidden'>
             <button className='bg-white text-black py-1 px-8 rounded-md text-sm font-semibold cursor-pointer' onClick={() => setModelOpen(true)}>
@@ -188,7 +201,7 @@ const Navbar = ({ nav, openRefModal }) => {
                         </div>
                     </div>    
                 </div>)}
-        <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)}/>
+        <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)} isReferred={isReferred}/>
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)}/>
         {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal}/>)}
         {openWallet && (<WalletSidebar onClose={handleCloseWallet} isOpen={openWallet}/>)}

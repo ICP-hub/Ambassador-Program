@@ -40,7 +40,7 @@ const TaskCard = ({task}) => {
             <a href={parsedTask?.url} target='blank' className='text-sm text-blue-500 cursor-pointer'>{parsedTask?.url}</a>
             :
             parsedTask?.type=="image"?
-            <img src={parsedTask?.img} alt="user submission"/>
+            <img src={parsedTask?.img} alt="user submission" className='object-cover w-[200px] h-[150px]'/>
             :
             <p className='text-sm'>{parsedTask?.text}</p>
         }

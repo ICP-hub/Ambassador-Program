@@ -18,6 +18,8 @@ import { HiMenu } from 'react-icons/hi';
 import WalletSidebar from '../../wallet/walletSidebar';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
+import { FaUserCircle } from "react-icons/fa";
+
 const Navbar = ({nav,openRefModal}) => {
 
     const [isModelOpen,setModelOpen]=useState(false);
@@ -168,11 +170,12 @@ const Navbar = ({nav,openRefModal}) => {
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail} 
               <button className="ml-4 text-red-500">Logout</button> */}
-              <img
+              <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/>
+              {/* <img
                         src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
                         alt="not found"
                         className="w-10 h-10 rounded-full"
-                        />
+                        /> */}
             </div>
           </div>
         ) : (

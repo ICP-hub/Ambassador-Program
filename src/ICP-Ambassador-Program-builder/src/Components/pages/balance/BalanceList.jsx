@@ -267,9 +267,10 @@
 
 // export default BalanceList;
 
-import React from 'react'
+import React, { useState } from 'react'
 import TextField from '@mui/material/TextField';
 const BalanceList = () => {
+  const [amount,setAmount]=useState(0)
   return (
     <div>
       <div className='flex flex-col   mx-20 my-10'>
@@ -294,15 +295,15 @@ const BalanceList = () => {
 
           <div className=' flex items-center gap-4 my-3'>
             <div className='font-semibold text-md'>
-              Deposite Amount : 
+              Deposit Amount (in ICP) : 
             </div>
             <div className='w-1/2 -mt-5'>
-              <TextField id="standard-basic" label="Amount" variant="standard" />
+              <TextField value={amount} id="standard-basic" label="Amount" variant="standard" onChange={(e)=>setAmount(parseFloat(e.target.value))} />
             </div> 
           </div>
 
           <div className='flex justify-between items-center mt-8'>
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Deposite</button>
+            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Deposit</button>
             <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button>
           </div>
         </div>

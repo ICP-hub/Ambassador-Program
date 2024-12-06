@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 const Card = ({ contest,hub }) => {
   //console.log(hub)
   //console.log("contest ==>",contest)
-  const {  status, title,  description, image,reward } = contest;
+  const {  status, title,  description, img,reward } = contest;
   
   const [tasks, setTasks] = useState([]);
 
@@ -26,6 +26,7 @@ const Card = ({ contest,hub }) => {
           description: task[taskKey]?.body || '', 
           submitted: false,
           image: task[taskKey]?.img || null,
+          sampleImg:task[taskKey]?.img || null,
           validation_rule:task[taskKey]?.validation_rule || '',
           task_id:task[taskKey]?.id
         };
@@ -132,9 +133,9 @@ const Card = ({ contest,hub }) => {
         </div>
         
         <div className="mb-4">
-        {image ? (
+        {img?.length>0 ? (
             <img
-            src={image}
+            src={img[0]}
               alt={title}
               className="w-24 h-24 object-cover rounded"
             />

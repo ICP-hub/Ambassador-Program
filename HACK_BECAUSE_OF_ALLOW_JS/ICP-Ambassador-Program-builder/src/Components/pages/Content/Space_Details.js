@@ -29,17 +29,78 @@ const Space_Details = ({ setLoading }) => {
     const [discordURL, setDiscordURL] = useState('');
     const [backgroundColor, setBackgroundColor] = useState('');
     const [updatedSpace, setUpdatedSpace] = useState(spaces);
+    const [logoMetadata, setLogoMetadata] = useState(null);
+    const [bgMetadata, setBgMetadata] = useState(null);
     const nav = useNavigate();
+    const fileToUint8Array = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = () => resolve(new Uint8Array(reader.result));
+        reader.onerror = (error) => reject(error);
+    });
     useEffect(() => {
+        console.log("effect spaces", updatedSpace, updatedSpace?.bg_img?.length);
         if (spaces?.space_id == undefined) {
             nav('/');
         }
     }, []);
+    async function uploadImgAndReturnURL(metadata, file) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const fileContent = await fileToUint8Array(file);
+                const imageData = {
+                    image_title: metadata.title,
+                    name: metadata.name,
+                    content: [fileContent], // This is the field expected by the backend
+                    content_type: metadata.contentType // Ensure this matches backend expectations
+                };
+                let res = await actor?.backendActor?.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER, imageData);
+                console.log("image upload promise response : ", res);
+                if (res?.Ok) {
+                    let id = res?.Ok;
+                    const protocol = process.env.DFX_NETWORK === "ic" ? "https" : "http";
+                    const domain = process.env.DFX_NETWORK === "ic" ? "raw.icp0.io" : "localhost:4943";
+                    let url = `${protocol}://${process.env.CANISTER_ID_IC_ASSET_HANDLER}.${domain}/f/${id}`;
+                    resolve(url);
+                }
+                else {
+                    reject(new Error("Image upload response was not Ok"));
+                }
+            }
+            catch (err) {
+                console.log("rejected in catch : ", err);
+                reject(new Error(err));
+            }
+        });
+    }
+    // async function uploadLogo(){
+    //     const fileContent=await fileToUint8Array(logoImage)
+    //     const imageData = {
+    //         image_title: logoMetadata.title,
+    //         name: logoMetadata.name,
+    //         content: [fileContent], // This is the field expected by the backend
+    //         content_type: logoMetadata.contentType // Ensure this matches backend expectations
+    //       };
+    //     let res= await actor?.backendActor?.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER,imageData)
+    //     let url="not found"
+    //     if(res?.Ok){
+    //         let id=res?.Ok
+    //         const protocol = process.env.DFX_NETWORK === "ic" ? "https" : "http";
+    //         const domain = process.env.DFX_NETWORK === "ic" ? "raw.icp0.io" : "localhost:4943";
+    //         url=`${protocol}://${process.env.CANISTER_ID_IC_ASSET_HANDLER}.${domain}/f/${id}`
+    //     }
+    //     console.log(res,url)
+    // }
     async function editSpace() {
         try {
-            console.log("updated space : ", updatedSpace);
             setLoading(true);
-            let res = await actor?.backendActor?.update_space(updatedSpace);
+            let newspace = updatedSpace;
+            if (bgMetadata) {
+                let newBGImg = await uploadImgAndReturnURL(bgMetadata, backgroundImage);
+                newspace = { ...newspace, bg_img: [newBGImg] };
+            }
+            console.log("updated space : ", newspace);
+            let res = await actor?.backendActor?.update_space(newspace);
             console.log(res, "response uodating space");
             if (res != null && res?.Err == undefined && res != undefined) {
                 toast.success('Space updated successfully');
@@ -61,23 +122,23 @@ const Space_Details = ({ setLoading }) => {
     };
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogoImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        setLogoImage(file);
+        setLogoMetadata({
+            title: file.name.split(".")[0], // Use filename (without extension) as title
+            name: file.name,
+            contentType: file.type,
+            content: null, // Content will be set in handleUpload
+        });
     };
     const handleFileChangeBackground = (event) => {
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setBackgroundImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        setBackgroundImage(file);
+        setBgMetadata({
+            title: file.name.split(".")[0], // Use filename (without extension) as title
+            name: file.name,
+            contentType: file.type,
+            content: null, // Content will be set in handleUpload
+        });
     };
     return (<div className=''>
         <Navbar nav={nav}/>
@@ -91,26 +152,34 @@ const Space_Details = ({ setLoading }) => {
                 </div>
 
 
-                <div className='mt-4 w-full '>
-                    <div className='text-xl font-medium'>Logo Image</div>
-                    <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full  h-80 mx-auto">
-                        {logoImage ? (<img src={'upload_background.png'} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt='' className='w-80'/>)}
-                        <div>drag file here or</div>
-                        <label className="mt-4 w-full bg-blue-500 rounded">
-                            <input type="file" className="hidden" onChange={handleFileChange}/>
-                            
-                            <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
-                            BROWSE
-                            </div>
-                        </label>
+                {/* <div className='mt-4 w-full mb-20 '>
+            <div className='text-xl font-medium'>Logo Image</div>
+            <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full   mx-auto">
+                {logoImage ? (
+                    <img src={URL.createObjectURL(logoImage)} alt="Uploaded" className="object-contain h-[300px] w-[400px]" />
+                ) : (
+                    <img src={'upload_background.png'} alt='' className='object-contain h-[300px] w-[400px]'/>
+                )}
+                <div >drag file here or</div>
+                <label className="mt-4 w-full bg-blue-500 rounded">
+                    <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    />
+                    
+                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
+                    BROWSE
                     </div>
-                </div>
+                </label>
+            </div>
+        </div> */}
 
                 <div className='mt-4 w-full '>
-                    <div className='text-xl  font-medium '>Background image</div>
-                    <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full  h-80 mx-auto">
-                        {backgroundImage ? (<img src={'upload_background.png'} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt='' className='w-80'/>)}
-                        <div>drag file here or</div>
+                    <div className='text-xl  font-medium '>Space image</div>
+                    <div className="flex flex-col gap-3 items-center justify-center   rounded-lg w-full   mx-auto">
+                        {backgroundImage ? (<img src={URL.createObjectURL(backgroundImage)} alt="Uploaded" className="object-contain h-[300px] w-[400px]"/>) : (<img src={updatedSpace?.bg_img?.length > 0 ? updatedSpace?.bg_img[0] : 'upload_background.png'} alt='' className='object-contain h-[300px] w-[400px]'/>)}
+                        <div>Choose an image</div>
                         <label className="mt-4 w-full bg-blue-500 rounded">
                             <input type="file" className="hidden" onChange={handleFileChangeBackground}/>
                             

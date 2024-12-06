@@ -25,6 +25,41 @@ const CardDetails = () => {
     const [subStatus, setSubStatus] = useState("");
     const nav = useNavigate();
     const [tasks, setTasks] = useState(updatedContest.tasks);
+    const fileToUint8Array = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = () => resolve(new Uint8Array(reader.result));
+        reader.onerror = (error) => reject(error);
+    });
+    async function uploadImgAndReturnURL(metadata, file) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const fileContent = await fileToUint8Array(file);
+                const imageData = {
+                    image_title: metadata.title,
+                    name: metadata.name,
+                    content: [fileContent], // This is the field expected by the backend
+                    content_type: metadata.contentType // Ensure this matches backend expectations
+                };
+                let res = await ICP_Ambassador_Program_backend.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER, imageData);
+                console.log("image upload promise response : ", res);
+                if (res?.Ok) {
+                    let id = res?.Ok;
+                    const protocol = process.env.DFX_NETWORK === "ic" ? "https" : "http";
+                    const domain = process.env.DFX_NETWORK === "ic" ? "raw.icp0.io" : "localhost:4943";
+                    let url = `${protocol}://${process.env.CANISTER_ID_IC_ASSET_HANDLER}.${domain}/f/${id}`;
+                    resolve(url);
+                }
+                else {
+                    reject(new Error("Image upload response was not Ok"));
+                }
+            }
+            catch (err) {
+                console.log("rejected in catch : ", err);
+                reject(new Error(err));
+            }
+        });
+    }
     function parseTasks(mission_tasks, sub_tasks) {
         try {
             let new_tasks = [];
@@ -36,7 +71,7 @@ const CardDetails = () => {
                     new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.text });
                 }
                 if (taskType == "SendImage") {
-                    new_tasks.push({ ...mission_tasks[i], image: sub_tasks[i][taskType]?.img });
+                    new_tasks.push({ ...mission_tasks[i], image: sub_tasks[i][taskType]?.img, sampleImg: mission_tasks[i].image });
                 }
                 if (taskType == "SendUrl") {
                     new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.url });
@@ -79,6 +114,7 @@ const CardDetails = () => {
     async function addSubmission() {
         try {
             // e.preventDefault();
+            setLoading(true);
             console.log("before finaltasks : ", tasks);
             let user = JSON.parse(Cookies.get('discord_user'));
             let finalTasks = [];
@@ -93,12 +129,47 @@ const CardDetails = () => {
                     };
                 }
                 if (tasks[i]?.id == "SendImage") {
-                    task = {
-                        SendImage: {
-                            id: tasks[i]?.task_id,
-                            img: tasks[i]?.content || ""
-                        }
-                    };
+                    if (typeof tasks[i]?.image != 'object') {
+                        // toast.error("please choose a correct image")
+                        // finalTasks.push({
+                        //   SendImage:{
+                        //     id:finalTasks?.length,
+                        //     title:tasks[i]?.title,
+                        //     body:tasks[i]?.body,
+                        //     img:tasks[i]?.img
+                        //   } 
+                        // })
+                        task = {
+                            SendImage: {
+                                id: tasks[i]?.task_id,
+                                img: tasks[i]?.image || ""
+                            }
+                        };
+                    }
+                    else {
+                        console.log(tasks[i]);
+                        let metadata = {
+                            title: tasks[i]?.image.name.split(".")[0], // Use filename (without extension) as title
+                            name: tasks[i]?.image.name,
+                            contentType: tasks[i]?.image.type,
+                            content: null, // Content will be set in handleUpload
+                        };
+                        let img = await uploadImgAndReturnURL(metadata, tasks[i]?.image);
+                        task = {
+                            SendImage: {
+                                id: tasks[i]?.task_id,
+                                img: img
+                            }
+                        };
+                        // finalTasks.push({
+                        //   SendImage:{
+                        //     id:finalTasks?.length,
+                        //     title:tasks[i]?.title,
+                        //     body:tasks[i]?.body,
+                        //     img:img
+                        //   } 
+                        // })
+                    }
                 }
                 if (tasks[i]?.id == "SendUrl") {
                     task = {
@@ -114,7 +185,6 @@ const CardDetails = () => {
                 ...submission,
                 tasks_submitted: finalTasks
             });
-            setLoading(true);
             let res = await ICP_Ambassador_Program_backend.add_or_update_submission({
                 ...submission,
                 tasks_submitted: finalTasks
@@ -171,7 +241,7 @@ const CardDetails = () => {
         setRandomColor(getRandomDarkColor());
         getSubmission();
     }, []);
-    const { reward, status, title, image, social_platforms, icons } = updatedContest;
+    const { reward, status, title, img, social_platforms, icons } = updatedContest;
     //console.log("Updated contest ==>",updatedContest)
     const statusKey = Object.keys(status)[0];
     const statusValue = status[statusKey];
@@ -221,7 +291,7 @@ const CardDetails = () => {
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
-                {image ? (<img src={image} alt={title} className="w-44 h-44 object-cover rounded-lg"/>) : (
+                {img?.length > 0 ? (<img src={img} alt={title} className="w-44 h-44 object-cover rounded-lg"/>) : (
         // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
         // <span>No Image</span>
         // </div>
@@ -248,7 +318,7 @@ const CardDetails = () => {
                     <span className="text-md text-white font-semibold">{icons.platform}</span>
                 </div>
                 <div className=" font-semibold text-gray-600 text-sm">
-                    2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00
+                    {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
                 </div>
             </div>    
         </div>
@@ -292,11 +362,11 @@ const CardDetails = () => {
                               <div className="text-white font-semibold text-md">{task.description}</div>
                               <div className='flex gap-5 my-5'>
                                 <div className="text-white font-semibold text-md mt-4">Sample Image</div>
-                                <img src={task.image} className='w-40 h-40' alt=''/>
+                                <img src={task.sampleImg} className='w-40 h-40' alt=''/>
                               </div>
                                 
-                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
-                                {task.image ? (<img src={task.imagye} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt="" className="w-80"/>)}
+                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full mx-auto">
+                                {task.image ? (<img src={typeof task.image == 'object' ? URL.createObjectURL(task.image) : task.image} alt="Uploaded" className="object-contain h-[300px] w-[400px]"/>) : (<img src={'upload_background.png'} alt="" className=""/>)}
                                 <div>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
                                     <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)}/>

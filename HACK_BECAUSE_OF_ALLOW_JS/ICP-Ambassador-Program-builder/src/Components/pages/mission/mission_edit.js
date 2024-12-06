@@ -57,8 +57,44 @@ const MissionEdit = ({ setLoading }) => {
     const [space, setSpace] = useState([]);
     const [description, setDescription] = useState(mission?.description);
     const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
+    const [imgMetadata, setImgMetadata] = useState(null);
     const [participantsCount, setParticipantsCount] = useState('');
     const nav = useNavigate();
+    const fileToUint8Array = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = () => resolve(new Uint8Array(reader.result));
+        reader.onerror = (error) => reject(error);
+    });
+    async function uploadImgAndReturnURL(metadata, file) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const fileContent = await fileToUint8Array(file);
+                const imageData = {
+                    image_title: metadata.title,
+                    name: metadata.name,
+                    content: [fileContent], // This is the field expected by the backend
+                    content_type: metadata.contentType // Ensure this matches backend expectations
+                };
+                let res = await actor?.backendActor?.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER, imageData);
+                console.log("image upload promise response : ", res);
+                if (res?.Ok) {
+                    let id = res?.Ok;
+                    const protocol = process.env.DFX_NETWORK === "ic" ? "https" : "http";
+                    const domain = process.env.DFX_NETWORK === "ic" ? "raw.icp0.io" : "localhost:4943";
+                    let url = `${protocol}://${process.env.CANISTER_ID_IC_ASSET_HANDLER}.${domain}/f/${id}`;
+                    resolve(url);
+                }
+                else {
+                    reject(new Error("Image upload response was not Ok"));
+                }
+            }
+            catch (err) {
+                console.log("rejected in catch : ", err);
+                reject(new Error(err));
+            }
+        });
+    }
     const handlesave = async (action) => {
         try {
             const draft_data = {
@@ -72,6 +108,7 @@ const MissionEdit = ({ setLoading }) => {
                 Reward_data: rewardsData,
                 participants_count: participantsCount
             };
+            setLoading(true);
             let finalTasks = [];
             for (let i = 0; i < tasks?.length; i++) {
                 if (tasks[i]?.type == "text") {
@@ -96,18 +133,37 @@ const MissionEdit = ({ setLoading }) => {
                     });
                 }
                 if (tasks[i]?.type == "img") {
-                    finalTasks.push({
-                        SendImage: {
-                            id: finalTasks?.length,
-                            title: tasks[i]?.title,
-                            body: tasks[i]?.body,
-                            img: tasks[i]?.img
-                        }
-                    });
+                    if (typeof tasks[i]?.img != 'object') {
+                        // toast.error("please choose a correct image")
+                        finalTasks.push({
+                            SendImage: {
+                                id: finalTasks?.length,
+                                title: tasks[i]?.title,
+                                body: tasks[i]?.body,
+                                img: tasks[i]?.img
+                            }
+                        });
+                    }
+                    else {
+                        let metadata = {
+                            title: tasks[i]?.img.name.split(".")[0], // Use filename (without extension) as title
+                            name: tasks[i]?.img.name,
+                            contentType: tasks[i]?.img.type,
+                            content: null, // Content will be set in handleUpload
+                        };
+                        let img = await uploadImgAndReturnURL(metadata, tasks[i]?.img);
+                        finalTasks.push({
+                            SendImage: {
+                                id: finalTasks?.length,
+                                title: tasks[i]?.title,
+                                body: tasks[i]?.body,
+                                img: img
+                            }
+                        });
+                    }
                 }
             }
-            console.log("data ==>", draft_data, mission, actor, finalTasks);
-            const updatedMission = {
+            let updatedMission = {
                 ...mission,
                 title: title,
                 description: description,
@@ -115,8 +171,12 @@ const MissionEdit = ({ setLoading }) => {
                 reward: parseInt(rewardsData),
                 tasks: finalTasks
             };
+            if (imgMetadata) {
+                let newId = await uploadImgAndReturnURL(imgMetadata, logoImage);
+                updatedMission = { ...updatedMission, img: [newId] };
+            }
+            console.log("data ==>", draft_data, mission, actor, finalTasks);
             console.log("final updated mission : ", updatedMission, tasks);
-            setLoading(true);
             const res = await actor?.backendActor?.edit_mission(updatedMission);
             console.log(res);
             if (res != null && res != undefined && res?.Err == undefined) {
@@ -178,13 +238,20 @@ const MissionEdit = ({ setLoading }) => {
     };
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogoImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        setLogoImage(file);
+        setImgMetadata({
+            title: file.name.split(".")[0], // Use filename (without extension) as title
+            name: file.name,
+            contentType: file.type,
+            content: null, // Content will be set in handleUpload
+        });
+        // if (file) {
+        //   const reader = new FileReader();
+        //   reader.onloadend = () => {
+        //     setLogoImage(reader.result);
+        //   };
+        //   reader.readAsDataURL(file);
+        // }
     };
     const handleTaskbar = () => {
         setSidebarOpen(true);
@@ -254,9 +321,9 @@ const MissionEdit = ({ setLoading }) => {
         <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 2 }} className="w-5/6">
           <div className="mt-4 w-full ">
             <div className="text-xl font-medium">Mission Image</div>
-            <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
-              {logoImage ? (<img src={logoImage} alt="Uploaded" className="object-contain h-full w-full"/>) : (<img src={'upload_background.png'} alt="" className="w-80"/>)}
-              <div>drag file here or</div>
+            <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full  mx-auto">
+              {logoImage ? (<img src={URL.createObjectURL(logoImage)} alt="Uploaded" className="object-contain h-[300px] w-[400px] "/>) : (<img src={mission?.img?.length > 0 ? mission?.img[0] : 'upload_background.png'} alt="" className="object-contain "/>)}
+              <div>{mission?.img?.length > 0 ? "" : "Choose an Image"}</div>
               <label className="mt-4 w-full bg-blue-500 rounded">
                 <input type="file" className="hidden" onChange={handleFileChange}/>
                 <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">

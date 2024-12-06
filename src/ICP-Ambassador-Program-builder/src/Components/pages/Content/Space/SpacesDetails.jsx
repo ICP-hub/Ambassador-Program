@@ -181,7 +181,14 @@ const SpacesDetails = ({setLoading}) => {
                   return(
                   <TableRow key={index} className='hover:bg-blue-100 cursor-pointer '>
                   <TableCell align="center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {
+                      row?.img?.length>0?
+                    <img src={row?.img[0]} className='w-[40px] h-[40px] rounded-sm object-fill' onClick={()=>handleMission(index)}/>
+
+                      :
                     <Avatar variant="rounded" sx={{ width: 40, height: 40 }} onClick={()=>handleMission(index)}>M</Avatar>
+
+                    }
                   </TableCell>
                     <TableCell align="center">{row?.title}</TableCell>
                     <TableCell align="center">{parseInt(row?.reward)} </TableCell>

@@ -44,6 +44,9 @@ thread_local! {
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
     ));
     
+    pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
+    ));
 
 }
 
@@ -146,7 +149,8 @@ pub struct Space{
     pub shor_description:Option<String>,
     pub bg_css:Option<String>,
     pub urls:types::SpaceURLs,
-    pub mission_count:u16
+    pub mission_count:u16,
+    pub conversion:u16
 }
 
 impl Storable for Space{
@@ -175,7 +179,9 @@ pub struct Mission{
     pub reward_currency:types::RewardCurrency,
     pub start_date:String,
     pub end_date:String,
-    pub tasks:Vec<Tasks>
+    pub tasks:Vec<Tasks>,
+    pub max_users_rewarded:u64,
+    pub pool:u64
 }
 
 impl Storable for Mission{
@@ -212,4 +218,24 @@ impl Storable for Submission{
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_cbor::from_slice(&bytes).expect("Failed to deserialize submissions")
     }
+}
+
+
+// asset canister implementation
+#[derive(CandidType, Deserialize, Serialize, Clone)]
+pub struct ImageIdWrapper {
+    pub image_id: String,
+}
+impl Storable for ImageIdWrapper {
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize IMAGEID");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize IMAGEID")
+    }
+    
 }

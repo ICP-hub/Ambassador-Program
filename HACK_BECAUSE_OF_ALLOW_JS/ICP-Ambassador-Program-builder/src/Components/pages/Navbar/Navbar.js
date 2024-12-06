@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAuthClient } from '../../../utils/useAuthClient';
+import { FaUserCircle } from 'react-icons/fa';
 const Navbar = ({ nav }) => {
     const [showLogout, setShowLogout] = useState(false);
     const admin = useSelector(state => state.admin.value);
@@ -28,7 +29,13 @@ const Navbar = ({ nav }) => {
                 setIsAuthenticated();
             }}>
                         Log Out
-                        </div>) : (<img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png" alt="not found" className="w-10 h-10 rounded-full"/>)}
+                        </div>) : (
+        // <img
+        // src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
+        // alt="not found"
+        // className="w-10 h-10 rounded-full"
+        // />
+        <FaUserCircle className='w-10 h-10 rounded-full text-black'/>)}
                 </div>
         </div>
     </div>);

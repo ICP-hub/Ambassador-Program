@@ -1,7 +1,9 @@
+use candid::Principal;
+use ic_cdk::caller;
 use ic_cdk_macros::*;
 
 
-use crate::{Benefactors, UserLevel, UserProfile, REFERRAL_BENEFICIARY_MAP, USER_PROFILE_MAP};
+use crate::{Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP, USER_PROFILE_MAP};
     
 //--
 #[update]
@@ -163,6 +165,52 @@ fn determine_level(points:u64)->UserLevel{
         10000..=99999=>UserLevel::Master,
         _=>UserLevel::GrandMaster
     }
+}
+
+#[update]
+pub fn add_wallet(id:String)->Result<String,String>{
+    let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
+    let mut user_mut:UserProfile;
+
+    match user{
+        Some(val)=>user_mut=val,
+        None=>return Err(String::from("No user found with this id"))
+    }
+    user_mut.wallet=Some(caller());
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id, user_mut));
+    return Ok(String::from("User wallet updated"))
+}
+
+#[update]
+pub fn withdraw_points(id:String,points:u64)->Result<String,String>{
+    let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
+    let mut user_mut:UserProfile;
+    let wallet:Principal;
+    match user{
+        Some(val)=>user_mut=val,
+        None=>return Err(String::from("User not found"))
+    }
+    match user_mut.wallet {
+        Some(val)=>wallet=val,
+        None=>return
+         Err(String::from("user wallet not set"))
+    }
+    if(points>user_mut.redeem_points){
+        return Err(String::from("Not enough redeemable points"))
+    }
+    let amount:u64;
+    
+    //transfer amount to user's wallet
+    let space=SPACE_MAP.with(|map| map.borrow().get(&user_mut.hub.clone()));
+    match space{
+        Some(space_val)=>{
+            amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000
+        },
+        None=>return Err(String::from("Invalid hub for the user"))
+    }
+    user_mut.redeem_points-=points;
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id,user_mut));
+    return Ok(String::from("amount redeemed to user"))
 }
 
 // #[update]
