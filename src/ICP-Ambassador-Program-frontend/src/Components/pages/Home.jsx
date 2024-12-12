@@ -21,7 +21,8 @@ const Home = () => {
   const dispatch=useDispatch()
 
   const [space,setSpaces]=useState('');
-
+    const loggedIn = Cookies.get('isLoggedIn')
+    console.log("Looged In ==>",loggedIn)
     const getUser = async(isLoggedIn)=>{
     try{
         //console.log(userId)
@@ -32,12 +33,13 @@ const Home = () => {
         if(details && details!=[]){
           dispatch(updateUser(details[0]))
           // registered=true
+
         }
         else{
-          if(isLoggedIn){
+          if(loggedIn){
             setIsHubModalOpen(true)
           }
-          // setIsHubModalOpen(true)
+           setIsHubModalOpen(true)
           //console.log("user not found")
         }
         setLoading(false)
@@ -95,9 +97,9 @@ const Home = () => {
       
       console.log(cookieUser && !isLoggedIn,!cookieUser,!isLoggedIn)
       
-      // if (isLoggedIn) {
-      //   setIsHubModalOpen(true);
-      // }
+      if (isLoggedIn) {
+        setIsHubModalOpen(true);
+      }
 
       //setIsHubModalOpen(true);
       // setLoading(false);
