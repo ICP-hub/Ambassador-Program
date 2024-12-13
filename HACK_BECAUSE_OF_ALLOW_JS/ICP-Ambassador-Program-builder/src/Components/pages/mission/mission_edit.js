@@ -8,7 +8,7 @@ import SortDescription from '../Content/sortDescription';
 import { AutocompleteSearchInput } from '../autoCompleteInputSearch/AutoCompleteSearchInput';
 import Rewards from '../reward/reward';
 import TaskSidebar from './task/TaskSidebar';
-import { ApiTask, ImageTask, SendURL } from './task/TaskList';
+import { ApiTask, ImageTask, SendURL, TwitterTask } from './task/TaskList';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -39,6 +39,7 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
       {task.type === 'text' && (<ApiTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
       {task.type === 'img' && (<ImageTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
       {task.type === 'url' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
+      {task.type === 'twitter_post' && (<TwitterTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };
 const MissionEdit = ({ setLoading }) => {

@@ -505,7 +505,7 @@ const Contests = () => {
       console.log(res)
 
       if(res!=undefined && res!=null && res?.Ok!=undefined){
-        let space_1=res?.Ok[0][0]
+        let space_1=res?.Ok[1][0]
         //console.log(space_1);
         const space_details=await ICP_Ambassador_Program_backend.get_space(space_1);
         //console.log("Space Details ==>",space_details.Ok.name)
@@ -567,8 +567,8 @@ const Contests = () => {
   
   
   return (
-    <div className="h-screen overflow-y-scroll scrollbar-hide">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 w-full">
+    <div className=" overflow-y-scroll scrollbar-hide " style={{ height: 'calc(100vh - 100px)' }}>
+      <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
         {
           displayedContests?.length>0?
           displayedContests.map((contest, index) => (

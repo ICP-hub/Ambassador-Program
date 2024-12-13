@@ -123,17 +123,22 @@ const Home = () => {
   return (
     <div className="flex flex-col rounded-md m-3 h-screen " style={{ backgroundColor: '#16161a' }}>
       <Navbar nav={nav} />
-      <FilterProvider>
-        <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
-          
-          <div className=" w-1/6 h-full">
-            <Filter />
+      <div>
+
+        <FilterProvider>
+          <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
+            
+            <div className=" w-1/6 h-full lg:block sm:hidden">
+              <Filter />
+            </div>
+            <div className="w-full h-full ">
+              <Contests />
+            </div>
           </div>
-          <div className="w-full h-full">
-            <Contests />
-          </div>
-        </div>
-      </FilterProvider>
+        </FilterProvider>
+
+      </div>
+      
 
       {isHubModalOpen && (
         <HubConnectionModal
@@ -154,9 +159,13 @@ const Home = () => {
       </div>
 
       
-      {filterMobile && (
-        <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
-      )}
+
+        {filterMobile && (
+          <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
+        )}
+
+      
+      
     </div>
   );
 };

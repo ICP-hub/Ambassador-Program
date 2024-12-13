@@ -31,6 +31,7 @@ const CardDetails = () => {
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
+  
 
   const [twitterLink, setTwitterLink] = useState("");
 
@@ -51,10 +52,18 @@ const CardDetails = () => {
 
   const handleFileChange = (e, taskId) => {
     const file = e.target.files[0];
-    setTasks(prevTasks => prevTasks.map(task => 
-      task.id === taskId ? { ...task, image: file } : task
-    ));
+    if (!file) return;
+  
+    const fileURL = URL.createObjectURL(file);
+  
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, Uploaded_image: fileURL } : task
+      )
+    );
+    console.log(tasks)
   };
+  
 
   
   const handleSubmit =async (e, taskId) => {
@@ -176,13 +185,13 @@ const twitterSubmit = ()=>{
       }}
       className="h-full pt-3" >
       <Navbar nav={nav} />
-      <div className='flex justify-center items-center ml-20 '>
-      <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full ' >
+      <div className='flex justify-center items-center lg:ml-20 sm:ml-0   '>
+      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
                 {image ? (
-                    <img src={image} alt={title} className="w-44 h-44 object-cover rounded-lg" />
+                    <img src={image} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg" />
                 ) : (
                     // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
                     // <span>No Image</span>
@@ -190,7 +199,7 @@ const twitterSubmit = ()=>{
                     <img
                       src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
                       alt={title}
-                      className="w-24 h-24 object-cover rounded"
+                      className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"
                     />
                 )}
                 </div>
@@ -235,7 +244,7 @@ const twitterSubmit = ()=>{
                     borderRadius: '0.5rem',
                 }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         {task.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
@@ -246,7 +255,7 @@ const twitterSubmit = ()=>{
                             <>
 
                                 
-                                <div className="text-white font-semibold text-md">{task.description}</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div>
                                 </div>
@@ -256,7 +265,7 @@ const twitterSubmit = ()=>{
                               <>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
                                   <input
                                   type='SendURL'
                                   placeholder='Enter URL'
@@ -270,28 +279,30 @@ const twitterSubmit = ()=>{
                             </>
                             )}
                             {task.id === 'SendImage' && (
-                            <div className="mt-4 w-full ">
-                              <div className="text-white font-semibold text-md">{task.description}</div>
-                              <div className='flex gap-5 my-5'>
-                                <div className="text-white font-semibold text-md mt-4">Sample Image</div>
-                                <img src={task.image} className='w-40 h-40' alt=''/>
-                              </div>
-                                
-                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-80 mx-auto">
-                                {task.image ? (
-                                    <img src={task.imagye} alt="Uploaded" className="object-contain h-full w-full" />
-                                ) : (
-                                    <img src={'upload_background.png'} alt="" className="w-80" />
-                                )}
-                                <div>drag file here or</div>
-                                <label className="mt-4 w-full bg-blue-500 rounded">
-                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.id)} />
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
-                                    BROWSE
-                                    </div>
-                                </label>
-                                </div>
+                              
+                            <div className="mt-4 w-full">
+                            <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
+                            <div className="flex gap-5 my-5">
+                              <div className="text-white font-semibold lg:text-md sm:text-xs mt-4">Sample Image</div>
+                              <img src={task.image} className="w-40 h-40" alt="" />
                             </div>
+                          
+                            <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
+                              {task.image ? (
+                                <img src={task.Uploaded_image} alt="Uploaded" className="object-contain max-h-64" />
+                              ) : (
+                                <img src={'upload_background.png'} alt="" className="w-80" />
+                              )}
+                              <div className="mt-4 text-gray-500">Drag file here or</div>
+                              <label className="w-full">
+                                <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.id)} />
+                                <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black hover:text-white rounded-md b cursor-pointer hover:bg-blue-600">
+                                  BROWSE
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                          
                             )}
                             <div className='flex items-center justify-center'>
                             <button
@@ -313,14 +324,14 @@ const twitterSubmit = ()=>{
             ))}
 
                   <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         Twitter Post sample task title
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         
                         <div  className="flex flex-col gap-3 mt-3">  
-                            <div className="text-white font-semibold text-md">Twitter Post sample description</div>
+                            <div className="text-white font-semibold lg:text-md sm:text-xs">Twitter Post sample description</div>
                             <div className ='flex w-full gap-4 items-center'>
 
                             <input
@@ -331,11 +342,11 @@ const twitterSubmit = ()=>{
                                   className='outline-none p-3 rounded w-full text-black'
                               />
                               {!authenticate ?(
-                                <button className='w-12 h-12 bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                                <button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
                                 <PrivacyTipIcon className='text-black'/>
                                 </button>
                               ):(
-                                <div className='w-12 h-12 bg-white flex justify-center items-center rounded-full'>
+                                <div className='w-12 lg:h-12 sm:h-10 bg-white flex justify-center items-center rounded-full'>
                                   <AdminPanelSettingsIcon className=' text-green-600'/>
                               </div>
                               )}
