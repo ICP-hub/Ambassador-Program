@@ -13,7 +13,6 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     const [joined,setJoined]=useState(false)
     const [verifying,setVerifying]=useState(false)
     const guildID=1309834458777653279
-    const bot="MTMwMzY4MjYwMjgyNTE1ODY3Ng.G_oM-A.Jeyx-0JjQIv8DNGwddj6JJaEm-yHiuOVe3a2xo"
     const url="https://bondex.kaifoundry.com/api/icp/v1"
     async function verifyGuildJoined(){
         try {
