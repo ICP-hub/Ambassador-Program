@@ -360,16 +360,16 @@ const CardDetails = () => {
             background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
         }} className="h-full pt-3">
       <Navbar nav={nav}/>
-      <div className='flex justify-center items-center ml-20 '>
-      <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full '>
+      <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
+      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full '>
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
-                {img?.length > 0 ? (<img src={img} alt={title} className="w-44 h-44 object-cover rounded-lg"/>) : (
+                {img?.length > 0 ? (<img src={img} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg"/>) : (
         // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
         // <span>No Image</span>
         // </div>
-        <img src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg' alt={title} className="w-24 h-24 object-cover rounded"/>)}
+        <img src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg' alt={title} className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"/>)}
                 </div>
             </div>
             <div className='flex flex-col gap-4 justify-start items-start'>
@@ -407,7 +407,7 @@ const CardDetails = () => {
                 borderRadius: '0.5rem',
             }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white"/>} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs"/>} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         {task.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
@@ -416,7 +416,7 @@ const CardDetails = () => {
                             {task.id === 'SendText' && (<>
 
                                 
-                                <div className="text-white font-semibold text-md">{`Task description :\n\n ${task.description}`}</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
                                     <textarea rows={10} className='w-full py-2 px-3 bg-[#1d1d21]' onChange={(e) => handleInputChange(e, task.task_id)} value={task.content}/>
@@ -425,7 +425,7 @@ const CardDetails = () => {
                             {task.id === 'SendUrl' && (<>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white font-semibold text-md">{`Task description :\n\n ${task.description}`}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
                                   <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded text-black' value={task.content}/>
 
                               </div>
@@ -433,10 +433,10 @@ const CardDetails = () => {
                             
                             </>)}
                             {task.id === "SendTwitterPost" && (<div className="flex flex-col gap-3 mt-3">  
-                                       <div className="text-white font-semibold text-md">{`Task description :\n\n ${task.description}`}</div>
+                                       <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
                                        <div className='flex w-full gap-4 items-center'>
                                        <input type='text' value={task.content} placeholder='Share post link' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded w-full text-black'/>
-                                         {!authenticate ? (<button className='w-12 h-12 bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e) => { Check_authentication(e); }}>
+                                         {!authenticate ? (<button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e) => { Check_authentication(e); }}>
                                            <PrivacyTipIcon className='text-black'/>
                                            </button>) : (<div className='w-12 h-12 bg-white flex justify-center items-center rounded-full'>
                                              <AdminPanelSettingsIcon className=' text-green-600'/>
@@ -460,18 +460,18 @@ const CardDetails = () => {
                                        </div>
                                    </div>)}
                             {task.id === 'SendImage' && (<div className="mt-4 w-full ">
-                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
                               <div className='flex gap-5 my-5'>
-                                <div className="text-white font-semibold text-md mt-4">Sample Image</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs mt-4">Sample Image</div>
                                 <img src={task.sampleImg} className='w-40 h-40' alt=''/>
                               </div>
                                 
-                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full mx-auto">
-                                {task.image ? (<img src={typeof task.image == 'object' ? URL.createObjectURL(task.image) : task.image} alt="Uploaded" className="object-contain h-[300px] w-[400px]"/>) : (<img src={'upload_background.png'} alt="" className=""/>)}
-                                <div>drag file here or</div>
+                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
+                                {task.image ? (<img src={typeof task.image == 'object' ? URL.createObjectURL(task.image) : task.image} alt="Uploaded" className="object-contain sm:max-h-64 sm:w-full h-[300px] w-[400px]"/>) : (<img src={'upload_background.png'} alt="" className=""/>)}
+                                <div className='mt-4 text-gray-500'>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
                                     <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)}/>
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
+                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black hover:text-white rounded-md b cursor-pointer hover:bg-blue-600">
                                     BROWSE
                                     </div>
                                 </label>
@@ -502,7 +502,7 @@ const CardDetails = () => {
                <AccordionDetails>
                    
                    <div  className="flex flex-col gap-3 mt-3">
-                       <div className="text-white font-semibold text-md">Twitter Post sample description</div>
+                       <div className="text-white font-semibold lg:text-md sm:text-xs">Twitter Post sample description</div>
                        <div className ='flex w-full gap-4 items-center'>
                        <input
                              type='text'
@@ -512,7 +512,7 @@ const CardDetails = () => {
                              className='outline-none p-3 rounded w-full text-black'
                          />
                          {!authenticate ?(
-                           <button className='w-12 h-12 bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                           <button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
                            <PrivacyTipIcon className='text-black'/>
                            </button>
                          ):(
