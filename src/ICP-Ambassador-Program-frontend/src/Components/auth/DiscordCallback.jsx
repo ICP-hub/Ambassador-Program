@@ -80,8 +80,8 @@ const DiscordCallback = ({setOpen}) => {
     params.append('client_secret', DISCORD_CLIENT_SECRET);
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
-    params.append('redirect_uri', 'https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback');
-    // params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
+    // params.append('redirect_uri', 'https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback');
+    params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
 
     const response = await fetch('https://discord.com/api/v10/oauth2/token', {
       method: 'POST',

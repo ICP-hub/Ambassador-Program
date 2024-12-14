@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { updateActor } from '../../../redux/actors/actorSlice';
 import { updateAdmin } from '../../../redux/admin/adminSlice';
 import { useNavigate } from 'react-router-dom';
+import { createActor as createLedgerActor } from '../../../../../declarations/ledger';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -36,9 +37,13 @@ const Login = () => {
                     let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
                         identity:authClient.getIdentity()
                     }})
+                    let ledgerActor = createLedgerActor("ryjl3-tyaaa-aaaaa-aaaba-cai",{agentOptions:{
+                        identity:authClient.getIdentity()
+                    }})
 
                     dispatch(updateActor({
-                        backendActor
+                        backendActor,
+                        ledgerActor
                     }))
                     let res=await backendActor.get_admin()
                     console.log("login res : ",res)

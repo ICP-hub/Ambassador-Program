@@ -267,10 +267,74 @@
 
 // export default BalanceList;
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
+import { useSelector } from 'react-redux';
+import { formatTokenMetaData, stringToSubaccountBytes } from '../../../utils/utils';
+import { Principal } from '@dfinity/principal';
+import { canisterId as ledgerId } from '../../../../../declarations/ledger';
+import toast from 'react-hot-toast';
 const BalanceList = () => {
   const [amount,setAmount]=useState(0)
+  const [balance,setBalance]=useState(0)
+  const spaces=useSelector(state=>state.spaces.value)
+  const actor=useSelector(state=>state.actor.value)
+  const [loading,setLoading]=useState(false)
+
+  async function getBalance(){
+    try {
+      let balance=await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) , subaccount: [stringToSubaccountBytes(spaces?.space_id)] })
+      let metadataRes=await actor?.ledgerActor?.icrc1_metadata()
+      let metadata=formatTokenMetaData(metadataRes)
+      console.log("space balance",parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
+      setBalance(parseFloat(balance)/Math.pow(10, parseInt(metadata?.["icrc1:decimals"])))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async function depositAmount(){
+    try{
+      setLoading(true)
+      let metadataRes=await actor?.ledgerActor?.icrc1_metadata()
+      let metadata=formatTokenMetaData(metadataRes)
+      let amnt=parseInt(Number(amount) * Math.pow(10, parseInt(metadata?.["icrc1:decimals"])))
+      let transaction = {
+        to : { 
+          owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) ,
+          subaccount: [stringToSubaccountBytes(spaces?.space_id)] 
+        },
+        fee : [metadata?.["icrc1:fee"]],
+        memo : [],
+        from_subaccount : [],
+        created_at_time : [],
+        amount : amnt,
+      };
+      let transferRes=await actor?.ledgerActor?.icrc1_transfer(transaction)
+      console.log(transferRes)
+      setAmount(0)
+      setLoading(false)
+      toast.success("transferred funds to the hub")
+      getBalance()
+    }catch(err){
+      toast.error("Some error occurred")
+      setLoading(false)
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    getBalance()
+    console.log("balances useeffect : ",spaces,balance,actor?.ledgerActor)
+  },[])
+  if(loading){
+    return(
+      <div className='flex justify-center items-center h-screen'>
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black" />
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className='flex flex-col   mx-20 my-10'>
@@ -288,7 +352,7 @@ const BalanceList = () => {
             </div>
 
             <div className='font-semibold text-lg mb-3'>
-              Hub Balance : 67 ICP
+              Hub Balance : {balance} ICP
             </div>
             
           </div>
@@ -298,13 +362,13 @@ const BalanceList = () => {
               Deposit Amount (in ICP) : 
             </div>
             <div className='w-1/2 -mt-5'>
-              <TextField value={amount} id="standard-basic" label="Amount" variant="standard" onChange={(e)=>setAmount(parseFloat(e.target.value))} />
+              <TextField value={amount} id="standard-basic" label="Amount" variant="standard" onChange={(e)=>parseFloat(setAmount(e.target.value))} />
             </div> 
           </div>
 
           <div className='flex justify-between items-center mt-8'>
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Deposit</button>
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button>
+            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer' onClick={depositAmount}>Deposit</button>
+            {/* <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button> */}
           </div>
         </div>
         

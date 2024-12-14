@@ -138,11 +138,11 @@ const Home = () => {
 
   return (
     <div className="flex flex-col rounded-md m-3 h-screen " style={{ backgroundColor: '#16161a' }}>
-      <Navbar nav={nav} openRefModal={openRefModal}/>
+      <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading}/>
       <FilterProvider>
         <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
           
-          <div className=" w-1/6 h-full">
+          <div className=" w-1/6 h-full lg:block sm:hidden">
             <Filter />
           </div>
           <div className="w-full h-full">

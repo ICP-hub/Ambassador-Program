@@ -83,6 +83,11 @@ pub enum Tasks{
         title:String,
         body:String
     },
+    SendTwitterPost{
+        id:u8,
+        title:String,
+        body:String
+    }
  
     // These might be needed in future for implementation
 
@@ -140,6 +145,10 @@ pub struct CreateMission{
     pub max_users_rewarded:u64,
     pub pool:u64
 }
+#[derive(CandidType)]
+pub struct TransferResultICRC1 {
+    result: Result<Nat, String>
+}
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum CheckCodeType{
@@ -160,6 +169,10 @@ pub enum TaskSubmitted{
     SendUrl{
         id:u8,
         url:String
+    },
+    SendTwitterPost{
+        id:u8,
+        post:String
     }
 }
 

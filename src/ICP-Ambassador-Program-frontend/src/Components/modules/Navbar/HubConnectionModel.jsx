@@ -11,11 +11,13 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
     const [selectedHub, setSelectedHub] = useState([]);
     const [verified,setVerified] = useState(false)
     const [joined,setJoined]=useState(false)
+    const [verifying,setVerifying]=useState(false)
     const guildID=1309834458777653279
     const bot="MTMwMzY4MjYwMjgyNTE1ODY3Ng.G_oM-A.Jeyx-0JjQIv8DNGwddj6JJaEm-yHiuOVe3a2xo"
     const url="https://bondex.kaifoundry.com/api/icp/v1"
     async function verifyGuildJoined(){
         try {
+            setVerifying(true)
             let token=Cookies.get('token')
             // const res=await fetch(`https://discord.com/api/guilds/${guildID}/members/search`, {
             //     headers: {
@@ -35,9 +37,11 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
             let user_parsed=JSON.parse(user)
             const res=await axios.get(`${url}/userExists?id=${user_parsed.id}`)
             if(res?.data?.joined){
+                setVerifying(false)
                 toast?.success("Thanks for joining us")
                 setVerified(true)
             }else{
+                setVerifying(false)
                 toast?.error("Please verify if you have joined correctly")
             }
             console.log(res.data,user_parsed.id)
@@ -121,7 +125,18 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
                                 setJoined(true)
                             }} >Join us</button>
                             :
-                            <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={verifyGuildJoined}>Verify</button>
+                            <>
+                                {
+                                    verifying?
+                                        <p className='my-2 text-black text-xs font-semibold'>Verification in process...</p>
+                                    :
+                                        <p className='my-2 text-black text-xs font-semibold'>Please Verify if you have joined our discord</p>
+                                }
+                                <button disabled={verifying} className='bg-blue-500 text-white px-4 py-2 rounded mt-4' onClick={verifyGuildJoined}>Verify</button>
+                                
+                               
+                            </>
+                            
                         }
                         
                     </>

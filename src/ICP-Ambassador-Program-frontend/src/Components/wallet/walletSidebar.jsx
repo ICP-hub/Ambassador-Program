@@ -1,8 +1,198 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdClose } from "react-icons/md";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-const WalletSidebar = ({onClose, isOpen}) => {
-   
+import Cookies from 'js-cookie'
+import toast from 'react-hot-toast';
+import { createActor, ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
+import { AuthClient } from '@dfinity/auth-client';
+import { canisterId, createActor as createLedgerActor } from '../../../../declarations/ledger';
+// import {A} from '@dfinity/agent'
+import { Principal } from '@dfinity/principal';
+import { stringToSubaccountBytes } from '../utils/utils';
+
+const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
+    const [hub,setHub]=useState('')
+    const [amount,setAmount]=useState(0)
+    const [sendAmount,setSendAmount]=useState(0)
+    const [conversion,setConversion]=useState(10)
+    const [authClient,setAuthClient]=useState(null)
+    const [ledger,setLedger]=useState(null)
+    const [updatedUser,setUpdatedUser]=useState(user)
+    const [receiver,setReceiver]=useState("")
+    const [principal,setPrincipal]=useState(null)
+
+    useEffect(()=>{
+        const HUB=Cookies.get('selectedHubName')
+        setHub(HUB)
+    },[])
+    async function getSpace() {
+        try {
+            const space=await ICP_Ambassador_Program_backend.get_space(updatedUser?.hub)
+            console.log(space,hub,updatedUser?.hub)
+            if(space?.Ok){
+                setConversion(parseInt(space?.Ok?.conversion))
+            }
+        } catch (error) {
+            console.log("err fetching hub details : ",error)
+        }
+    }
+    async function init_authclient(){
+        let client=await AuthClient.create()
+        setAuthClient(client)
+     
+        if(await client.isAuthenticated()){
+            let identity=client?.getIdentity()
+
+            if(identity?.getPrincipal()!=updatedUser?.wallet[0]){
+                await client.logout()
+                return
+            }
+            let ledgerActor=createLedgerActor(canisterId,{agentOptions:{
+                identity:client.getIdentity()
+            }})
+            setLedger(ledgerActor)
+        }
+    }
+
+    useEffect(()=>{
+        init_authclient()
+        getSpace()
+    },[hub])
+    async function getUser(){
+        try {
+            let userRes=await ICP_Ambassador_Program_backend.get_user_data(updatedUser?.discord_id)
+            console.log("userRes : ",userRes)
+            if(userRes[0]){
+                setUpdatedUser(userRes[0])
+                setDiscord_user(userRes[0])
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function login(){
+          try {
+            const authClient = await AuthClient.create();
+    
+            await authClient.login({
+                      identityProvider: process.env.DFX_NETWORK === "ic"
+                          ? "https://identity.ic0.app/"
+                          : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
+                      onError: (error) => console.log(error),
+                      onSuccess: async() => {
+                        if(updatedUser?.wallet?.length==0){
+                            let backendActor=createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{identity:authClient?.getIdentity()}})
+                            let updateWalletRes=await backendActor.add_wallet(updatedUser?.discord_id)
+                            if(updateWalletRes?.Ok){
+                                toast.success(updateWalletRes?.Ok)
+                            }else{
+                                throw new Error(updateWalletRes?.Err)
+                            }
+                        }
+                        let ledgerActor=createLedgerActor(canisterId,{
+                            agentOptions:{
+                              identity:authClient.getIdentity()
+                            }
+                          })
+                          console.log("user connected with principal : ",authClient.getIdentity().getPrincipal().toText())
+                          setPrincipal(authClient.getIdentity().getPrincipal().toText())
+                          setLedger(ledgerActor)
+                      }
+            });
+    
+    
+    
+          } catch (error) {
+            toast.error("Something went wring while connecting wallet")
+              console.log(error)
+          }
+      
+        }
+
+
+
+      async function logout(){
+        await authClient?.logout()
+        setLedger(null)
+      }
+
+
+    async function withdraw(){
+        try {
+            console.log("withdraw",updatedUser?.redeem_points,amount,user)
+            if(updatedUser?.wallet?.length==0){
+                toast.error("You wallet is set, please connect a wallet")
+                return
+            }
+            if(amount>parseInt(updatedUser?.redeem_points)){
+                toast.error("Not enough redeemable points")
+                return
+            }
+            let withdrawRes=await ICP_Ambassador_Program_backend.withdraw_points(updatedUser?.discord_id,parseInt(amount))
+            console.log(withdrawRes)
+            if(withdrawRes?.Ok){
+                toast.success(withdrawRes?.Ok)
+                getUser()
+            }else{
+                toast.error("Cannot withdraw now, please try after some time or try reducing points")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    function checkPrincipal(){
+        try{
+            let p=Principal.fromText(receiver)
+            return true
+        }catch(err){
+            return false
+        }
+    }
+    async function send(){
+        try {
+            // console.log("withdraw",user?.redeem_points,amount)
+            // if(amount>parseInt(user?.redeem_points)){
+                // console.log(sendAmount,receiver)
+                if(!checkPrincipal(receiver)){
+                  toast.error("Invalid principal")  
+                  return  
+                }
+                if(sendAmount==0 || sendAmount==""){
+                    toast.error("Invalid amount")  
+                    return   
+                }
+                const balance=await ledger?.icrc1_balance_of({owner:Principal.fromText(principal),subaccount:[]})
+
+                console.log(sendAmount,receiver,principal,balance,user?.wallet[0]?.toText(),"subacc : ",user?.hub)
+                const finalAmount=parseFloat(sendAmount)*Math.pow(10,8)
+                const fees=Math.pow(10,4)
+                if((finalAmount+fees)>parseInt(balance)){
+                    toast.error("Insufficient balance")
+                    return
+                }
+                const transaction={
+                    to:{owner:Principal.fromText(receiver),subaccount:[]},
+                    fee:[fees],
+                    memo:[],
+                    from_subaccount:[],
+                    created_at_time:[],
+                    amount:finalAmount
+                }
+                console.log("final transaction : ",transaction)
+                const transactionRes=await ledger.icrc1_transfer(transaction)
+                console.log(transactionRes)
+                if(transactionRes?.Ok){
+                    toast.success("TRansaction successful")
+                }else{
+                    toast.error("Transaction failed due to some reason")
+                }
+            // }
+        } catch (error) {
+            toast.error("Something went wrong")
+            console.log(error)
+        }
+    }
+
   return (
 
     <div
@@ -11,27 +201,69 @@ const WalletSidebar = ({onClose, isOpen}) => {
     }`}
 >
     <div className='flex justify-end'>
-        <button onClick={onClose} className=' hover:bg-black hover:text-white rounded-full h-9 w-9 flex justify-center items-center cursor-pointer'>
+        <button onClick={onClose} className='  rounded-full h-9 w-9 flex justify-center items-center cursor-pointer'>
             <MdClose className='text-black  hover:text-white' style={{ fontSize: '20px' }} />
         </button>
     </div>
     <div className='flex flex-col justify-center items-center'>
         <div className='flex flex-col gap-5 justify-center items-center mt-8'>
-            <div className='font-semibold text-3xl'>Wallet ID</div>
-            <div className='bg-black text-white font-semibold py-2 w-full rounded flex justify-center items-center'>Connect wallet</div>
-        </div>
-        <div className='flex flex-col ml-8 gap-10 mt-16'>
-                <div className='flex flex-col gap-5'>
-                    <div className='text-md font-semibold '>Total Points Earned : 150</div>
-                    <div className='text-md font-semibold '>Redeembale Points : 50</div>
+            <div className='font-semibold text-3xl'>User Wallet</div>
+            {
+                ledger?
+                <div 
+                    className='bg-black text-white font-semibold py-2 w-full rounded flex justify-center items-center'
+                    onClick={logout}
+                >
+                    Disconnect wallet
                 </div>
-                <div className='flex text-sm items-center gap-2 text-[#7064f5] font-semibold' >
+                :
+                <div 
+                    className='bg-black text-white font-semibold py-2 w-full rounded flex justify-center items-center'
+                    onClick={login}
+                >
+                    Connect wallet
+                </div>
+
+            }
+        </div>
+        <div className='flex flex-col ml-8 gap-4 mt-16'>
+                <div className='flex flex-col gap-5'>
+                    <div className='text-md font-semibold '>Total Points Earned : {updatedUser?.xp_points?.toString()}</div>
+                    <div className='text-md font-semibold '>Redeembale Points : {updatedUser?.redeem_points?.toString()}</div>
+                </div>
+                <div className='flex text-sm items-center gap-2 my-3 text-[#7064f5] font-semibold' >
                     <div>Conversion rate of your hub : 100p </div>
                     <MdOutlineArrowRightAlt/> 
-                    <div>0.6 ICP</div>
+                    <div>{`${parseFloat(conversion/10)} ICP`}</div>
                 </div>
-                <div className='border py-3 w-full border-gray-300 hover:bg-black hover:text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded'>Enter amount of points to be withdrawed</div>
-                <div className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded'>Withdraw amount</div>
+                <input 
+                    className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                    placeholder='enter amount of points to redeem'   
+                    onChange={(e)=>setAmount(e.target.value)}
+                    type='number'
+                />
+                <div className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded' onClick={withdraw}>Withdraw points</div>
+                {
+                    ledger?
+                    <>
+                    <input 
+                        className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                        placeholder='enter amount to be sent in ICP'   
+                        onChange={(e)=>setSendAmount(e.target.value)}
+                        type='number'
+                    />
+                    <input 
+                        className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                        placeholder='enter receiver principal'   
+                        onChange={(e)=>setReceiver(e.target.value)}
+                        type='text'
+                    />
+                    <button className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded' onClick={send}>Send amount</button>
+                    </>
+                    :
+                    <></>
+                }
+                
         </div>
    </div> 
     

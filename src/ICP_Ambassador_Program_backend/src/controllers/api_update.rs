@@ -2,6 +2,7 @@ use candid::{encode_one, Nat, Principal};
 use ic_cdk::api::{self, call::{CallResult, RejectionCode}, management_canister::main::{CanisterInstallMode, WasmModule}};
 use icrc_ledger_types::icrc1::{account::Account, transfer::{TransferArg, TransferError,NumTokens}};
 use crate::{icp_ledger_id, CreateFileInput, ImageIdWrapper, ProfileImageData, ReturnResult, IMAGE_MAP};
+use sha2::{Sha256, Digest};
 
 
 #[ic_cdk::update]
@@ -50,7 +51,9 @@ pub async fn upload_profile_image(asset_canister_id: String, image_data: Profile
 }
 
 pub async fn transfer_amount(amount:u64,user:Principal,space_id:String)->Result<Nat,String>{
-    let space_blob=space_id.as_bytes().try_into().unwrap();
+    // let space_slice=space_id.as_bytes().to_vec();
+    // let space_blob=space_slice.try_into().map_err(|_| "Invalid space_id vector length".to_string())?;
+    let space_blob: [u8; 32] = Sha256::digest(space_id.as_bytes()).into();
     let tokens=NumTokens::from(amount);
     let transfer_args=TransferArg{
         to:Account{
@@ -65,14 +68,14 @@ pub async fn transfer_amount(amount:u64,user:Principal,space_id:String)->Result<
     };
     let ledger_canister_id = Principal::from_text(icp_ledger_id)
         .map_err(|_| "Invalid ledger canister ID".to_string())?;
-    let (result,): (Result<Nat, String>,) = ic_cdk::call(
+    let (result,): (Result<Nat, TransferError>,) = ic_cdk::call(
         ledger_canister_id,
         "icrc1_transfer",
         (transfer_args,),
     )
     .await
     .map_err(|e| format!("Transfer failed: {:?}", e))?;
-    return Ok(tokens);
+    Ok(tokens)
 }
 
 

@@ -138,8 +138,8 @@ const Contests = () => {
   
   
   return (
-    <div className="h-screen overflow-y-scroll scrollbar-hide">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 w-full">
+    <div className="overflow-y-scroll scrollbar-hide" style={{ height: 'calc(100vh - 100px)' }}>
+      <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
         {
           displayedContests?.length>0?
           displayedContests.map((contest, index) => (

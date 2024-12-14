@@ -19,7 +19,7 @@ import WalletSidebar from '../../wallet/walletSidebar';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
 import { FaUserCircle } from "react-icons/fa";
-const Navbar = ({ nav, openRefModal }) => {
+const Navbar = ({ nav, openRefModal, setLoading }) => {
     const [isModelOpen, setModelOpen] = useState(false);
     const [isSideBarOpen, setSideBarOpen] = useState(false);
     const [isSideBar, setIsSideBar] = useState(false);
@@ -103,39 +103,44 @@ const Navbar = ({ nav, openRefModal }) => {
 
         </div>
         <div className='flex items-center gap-3'>
-            <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
-                <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
-                    <AiFillThunderbolt className='text-white' style={{ fontSize: '13px' }}/>
-                </div>
-                <div className='text-white' style={{ fontSize: '14px' }}>0</div>
+            {/* <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
+            <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
+                <AiFillThunderbolt className='text-white' style={{fontSize:'13px'}}/>
             </div>
-            <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
-                <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
-                    <HiSignal className='text-white' style={{ fontSize: '13px' }}/>
-                </div>
-                <div className='text-white' style={{ fontSize: '14px' }}>0</div>
+            <div className='text-white' style={{fontSize:'14px'}}>0</div>
+        </div>
+        <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
+            <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
+                <HiSignal className='text-white' style={{fontSize:'13px'}}/>
             </div>
-            <div className='sm:block lg:hidden'>
-                <HiMenu className='text-white' size={24} onClick={() => {
-            setIsSideBar(!isSideBar);
-        }}/>
-            </div>
-
+            <div className='text-white'style={{fontSize:'14px'}}>0</div>
+        </div>
+        <div className='sm:block lg:hidden'>
+            <HiMenu className='text-white' size={24} onClick={()=>{
+                setIsSideBar(!isSideBar)
+            }}  />
+        </div> */}
+            {discordl_user ?
             <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer' onClick={handleWallet}>
                 
-                <FaWallet className='text-white' style={{ fontSize: '20px' }}/>
-                
-                <div className='text-white' style={{ fontSize: '14px' }}>$0</div>
-            </div>
+                    <FaWallet className='text-white' style={{ fontSize: '20px' }}/>
+                    
+                    {/* <div className='text-white' style={{fontSize:'14px'}}>$0</div> */}
+                </div>
+            :
+                <></>}
 
-            <div className='lg:flex sm:hidden  justify-between items-center gap-3 rounded-md hover:bg-gray-700 p-1 cursor-pointer'>
-                <HiOutlineQuestionMarkCircle className='text-white' style={{ fontSize: '20px' }}/>   
-            </div>
-            <div className='lg:flex sm:hidden  justify-between items-center gap-1
-             rounded-md hover:bg-gray-700 p-1 cursor-pointer' onClick={() => { setSideBarOpen(!isSideBarOpen); }}>
-                <IoNotificationsOutline className='text-white' style={{ fontSize: '20px' }}/>   
-                <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`} style={{ fontSize: '20px', cursor: 'pointer' }}/>   
-            </div>
+            
+
+            {/* <div className='lg:flex sm:hidden  justify-between items-center gap-3 rounded-md hover:bg-gray-700 p-1 cursor-pointer'>
+            <HiOutlineQuestionMarkCircle className='text-white' style={{fontSize:'20px'}}/>
+        </div>
+        <div className='lg:flex sm:hidden  justify-between items-center gap-1
+         rounded-md hover:bg-gray-700 p-1 cursor-pointer' onClick={()=>{setSideBarOpen(!isSideBarOpen)}}>
+            <IoNotificationsOutline className='text-white' style={{fontSize:'20px'}}/>
+            <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`}
+                style={{ fontSize: '20px', cursor: 'pointer' }}/>
+        </div> */}
             {discordl_user ? (<div className='lg:block sm:hidden' onClick={handleProfileClick}>
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail}
@@ -203,8 +208,8 @@ const Navbar = ({ nav, openRefModal }) => {
                 </div>)}
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)} isReferred={isReferred}/>
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)}/>
-        {isDrawerOpen && (<ProfileDrawer user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal}/>)}
-        {openWallet && (<WalletSidebar onClose={handleCloseWallet} isOpen={openWallet}/>)}
+        {isDrawerOpen && (<ProfileDrawer setLoading={setLoading} user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal}/>)}
+        {openWallet && (<WalletSidebar onClose={handleCloseWallet} user={discordl_user} isOpen={openWallet} setDiscord_user={setDiscord_user}/>)}
            
     </div>);
 };

@@ -3,12 +3,12 @@ import { MdClose } from "react-icons/md";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import Cookies from 'js-cookie'
 import { FaUserCircle } from 'react-icons/fa';
-const ProfileDrawer = ({ user, onClose, isOpen,openRefModal }) => {
+const ProfileDrawer = ({ user, onClose, isOpen,openRefModal,setLoading }) => {
     // console.log("user ==>",user)
     const [points,setPoints]=useState(0)
     const [hub,setHub]=useState('')
-    // const baseReferral=`http://localhost:3000/ref?ref=`
-    const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
+    const baseReferral=`http://localhost:3000/ref?ref=`
+    // const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
     useEffect(()=>{
         const HUB=Cookies.get('selectedHubName')
         setHub(HUB)

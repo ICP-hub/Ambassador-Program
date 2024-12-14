@@ -110,6 +110,7 @@ type TaskSubmitted = variant {
   SendImage : record { id : nat8; img : text };
   SendUrl : record { id : nat8; url : text };
   SendText : record { id : nat8; "text" : text };
+  SendTwitterPost : record { id : nat8; post : text };
 };
 type Tasks = variant {
   SendImage : record { id : nat8; img : text; title : text; body : text };
@@ -122,6 +123,7 @@ type Tasks = variant {
     body : text;
     max_len : nat16;
   };
+  SendTwitterPost : record { id : nat8; title : text; body : text };
 };
 type UserLevel = variant { GrandMaster; Initiate; Knight; Padawan; Master };
 type UserProfile = record {

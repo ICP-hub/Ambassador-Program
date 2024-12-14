@@ -4,6 +4,8 @@ use ic_cdk_macros::*;
 
 
 use crate::{Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP, USER_PROFILE_MAP};
+
+use super::transfer_amount;
     
 //--
 #[update]
@@ -182,7 +184,7 @@ pub fn add_wallet(id:String)->Result<String,String>{
 }
 
 #[update]
-pub fn withdraw_points(id:String,points:u64)->Result<String,String>{
+pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
     let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
     let mut user_mut:UserProfile;
     let wallet:Principal;
@@ -204,7 +206,12 @@ pub fn withdraw_points(id:String,points:u64)->Result<String,String>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&user_mut.hub.clone()));
     match space{
         Some(space_val)=>{
-            amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000
+            amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000;
+            let transfer_res=transfer_amount(amount, wallet, space_val.space_id).await;
+            match transfer_res{
+                Ok(_)=>{},
+                Err(e)=>return Err(e)
+            }
         },
         None=>return Err(String::from("Invalid hub for the user"))
     }

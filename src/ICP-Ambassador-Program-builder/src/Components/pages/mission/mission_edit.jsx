@@ -20,13 +20,15 @@ import SortDescription from '../Content/sortDescription';
 import { AutocompleteSearchInput } from '../autoCompleteInputSearch/AutoCompleteSearchInput';
 import Rewards from '../reward/reward';
 import TaskSidebar from './task/TaskSidebar';
-import { ApiTask, ImageTask, SendURL } from './task/TaskList';
+import { ApiTask, ImageTask, SendURL,TwitterTask } from './task/TaskList';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Principal } from '@dfinity/principal';
+import { formatTokenMetaData, stringToSubaccountBytes } from '../../../utils/utils';
 const ItemTypes = {
   TASK: 'task',
 };
@@ -74,6 +76,13 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
           onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}
         />
       )}
+      {task.type === 'twitter_post' && (
+        <TwitterTask
+          task={task}
+          onDelete={() => onDelete(task.id)}
+          onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}
+        />
+      )}
     </div>
   );
   
@@ -81,7 +90,9 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
 
 const MissionEdit = ({setLoading}) => {
   const actor=useSelector(state=>state.actor.value)
+  const spaces=useSelector(state=>state.spaces.value)
   const mission=useSelector(state=>state.mission.value)
+  const [pool,setPool]=useState(0)
   const timezone = 'Asia/Calcutta';
   const [logoImage, setLogoImage] = useState(null);
   const [startDate, setStartDate] = useState(moment().tz(timezone));
@@ -95,8 +106,21 @@ const MissionEdit = ({setLoading}) => {
   const [description,setDescription]=useState(mission?.description)
   const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
   const [imgMetadata,setImgMetadata]=useState(null)
+  const [spaceBalance,setSpaceBalance]=useState(0)
   const [participantsCount, setParticipantsCount] = useState('');
   const nav=useNavigate()
+
+  async function getBalance(){
+    try {
+      let balance=await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) , subaccount: [stringToSubaccountBytes(spaces?.space_id)] })
+      let metadataRes=await actor?.ledgerActor?.icrc1_metadata()
+      let metadata=formatTokenMetaData(metadataRes)
+      console.log("space balance",parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
+      setSpaceBalance(parseFloat(balance)/Math.pow(10, parseInt(metadata?.["icrc1:decimals"])))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const fileToUint8Array = (file) =>
     new Promise((resolve, reject) => {
@@ -137,6 +161,11 @@ const MissionEdit = ({setLoading}) => {
 
   const handlesave = async(action) =>{
     try{
+      if((parseFloat(pool)+0.0001)>=(spaceBalance)){
+        console.log(pool,spaceBalance)
+        toast.error("Insufficient space balance, please add more funds")
+        return
+      }
       const draft_data ={
         Title:title,
         Image:logoImage,
@@ -168,6 +197,15 @@ const MissionEdit = ({setLoading}) => {
         if(tasks[i]?.type=="url"){
           finalTasks.push({
             SendUrl:{
+              id:finalTasks?.length,
+              title:tasks[i]?.title,
+              body:tasks[i]?.body,
+            }
+          })
+        }
+        if(tasks[i]?.type=="twitter_post"){
+          finalTasks.push({
+            SendTwitterPost:{
               id:finalTasks?.length,
               title:tasks[i]?.title,
               body:tasks[i]?.body,
@@ -212,7 +250,9 @@ const MissionEdit = ({setLoading}) => {
         description:description,
         status:action=="save"?{Draft:null}:{Active:null},
         reward:parseInt(rewardsData),
-        tasks:finalTasks
+        tasks:finalTasks,
+        pool:parseInt(pool*Math.pow(10,8)),
+        max_users_rewarded:0
       }
 
       if(imgMetadata){
@@ -265,6 +305,13 @@ const MissionEdit = ({setLoading}) => {
           ...oldTasks[i]?.SendUrl
         })
       }
+      if(oldTasks[i]?.SendTwitterPost){
+        displayableTasks.push({
+          id:i,
+          type:"twitter_post",
+          ...oldTasks[i]?.SendTwitterPost
+        })
+      }
     }
     console.log("parsed tasks : ",displayableTasks)
     setTasks(displayableTasks)
@@ -276,6 +323,7 @@ const MissionEdit = ({setLoading}) => {
     }
     console.log(mission,"mission",actor)
     parseTasks(mission?.tasks)
+    getBalance()
   },[mission])
 
   const handleStartDateChange = (date) => {
@@ -491,9 +539,12 @@ const MissionEdit = ({setLoading}) => {
           </FormControl>
 
           <Rewards 
+            spaceBal={spaceBalance}
             onRewardsChange={handleRewardsChange} 
             initialReward={rewardsData}
             onParticipantsChange={(value)=>setRewardsData(value)} 
+            pool={pool}
+            setPool={setPool}
           />
           <div className=''>
             {tasks.length > 0 && (<div className="text-4xl border-b-2 border-gray-300 mb-4 py-2">Tasks</div>)}

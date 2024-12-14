@@ -7,6 +7,7 @@ import { updateActor } from '../redux/actors/actorSlice';
 import Login from '../Components/pages/authComponents/Login';
 import { store } from '../redux/store';
 import { updateAdmin } from '../redux/admin/adminSlice';
+import { createActor as createLedgerActor} from '../../../declarations/ledger';
 
 const AuthContext = createContext();
 
@@ -32,9 +33,13 @@ export const useAuthClient = () => {
             let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
                 identity:identity
             }})
+            let ledgerActor = createLedgerActor("ryjl3-tyaaa-aaaaa-aaaba-cai",{agentOptions:{
+                identity:identity
+            }})
 
             dispatch(updateActor({
-                backendActor
+                backendActor,
+                ledgerActor
             }))
             let res=await backendActor.get_admin()
             console.log("login res : ",res)

@@ -25,6 +25,13 @@ const TaskCard = ({task}) => {
                 type:'url'
             })
         }
+        if(taskType=="SendTwitterPost"){
+            setParsedTask({
+                id:task[taskType]?.id,
+                url:task[taskType]?.post,
+                type:'url'
+            })
+        }
     }
     useEffect(()=>{
         parseTask()

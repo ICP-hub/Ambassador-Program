@@ -9,12 +9,18 @@ import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import app from "./firebase_config";
+import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 // import upload_background from '../../../assets/images/upload_background.png'
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie'
 import toast from 'react-hot-toast';
+
+const auth = getAuth(app);
 
 const CardDetails = () => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
@@ -24,10 +30,16 @@ const CardDetails = () => {
   const [submission,setSubmission]=useState(null)
   const [loading,setLoading]=useState(false)
   const [subStatus,setSubStatus]=useState("")
+  const [authenticate,setAuth]=useState(false);
+  const [twitterUser,setTwitterUser]=useState("")
   const nav=useNavigate()
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
+  const [twitterLink, setTwitterLink] = useState("");
+  const handleInputTwitter = (e) => {
+      setTwitterLink(e.target.value);
+  };
 
   const fileToUint8Array = (file) =>
     new Promise((resolve, reject) => {
@@ -81,6 +93,9 @@ const CardDetails = () => {
         if(taskType=="SendUrl"){
           new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.url})
         }
+        if(taskType=="SendTwitterPost"){
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.post})
+        }
       }
       console.log("parsed mission tasks : ",new_tasks)
       setTasks(new_tasks)
@@ -114,6 +129,38 @@ const CardDetails = () => {
       console.log("error while fetching submission : ",error)
     }
   }
+  const Check_authentication = async (e) => {
+    e.preventDefault();
+    
+    const provider = new TwitterAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log("user ==>",user)
+        const username = user.reloadUserInfo.screenName;
+        console.log("username ==>",username)
+        // const regex = /(?:twitter|x)\.com\/([^\/]+)/;
+        // const match = twitterLink.match(regex);
+        // const usernameInLink = match ? match[1] : null;
+        // console.log("userNameInLink ==>", usernameInLink);
+        if (username) {
+            setAuth(true);
+            setTwitterUser(username)
+            console.log("Authentication successful");
+            toast.success("Authenticated using twitter")
+        } else {
+            console.log("User not authenticated");
+            toast.error("Something failed while authenticating with twitter")
+        }
+    } catch (error) {
+        console.error("Error during Twitter login:", error);
+    }
+};
+const twitterSubmit = ()=>{
+  if(!authenticate){
+    alert("Authenticate twitter before submitting .....");
+  }
+}
 
   async function addSubmission(){
     try{
@@ -176,6 +223,33 @@ const CardDetails = () => {
             // })
           }
           
+        }
+        if(tasks[i]?.id=="SendTwitterPost"){
+          if(!authenticate){
+            setLoading(false)
+            toast.error("Please authenticate using twitter for submitting a post")
+            return
+          }
+          const regex = /^https:\/\/x\.com\/[^/]+\/[^/]+\/[^/]+$/;
+          console.log("regex test : ",regex.test(tasks[i].content),tasks[i].content)
+          let testResult=regex.test(tasks[i].content)
+          if(!testResult){
+            setLoading(false)
+            toast.error("Invalid post link format")
+            return
+          }
+          if(!tasks[i].content?.includes(twitterUser)){
+            console.log("user check : ",twitterUser)
+            setLoading(false)
+            toast.error("Someone else's post cannot be submitted")
+            return
+          }
+          task={
+            SendTwitterPost:{
+              id:tasks[i]?.task_id,
+              post:tasks[i]?.content||""
+            }
+          }
         }
         if(tasks[i]?.id=="SendUrl"){
           task={
@@ -322,13 +396,13 @@ const CardDetails = () => {
       }}
       className="h-full pt-3" >
       <Navbar nav={nav} />
-      <div className='flex justify-center items-center ml-20 '>
-      <div className=' flex flex-col gap-16 justify-start items-start  w-3/4 mt-10 h-full ' >
+      <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
+      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
                 {img?.length>0 ? (
-                    <img src={img} alt={title} className="w-44 h-44 object-cover rounded-lg" />
+                    <img src={img} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg" />
                 ) : (
                     // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
                     // <span>No Image</span>
@@ -336,7 +410,7 @@ const CardDetails = () => {
                     <img
                       src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
                       alt={title}
-                      className="w-24 h-24 object-cover rounded"
+                      className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"
                     />
                 )}
                 </div>
@@ -381,7 +455,7 @@ const CardDetails = () => {
                     borderRadius: '0.5rem',
                 }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         {task.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
@@ -392,7 +466,7 @@ const CardDetails = () => {
                             <>
 
                                 
-                                <div className="text-white font-semibold text-md">{task.description}</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
                                     <textarea 
@@ -408,7 +482,7 @@ const CardDetails = () => {
                               <>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
                                   <input
                                   type='SendURL'
                                   placeholder='Enter URL'
@@ -422,24 +496,70 @@ const CardDetails = () => {
                             
                             </>
                             )}
+                            {task.id==="SendTwitterPost" && (
+                               
+                                   
+                                   <div  className="flex flex-col gap-3 mt-3">  
+                                       <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
+                                       <div className ='flex w-full gap-4 items-center'>
+                                       <input
+                                             type='text'
+                                             value={task.content}
+                                             placeholder='Share post link'
+                                             onChange={(e) => handleInputChange(e, task.task_id)}
+                                             className='outline-none p-3 rounded w-full text-black'
+                                         />
+                                         {!authenticate ?(
+                                           <button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                                           <PrivacyTipIcon className='text-black'/>
+                                           </button>
+                                         ):(
+                                           <div className='w-12 h-12 bg-white flex justify-center items-center rounded-full'>
+                                             <AdminPanelSettingsIcon className=' text-green-600'/>
+                                         </div>
+                                         )}
+                                         
+                                       </div>
+                                       {!authenticate ?(
+                                           <div>
+                                             <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p>
+                                           </div>
+                                         ):(
+                                           <div >
+                                             <p className='text-green-500 text-sm font-semibold '>Authenticated</p>
+                                           </div>
+                                         )}
+                                       
+                                       <div className='flex items-center justify-center'>
+                                       {/* <button
+                                           onClick={()=>{twitterSubmit()}}
+                                           type="submit"
+                                           className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                                       >
+                                           Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                                       </button> */}
+                                       </div>
+                                   </div>
+                                   
+                            )}
                             {task.id === 'SendImage' && (
                             <div className="mt-4 w-full ">
-                              <div className="text-white font-semibold text-md">{task.description}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
                               <div className='flex gap-5 my-5'>
-                                <div className="text-white font-semibold text-md mt-4">Sample Image</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs mt-4">Sample Image</div>
                                 <img src={task.sampleImg} className='w-40 h-40' alt=''/>
                               </div>
                                 
-                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full mx-auto">
+                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
                                 {task.image ? (
-                                    <img src={typeof task.image=='object'?URL.createObjectURL(task.image):task.image} alt="Uploaded" className="object-contain h-[300px] w-[400px]" />
+                                    <img src={typeof task.image=='object'?URL.createObjectURL(task.image):task.image} alt="Uploaded" className="object-contain sm:max-h-64 sm:w-full h-[300px] w-[400px]" />
                                 ) : (
                                     <img src={'upload_background.png'} alt="" className="" />
                                 )}
-                                <div>drag file here or</div>
+                                <div  className='mt-4 text-gray-500'>drag file here or</div>
                                 <label className="mt-4 w-full bg-blue-500 rounded">
                                     <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)} />
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2  bg-white text-black rounded-md cursor-pointer hover:bg-blue-600">
+                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black hover:text-white rounded-md b cursor-pointer hover:bg-blue-600">
                                     BROWSE
                                     </div>
                                 </label>
@@ -466,6 +586,57 @@ const CardDetails = () => {
                 </div>
                 </div>
             ))}
+             {/* <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
+                        Twitter Post sample task title
+                    </AccordionSummary>
+                    <div className='h-[1px] bg-gray-500 mx-4'></div>
+                    <AccordionDetails>
+                        
+                        <div  className="flex flex-col gap-3 mt-3">  
+                            <div className="text-white font-semibold lg:text-md sm:text-xs">Twitter Post sample description</div>
+                            <div className ='flex w-full gap-4 items-center'>
+                            <input
+                                  type='text'
+                                  value={twitterLink}
+                                  placeholder='Share post link'
+                                  onChange={(e) => handleInputTwitter(e)}
+                                  className='outline-none p-3 rounded w-full text-black'
+                              />
+                              {!authenticate ?(
+                                <button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                                <PrivacyTipIcon className='text-black'/>
+                                </button>
+                              ):(
+                                <div className='w-12 h-12 bg-white flex justify-center items-center rounded-full'>
+                                  <AdminPanelSettingsIcon className=' text-green-600'/>
+                              </div>
+                              )}
+                              
+                            </div>
+                            {!authenticate ?(
+                                <div>
+                                  <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p>
+                                </div>
+                              ):(
+                                <div >
+                                  <p className='text-green-500 text-sm font-semibold '>Authenticated</p>
+                                </div>
+                              )}
+                            
+                            <div className='flex items-center justify-center'>
+                            <button
+                                onClick={()=>{twitterSubmit()}}
+                                type="submit"
+                                className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                            >
+                                Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                            </button>
+                            </div>
+                        </div>
+                        
+                    </AccordionDetails>
+                  </Accordion> */}
             <div className='w-full flex justify-center'>
               {
                 subStatus=="Unread"?
