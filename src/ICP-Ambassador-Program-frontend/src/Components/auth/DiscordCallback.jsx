@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '../auth/authdata';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from './authdata';
 import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 const DiscordCallback = ({setOpen}) => {
   const navigate = useNavigate();

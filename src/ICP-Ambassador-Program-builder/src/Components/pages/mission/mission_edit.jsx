@@ -113,6 +113,7 @@ const MissionEdit = ({setLoading}) => {
   async function getBalance(){
     try {
       let balance=await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) , subaccount: [stringToSubaccountBytes(spaces?.space_id)] })
+      console.log("Spaced id ==>",)
       let metadataRes=await actor?.ledgerActor?.icrc1_metadata()
       let metadata=formatTokenMetaData(metadataRes)
       console.log("space balance",parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))

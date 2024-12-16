@@ -103,23 +103,23 @@ const Navbar = ({ nav, openRefModal, setLoading }) => {
 
         </div>
         <div className='flex items-center gap-3'>
-            {/* <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
-            <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
-                <AiFillThunderbolt className='text-white' style={{fontSize:'13px'}}/>
+            <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
+                <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
+                    <AiFillThunderbolt className='text-white' style={{ fontSize: '13px' }}/>
+                </div>
+                <div className='text-white' style={{ fontSize: '14px' }}>0</div>
             </div>
-            <div className='text-white' style={{fontSize:'14px'}}>0</div>
-        </div>
-        <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
-            <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
-                <HiSignal className='text-white' style={{fontSize:'13px'}}/>
+            <div className='flex justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-2 px-2 cursor-pointer'>
+                <div className='w-6 h-6 rounded-full border-2 border-gray-500 flex justify-center items-center'>
+                    <HiSignal className='text-white' style={{ fontSize: '13px' }}/>
+                </div>
+                <div className='text-white' style={{ fontSize: '14px' }}>0</div>
             </div>
-            <div className='text-white'style={{fontSize:'14px'}}>0</div>
-        </div>
-        <div className='sm:block lg:hidden'>
-            <HiMenu className='text-white' size={24} onClick={()=>{
-                setIsSideBar(!isSideBar)
-            }}  />
-        </div> */}
+            <div className='sm:block lg:hidden'>
+                <HiMenu className='text-white' size={24} onClick={() => {
+            setIsSideBar(!isSideBar);
+        }}/>
+            </div>
             {discordl_user ?
             <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer' onClick={handleWallet}>
                 
@@ -132,15 +132,14 @@ const Navbar = ({ nav, openRefModal, setLoading }) => {
 
             
 
-            {/* <div className='lg:flex sm:hidden  justify-between items-center gap-3 rounded-md hover:bg-gray-700 p-1 cursor-pointer'>
-            <HiOutlineQuestionMarkCircle className='text-white' style={{fontSize:'20px'}}/>
-        </div>
-        <div className='lg:flex sm:hidden  justify-between items-center gap-1
-         rounded-md hover:bg-gray-700 p-1 cursor-pointer' onClick={()=>{setSideBarOpen(!isSideBarOpen)}}>
-            <IoNotificationsOutline className='text-white' style={{fontSize:'20px'}}/>
-            <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`}
-                style={{ fontSize: '20px', cursor: 'pointer' }}/>
-        </div> */}
+            <div className='lg:flex sm:hidden  justify-between items-center gap-3 rounded-md hover:bg-gray-700 p-1 cursor-pointer'>
+                <HiOutlineQuestionMarkCircle className='text-white' style={{ fontSize: '20px' }}/>   
+            </div>
+            <div className='lg:flex sm:hidden  justify-between items-center gap-1
+             rounded-md hover:bg-gray-700 p-1 cursor-pointer' onClick={() => { setSideBarOpen(!isSideBarOpen); }}>
+                <IoNotificationsOutline className='text-white' style={{ fontSize: '20px' }}/>   
+                <IoChevronUpOutline className={`text-white transition-transform duration-300 ${isSideBarOpen ? 'rotate-180' : 'rotate-0'}`} style={{ fontSize: '20px', cursor: 'pointer' }}/>   
+            </div>
             {discordl_user ? (<div className='lg:block sm:hidden' onClick={handleProfileClick}>
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail}
@@ -180,9 +179,16 @@ const Navbar = ({ nav, openRefModal, setLoading }) => {
                                     <CiSearch className='' style={{ fontSize: '20px', color: '#71827f' }}/>
                                     <input className='text-white bg-transparent outline-none border-none placeholder:font-bold' placeholder='Search'/>
                                 </div>
-                                <div className='flex  bg-white w-full text-black justify-center items-center py-2 px-7 rounded-md text-sm font-semibold cursor-pointer' style={{ boxShadow: 'rgba(255, 255, 255, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 63px 60px -50px' }} onClick={() => { setModelOpen(true); }}>
-                                    Log In
-                                </div> 
+                                {discordl_user ? (<div className='lg:block sm:hidden' onClick={handleProfileClick}>
+                                        <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
+                                        <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/>
+                                        </div>
+                                    </div>) : (<div className='lg:block sm:hidden'>
+                                        <div className='flex bg-white w-full text-black justify-center items-center py-2 px-7 rounded-md text-sm font-semibold cursor-pointer' style={{ boxShadow: 'rgba(255, 255, 255, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 63px 60px -50px' }} onClick={() => setModelOpen(true)}>
+                                        Log In
+                                        </div>
+                                    </div>)}
+
                                 <div className='flex items-center gap-3 rounded-md  p-1 cursor-pointer'>
                                     <HiOutlineQuestionMarkCircle className='text-white font-bold' style={{ fontSize: '23px' }}/> <div className='text-white font-semibold'>Support</div>  
                                 </div>
