@@ -93,10 +93,10 @@ const MissionEdit = ({setLoading}) => {
   const spaces=useSelector(state=>state.spaces.value)
   const mission=useSelector(state=>state.mission.value)
   const [pool,setPool]=useState(0)
-  const timezone = 'Asia/Calcutta';
+  const timezone = 'UTC';
   const [logoImage, setLogoImage] = useState(null);
   const [startDate, setStartDate] = useState(moment().tz(timezone));
-  const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(moment().tz(timezone));
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [title,setTitle]=useState(mission?.title)
@@ -262,7 +262,7 @@ const MissionEdit = ({setLoading}) => {
       }
   
       console.log("data ==>",draft_data,mission,actor,finalTasks)
-      
+      console.log("dates : ",startDate.toDate(),endDate.toDate())
       console.log("final updated mission : ",updatedMission,tasks)
       const res=await actor?.backendActor?.edit_mission(updatedMission)
       console.log(res)

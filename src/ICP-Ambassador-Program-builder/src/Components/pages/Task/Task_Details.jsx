@@ -178,8 +178,8 @@ const Task_Details = ({setLoading}) => {
 
             
             {isModalOpen && selectedUser && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-                    <div className="bg-white p-6  max-h-[80vh] rounded shadow-lg w-1/2">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 overflow-y-scroll">
+                    <div className="bg-white p-6  max-h-[80vh] rounded shadow-lg w-1/2 overflow-y-scroll">
                         <h2 className="text-lg font-bold mb-4">User Submission</h2>
                         <p>
                             <strong>Name:</strong> {selectedUser.user}

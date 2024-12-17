@@ -283,14 +283,16 @@ const BalanceList = () => {
 
   async function getBalance(){
     try {
-      let balance=await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) , subaccount: [stringToSubaccountBytes(spaces?.space_id)] })
-     
+      let balance=await actor?.ledgerActor?.icrc1_balance_of({ 
+        owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND) , 
+        // subaccount: [stringToSubaccountBytes(spaces?.space_id)] 
+        subaccount:[]
+      })
       let metadataRes=await actor?.ledgerActor?.icrc1_metadata()
       let metadata=formatTokenMetaData(metadataRes)
-      console.log("Spaces ==>",spaces)
-      console.log("Balance",balance)
-      console.log("Space ID:", spaces?.space_id);
-      console.log("space balance",parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
+      console.log("space balance",spaces?.space_id,parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
+      console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_0"))
+      console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_1"))
       setBalance(parseFloat(balance)/Math.pow(10, parseInt(metadata?.["icrc1:decimals"])))
     } catch (error) {
       console.log(error)
