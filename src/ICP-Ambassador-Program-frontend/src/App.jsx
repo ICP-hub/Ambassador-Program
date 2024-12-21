@@ -5,10 +5,13 @@ import CardDetails from './Components/modules/Contests/CardDetails';
 import { ICP_Ambassador_Program_backend } from 'declarations/ICP_Ambassador_Program_backend';
 import DiscordCallback from './Components/auth/DiscordCallback';
 import ReferralHandler from './Components/pages/ReferralHandler';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [open,setOpen]=useState(false)
   return (
+    <>
+    <Toaster/>
     <BrowserRouter>
       <Routes>
         <Route path ='/' element={<Home/>}/>
@@ -17,6 +20,7 @@ function App() {
         <Route path='/ref' element={<ReferralHandler/>}/>
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

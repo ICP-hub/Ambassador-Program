@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthClient } from '../../../utils/useAuthClient'
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor } from '../../../../../declarations/ICP_Ambassador_Program_backend';
@@ -6,12 +6,15 @@ import { useDispatch } from 'react-redux';
 import { updateActor } from '../../../redux/actors/actorSlice';
 import { updateAdmin } from '../../../redux/admin/adminSlice';
 import { useNavigate } from 'react-router-dom';
+import { createActor as createLedgerActor } from '../../../../../declarations/ledger';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 
     const {setIsAuthenticated,isAuthenticated}=useAuthClient()
     const dispatch=useDispatch()
     // const nav=useNavigate()
+    const [loading,setLoading]=useState(false)
 
     useEffect(()=>{
         console.log(isAuthenticated)
@@ -20,18 +23,27 @@ const Login = () => {
     async function login(){
         try {
             const authClient = await AuthClient.create();
+            setLoading(true)
             await authClient.login({
                 identityProvider: process.env.DFX_NETWORK === "ic"
                     ? "https://identity.ic0.app/"
                     : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
-                onError: (error) => console.log(error),
+                onError: (error) => {
+                    toast.error("Some error occured while authentication")
+                    setLoading(false)
+                    console.log(error)
+                },
                 onSuccess: async() => {
                     let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
                         identity:authClient.getIdentity()
                     }})
+                    let ledgerActor = createLedgerActor("ryjl3-tyaaa-aaaaa-aaaba-cai",{agentOptions:{
+                        identity:authClient.getIdentity()
+                    }})
 
                     dispatch(updateActor({
-                        backendActor
+                        backendActor,
+                        ledgerActor
                     }))
                     let res=await backendActor.get_admin()
                     console.log("login res : ",res)
@@ -41,6 +53,7 @@ const Login = () => {
                     }
                     else{
                         console.log("You are not an admin -->" + authClient.getIdentity().getPrincipal())
+
                         let reg_res=await backendActor.register_admin()
                         console.log("register admin response : ",reg_res)
                         if(reg_res?.Ok==null && res!=null && res!=undefined ){
@@ -57,8 +70,17 @@ const Login = () => {
                 },
             });
         } catch (error) {
+            setLoading(false)
+            toast.error("Some error occured while authenticating")
             console.log("login function : ",error)
         }
+    }
+    if(loading){
+        return(
+            <div className='flex justify-center items-center h-screen'>
+            <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black" />
+          </div>
+        )
     }
   return (
     <div className='w-screen h-screen flex flex-col items-center justify-center bg-black'>

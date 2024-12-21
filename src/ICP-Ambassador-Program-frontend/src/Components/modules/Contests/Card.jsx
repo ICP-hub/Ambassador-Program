@@ -6,25 +6,41 @@ import { FaDiscord } from "react-icons/fa";
 import { BiLogoTelegram } from "react-icons/bi";
 import { FaFileUpload } from "react-icons/fa";
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 const Card = ({ contest,hub }) => {
   //console.log(hub)
   //console.log("contest ==>",contest)
-  const {  status, title,  description, image,reward } = contest;
+  const {  status, title,  description, img,reward } = contest;
   
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     if (contest?.tasks) {
+      console.log("contest tasks : ",contest)
       const formattedTasks = contest.tasks.map((task) => {
         const taskKey = Object.keys(task)[0]; 
+        let bg=''
+        if(taskKey=='SendText' || taskKey=='SendUrl'){
+          bg='text'
+        }else if(taskKey=="TwitterFollow" || taskKey=="SendTwitterPost"){
+          bg='twitter'
+        }else{
+          bg='img'
+        }
         return {
           id: taskKey,
           title: task[taskKey]?.title || taskKey, 
           description: task[taskKey]?.body || '', 
           submitted: false,
           image: task[taskKey]?.img || null,
-          validation_rule:task[taskKey]?.validation_rule || ''
+          sampleImg:task[taskKey]?.img || null,
+          validation_rule:task[taskKey]?.validation_rule || '',
+          task_id:task[taskKey]?.id,
+          sampleText:task[taskKey]?.sample,
+          completed:false,
+          bg,
+          account:task[taskKey]?.account
         };
       });
       setTasks(formattedTasks);
@@ -68,7 +84,12 @@ const Card = ({ contest,hub }) => {
 
   const handleCard = () => {
     //console.log("Contest",contest)
-    navigate('/contest_details', { state: { updatedContest } });
+    let user=Cookies.get('discord_user')
+    if(user){
+      navigate('/contest_details', { state: { updatedContest } });
+    }else{
+      toast.error("Please login to view the details")
+    }
   };
 
 
@@ -106,9 +127,9 @@ const Card = ({ contest,hub }) => {
 
       </div>
       <div className='flex justify-between'>
-        <div>
+        <div className='w-[70%] overflow-hidden'>
             <h3 className="text-md font-bold mb-2">{title}</h3>
-            <div className='mt-4 text-sm text-gray-600'>{description}</div>
+            <div className='mt-4 text-sm text-gray-600 w-full '>{description?.length>50?`${description?.substring(0,45)}...`:description}</div>
             {/* {social_platforms(
                     <div className="flex space-x-2">
                 {social_platforms.map((platform, index) => {
@@ -124,9 +145,9 @@ const Card = ({ contest,hub }) => {
         </div>
         
         <div className="mb-4">
-        {image ? (
+        {img?.length>0 ? (
             <img
-            src={image}
+            src={img[0]}
               alt={title}
               className="w-24 h-24 object-cover rounded"
             />

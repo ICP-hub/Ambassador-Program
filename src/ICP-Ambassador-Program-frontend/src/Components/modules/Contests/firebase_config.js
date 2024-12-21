@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -15,9 +14,7 @@ const firebaseConfig = {
   appId: "1:513704027008:web:3b272401189fe1c77d5765",
   measurementId: "G-GJXQ06C9S9"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
 export default app;

@@ -3,8 +3,10 @@ import Card from './Card';
 import { useFilterContext } from '../../Context/FilterContext';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 const Contests = () => {
     const { selectedPlatform } = useFilterContext();
+    const user = useSelector(state => state.user.value);
     const contests = [];
     const [displayedContests, setDisplayedContests] = useState(contests);
     const [hub, setHub] = useState('');
@@ -22,7 +24,7 @@ const Contests = () => {
             //console.log("all missions")
             getMissions();
         }
-    }, []);
+    }, [user]);
     const get_user_mission = async (spaceId) => {
         try {
             const user_contest = await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
@@ -35,416 +37,21 @@ const Contests = () => {
                 const updatedContests = contestsArray.map(contest => ({
                     ...contest
                 }));
-                setDisplayedContests(updatedContests);
+                console.log("updated contests : ", updatedContests);
+                let activeContests = [];
+                for (let i = 0; i < updatedContests.length; i++) {
+                    if (Object.keys(updatedContests[i]?.status)[0] == "Active") {
+                        activeContests.push(updatedContests[i]);
+                    }
+                }
+                console.log("Active contests : ", activeContests);
+                setDisplayedContests(activeContests);
             }
         }
         catch (e) {
             console.log("Error ==>", e);
         }
     };
-    const sample_contest = {
-        reward: "100 Points",
-        status: "Active",
-        title: "Submit a description of our hub5",
-        image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-        description: hub,
-        social_platforms: [
-            {
-                name: "Twitter",
-                bgcolor: '#1dc0f2'
-            },
-            {
-                name: "Discord",
-                bgcolor: '#5865f2'
-            }
-        ],
-        icons: {
-            platform: hub,
-            platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-        }
-    };
-    // const contests=[
-    // {
-    //   reward: "10 ICP",
-    //   status: "Active",
-    //   title: "Create tutorial how to use ckETH",
-    //   image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //   description: "ICP Tech Degens",
-    //   social_platforms: [
-    //     {
-    //       name: "Twitter",
-    //       bgcolor:'#1dc0f2'
-    //     },
-    //     {
-    //       name: "Discord",
-    //       bgcolor:'#5865f2'
-    //     }
-    //   ],
-    //   icons: {
-    //     platform: "ICP Tech Degens",
-    //     platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //   }
-    // },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Draft",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Upload",
-    //         bgcolor:'#de7515'
-    //       },
-    //       {
-    //         name: "Telegram",
-    //         bgcolor:'#0088cc'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Api",
-    //         bgcolor:'#6d15de'
-    //       },
-    //       {
-    //         name: "Transaction",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    // ]
-    // const contests = [
-    //   {
-    //     reward: "10 ICP",
-    //     status: "Active",
-    //     title: "Create tutorial how to use ckETH",
-    //     image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //     description: "ICP Tech Degens",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP Tech Degens",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Draft",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Upload",
-    //         bgcolor:'#de7515'
-    //       },
-    //       {
-    //         name: "Telegram",
-    //         bgcolor:'#0088cc'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Api",
-    //         bgcolor:'#6d15de'
-    //       },
-    //       {
-    //         name: "Transaction",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "10 ICP",
-    //     status: "Active",
-    //     title: "Create tutorial how to use ckETH",
-    //     image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //     description: "ICP Tech Degens",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP Tech Degens",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "10 ICP",
-    //     status: "Active",
-    //     title: "Create tutorial how to use ckETH",
-    //     image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //     description: "ICP Tech Degens",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP Tech Degens",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "10 ICP",
-    //     status: "Active",
-    //     title: "Create tutorial how to use ckETH",
-    //     image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //     description: "ICP Tech Degens",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP Tech Degens",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "10 ICP",
-    //     status: "Active",
-    //     title: "Create tutorial how to use ckETH",
-    //     image: "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg",
-    //     description: "ICP Tech Degens",
-    //     social_platforms: [
-    //       {
-    //         name: "Twitter",
-    //         bgcolor:'#1dc0f2'
-    //       },
-    //       {
-    //         name: "Discord",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP Tech Degens",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "AMA Twitter Space Featuring WaterNeuron",
-    //     image: "https://tse1.mm.bing.net/th?id=OIP.3QKFBcWD_KT3zK_TzGgEiQHaEK&pid=Api&P=0&h=180",
-    //     description: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png",
-    //     social_platforms: [
-    //       {
-    //         name: "Upload",
-    //         bgcolor:'#de7515'
-    //       },
-    //       {
-    //         name: "Telegram",
-    //         bgcolor:'#0088cc'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Singapore",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    //   {
-    //     reward: "0.2 ICP",
-    //     status: "Ended",
-    //     title: "ICP Hub TH x ID Community Partnership",
-    //     image: "https://static.bangkokpost.com/media/content/dcx/2020/01/29/3505734.jpg",
-    //     description: "ICP HUB Indonesia",
-    //     social_platforms: [
-    //       {
-    //         name: "Api",
-    //         bgcolor:'#6d15de'
-    //       },
-    //       {
-    //         name: "Transaction",
-    //         bgcolor:'#5865f2'
-    //       }
-    //     ],
-    //     icons: {
-    //       platform: "ICP HUB Indonesia",
-    //       platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
-    //     }
-    //   },
-    // ];
     async function getMissions() {
         try {
             const res = await ICP_Ambassador_Program_backend.get_all_spaces();
@@ -465,7 +72,15 @@ const Contests = () => {
                 const updatedContests = mis_res.Ok.map(contest => ({
                     ...contest
                 }));
-                setDisplayedContests(updatedContests);
+                let activeContests = [];
+                for (let i = 0; i < updatedContests.length; i++) {
+                    if (Object.keys(updatedContests[i]?.status)[0] == "Active") {
+                        activeContests.push(updatedContests[i]);
+                    }
+                }
+                // let activeMissions=[]
+                console.log("updated contests : ", activeContests);
+                setDisplayedContests(activeContests);
                 //console.log("Updated displayedContests:", updatedContests);
             }
         }
@@ -492,8 +107,8 @@ const Contests = () => {
         setDisplayedContests(combinedContests);
         //console.log("DisplyedContests",displayedContests)
     }, [selectedPlatform]);
-    return (<div className="h-screen overflow-y-scroll scrollbar-hide">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 w-full">
+    return (<div className="overflow-y-scroll scrollbar-hide" style={{ height: 'calc(100vh - 100px)' }}>
+      <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
         {displayedContests?.length > 0 ?
             displayedContests.map((contest, index) => (<Card key={index} contest={contest} hub={hub}/>))
             :

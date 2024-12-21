@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MenuItem, Select, FormControl, TextField, Box, Typography, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Rewards = ({ onRewardsChange, onParticipantsChange,initialReward }) => {
+const Rewards = ({ spaceBal,onRewardsChange, onParticipantsChange,initialReward ,pool,setPool,conv}) => {
   const [rewards, setRewards] = useState(initialReward);
   const [participantsCount, setParticipantsCount] = useState(''); 
 
@@ -34,14 +34,26 @@ const Rewards = ({ onRewardsChange, onParticipantsChange,initialReward }) => {
     <div className='flex flex-col gap-3 w-full mt-4 mb-4'>
       <Typography variant='h4'>Rewards</Typography>
       <FormControl className='flex gap-3'>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} gap={2}>
-          <Box>Amount of reward points</Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start',marginBottom:'30px' }} gap={2}>
+          <Box>Amount of reward points per user</Box>
           <TextField
             label='How many points will be rewarded?'
             size='small'
             style={{ fontSize: '10px' }}
             value={rewards} 
             onChange={handleParticipantsChange} 
+          />
+        </Box>
+      </FormControl>
+      <FormControl className='flex gap-3'>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} gap={2}>
+          <Box>Total pool size (in ICP)</Box>
+          <TextField
+            label='How many points will be rewarded?'
+            size='small'
+            style={{ fontSize: '10px' }}
+            value={pool} 
+            onChange={(e)=>parseFloat(setPool(e.target.value))} 
           />
         </Box>
       </FormControl>

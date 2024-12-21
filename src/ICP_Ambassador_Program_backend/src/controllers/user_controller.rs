@@ -1,269 +1,269 @@
-use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable, Memory};
-use candid::{CandidType, Principal};
+use candid::Principal;
+use ic_cdk::caller;
 use ic_cdk_macros::*;
-use serde::{Deserialize, Serialize};
 
 
-use crate::{UserProfile,UserLevel,USER_PROFILE_MAP,REFERRAL_TREE};
+use crate::{Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP, USER_PROFILE_MAP};
+
+use super::transfer_amount;
     
 //--
 #[update]
-fn create_user(
+pub fn create_user(
     discord_id: String,
     username: String,
-    wallet: Option<Principal>,
-    hub: Option<String>,
-    referrer_principal: Option<Principal>
+    hub: String,
+    referred_by: Option<String>
 ) -> Result<String, String> {
 
     if discord_id.trim().is_empty() || username.trim().is_empty() {
         return Err("Discord ID and Username cannot be empty".to_string());
     }
 
-    // let wallet = wallet.ok_or("Wallet is a required field")?;
-    let hub = hub.ok_or("Hub is a required field")?;
-
     let user_exists = USER_PROFILE_MAP.with(|map| map.borrow().contains_key(&discord_id));
 
     if user_exists {
         return Err("A user with this Discord ID already exists".to_string());
     }
+    let ref_user_id:String;
+    match referred_by{
+        Some(val)=>ref_user_id=val,
+        None=>ref_user_id=String::from("")
+    }
+    if ref_user_id!=String::from(""){
+        let referred_by_user=USER_PROFILE_MAP.with(|map| map.borrow().get(&ref_user_id));
 
-    // let wallet_exists = USER_PROFILE_MAP.with(|map| {
-    //     map.borrow().iter().any(|(_, profile)| profile.wallet == Some(wallet))
-    // });
-    // match 
+        match referred_by_user{
+            Some(_) => {},
+            None => return Err("Invalid referrer".to_string())
+        }
 
-    // if wallet_exists {
-    //     return Err("This wallet principal is already associated with another account".to_string());
-    // }
+        let add_ref_result=add_referral(ref_user_id.clone(), discord_id.clone());
+        match add_ref_result{
+            Ok(_)=>{},
+            Err(e)=>return Err(e)
+        }
+    }
+    
 
-    let referrer = referrer_principal.and_then(|principal| {
-        USER_PROFILE_MAP.with(|map| {
-            map.borrow().iter().find(|(_, profile)| profile.wallet == Some(principal)).map(|(_, _)| principal)
-        })
-    });
-
-    let user_profile = UserProfile {
-        user_id: discord_id.clone(),
+    let new_user = UserProfile {
         discord_id: discord_id.clone(),
         username,
         wallet: None,
-        referrer: referrer.clone(),
-        hub: Some(hub),
+        hub,
         xp_points: 0,
         redeem_points: 0,
         level: UserLevel::Initiate,
-        referrals: Vec::new(),
+        direct_refers:vec![],
+        referred_by:Some(ref_user_id)
     };
-
-    USER_PROFILE_MAP.with(|map| {
-        map.borrow_mut().insert(discord_id.clone(), user_profile);
-
-        // if let Some(referrer_principal) = referrer {
-        //     add_referral(&referrer_principal, wallet);
-        // }
-    });
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(discord_id, new_user));
 
     Ok("User created successfully".to_string())
 }
 
-fn add_referral(referrer_principal: &Principal, referral: Principal) {
-    USER_PROFILE_MAP.with(|map| {
-        for (_, user) in map.borrow().iter() {
-            if user.wallet == Some(*referrer_principal) && user.referrals.len() < max_referrals(&user.level) {
-                let mut updated_user = user.clone();
-                updated_user.referrals.push(referral);
-                map.borrow_mut().insert(updated_user.discord_id.clone(), updated_user);
-                break;
-            }
-        }
-    });
+fn add_referral(referrer: String, user: String)->Result<(),String> {
+    
+    let ref_user=USER_PROFILE_MAP.with(|map| map.borrow().get(&referrer));
+    let mut ref_user_val:UserProfile;
 
-    REFERRAL_TREE.with(|tree| {
-        let mut tree = tree.borrow_mut();
-        let referrals = tree.entry(*referrer_principal).or_default();
+    match ref_user {
+        Some(val)=>ref_user_val=val,
+        None=> return Err("invalid referral".to_string())
+    };
+    if ref_user_val.direct_refers.len()>=10{
+        return Err("user already referred 10 users!".to_string());
+    };
+    let parent_benefactors=REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow().get(&referrer));
+    let mut parent_banefactor_val:Vec<String>;
 
-        // Ensure the referrer does not exceed 10 referrals
-        if referrals.len() < 10 {
-            referrals.push(referral);
-        }
-    });
-}
-
-
-#[update]
-fn add_points(discord_id: String, redeem_points: u64) -> Result<String, String> {
-    if redeem_points == 0 {
-        return Err("Points to add must be greater than zero".to_string());
-    }
-
-    let mut user_to_update = None;
-
-    // Fetch the user profile to update if it exists
-    USER_PROFILE_MAP.with(|map| {
-        if let Some(user) = map.borrow().get(&discord_id).clone() {
-            user_to_update = Some(user.clone());
-        }
-    });
-
-    if let Some(mut user) = user_to_update {
-        // Update the user's redeem_points and xp_points
-        user.redeem_points += redeem_points;
-        user.xp_points += redeem_points;
-
-        // Check and update user level if necessary
-        let old_level = user.level.clone();
-        user.level = determine_level(user.xp_points);
-
-        if user.level != old_level {
-            apply_milestone_bonus(&mut user);
-        }
-
-        // Insert the updated user profile back into USER_PROFILE_MAP
-        USER_PROFILE_MAP.with(|map| {
-            map.borrow_mut().insert(discord_id.clone(), user);
-        });
-
-        // Fetch the referrer and reward them if they exist
-        let referrer_principal = USER_PROFILE_MAP.with(|map| {
-            map.borrow().get(&discord_id).and_then(|u| u.referrer)
-        });
-
-        if let Some(referrer) = referrer_principal {
-            reward_referrer(&referrer, redeem_points);
-        }
-
-        Ok("Points added successfully".to_string())
-    } else {
-        Err("User not found".to_string())
-    }
-}
-
-fn reward_referrer(referrer_principal: &Principal, earned_points: u64) {
-    let mut referrer_to_update = None;
-
-    USER_PROFILE_MAP.with(|map| {
-        for (_, user) in map.borrow().iter() {
-            if user.wallet == Some(*referrer_principal) {
-                referrer_to_update = Some(user.clone());
-                break;
-            }
-        }
-    });
-
-    if let Some(mut user) = referrer_to_update {
-        // Calculate fractional points based on user level
-        let reward_points = match user.level {
-            UserLevel::Knight => earned_points as f64 / 1000.0,
-            UserLevel::Master => earned_points as f64 / 100.0,
-            UserLevel::GrandMaster => earned_points as f64 / 10.0,
-            _ => 0.0,
-        };
-
-        // Round the reward points to the nearest whole number
-        let rounded_points = reward_points.round() as u64;
-
-        // Add the rounded points to both redeem_points and xp_points
-        user.redeem_points += rounded_points;
-        user.xp_points += rounded_points;
-
-        // Update the user's profile in USER_PROFILE_MAP
-        USER_PROFILE_MAP.with(|map| {
-            map.borrow_mut().insert(user.discord_id.clone(), user);
-        });
-    }
-}
-
-
-
-#[update]
-fn redeem_points_for_icp(discord_id: String, points_to_redeem: u64) -> Result<String, String> {
-    if points_to_redeem == 0 {
-        return Err("Points to redeem must be greater than zero".to_string());
-    }
-
-    USER_PROFILE_MAP.with(|map| {
-        if let Some(mut user) = map.borrow().get(&discord_id).clone() {
-            if user.redeem_points >= points_to_redeem {
-                user.redeem_points -= points_to_redeem;
-                map.borrow_mut().insert(discord_id.clone(), user);
-
-                Ok(format!("Successfully redeemed {} points for ICP", points_to_redeem))
-            } else {
-                Err("Not enough redeem points to complete the transaction".to_string())
-            }
-        } else {
-            Err("User not found".to_string())
-        }
-    })
-}
-
-fn determine_level(xp_points: u64) -> UserLevel {
-    match xp_points {
-        0..=99 => UserLevel::Initiate,
-        100..=999 => UserLevel::Padawan,
-        1000..=9999 => UserLevel::Knight,
-        10000..=99999 => UserLevel::Master,
-        _ => UserLevel::GrandMaster,
-    }
-}
-
-fn max_referrals(level: &UserLevel) -> usize {
-    match level {
-        UserLevel::Padawan | UserLevel::Knight | UserLevel::Master | UserLevel::GrandMaster => 10,
-        _ => 0,
-    }
-}
-
-
-fn apply_milestone_bonus(user: &mut UserProfile) {
-    let bonus = match user.level {
-        UserLevel::Padawan => 10,
-        UserLevel::Knight => 100,
-        UserLevel::Master => 1000,
-        UserLevel::GrandMaster => 10000,
-        _ => 0,
+    match parent_benefactors {
+        Some(val)=>parent_banefactor_val=val.benefactors,
+        None => parent_banefactor_val=vec![]
     };
 
-    
-    user.redeem_points += bonus;
-    user.xp_points += bonus;
+    if parent_banefactor_val.len()>4{
+        let mut new_vec:Vec<String>=vec![];
+        for i in 1..5{
+            new_vec.push(parent_banefactor_val[i].clone());
+        }
+        parent_banefactor_val=new_vec;
+    };
+    parent_banefactor_val.push(referrer.clone());
+    let user_benefactors:Benefactors=Benefactors{
+        benefactors:parent_banefactor_val,
+        user:user.clone()
+    };
+
+    REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow_mut().insert(user.clone(), user_benefactors));
+    ref_user_val.direct_refers.push(user);
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(referrer, ref_user_val));
+    return Ok(());
 }
 
+#[update]
+pub fn get_all_user_benefactors(id:String)->Result<Benefactors,String>{
+    let benefactors=REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow().get(&id));
 
-
-#[query]
-fn get_user_data(discord_id: String) -> Option<UserProfile> {
-    USER_PROFILE_MAP.with(|map| map.borrow().get(&discord_id).clone())
+    match benefactors{
+        Some(val)=>return Ok(val),
+        None=>return Err("No benefactors found!".to_string())
+    }
 }
 
 #[query]
-fn get_all_users() -> Vec<UserProfile> {
-    USER_PROFILE_MAP.with(|map| map.borrow().iter().map(|(_, user)| user.clone()).collect())
+pub fn get_user_data(id:String)->Option<UserProfile>{
+    return USER_PROFILE_MAP.with(|map| map.borrow().get(&id));
 }
 
-#[query]
-fn get_all_referrals(principal: Principal, depth: usize) -> Vec<Principal> {
-    let mut all_referrals = Vec::new();
-    if depth == 0 {
-        return all_referrals;
+pub fn update_points(discord_id: String,points:u64)->Result<(),String>{
+    if points==0{
+        return Ok(())
+    }
+    let old_user=USER_PROFILE_MAP.with(|map| map.borrow().get(&discord_id));
+    let mut new_user:UserProfile;
+
+    match old_user{
+        Some(val)=>new_user=val,
+        None=>return Err("No user found to update points".to_string())
     }
 
-    REFERRAL_TREE.with(|tree| {
-        let tree = tree.borrow();
-        if let Some(direct_referrals) = tree.get(&principal) {
-            all_referrals.extend(direct_referrals.clone());
-            for referral in direct_referrals {
-                all_referrals.extend(get_all_referrals(*referral, depth - 1));
+    new_user.xp_points+=points;
+    new_user.redeem_points+=points;
+
+    let new_level=determine_level(new_user.xp_points);
+    if new_user.level != new_level{
+        new_user.level=new_level.clone();
+        match new_level {
+            UserLevel::Initiate=>{},
+            UserLevel::Padawan=>{
+                new_user.xp_points+=10;
+                new_user.redeem_points+=10
+            },
+            UserLevel::Knight=>{
+                new_user.xp_points+=100;
+                new_user.redeem_points+=100;
+            },
+            UserLevel::Master=>{
+                new_user.xp_points+=1000;
+                new_user.redeem_points+=1000;
+            },
+            UserLevel::GrandMaster=>{
+                new_user.xp_points+=10000;
+                new_user.redeem_points+=10000;
             }
         }
-    });
+    }
 
-    all_referrals
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(new_user.discord_id.clone(), new_user));
+    return Ok(());
 }
 
-#[init]
-fn init() {
-    ic_cdk::println!("Canister initialized");
+fn determine_level(points:u64)->UserLevel{
+    match points {
+        0..=99=>UserLevel::Initiate,
+        100..=999=>UserLevel::Padawan,
+        1000..=9999=>UserLevel::Knight,
+        10000..=99999=>UserLevel::Master,
+        _=>UserLevel::GrandMaster
+    }
 }
+
+#[update]
+pub fn add_wallet(id:String)->Result<String,String>{
+    let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
+    let mut user_mut:UserProfile;
+
+    match user{
+        Some(val)=>user_mut=val,
+        None=>return Err(String::from("No user found with this id"))
+    }
+    user_mut.wallet=Some(caller());
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id, user_mut));
+    return Ok(String::from("User wallet updated"))
+}
+
+#[update]
+pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
+    let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
+    let mut user_mut:UserProfile;
+    let wallet:Principal;
+    match user{
+        Some(val)=>user_mut=val,
+        None=>return Err(String::from("User not found"))
+    }
+    match user_mut.wallet {
+        Some(val)=>wallet=val,
+        None=>return
+         Err(String::from("user wallet not set"))
+    }
+    if(points>user_mut.redeem_points){
+        return Err(String::from("Not enough redeemable points"))
+    }
+    let amount:u64;
+    
+    //transfer amount to user's wallet
+    let space=SPACE_MAP.with(|map| map.borrow().get(&user_mut.hub.clone()));
+    match space{
+        Some(space_val)=>{
+            amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000;
+            let transfer_res=transfer_amount(amount, wallet, space_val.space_id).await;
+            match transfer_res{
+                Ok(_)=>{},
+                Err(e)=>return Err(e)
+            }
+        },
+        None=>return Err(String::from("Invalid hub for the user"))
+    }
+    user_mut.redeem_points-=points;
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id,user_mut));
+    return Ok(String::from("amount redeemed to user"))
+}
+
+// #[update]
+// fn add_points(discord_id: String, redeem_points: u64) -> Result<String, String> {
+//     if redeem_points == 0 {
+//         return Err("Points to add must be greater than zero".to_string());
+//     }
+
+//     let mut user_to_update = None;
+
+//     // Fetch the user profile to update if it exists
+//     USER_PROFILE_MAP.with(|map| {
+//         if let Some(user) = map.borrow().get(&discord_id).clone() {
+//             user_to_update = Some(user.clone());
+//         }
+//     });
+
+//     if let Some(mut user) = user_to_update {
+//         // Update the user's redeem_points and xp_points
+//         user.redeem_points += redeem_points;
+//         user.xp_points += redeem_points;
+
+//         // Check and update user level if necessary
+//         let old_level = user.level.clone();
+//         user.level = determine_level(user.xp_points);
+
+//         if user.level != old_level {
+//             apply_milestone_bonus(&mut user);
+//         }
+
+//         // Insert the updated user profile back into USER_PROFILE_MAP
+//         USER_PROFILE_MAP.with(|map| {
+//             map.borrow_mut().insert(discord_id.clone(), user);
+//         });
+
+//         // Fetch the referrer and reward them if they exist
+//         let referrer_principal = USER_PROFILE_MAP.with(|map| {
+//             map.borrow().get(&discord_id).and_then(|u| u.referrer)
+//         });
+
+//         if let Some(referrer) = referrer_principal {
+//             reward_referrer(&referrer, redeem_points);
+//         }
+
+//         Ok("Points added successfully".to_string())
+//     } else {
+//         Err("User not found".to_string())
+//     }
+// }

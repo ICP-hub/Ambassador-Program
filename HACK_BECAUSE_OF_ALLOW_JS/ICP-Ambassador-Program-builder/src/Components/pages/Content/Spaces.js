@@ -9,10 +9,12 @@ import { useSelector } from 'react-redux';
 import SpaceCard from './SpaceCard';
 import { useDispatch } from 'react-redux';
 import { updateSpace } from '../../../redux/spaces/spaceSlice';
+import toast from 'react-hot-toast';
 const Spaces = ({ setLoading }) => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
+    const [convRate, setConvRate] = useState(10);
     const [chain, setchain] = useState('');
     const [spaces, setSpaces] = useState([]);
     const actor = useSelector(state => state.actor.value);
@@ -22,11 +24,13 @@ const Spaces = ({ setLoading }) => {
         name: "",
         slug: "",
         description: "THis is a sample description",
-        chain: chain
+        chain: chain,
+        conversion: convRate
     });
     async function createNewSpace() {
         try {
             setLoading(true);
+            console.log(newSpace);
             let res = await actor?.backendActor?.create_space(newSpace);
             console.log("space creation response : ", res);
             if (res != undefined && res != null) {
@@ -35,12 +39,13 @@ const Spaces = ({ setLoading }) => {
             }
             else {
                 setLoading(false);
-                alert('Some error occurred!');
+                toast.error('Some error occurred!');
             }
+            console.log(convRate);
         }
         catch (error) {
             setLoading(false);
-            alert('Some error occurred!');
+            toast.error('Something went wrong!');
             console.log("space creation error : ", error);
         }
     }
@@ -136,6 +141,22 @@ const Spaces = ({ setLoading }) => {
                 <p className='text-sm text-gray-500'>
                   Will be used as URL, e.g. https://app.blocked.cc/blocked
                 </p>
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>Space conversion rate (per 100  points)</label>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Select</InputLabel>
+                  <Select labelId="demo-simple-select-label" id="demo-simple-select-conv" value={newSpace.conversion} label="conversion rate" onChange={(e) => setNewSpace({ ...newSpace, conversion: parseInt(e.target.value) })}>
+                    <MenuItem value={5}>0.5</MenuItem>
+                    <MenuItem value={6}>0.6</MenuItem>
+                    <MenuItem value={7}>0.7</MenuItem>
+                    <MenuItem value={8}>0.8</MenuItem>
+                    <MenuItem value={9}>0.9</MenuItem>
+                    <MenuItem value={10}>1</MenuItem>
+                  </Select>
+                </FormControl>
+                <p className='text-sm text-gray-500'>Please select what type is used by this chain</p>
               </div>
 
               

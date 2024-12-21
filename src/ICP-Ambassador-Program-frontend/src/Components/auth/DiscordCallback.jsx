@@ -107,7 +107,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '../../Util/file.js';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from './authdata';
 import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 
 const DiscordCallback = ({ setOpen }) => {
@@ -125,8 +125,13 @@ const DiscordCallback = ({ setOpen }) => {
       try {
         const accessToken = await exchangeCodeForToken(code);
 
-        const userData = await fetchUserData(accessToken);
-        const isMember = await checkServerMembership(userData.id, accessToken);
+        console.log("access token : ",accessToken)
+        const response = await fetch('https://discord.com/api/users/@me', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        Cookies.set('token',accessToken)
 
         if (isMember) {
           Cookies.set('discord_user', JSON.stringify(userData), { expires: 10 });
@@ -147,6 +152,28 @@ const DiscordCallback = ({ setOpen }) => {
 
     handleDiscordLogin();
   }, [navigate]);
+
+
+  const getUser = async(userId)=>{
+    try{
+        //console.log(userId)
+        const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+        console.log(details,"dd")
+        if(details.length ===0){
+          // Cookies.set('isLoggedIn', 'false', { expires: 1 / 1440 });
+          console.log("setting isloggedin")
+          Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
+        }
+        else{
+          //console.log("user not found")
+          // Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
+          // Cookies.set('needReg', 'true', { expires: 1 / 1440 });
+          setOpen(true)
+        }
+    }catch(e){
+        console.log("Error ==>",e)
+    }
+  }
 
   const exchangeCodeForToken = async (code) => {
     const params = new URLSearchParams();

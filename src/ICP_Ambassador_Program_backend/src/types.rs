@@ -1,5 +1,6 @@
-use candid::{CandidType, Principal};
+use candid::{CandidType, Nat, Principal};
 use serde::{Deserialize, Serialize};
+use serde_bytes::ByteBuf;
 
 #[derive(CandidType,Deserialize)]
 pub struct UpdateUser{
@@ -10,13 +11,12 @@ pub struct UpdateUser{
 //
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType, PartialEq)]
 pub enum UserLevel {
-    Initiate,    // Level 1
-    Padawan,     // Level 2
-    Knight,      // Level 3
-    Master,      // Level 4
-    GrandMaster, // Level 5
+    Initiate, 
+    Padawan,  
+    Knight,   
+    Master,   
+    GrandMaster,
 }
-//
 
 // admin
 
@@ -43,7 +43,8 @@ pub struct CreateSpace{
     pub name:String,
     pub slug:String,
     pub description:String,
-    pub chain:String
+    pub chain:String,
+    pub conversion:u16
 }
 
 // missions 
@@ -64,11 +65,13 @@ pub enum RewardCurrency{
 pub enum Tasks{
     
     SendImage{
+        id:u8,
         title:String,
         body:String,
         img:String
     },
     SendText{
+        id:u8,
         title:String,
         body:String,
         sample:String,
@@ -76,9 +79,21 @@ pub enum Tasks{
         max_len:u16
     },
     SendUrl{
+        id:u8,
         title:String,
         body:String
     },
+    SendTwitterPost{
+        id:u8,
+        title:String,
+        body:String
+    },
+    TwitterFollow{
+        id:u8,
+        title:String,
+        body:String,
+        account:String
+    }
  
     // These might be needed in future for implementation
 
@@ -133,6 +148,12 @@ pub struct CreateMission{
     pub reward_currency:RewardCurrency,
     pub start_date:String,
     pub end_date:String,
+    pub max_users_rewarded:u64,
+    pub pool:u64
+}
+#[derive(CandidType)]
+pub struct TransferResultICRC1 {
+    result: Result<Nat, String>
 }
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
@@ -144,14 +165,32 @@ pub enum CheckCodeType{
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum TaskSubmitted{
     SendText{
+        id:u8,
         text:String
     },
     SendImage{
+        id:u8,
         img:String
     },
     SendUrl{
+        id:u8,
         url:String
+    },
+    SendTwitterPost{
+        id:u8,
+        post:String
+    },
+    TwitterFollow{
+        id:u8,
+        followed:bool
     }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType,PartialEq)]
+pub enum SubmissionStatus{
+    Approved,
+    Rejected,
+    Unread
 }
 
 // errors 
@@ -163,7 +202,7 @@ pub enum UserErrors {
 }
 
 #[derive(CandidType,Deserialize)]
-pub enum AdminErrors{
+pub enum Errors{
     NotASuperAdmin,
     NotOwnerOrSuperAdmin,
     NotRegisteredAsAdmin,
@@ -178,5 +217,40 @@ pub enum AdminErrors{
     ErrUpdatingMission,
     NoUserFound,
     ErrUpdatingSubmission,
-    NoSubmissionFound
+    NoSubmissionFound,
+    ReferrerNotFound,
+    SubmissionAlreadyReviewed
 }
+
+
+// asset canister types
+
+#[derive(Clone, CandidType, Serialize, Deserialize)]
+pub struct CoverImageData {
+    pub content: Option<ByteBuf>,  // The image content for the cover image
+    pub ledger_id: Principal,      // Ledger ID associated with the cover image
+    // Additional parameters specific to cover images can be added here if needed
+}
+
+#[derive(CandidType, Clone, Debug, Default, Deserialize, Serialize)]
+pub struct CreateFileInput {
+    // pub parent: u32,
+    pub name: String,
+    pub content_type: String,
+    pub size: Option<Nat>, // if provided, can be used to detect the file is fully filled
+    pub content: Option<ByteBuf>, // should <= 1024 * 1024 * 2 - 1024
+    pub status: Option<i8>, // when set to 1, the file must be fully filled, and hash must be provided
+    pub hash: Option<ByteBuf>, // recommend sha3 256
+    pub ert: Option<String>,
+    pub crc32: Option<u32>,
+}
+
+
+
+#[derive(Clone, CandidType, Serialize, Deserialize)]
+pub struct ProfileImageData {
+    pub content: Option<ByteBuf>,
+    // You can add more fields if necessary
+}
+
+pub type ReturnResult = Result<u32, String>;
