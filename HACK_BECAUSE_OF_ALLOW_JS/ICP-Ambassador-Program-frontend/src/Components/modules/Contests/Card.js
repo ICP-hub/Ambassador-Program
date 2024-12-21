@@ -17,6 +17,16 @@ const Card = ({ contest, hub }) => {
             console.log("contest tasks : ", contest);
             const formattedTasks = contest.tasks.map((task) => {
                 const taskKey = Object.keys(task)[0];
+                let bg = '';
+                if (taskKey == 'SendText' || taskKey == 'SendUrl') {
+                    bg = 'text';
+                }
+                else if (taskKey == "TwitterFollow" || taskKey == "SendTwitterPost") {
+                    bg = 'twitter';
+                }
+                else {
+                    bg = 'img';
+                }
                 return {
                     id: taskKey,
                     title: task[taskKey]?.title || taskKey,
@@ -25,7 +35,11 @@ const Card = ({ contest, hub }) => {
                     image: task[taskKey]?.img || null,
                     sampleImg: task[taskKey]?.img || null,
                     validation_rule: task[taskKey]?.validation_rule || '',
-                    task_id: task[taskKey]?.id
+                    task_id: task[taskKey]?.id,
+                    sampleText: task[taskKey]?.sample,
+                    completed: false,
+                    bg,
+                    account: task[taskKey]?.account
                 };
             });
             setTasks(formattedTasks);
@@ -92,9 +106,9 @@ const Card = ({ contest, hub }) => {
 
       </div>
       <div className='flex justify-between'>
-        <div>
+        <div className='w-[70%] overflow-hidden'>
             <h3 className="text-md font-bold mb-2">{title}</h3>
-            <div className='mt-4 text-sm text-gray-600'>{description}</div>
+            <div className='mt-4 text-sm text-gray-600 w-full '>{description?.length > 50 ? `${description?.substring(0, 45)}...` : description}</div>
             {/* {social_platforms(
                 <div className="flex space-x-2">
             {social_platforms.map((platform, index) => {

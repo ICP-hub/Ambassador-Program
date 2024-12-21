@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import Navbar from '../Navbar/Navbar'
 import { Button } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import TaskCard from './TaskCard';
 import toast from 'react-hot-toast';
@@ -12,6 +12,7 @@ const Task_Details = ({setLoading}) => {
     const [selectedUser, setSelectedUser] = useState(null); 
     const [isModalOpen, setIsModalOpen] = useState(false); 
     const actors=useSelector(state=>state.actor.value)
+    const nav=useNavigate()
     const [users,setUsers] = useState([
         // { id: 1, name: "993209495805239487", description: "User description for rjx25349" },
         // { id: 2, name: "abc12345", description: "User description for abc12345" },
@@ -114,7 +115,7 @@ const Task_Details = ({setLoading}) => {
 
   return (
     <div>
-    <Navbar/>
+    <Navbar nav={nav}/>
     <div className='flex flex-col   mx-20 my-10'>
         <div className=' flex flex-col'>
             <div className='font-semibold text-3xl mb-3'>Submissions</div>

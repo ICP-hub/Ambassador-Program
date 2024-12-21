@@ -227,7 +227,8 @@ pub struct Submission{
     pub user:String,
     pub mission_id:String,
     pub tasks_submitted:Vec<TaskSubmitted>,
-    pub status:SubmissionStatus
+    pub status:SubmissionStatus,
+    pub points_rewarded:bool
     //needs to be optimized based on user inputs provided at frontend
 }
 

@@ -142,9 +142,9 @@ const Home = () => {
       <FilterProvider>
         <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
           
-          <div className=" w-1/6 h-full lg:block sm:hidden">
+          {/* <div className=" w-1/6 h-full lg:block sm:hidden">
             <Filter />
-          </div>
+          </div> */}
           <div className="w-full h-full">
             <Contests />
           </div>
@@ -161,18 +161,18 @@ const Home = () => {
       )}
 
       
-      <div className='relative'>
+      {/* <div className='relative'>
         <div className='absolute bottom-44 left-1/2 transform -translate-x-1/2 z-50 lg:hidden' onClick={handleFilterMobile}>
           <div className='bg-white rounded py-2 px-5 font-semibold flex gap-3 justify-center items-center'>
             <MdOutlineTune className='text-lg' /> Filter
           </div>
         </div>
-      </div>
+      </div> */}
 
       
-      {filterMobile && (
+      {/* {filterMobile && (
         <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
-      )}
+      )} */}
       <ReactModal
         isOpen={refModal}
         className='modal'

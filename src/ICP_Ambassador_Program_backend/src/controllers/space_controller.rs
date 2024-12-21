@@ -193,8 +193,35 @@ pub fn lock_funds(id:String,amount:u64)->Result<(),String>{
     if avalable_fund<amount{
         return Err(String::from("Insufficient funds for this action, please add more funds"));
     }
-    fund_val.balance-=amount;
     fund_val.locked+=amount;
+    SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(space_val.space_id, fund_val));
+    return Ok(());
+
+}
+pub fn unlock_funds(id:String,amount:u64)->Result<(),String>{
+    let space=SPACE_MAP.with(|map| map.borrow().get(&id));
+    let space_val:Space;
+    match space{
+        Some(val)=>space_val=val,
+        None=>return Err(String::from("No space found to lock funds for"))
+    }
+    let funds=SPACE_FUND_MAP.with(|map| map.borrow().get(&space_val.space_id.clone()));
+    let mut fund_val:FundEntry;
+    match funds {
+        Some(val)=>fund_val=val,
+        None=>{
+            fund_val=FundEntry{
+                balance:0,
+                locked:0,
+                space_id:space_val.space_id.clone()
+            }
+        }
+    }
+    // let avalable_fund=fund_val.balance-fund_val.locked;
+    if fund_val.locked<amount{
+        return Err(String::from("Insufficient funds for this action, please add more funds"));
+    }
+    fund_val.locked-=amount;
     SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(space_val.space_id, fund_val));
     return Ok(());
 

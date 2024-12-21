@@ -118,9 +118,9 @@ const Home = () => {
       <FilterProvider>
         <div className="flex flex-grow p-2 m-2 rounded-md overflow-y-scroll scrollbar-hide">
           
-          <div className=" w-1/6 h-full lg:block sm:hidden">
-            <Filter />
-          </div>
+          {/* <div className=" w-1/6 h-full lg:block sm:hidden">
+          <Filter />
+        </div> */}
           <div className="w-full h-full">
             <Contests />
           </div>
@@ -130,16 +130,18 @@ const Home = () => {
       {isHubModalOpen && (<HubConnectionModal setLoading={setLoading} isOpen={isHubModalOpen} onClose={() => setIsHubModalOpen(false)} spaces={space}/>)}
 
       
-      <div className='relative'>
-        <div className='absolute bottom-44 left-1/2 transform -translate-x-1/2 z-50 lg:hidden' onClick={handleFilterMobile}>
-          <div className='bg-white rounded py-2 px-5 font-semibold flex gap-3 justify-center items-center'>
-            <MdOutlineTune className='text-lg'/> Filter
+      {/* <div className='relative'>
+          <div className='absolute bottom-44 left-1/2 transform -translate-x-1/2 z-50 lg:hidden' onClick={handleFilterMobile}>
+            <div className='bg-white rounded py-2 px-5 font-semibold flex gap-3 justify-center items-center'>
+              <MdOutlineTune className='text-lg' /> Filter
+            </div>
           </div>
-        </div>
-      </div>
+        </div> */}
 
       
-      {filterMobile && (<FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)}/>)}
+      {/* {filterMobile && (
+          <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
+        )} */}
       <ReactModal isOpen={refModal} className='modal' ariaHideApp={false} style={{
             overlay: { backdropFilter: 'blur(3px)', zIndex: 50, backgroundColor: 'rbg(0,0,0,0%)' },
         }}>
