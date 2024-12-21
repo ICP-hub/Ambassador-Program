@@ -268,6 +268,9 @@ const BalanceList = () => {
             let balance = await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND), subaccount: [stringToSubaccountBytes(spaces?.space_id)] });
             let metadataRes = await actor?.ledgerActor?.icrc1_metadata();
             let metadata = formatTokenMetaData(metadataRes);
+            console.log("Spaces ==>", spaces);
+            console.log("Balance", balance);
+            console.log("Space ID:", spaces?.space_id);
             console.log("space balance", parseInt(balance), parseInt(metadata?.["icrc1:decimals"]));
             setBalance(parseFloat(balance) / Math.pow(10, parseInt(metadata?.["icrc1:decimals"])));
         }
