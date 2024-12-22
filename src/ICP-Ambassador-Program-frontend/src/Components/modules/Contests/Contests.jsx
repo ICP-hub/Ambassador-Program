@@ -90,19 +90,18 @@ const Contests = () => {
         const updatedContests = mis_res.Ok.map(contest => ({
           ...contest
         }));
-        // let activeContests=[]
-        // for(let i=0;i<updatedContests.length;i++){
-        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-        //     activeContests.push(updatedContests[i])
-        //   }
-        // }
-        // // let activeMissions=[]
-        // console.log("updated contests : ",activeContests)
+        let activeContests=[]
+        for(let i=0;i<updatedContests.length;i++){
+          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+            activeContests.push(updatedContests[i])
+          }
+        }
+        // let activeMissions=[]
+        console.log("updated contests : ",activeContests)
 
         
-        // setDisplayedContests(activeContests);
-        setDisplayedContests(updatedContests)
-        console.log("Updated displayedContests:", displayedContests);
+        setDisplayedContests(activeContests);
+        //console.log("Updated displayedContests:", updatedContests);
         
       }
     } catch (error) {
@@ -146,13 +145,9 @@ const Contests = () => {
   
   
   return (
-    <div className=" rounded " style={{ height: 'calc(100vh - 100px)' }}>
-      <div className='flex gap-2 '>
-        <div className={`grid lg:grid-cols-4 h-screen transition-all duration-500 ${isOpenContestDetails ? 'w-[calc(100%-300px)]' : 'w-full'} sm:grid-cols-1 rounded-md md:grid-cols-2 gap-4 p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}
-      style={{
-        maxWidth: isOpenContestDetails ? 'calc(100% - 300px)' : '100%', 
-        transition: 'max-width 0.5s ease-in-out'
-      }}>
+    <div className="overflow-y-scroll scrollbar-hide" style={{ height: 'calc(100vh - 100px)' }}>
+      <div className='flex'>
+        <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
           {
             displayedContests?.length>0?
             displayedContests.map((contest, index) => (
