@@ -34,6 +34,17 @@ const Contest_Details = ({closeContestDetails,contest}) => {
   const [authenticate,setAuth]=useState(false);
   const [twitterUser,setTwitterUser]=useState("")
   const nav=useNavigate()
+   const HUB=Cookies.get('selectedHubName')
+  const icons={
+    
+    platform: HUB,
+    platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
+
+}
+  const Contest ={
+    ...updatedContest.tasks,
+    icons
+  }
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
@@ -339,7 +350,7 @@ const twitterSubmit = ()=>{
     getSubmission()
   }, []);
 
-  const { reward, status, title, img, social_platforms, icons } = updatedContest;
+  const { reward, status, title, img, social_platforms} = updatedContest;
   //console.log("Updated contest ==>",updatedContest)
   const statusKey = Object.keys(status)[0]; 
   const statusValue = status[statusKey]; 
@@ -391,62 +402,78 @@ const twitterSubmit = ()=>{
     )
   }
   return (
-    <div style={{
-        background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
-        
-      }}
-      className="h-full pt-3" >
-      <Navbar nav={nav} />
-      <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
-      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
-        <div className="flex items-center justify-center  gap-10">
-            <div>
+    <div 
+      className="  w-[450px] font-poppins overflow-y-scroll bg-[#16161a] transition-transform transition-all duration-500 delay-200 scrollbar-hide h-screen rounded-md" >
+      {/* <Navbar nav={nav} /> */}
+      
+      
+      <div className='flex justify-center items-center w-full  '>
+      <div className=' flex flex-col gap-16 justify-start items-start w-full  ' >
+        <div className="flex flex-col w-full items-center justify-center rounded  h-52  gap-10" style={{
+            background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
+          }}>
+            <div className='flex w-full justify-end items-center  px-4 mt-8'>
+                <div
+                  className='w-7 h-7 rounded-full hover:border hover:border-black hover:bg-black  flex justify-center items-center cursor-pointer'
+                  onClick={closeContestDetails}
+                >
+                  <MdClose className='text-white' style={{ fontSize: '20px' }} />
+                </div>
+
+              </div >
+            <div className='flex justify-around w-full  '>
+              
+
                 <div className="mb-4">
-                {img?.length>0 ? (
-                    <img src={img} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg" />
-                ) : (
-                    // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
-                    // <span>No Image</span>
-                    // </div>
-                    <img
-                      src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
-                      alt={title}
-                      className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"
-                    />
-                )}
+                  {img?.length>0 ? (
+                      <img src={img} alt={title} className="w-64  object-cover rounded-lg" />
+                  ) : (
+                      // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
+                      // <span>No Image</span>
+                      // </div>
+                      <img
+                        src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
+                        alt={title}
+                        className="w-52 h-36 object-cover rounded"
+                      />
+                  )}
                 </div>
-            </div>
-            <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className='font-bold text-sm' 
-                        style={{
-                          
-                          color:
-                            statusKey === 'Active'
-                              ? '#1db851'
-                              : statusKey === 'Draft'
-                              ? '#b8b8b8'
-                              : statusValue === 'In Active' 
-                              ? '#a0a0a0'
-                              : '#e20203',
-                        }}
-                    >{statusValue === null || statusValue === undefined
-                      ? statusKey
-                      : statusValue}</div>
-                <div>
-                    <div className='text-white text-xl font-bold'>{title}</div>
-                </div>
-                <div className="flex items-center gap-3 ">
-                    <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-                    <span className="text-md text-white font-semibold">{icons.platform}</span>
-                </div>
-                <div className=" font-semibold text-gray-600 text-sm">
-                    {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
-                </div>
-            </div>    
-        </div>
+            
+                <div className='flex flex-col gap-4 justify-start items-start'>
+                    <div className=' text-sm font-poppins' 
+                            style={{
+                              
+                              color:
+                                statusKey === 'Active'
+                                  ? '#1db851'
+                                  : statusKey === 'Draft'
+                                  ? '#b8b8b8'
+                                  : statusValue === 'In Active' 
+                                  ? '#a0a0a0'
+                                  : '#e20203',
+                            }}
+                        >{statusValue === null || statusValue === undefined
+                          ? statusKey
+                          : statusValue}</div>
+                    <div>
+                        <div className='text-white text-xl  font-poppins'>{title}</div>
+                    </div>
+                    <div className="flex items-center gap-3 ">
+                        <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" /> 
+                         <span className="text-md text-white font-semibold">{icons.platform}</span>
+                    </div>
+                    <div className=" font-semibold text-gray-600 text-sm">
+                        {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
+                    </div>
+                </div> 
+                </div>   
+          </div>
         
-        <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
-            {tasks.map((task,index) => (
+        <div className='w-full px-2 flex flex-col gap-6 overflow-y-auto mb-5'>
+            {tasks.map((task,index) => {
+              const [dynamicKey, taskData] = Object.entries(task)[index];
+              return(
+                
                 <div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={index}>
                 <div className='relative rounded-lg' style={{
                     borderTop: `2px solid ${randomColor}`,   
@@ -461,9 +488,9 @@ const twitterSubmit = ()=>{
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
-                        {!task.submitted ? (
-                        <form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
-                            {task.id === 'SendText' && (
+                        {!taskData.submitted ? (
+                        <form onSubmit={(e) => addSubmission(e, taskData.id)} className="flex flex-col gap-3 mt-3">
+                            {dynamicKey === 'SendText' && (
                             <>
 
                                 
@@ -479,7 +506,7 @@ const twitterSubmit = ()=>{
                                 </div>
                             </>
                             )}
-                            {task.id === 'SendUrl' && (
+                            {dynamicKey === 'SendUrl' && (
                               <>
                               <div className='flex flex-col gap-3'>
 
@@ -497,7 +524,7 @@ const twitterSubmit = ()=>{
                             
                             </>
                             )}
-                            {task.id==="SendTwitterPost" && (
+                            {dynamicKey==="SendTwitterPost" && (
                                
                                    
                                    <div  className="flex flex-col gap-3 mt-3">  
@@ -507,7 +534,7 @@ const twitterSubmit = ()=>{
                                              type='text'
                                              value={task.content}
                                              placeholder='Share post link'
-                                             onChange={(e) => handleInputChange(e, task.task_id)}
+                                             onChange={(e) => handleInputChange(e, taskData.id)}
                                              className='outline-none p-3 rounded w-full text-black'
                                          />
                                          {!authenticate ?(
@@ -543,7 +570,7 @@ const twitterSubmit = ()=>{
                                    </div>
                                    
                             )}
-                            {task.id === 'SendImage' && (
+                            {dynamicKey === 'SendImage' && (
                             <div className="mt-4 w-full ">
                               <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
                               <div className='flex gap-5 my-5'>
