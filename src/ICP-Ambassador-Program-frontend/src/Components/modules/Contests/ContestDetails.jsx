@@ -15,6 +15,7 @@ import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
+import { MdClose } from "react-icons/md";
 // import upload_background from '../../../assets/images/upload_background.png'
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie'
@@ -22,10 +23,15 @@ import toast from 'react-hot-toast';
 
 const auth = getAuth(app);
 
-const CardDetails = () => {
+const Contest_Details = ({closeContestDetails,contests}) => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
-  const location = useLocation();
-  const { updatedContest } = location.state || {};
+//   const location = useLocation();
+//   const { updatedContest } = location.state || {};
+console.log("contest in detial ==>",contests)
+
+  const HUB=Cookies.get('selectedHubName')
+  
+  const {contesttasks}=contests.tasks
   const [description, setDescription] = useState(''); 
   const [submission,setSubmission]=useState(null)
   const [loading,setLoading]=useState(false)
@@ -34,8 +40,18 @@ const CardDetails = () => {
   const [twitterUser,setTwitterUser]=useState("")
   const nav=useNavigate()
   const [tasks, setTasks] = useState(
-    updatedContest.tasks
+    contests.tasks
   );
+  const hubicons={
+    
+    platform: HUB,
+    platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
+
+} 
+const updatedContest ={
+    ...contests,
+    hubicons
+}
   const [twitterLink, setTwitterLink] = useState("");
   const handleInputTwitter = (e) => {
       setTwitterLink(e.target.value);
@@ -222,7 +238,6 @@ const twitterSubmit = ()=>{
             //   } 
             // })
           }
-          
         }
         if(tasks[i]?.id=="SendTwitterPost"){
           if(!authenticate){
@@ -316,7 +331,7 @@ const twitterSubmit = ()=>{
     nav('/')
   };
   //console.log(location)
-  if (!updatedContest) {
+  if (!contests) {
     return <p className='text-white'>No contest data available</p>;
   }
 
@@ -339,7 +354,8 @@ const twitterSubmit = ()=>{
   }, []);
 
   const { reward, status, title, img, social_platforms, icons } = updatedContest;
-  //console.log("Updated contest ==>",updatedContest)
+  
+  console.log("Updated contest ==>",updatedContest)
   const statusKey = Object.keys(status)[0]; 
   const statusValue = status[statusKey]; 
   
@@ -380,7 +396,7 @@ const twitterSubmit = ()=>{
         }
       });
     }
-  }, [description]);
+  }, [description,updatedContest]);
 
   if(loading){
     return(
@@ -390,62 +406,75 @@ const twitterSubmit = ()=>{
     )
   }
   return (
-    <div style={{
-        background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
-        
-      }}
-      className="h-full pt-3" >
-      <Navbar nav={nav} />
-      <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
-      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
-        <div className="flex items-center justify-center  gap-10">
-            <div>
-                <div className="mb-4">
-                {img?.length>0 ? (
-                    <img src={img} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg" />
-                ) : (
-                    // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
-                    // <span>No Image</span>
-                    // </div>
-                    <img
-                      src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
-                      alt={title}
-                      className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"
-                    />
-                )}
+    <div 
+      className="h-full    lg:w-[400px] sm:w-full rounded-md bg-[#16161a] font-poppins" >
+      
+      <div className='flex justify-center items-center w-full '>
+      <div className=' flex flex-col gap-16 justify-start items-start w-full  h-full ' >
+        <div className="flex flex-col items-center justify-center w-full gap-10">
+            
+            <div className='flex flex-col gap-4 w-full h-52 rounded-md' style={{
+                background: `linear-gradient(to bottom, ${randomColor}, transparent)`,    
+                }}>       
+                <div className='flex w-full justify-end '>
+                    <div
+                        className='w-7 h-7 rounded-full m-2 hover:bg-black hover:border-black flex justify-center items-center cursor-pointer'
+                        onClick={closeContestDetails}
+                        >
+                        <MdClose className='text-white' style={{ fontSize: '20px' }} />
+                    </div>
                 </div>
-            </div>
-            <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className='font-bold text-sm' 
-                        style={{
-                          
-                          color:
-                            statusKey === 'Active'
-                              ? '#1db851'
-                              : statusKey === 'Draft'
-                              ? '#b8b8b8'
-                              : statusValue === 'In Active' 
-                              ? '#a0a0a0'
-                              : '#e20203',
-                        }}
-                    >{statusValue === null || statusValue === undefined
-                      ? statusKey
-                      : statusValue}</div>
-                <div>
-                    <div className='text-white text-xl font-bold'>{title}</div>
+                <div className='flex justify-around '>
+                    <div className="mb-4">
+                    {img?.length>0 ? (
+                        <img src={img} alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-20 object-cover rounded-lg" />
+                    ) : (
+                        // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
+                        // <span>No Image</span>
+                        // </div>
+                        <img
+                        src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
+                        alt={title}
+                        className="w-40 h-32 object-cover rounded"
+                        />
+                    )}
+                    </div>
+                
+                <div className='flex flex-col gap-4 justify-start items-start'>
+                    <div className=' text-sm' 
+                            style={{
+                            
+                            color:
+                                statusKey === 'Active'
+                                ? '#1db851'
+                                : statusKey === 'Draft'
+                                ? '#b8b8b8'
+                                : statusValue === 'In Active' 
+                                ? '#a0a0a0'
+                                : '#e20203',
+                            }}
+                        >{statusValue === null || statusValue === undefined
+                        ? statusKey
+                        : statusValue}</div>
+                    <div>
+                        <div className='text-white text-xl '>{title}</div>
+                    </div>
+                    <div className="flex items-center gap-3 ">
+                        <img src={hubicons.platform_logo} alt={hubicons.platform} className="w-8 h-4 rounded-full" />
+                        <span className="text-md text-white ">{hubicons.platform}</span>
+                    </div>
+                    <div className=" font-semibold text-gray-600 text-sm">
+                        {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
+                    </div>
                 </div>
-                <div className="flex items-center gap-3 ">
-                    <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-                    <span className="text-md text-white font-semibold">{icons.platform}</span>
-                </div>
-                <div className=" font-semibold text-gray-600 text-sm">
-                    {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
                 </div>
             </div>    
         </div>
         
-        <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
-            {tasks.map((task,index) => (
+        <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5 p-2'>
+            {tasks.map((task,index) => {
+                 const [dynamicKey, taskData] = Object.entries(task)[0];
+                return(
                 <div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={index}>
                 <div className='relative rounded-lg' style={{
                     borderTop: `2px solid ${randomColor}`,   
@@ -455,40 +484,40 @@ const twitterSubmit = ()=>{
                     borderRadius: '0.5rem',
                 }}>
                     <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
-                        {task.title}
+                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs" />} aria-controls="panel1-content" id="panel1-header" className="text-white  text-lg">
+                        {taskData.title}
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         {!task.submitted ? (
-                        <form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
-                            {task.id === 'SendText' && (
+                        <form onSubmit={(e) => addSubmission(e, taskData.task_id)} className="flex flex-col gap-3 mt-3">
+                            {dynamicKey.id === 'SendText' && (
                             <>
 
                                 
-                                <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
+                                <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${taskData.description}`}</div>
                                 <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
                                     {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
                                     <textarea 
                                       rows={10}
                                       className='w-full py-2 px-3 bg-[#1d1d21]' 
-                                      onChange={(e)=>handleInputChange(e,task.task_id)}
-                                      value={task.content}
+                                      onChange={(e)=>handleInputChange(e,taskData.task_id)}
+                                      value={taskData.content}
                                     />
                                 </div>
                             </>
                             )}
-                            {task.id === 'SendUrl' && (
+                            {dynamicKey === 'SendUrl' && (
                               <>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${taskData.description}`}</div>
                                   <input
                                   type='SendURL'
                                   placeholder='Enter URL'
                                   onChange={(e) => handleInputChange(e, task.task_id)}
                                   className='outline-none p-3 rounded text-black'
-                                  value={task.content}
+                                  value={taskData.content}
                               />
 
                               </div>
@@ -496,17 +525,17 @@ const twitterSubmit = ()=>{
                             
                             </>
                             )}
-                            {task.id==="SendTwitterPost" && (
+                            {dynamicKey==="SendTwitterPost" && (
                                
                                    
                                    <div  className="flex flex-col gap-3 mt-3">  
-                                       <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
+                                       <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${taskData.description}`}</div>
                                        <div className ='flex w-full gap-4 items-center'>
                                        <input
                                              type='text'
                                              value={task.content}
                                              placeholder='Share post link'
-                                             onChange={(e) => handleInputChange(e, task.task_id)}
+                                             onChange={(e) => handleInputChange(e, taskData.task_id)}
                                              className='outline-none p-3 rounded w-full text-black'
                                          />
                                          {!authenticate ?(
@@ -542,9 +571,9 @@ const twitterSubmit = ()=>{
                                    </div>
                                    
                             )}
-                            {task.id === 'SendImage' && (
+                            {dynamicKey === 'SendImage' && (
                             <div className="mt-4 w-full ">
-                              <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
+                              <div className="text-white font-semibold lg:text-md sm:text-xs">{taskData.description}</div>
                               <div className='flex gap-5 my-5'>
                                 <div className="text-white font-semibold lg:text-md sm:text-xs mt-4">Sample Image</div>
                                 <img src={task.sampleImg} className='w-40 h-40' alt=''/>
@@ -552,7 +581,7 @@ const twitterSubmit = ()=>{
                                 
                                 <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
                                 {task.image ? (
-                                    <img src={typeof task.image=='object'?URL.createObjectURL(task.image):task.image} alt="Uploaded" className="object-contain sm:max-h-64 sm:w-full h-[300px] w-[400px]" />
+                                    <img src={typeof task.image=='object'?URL.createObjectURL(taskData.image):taskData.image} alt="Uploaded" className="object-contain sm:max-h-64 sm:w-full h-[300px] w-[400px]" />
                                 ) : (
                                     <img src={'upload_background.png'} alt="" className="" />
                                 )}
@@ -584,8 +613,8 @@ const twitterSubmit = ()=>{
                     </Accordion>
                     
                 </div>
-                </div>
-            ))}
+                </div>)
+            })}
              {/* <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         Twitter Post sample task title
@@ -668,4 +697,4 @@ const twitterSubmit = ()=>{
   );
 };
 
-export default CardDetails;
+export default Contest_Details;
