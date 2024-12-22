@@ -612,8 +612,8 @@ const twitterSubmit = ()=>{
                     </Accordion>
                     
                 </div>
-                </div>
-            ))}
+                </div>)
+            })}
              {/* <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                         Twitter Post sample task title

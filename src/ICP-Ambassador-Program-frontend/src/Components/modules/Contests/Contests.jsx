@@ -90,18 +90,18 @@ const Contests = () => {
         const updatedContests = mis_res.Ok.map(contest => ({
           ...contest
         }));
-        let activeContests=[]
-        for(let i=0;i<updatedContests.length;i++){
-          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-            activeContests.push(updatedContests[i])
-          }
-        }
-        // let activeMissions=[]
-        console.log("updated contests : ",activeContests)
+        // let activeContests=[]
+        // for(let i=0;i<updatedContests.length;i++){
+        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+        //     activeContests.push(updatedContests[i])
+        //   }
+        // }
+        // // let activeMissions=[]
+        // console.log("updated contests : ",activeContests)
 
         
-        setDisplayedContests(activeContests);
-        //setDisplayedContests(updatedContests)
+        // setDisplayedContests(activeContests);
+        setDisplayedContests(updatedContests)
         console.log("Updated displayedContests:", displayedContests);
         
       }

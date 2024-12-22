@@ -142,9 +142,9 @@ const Home = () => {
       <FilterProvider>
         <div className="flex flex-grow p-2  rounded-md ">
           
-          <div className=" w-1/6 h-full lg:block sm:hidden">
+          {/* <div className=" w-1/6 h-full lg:block sm:hidden">
             <Filter />
-          </div>
+          </div> */}
           <div className="w-full h-full">
             <Contests />
           </div>
