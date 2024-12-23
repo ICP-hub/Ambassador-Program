@@ -82,12 +82,12 @@ const Card = ({ contest,hub }) => {
 
 
   return (
-    <div className=" text-white p-4 rounded-lg shadow-lg " style={{backgroundColor:'#1d1d21'}} onClick={handleCard}>
+    <div className=" text-white p-4 rounded-lg shadow-lg font-poppins" style={{backgroundColor:'#1d1d21'}} >
 
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm font-semibold py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{parseInt(contest?.reward)+" "}points </span>
+        <span className="text-sm  py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{parseInt(contest?.reward)+" "}points </span>
         <span
-          className={`text-sm py-1 px-2 rounded-md font-bold`}
+          className={`text-sm py-1 px-2 rounded-md `}
           style={{
             backgroundColor:
               statusKey === 'Active'
@@ -116,8 +116,8 @@ const Card = ({ contest,hub }) => {
       </div>
       <div className='flex justify-between'>
         <div>
-            <h3 className="text-md font-bold mb-2">{title}</h3>
-            <div className='mt-4 text-sm text-gray-600'>{description}</div>
+            <h3 className="text-md  mb-2">{title}</h3>
+            {/* <div className='mt-4 text-sm text-gray-600'>{description}</div> */}
             {/* {social_platforms(
                     <div className="flex space-x-2">
                 {social_platforms.map((platform, index) => {
@@ -154,7 +154,7 @@ const Card = ({ contest,hub }) => {
       
       <div className="mt-4 flex items-center space-x-2">
         <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-        <span className="text-sm font-semibold">{icons.platform}</span>
+        <span className="text-sm ">{icons.platform}</span>
       </div>
     </div>
   );

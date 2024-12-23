@@ -119,7 +119,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
                         {
                             !joined?
                             <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={()=>{
-                                window.open('https://discord.gg/qqpeDDWV')
+                                window.open('https://discord.gg/yRjCXnZkGn')
                                 setJoined(true)
                             }} >Join us</button>
                             :

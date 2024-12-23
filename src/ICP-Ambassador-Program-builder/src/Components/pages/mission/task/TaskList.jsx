@@ -138,12 +138,16 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
         <div>Change sample image</div>
         <label className="mt-4 w-full bg-blue-500 rounded">
           <input type="file" className="hidden" onChange={handleFileChange} />
-          <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
+          <div className="w-full flex justify-center items-center text-sm  font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
             BROWSE
           </div>
         </label>
       </div>
+<<<<<<< HEAD
+      <TextField label="Task Title" placeholder="Title..." style={{marginTop:'5.3rem'}} size="small" value={imageTitle} onChange={handleTitleChange} />
+=======
       <TextField label="Task Title" placeholder="Title..." size="small" style={{marginTop:'5.3rem'}} value={imageTitle} onChange={handleTitleChange} />
+>>>>>>> origin/master
       <FormControl>
         <FormLabel>Description</FormLabel>
         <SortDescription initialDescription={imageDescription} value={imageDescription} onChange={handleDescriptionChange} />
@@ -162,14 +166,14 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
     setSendTitle(e.target.value);
     const field='title'
     
-    onUpdateField(field,e.target.value,task.id); // Update the parent state
+    onUpdateField(field,e.target.value,task.id); 
   };
 
   const handleDescriptionChange = (newDescription) => {
     setSendDescription(newDescription);
     const field='body'
     
-    onUpdateField(field,newDescription,task.id); // Update the parent state
+    onUpdateField(field,newDescription,task.id); 
   };
 
   return (
@@ -194,6 +198,59 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
     </Box>
   );
 };
+const TwitterFollowTask=({task,onDelete,onUpdateField})=>{
+  const [sendTitle, setSendTitle] = useState(task.title || '');
+  const [sendDescription, setSendDescription] = useState(task.body || '');
+  const [account,setAccount]=useState(task.account || '');
+  const handleTitleChange = (e) => {
+    console.log(task)
+    setSendTitle(e.target.value);
+    const field='title'
+    
+    onUpdateField(field,e.target.value,task.id); 
+  };
+  const handleAccountChange = (e) => {
+    console.log(task)
+    setAccount(e.target.value);
+    const field='account'
+    
+    onUpdateField(field,e.target.value,task.id); 
+  };
+  const handleDescriptionChange = (newDescription) => {
+    setSendDescription(newDescription);
+    const field='body'
+    
+    onUpdateField(field,newDescription,task.id);
+  };
+  return (
+    <Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography variant="body1" className="border-b-2 border-black">Twitter Follow Task</Typography>
+        <IconButton onClick={() => onDelete(task.id)}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+      <TextField 
+        label="Task title" 
+        placeholder="Title..." 
+        size="small" 
+        value={sendTitle} 
+        onChange={handleTitleChange} 
+      />
+      <TextField 
+        label="Twitter acoount" 
+        placeholder="Twitter account to follow..." 
+        size="small" 
+        value={account} 
+        onChange={handleAccountChange} 
+      />
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <SortDescription initialDescription={sendDescription} value={sendDescription} onChange={handleDescriptionChange} />
+      </FormControl>
+    </Box>
+  );
+}
 const TwitterTask = ({ task, onDelete, onUpdateField }) => {
   const [sendTitle, setSendTitle] = useState(task.title || '');
   const [sendDescription, setSendDescription] = useState(task.body || '');
@@ -233,6 +290,52 @@ const TwitterTask = ({ task, onDelete, onUpdateField }) => {
   );
 };
 
+const TwitterTask = ({ task, onDelete, onUpdateField }) => {
+  const [sendTitle, setSendTitle] = useState(task.title || '');
+  const [sendDescription, setSendDescription] = useState(task.body || '');
+
+<<<<<<< HEAD
+  const handleTitleChange = (e) => {
+    console.log(task)
+    setSendTitle(e.target.value);
+    const field='title'
+    
+    onUpdateField(field,e.target.value,task.id); 
+  };
+
+  const handleDescriptionChange = (newDescription) => {
+    setSendDescription(newDescription);
+    const field='body'
+    
+    onUpdateField(field,newDescription,task.id);
+  };
+
+  return (
+    <Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography variant="body1" className="border-b-2 border-black">Twitter Post Task</Typography>
+        <IconButton onClick={() => onDelete(task.id)}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+      <TextField 
+        label="Task title" 
+        placeholder="Title..." 
+        size="small" 
+        value={sendTitle} 
+        onChange={handleTitleChange} 
+      />
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <SortDescription initialDescription={sendDescription} value={sendDescription} onChange={handleDescriptionChange} />
+      </FormControl>
+    </Box>
+  );
+};
 
 
 export { ApiTask, ImageTask, SendURL,TwitterTask};
+=======
+
+export { ApiTask, ImageTask, SendURL,TwitterTask,TwitterFollowTask};
+>>>>>>> origin/master

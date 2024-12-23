@@ -63,3 +63,4 @@ export const DiscordAuthProvider = ({ children }) => {
       {children}
     </DiscordAuthContext.Provider>);
 };
+DiscordAuthContext.js;

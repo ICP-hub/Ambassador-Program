@@ -5,15 +5,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import ApiIcon from '@mui/icons-material/Api';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import SendIcon from '@mui/icons-material/Send';
+<<<<<<< HEAD
+import TwitterIcon from '@mui/icons-material/Twitter';
+=======
 // import TwitterIcon from '@mui/icons-material/Twitter';
 const TwitterIcon = () => {
-    return (<p className='text-3xl '>T</p>);
+    return (<p className='text-3xl '>X</p>);
 };
+>>>>>>> origin/master
 const tasks = [
     { name: 'Text Task', type: 'text', icon: <ApiIcon />, color: '#3f51b5' },
     { name: 'Image Task', type: 'img', icon: <InsertPhotoIcon />, color: '#008bb9' },
     { name: 'SendURL Task', type: 'url', icon: <SendIcon />, color: '#1da1f2' },
+<<<<<<< HEAD
     { name: 'Twitter Task', type: 'twitter_post', icon: <TwitterIcon />, color: '#1da1f3' },
+=======
+    { name: 'Twitter Task', type: 'twitter_post', icon: <TwitterIcon />, color: '#000000' },
+    { name: 'Twitter Follow Task', type: 'twitter_follow', icon: <TwitterIcon />, color: '#000000' },
+>>>>>>> origin/master
 ];
 const TaskSidebar = ({ open, onClose, onSelectTask }) => {
     return (<Drawer anchor="right" open={open} onClose={onClose} sx={{
