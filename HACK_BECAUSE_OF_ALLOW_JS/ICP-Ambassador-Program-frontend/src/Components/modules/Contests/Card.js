@@ -17,16 +17,6 @@ const Card = ({ contest, hub }) => {
             console.log("contest tasks : ", contest);
             const formattedTasks = contest.tasks.map((task) => {
                 const taskKey = Object.keys(task)[0];
-                let bg = '';
-                if (taskKey == 'SendText' || taskKey == 'SendUrl') {
-                    bg = 'text';
-                }
-                else if (taskKey == "TwitterFollow" || taskKey == "SendTwitterPost") {
-                    bg = 'twitter';
-                }
-                else {
-                    bg = 'img';
-                }
                 return {
                     id: taskKey,
                     title: task[taskKey]?.title || taskKey,
@@ -35,11 +25,7 @@ const Card = ({ contest, hub }) => {
                     image: task[taskKey]?.img || null,
                     sampleImg: task[taskKey]?.img || null,
                     validation_rule: task[taskKey]?.validation_rule || '',
-                    task_id: task[taskKey]?.id,
-                    sampleText: task[taskKey]?.sample,
-                    completed: false,
-                    bg,
-                    account: task[taskKey]?.account
+                    task_id: task[taskKey]?.id
                 };
             });
             setTasks(formattedTasks);
@@ -78,11 +64,11 @@ const Card = ({ contest, hub }) => {
             toast.error("Please login to view the details");
         }
     };
-    return (<div className=" text-white p-4 rounded-lg shadow-lg " style={{ backgroundColor: '#1d1d21' }} onClick={handleCard}>
+    return (<div className=" text-white p-4 rounded-lg shadow-lg font-poppins" style={{ backgroundColor: '#1d1d21' }}>
 
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm font-semibold py-1 px-2 rounded" style={{ backgroundColor: '#29292c' }}>{parseInt(contest?.reward) + " "}points </span>
-        <span className={`text-sm py-1 px-2 rounded-md font-bold`} style={{
+        <span className="text-sm  py-1 px-2 rounded" style={{ backgroundColor: '#29292c' }}>{parseInt(contest?.reward) + " "}points </span>
+        <span className={`text-sm py-1 px-2 rounded-md `} style={{
             backgroundColor: statusKey === 'Active'
                 ? '#1d2d27'
                 : statusKey === 'Draft'
@@ -106,9 +92,9 @@ const Card = ({ contest, hub }) => {
 
       </div>
       <div className='flex justify-between'>
-        <div className='w-[70%] overflow-hidden'>
-            <h3 className="text-md font-bold mb-2">{title}</h3>
-            <div className='mt-4 text-sm text-gray-600 w-full '>{description?.length > 50 ? `${description?.substring(0, 45)}...` : description}</div>
+        <div>
+            <h3 className="text-md  mb-2">{title}</h3>
+            {/* <div className='mt-4 text-sm text-gray-600'>{description}</div> */}
             {/* {social_platforms(
                 <div className="flex space-x-2">
             {social_platforms.map((platform, index) => {
@@ -134,7 +120,7 @@ const Card = ({ contest, hub }) => {
       
       <div className="mt-4 flex items-center space-x-2">
         <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full"/>
-        <span className="text-sm font-semibold">{icons.platform}</span>
+        <span className="text-sm ">{icons.platform}</span>
       </div>
     </div>);
 };

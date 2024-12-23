@@ -20,11 +20,7 @@ import SortDescription from '../Content/sortDescription';
 import { AutocompleteSearchInput } from '../autoCompleteInputSearch/AutoCompleteSearchInput';
 import Rewards from '../reward/reward';
 import TaskSidebar from './task/TaskSidebar';
-<<<<<<< HEAD
-import { ApiTask, ImageTask, SendURL,TwitterTask } from './task/TaskList';
-=======
 import { ApiTask, ImageTask, SendURL,TwitterFollowTask,TwitterTask } from './task/TaskList';
->>>>>>> origin/master
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -87,8 +83,7 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
           onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}
         />
       )}
-<<<<<<< HEAD
-=======
+
       {task.type === 'twitter_follow' && (
         <TwitterFollowTask
           task={task}
@@ -96,7 +91,6 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
           onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}
         />
       )}
->>>>>>> origin/master
     </div>
   );
   

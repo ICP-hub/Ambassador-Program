@@ -101,11 +101,7 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
           </div>
         </label>
       </div>
-<<<<<<< HEAD
-      <TextField label="Task Title" placeholder="Title..." style={{ marginTop: '5.3rem' }} size="small" value={imageTitle} onChange={handleTitleChange}/>
-=======
       <TextField label="Task Title" placeholder="Title..." size="small" style={{ marginTop: '5.3rem' }} value={imageTitle} onChange={handleTitleChange}/>
->>>>>>> origin/master
       <FormControl>
         <FormLabel>Description</FormLabel>
         <SortDescription initialDescription={imageDescription} value={imageDescription} onChange={handleDescriptionChange}/>
@@ -140,8 +136,6 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
       </FormControl>
     </Box>);
 };
-<<<<<<< HEAD
-=======
 const TwitterFollowTask = ({ task, onDelete, onUpdateField }) => {
     const [sendTitle, setSendTitle] = useState(task.title || '');
     const [sendDescription, setSendDescription] = useState(task.body || '');
@@ -178,7 +172,6 @@ const TwitterFollowTask = ({ task, onDelete, onUpdateField }) => {
       </FormControl>
     </Box>);
 };
->>>>>>> origin/master
 const TwitterTask = ({ task, onDelete, onUpdateField }) => {
     const [sendTitle, setSendTitle] = useState(task.title || '');
     const [sendDescription, setSendDescription] = useState(task.body || '');
@@ -207,8 +200,4 @@ const TwitterTask = ({ task, onDelete, onUpdateField }) => {
       </FormControl>
     </Box>);
 };
-<<<<<<< HEAD
-export { ApiTask, ImageTask, SendURL, TwitterTask };
-=======
 export { ApiTask, ImageTask, SendURL, TwitterTask, TwitterFollowTask };
->>>>>>> origin/master

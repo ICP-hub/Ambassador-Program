@@ -250,11 +250,6 @@
 //   );
 // }
 // export default BalanceList;
-<<<<<<< HEAD
-import React from 'react';
-import TextField from '@mui/material/TextField';
-const BalanceList = () => {
-=======
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
@@ -372,7 +367,6 @@ const BalanceList = () => {
         <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black"/>
       </div>);
     }
->>>>>>> origin/master
     return (<div>
       <div className='flex flex-col   mx-20 my-10'>
         <div className=' flex flex-col'>
@@ -389,42 +383,26 @@ const BalanceList = () => {
             </div>
 
             <div className='font-semibold text-lg mb-3'>
-<<<<<<< HEAD
-              Hub Balance : 67 ICP
-=======
               Hub Balance : {balance} ICP
             </div>
             <div className='font-semibold text-lg mb-3'>
               Locked amount : {lockedAm} ICP
->>>>>>> origin/master
             </div>
             
           </div>
 
           <div className=' flex items-center gap-4 my-3'>
             <div className='font-semibold text-md'>
-<<<<<<< HEAD
-              Deposite Amount : 
-            </div>
-            <div className='w-1/2 -mt-5'>
-              <TextField id="standard-basic" label="Amount" variant="standard"/>
-=======
               Deposit Amount (in ICP) : 
             </div>
             <div className='w-1/2 -mt-5'>
               <TextField value={amount} id="standard-basic" label="Amount" variant="standard" onChange={(e) => parseFloat(setAmount(e.target.value))}/>
->>>>>>> origin/master
             </div> 
           </div>
 
           <div className='flex justify-between items-center mt-8'>
-<<<<<<< HEAD
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Deposite</button>
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button>
-=======
             <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer' onClick={addFunds}>Deposit</button>
             {/* <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button> */}
->>>>>>> origin/master
           </div>
         </div>
         
