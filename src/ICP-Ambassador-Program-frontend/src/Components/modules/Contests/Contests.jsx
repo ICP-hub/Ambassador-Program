@@ -49,17 +49,64 @@ const Contests = () => {
         const updatedContests = contestsArray.map(contest => ({
           ...contest
         }));
+        // Hard coded card
+        const newContest = {
+          ...updatedContests[0], 
+          title: "updated mission title", 
+          description: "space 2 mission 2 description", 
+          status: { Active: null },
+          tasks: [
+            {
+              SendTwitterPost: {
+                id: 0,
+                title: "Twitter Task title",
+                body: "Twitter Task Description eie eeiey eicei "
+              }
+            },
+            {
+              SendText:{
+                id:1,
+                title:"Text task title ioejice",
+                description:"Text task description ejiejceuicjej"
+              }
+            },
+            {
+              SendUrl:{
+
+                id:2,
+                title:"URL task title ioejice",
+                description:"URL task description ejiejceuicjej"
+
+              }
+            },{
+              SendImage:{
+
+                id:3,
+                title:"Image task title ioejice",
+                description:"Image task description ejiejceuicjej"
+
+              }
+            }
+          ]
+        };
+        
+        // Append the new contest to the array
+        updatedContests.push(newContest);
+        
+       
+        
+        
 
         console.log("updated contests : ",updatedContests)
-        // let activeContests=[]
-        // for(let i=0;i<updatedContests.length;i++){
-        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-        //     activeContests.push(updatedContests[i])
-        //   }
-        // }
-        // console.log("Active contests : ",activeContests)
-        //setDisplayedContests(activeContests);
-        setDisplayedContests(updatedContests)
+        let activeContests=[]
+        for(let i=0;i<updatedContests.length;i++){
+          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+            activeContests.push(updatedContests[i])
+          }
+        }
+        console.log("Active contests : ",activeContests)
+        setDisplayedContests(activeContests);
+        //setDisplayedContests(updatedContests)
       }
 
       }catch(e){
@@ -90,6 +137,31 @@ const Contests = () => {
         const updatedContests = mis_res.Ok.map(contest => ({
           ...contest
         }));
+        const newContest = {
+          description: "space 2 mission 2 description",
+          end_date: "2024-12-31",
+          img: ["https://example.com/image1.png"],
+          max_users_rewarded: 50n,
+          mission_id: "4kjsd-fgtre-2mkbf-ppj3z-bgfym-opkmi-wp3e4-ikeol-rvhjq-xshow",
+          owner: _Principal({_arr: Uint8Array(29), _isPrincipal: true}),
+          pool: 5000000n,
+          reward: 100n,
+          reward_currency: { USD: null },
+          space_id: "4kjsd-fgtre-2mkbf-ppj3z-bgfym-opkmi-wp3e4-ikeol-rvhjq-xshow",
+          start_date: "2024-12-01",
+          status: { Active: null },
+          tasks: [
+            {
+              LikeTwitterPost: {
+                id: 1,
+                title: "Like Post Task",
+                body: "Like the given post to complete the task."
+              }
+            }
+          ],
+          title: "active mission title"
+        };
+        
         let activeContests=[]
         for(let i=0;i<updatedContests.length;i++){
           if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
