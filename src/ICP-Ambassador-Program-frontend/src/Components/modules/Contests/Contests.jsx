@@ -5,15 +5,15 @@ import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Contest_Details from './ContestDetails';
+
 const Contests = () => {
   const { selectedPlatform } = useFilterContext();
   const user=useSelector(state=>state.user.value)
   
 
   const contests=[]
+  
 
-  
-  
   const [displayedContests, setDisplayedContests] = useState(contests);
   const [hub,setHub]=useState('')
     useEffect(()=>{
@@ -55,6 +55,7 @@ const Contests = () => {
           title: "updated mission title", 
           description: "space 2 mission 2 description", 
           status: { Active: null },
+          reward:100,
           tasks: [
             {
               SendTwitterPost: {
@@ -67,7 +68,7 @@ const Contests = () => {
               SendText:{
                 id:1,
                 title:"Text task title ioejice",
-                description:"Text task description ejiejceuicjej"
+                body:"Text task description ejiejceuicjej"
               }
             },
             {
@@ -75,15 +76,16 @@ const Contests = () => {
 
                 id:2,
                 title:"URL task title ioejice",
-                description:"URL task description ejiejceuicjej"
+                body:"URL task description ejiejceuicjej"
 
               }
             },{
               SendImage:{
 
                 id:3,
+                sampleImg:'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
                 title:"Image task title ioejice",
-                description:"Image task description ejiejceuicjej"
+                body:"Image task description ejiejceuicjej"
 
               }
             }
@@ -98,15 +100,15 @@ const Contests = () => {
         
 
         console.log("updated contests : ",updatedContests)
-        let activeContests=[]
-        for(let i=0;i<updatedContests.length;i++){
-          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-            activeContests.push(updatedContests[i])
-          }
-        }
-        console.log("Active contests : ",activeContests)
-        setDisplayedContests(activeContests);
-        //setDisplayedContests(updatedContests)
+        // let activeContests=[]
+        // for(let i=0;i<updatedContests.length;i++){
+        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+        //     activeContests.push(updatedContests[i])
+        //   }
+        // }
+        // console.log("Active contests : ",activeContests)
+        // setDisplayedContests(activeContests);
+        setDisplayedContests(updatedContests)
       }
 
       }catch(e){
@@ -137,30 +139,6 @@ const Contests = () => {
         const updatedContests = mis_res.Ok.map(contest => ({
           ...contest
         }));
-        const newContest = {
-          description: "space 2 mission 2 description",
-          end_date: "2024-12-31",
-          img: ["https://example.com/image1.png"],
-          max_users_rewarded: 50n,
-          mission_id: "4kjsd-fgtre-2mkbf-ppj3z-bgfym-opkmi-wp3e4-ikeol-rvhjq-xshow",
-          owner: _Principal({_arr: Uint8Array(29), _isPrincipal: true}),
-          pool: 5000000n,
-          reward: 100n,
-          reward_currency: { USD: null },
-          space_id: "4kjsd-fgtre-2mkbf-ppj3z-bgfym-opkmi-wp3e4-ikeol-rvhjq-xshow",
-          start_date: "2024-12-01",
-          status: { Active: null },
-          tasks: [
-            {
-              LikeTwitterPost: {
-                id: 1,
-                title: "Like Post Task",
-                body: "Like the given post to complete the task."
-              }
-            }
-          ],
-          title: "active mission title"
-        };
         
         let activeContests=[]
         for(let i=0;i<updatedContests.length;i++){
@@ -217,9 +195,9 @@ const Contests = () => {
   
   
   return (
-    <div className="overflow-y-scroll scrollbar-hide" style={{ height: 'calc(100vh - 100px)' }}>
+    <div className="overflow-y-scroll scrollbar-hide" >
       
-        <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
+        <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full">
           {
             displayedContests?.length>0?
             displayedContests.map((contest, index) => (

@@ -137,7 +137,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col rounded-md m-3 h-screen " style={{ backgroundColor: '#16161a' }}>
+    <div className="flex flex-col rounded-md m-3 h-screen bg-[#16161a] " >
       <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading}/>
       <FilterProvider>
         <div className="flex flex-grow p-2  rounded-md ">

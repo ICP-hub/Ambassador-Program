@@ -26,7 +26,11 @@ const Contest_Details = ({closeContestDetails,contest}) => {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
 //   const location = useLocation();
 //   const { updatedContest } = location.state || {};
-  const {updatedContest}=contest;
+console.log("contest in detial ==>",contests)
+
+  
+  
+  const {contesttasks}=contests.tasks
   const [description, setDescription] = useState(''); 
   const [submission,setSubmission]=useState(null)
   const [loading,setLoading]=useState(false)
@@ -34,6 +38,17 @@ const Contest_Details = ({closeContestDetails,contest}) => {
   const [authenticate,setAuth]=useState(false);
   const [twitterUser,setTwitterUser]=useState("")
   const nav=useNavigate()
+   const HUB=Cookies.get('selectedHubName')
+  const icons={
+    
+    platform: HUB,
+    platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
+
+}
+  const Contest ={
+    ...updatedContest.tasks,
+    icons
+  }
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
@@ -339,7 +354,7 @@ const twitterSubmit = ()=>{
     getSubmission()
   }, []);
 
-  const { reward, status, title, img, social_platforms, icons } = updatedContest;
+  const { reward, status, title, img, social_platforms,  } = updatedContest;
   //console.log("Updated contest ==>",updatedContest)
   const statusKey = Object.keys(status)[0]; 
   const statusValue = status[statusKey]; 

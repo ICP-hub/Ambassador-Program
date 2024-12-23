@@ -267,7 +267,10 @@ const Navbar = ({nav,openRefModal,setLoading}) => {
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)} isReferred={isReferred} />
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)} />
         {isDrawerOpen && (
-                <ProfileDrawer setLoading={setLoading} user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal} />
+                <div>
+                    <ProfileDrawer setLoading={setLoading} user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal} />
+                </div>
+                
             )}
         {openWallet &&(
                 <WalletSidebar onClose={handleCloseWallet} user={discordl_user} isOpen={openWallet} setDiscord_user={setDiscord_user}/>

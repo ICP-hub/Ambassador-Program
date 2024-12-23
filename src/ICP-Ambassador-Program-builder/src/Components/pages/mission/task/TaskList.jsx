@@ -194,6 +194,59 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
     </Box>
   );
 };
+const TwitterFollowTask=({task,onDelete,onUpdateField})=>{
+  const [sendTitle, setSendTitle] = useState(task.title || '');
+  const [sendDescription, setSendDescription] = useState(task.body || '');
+  const [account,setAccount]=useState(task.account || '');
+  const handleTitleChange = (e) => {
+    console.log(task)
+    setSendTitle(e.target.value);
+    const field='title'
+    
+    onUpdateField(field,e.target.value,task.id); 
+  };
+  const handleAccountChange = (e) => {
+    console.log(task)
+    setAccount(e.target.value);
+    const field='account'
+    
+    onUpdateField(field,e.target.value,task.id); 
+  };
+  const handleDescriptionChange = (newDescription) => {
+    setSendDescription(newDescription);
+    const field='body'
+    
+    onUpdateField(field,newDescription,task.id);
+  };
+  return (
+    <Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography variant="body1" className="border-b-2 border-black">Twitter Follow Task</Typography>
+        <IconButton onClick={() => onDelete(task.id)}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+      <TextField 
+        label="Task title" 
+        placeholder="Title..." 
+        size="small" 
+        value={sendTitle} 
+        onChange={handleTitleChange} 
+      />
+      <TextField 
+        label="Twitter acoount" 
+        placeholder="Twitter account to follow..." 
+        size="small" 
+        value={account} 
+        onChange={handleAccountChange} 
+      />
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <SortDescription initialDescription={sendDescription} value={sendDescription} onChange={handleDescriptionChange} />
+      </FormControl>
+    </Box>
+  );
+}
 const TwitterTask = ({ task, onDelete, onUpdateField }) => {
   const [sendTitle, setSendTitle] = useState(task.title || '');
   const [sendDescription, setSendDescription] = useState(task.body || '');
@@ -235,4 +288,4 @@ const TwitterTask = ({ task, onDelete, onUpdateField }) => {
 
 
 
-export { ApiTask, ImageTask, SendURL,TwitterTask};
+export { ApiTask, ImageTask, SendURL,TwitterTask,TwitterFollowTask};
