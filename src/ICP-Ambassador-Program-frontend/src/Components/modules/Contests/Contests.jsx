@@ -8,13 +8,11 @@ import Contest_Details from './ContestDetails';
 const Contests = () => {
   const { selectedPlatform } = useFilterContext();
   const user=useSelector(state=>state.user.value)
-  const [isOpenContestDetails,setIsOpenContestDetails]=useState(false);
+  
 
   const contests=[]
 
-  const handleContestDetails =() =>{
-    setIsOpenContestDetails(!isOpenContestDetails);
-  }
+  
   
   const [displayedContests, setDisplayedContests] = useState(contests);
   const [hub,setHub]=useState('')
@@ -53,14 +51,16 @@ const Contests = () => {
         }));
 
         console.log("updated contests : ",updatedContests)
-        let activeContests=[]
-        for(let i=0;i<updatedContests.length;i++){
-          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-            activeContests.push(updatedContests[i])
-          }
-        }
-        console.log("Active contests : ",activeContests)
-        setDisplayedContests(activeContests);}
+        // let activeContests=[]
+        // for(let i=0;i<updatedContests.length;i++){
+        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+        //     activeContests.push(updatedContests[i])
+        //   }
+        // }
+        // console.log("Active contests : ",activeContests)
+        //setDisplayedContests(activeContests);
+        setDisplayedContests(updatedContests)
+      }
 
       }catch(e){
         console.log("Error ==>",e)
@@ -146,12 +146,12 @@ const Contests = () => {
   
   return (
     <div className="overflow-y-scroll scrollbar-hide" style={{ height: 'calc(100vh - 100px)' }}>
-      <div className='flex'>
+      
         <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 p-4 w-full">
           {
             displayedContests?.length>0?
             displayedContests.map((contest, index) => (
-              <div onClick={handleContestDetails}>
+              <div >
                 <Card key={index} contest={contest} hub={hub} />
               </div>
             ))
@@ -159,15 +159,7 @@ const Contests = () => {
             <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
           }
         </div>
-        <div>
-          {
-            isOpenContestDetails &&(
-              <Contest_Details closeContestDetails={handleContestDetails} contest={contest} />
-            )
-          }
-        </div>
-
-      </div>
+        
       
     </div>
   );
