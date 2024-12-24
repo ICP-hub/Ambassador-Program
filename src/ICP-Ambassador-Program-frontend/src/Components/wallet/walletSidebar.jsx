@@ -196,29 +196,29 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
   return (
 
     <div
-    className={`fixed top-0 right-0 w-96 h-full my-3 bg-white shadow-lg p-6 z-50 transition-transform duration-500 ease-in-out transform overflow-y-auto scrollbar-hide  ${
+    className={`fixed top-0 right-0 lg:w-96 sm:w-full h-full lg:my-3 sm:my-0 text-white font-poppins bg-[#1d1d21] shadow-lg p-6 z-50 transition-transform duration-500 ease-in-out transform overflow-y-auto scrollbar-hide  ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
     }`}
 >
     <div className='flex justify-end'>
-        <button onClick={onClose} className='  rounded-full h-9 w-9 flex justify-center items-center cursor-pointer'>
-            <MdClose className='text-black  hover:text-white' style={{ fontSize: '20px' }} />
+        <button onClick={onClose} className='  hover:bg-black hover:text-white rounded-full h-9 w-9 flex justify-center items-center cursor-pointer'>
+            <MdClose className='text-white  hover:text-white' style={{ fontSize: '20px' }} />
         </button>
     </div>
     <div className='flex flex-col justify-center items-center'>
         <div className='flex flex-col gap-5 justify-center items-center mt-8'>
-            <div className='font-semibold text-3xl'>User Wallet</div>
+            <div className='font-semibold text-3xl text-[#88bef5]'>User Wallet</div>
             {
                 ledger?
                 <div 
-                    className='bg-black text-white font-semibold py-2 w-full rounded flex justify-center items-center'
+                    className=' hover:bg-black hover:border-black border border-gray-700 cursor-pointer transition-all  duration-500 bg-black text-white font-semibold py-2 w-full rounded-md flex justify-center items-center'
                     onClick={logout}
                 >
                     Disconnect wallet
                 </div>
                 :
                 <div 
-                    className='bg-black text-white font-semibold py-2 w-full rounded flex justify-center items-center'
+                    className='hover:bg-black hover:border-black border border-gray-700 cursor-pointer transition-all  duration-500 text-white font-semibold py-2 w-full rounded-md flex justify-center items-center'
                     onClick={login}
                 >
                     Connect wallet
@@ -228,8 +228,8 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
         </div>
         <div className='flex flex-col ml-8 gap-4 mt-16'>
                 <div className='flex flex-col gap-5'>
-                    <div className='text-md font-semibold '>Total Points Earned : {updatedUser?.xp_points?.toString()}</div>
-                    <div className='text-md font-semibold '>Redeembale Points : {updatedUser?.redeem_points?.toString()}</div>
+                    <div className='text-md font-semibold text-[#88bef5]'>Total Points Earned : {updatedUser?.xp_points?.toString()}</div>
+                    <div className='text-md font-semibold text-[#88bef5]'>Redeembale Points : {updatedUser?.redeem_points?.toString()}</div>
                 </div>
                 <div className='flex text-sm items-center gap-2 my-3 text-[#7064f5] font-semibold' >
                     <div>Conversion rate of your hub : 100p </div>
@@ -242,7 +242,7 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
                     onChange={(e)=>setAmount(e.target.value)}
                     type='number'
                 />
-                <div className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded' onClick={withdraw}>Withdraw points</div>
+                <div className=' py-3 w-full  hover:bg-black hover:border-black border border-gray-700 cursor-pointer transition-all  duration-500 font-semibold text-sm flex justify-center items-center rounded-md' onClick={withdraw}>Withdraw points</div>
                 {
                     ledger?
                     <>
@@ -258,7 +258,7 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
                         onChange={(e)=>setReceiver(e.target.value)}
                         type='text'
                     />
-                    <button className=' py-3 w-full  bg-black text-white cursor-pointer font-semibold text-sm flex justify-center items-center rounded' onClick={send}>Send amount</button>
+                    <button className=' py-3 w-full hover:border-black  hover:bg-black border border-gray-700 cursor-pointer transition-all  duration-500 font-semibold text-sm flex justify-center items-center rounded-md' onClick={send}>Send amount</button>
                     </>
                     :
                     <></>

@@ -11,11 +11,11 @@ import { FaTwitter, FaLink, FaTextHeight, FaImage } from "react-icons/fa";
 
 const Card = ({ contest,hub }) => {
   //console.log(hub)
-  console.log("contest ==>",contest)
+  //console.log("contest ==>",contest)
   const {  status, title,  description, img,reward } = contest;
   
   const [tasks, setTasks] = useState(contest.tasks);
-  console.log(tasks)
+  //console.log(tasks)
 
   const taskDetailsMap = {
     SendTwitterPost: {
@@ -42,7 +42,7 @@ const Card = ({ contest,hub }) => {
 
   useEffect(() => {
     if (contest?.tasks) {
-      console.log("contest tasks : ",contest)
+      //console.log("contest tasks : ",contest)
       const formattedTasks = contest.tasks.map((task) => {
         const taskKey = Object.keys(task)[0]; 
         return {
@@ -57,7 +57,7 @@ const Card = ({ contest,hub }) => {
           task_id:task[taskKey]?.id
         };
       });
-      console.log("formatted :",formattedTasks)
+      //console.log("formatted :",formattedTasks)
       setTasks(formattedTasks);
     }
   }, [contest]);

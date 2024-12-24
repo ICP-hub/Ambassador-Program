@@ -381,7 +381,7 @@ const twitterSubmit = ()=>{
   const handleSend = (taskId,task) => {
     if (!task.content) return; 
     console.log(taskId)
-    console.log('Sending task:', taskId, task);
+    //console.log('Sending task:', taskId, task);
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.task_id === taskId ? { ...task, submitted: true } : task
@@ -391,7 +391,7 @@ const twitterSubmit = ()=>{
   const handleSendImage = (taskId,task) => {
     
     console.log(taskId)
-    console.log('Sending task:', taskId, task);
+    //console.log('Sending task:', taskId, task);
     setTasks((prevTasks) =>
       prevTasks.map((t) =>
         t.task_id === taskId ? { ...t, submitted: true } : t
@@ -479,7 +479,7 @@ const twitterSubmit = ()=>{
   }, [description]);
 
   useEffect(() => {
-    console.log("Updated tasks:", tasks);
+    //console.log("Updated tasks:", tasks);
   }, [tasks]);
 
   const handleDeleteFile = (taskId) => {
