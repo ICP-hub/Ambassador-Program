@@ -29,7 +29,7 @@ const Contest_Details = ({closeContestDetails,contests}) => {
 //   const { updatedContest } = location.state || {};
 console.log("contest in detial ==>",contests)
 
-  const HUB=Cookies.get('selectedHubName')
+  
   
   const {contesttasks}=contests.tasks
   const [description, setDescription] = useState(''); 
@@ -39,6 +39,17 @@ console.log("contest in detial ==>",contests)
   const [authenticate,setAuth]=useState(false);
   const [twitterUser,setTwitterUser]=useState("")
   const nav=useNavigate()
+   const HUB=Cookies.get('selectedHubName')
+  const icons={
+    
+    platform: HUB,
+    platform_logo: "https://seeklogo.com/images/I/internet-computer-icp-logo-83628B267C-seeklogo.com.png"
+
+}
+  const Contest ={
+    ...updatedContest.tasks,
+    icons
+  }
   const [tasks, setTasks] = useState(
     contests.tasks
   );
@@ -353,9 +364,8 @@ const twitterSubmit = ()=>{
     getSubmission()
   }, []);
 
-  const { reward, status, title, img, social_platforms, icons } = updatedContest;
-  
-  console.log("Updated contest ==>",updatedContest)
+  const { reward, status, title, img, social_platforms,  } = updatedContest;
+  //console.log("Updated contest ==>",updatedContest)
   const statusKey = Object.keys(status)[0]; 
   const statusValue = status[statusKey]; 
   

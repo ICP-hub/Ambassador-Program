@@ -83,7 +83,6 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
           onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}
         />
       )}
-
       {task.type === 'twitter_follow' && (
         <TwitterFollowTask
           task={task}
