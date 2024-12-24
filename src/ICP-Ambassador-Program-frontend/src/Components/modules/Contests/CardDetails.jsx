@@ -27,7 +27,7 @@ import { BiSolidSend } from "react-icons/bi";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { MdOutlineDeleteOutline } from "react-icons/md";
-
+import { IoIosSend } from "react-icons/io";
 
 const auth = getAuth(app);
 
@@ -81,6 +81,10 @@ const CardDetails = () => {
         icon: FaFileUpload,
         color: "#de7515", 
       },
+      JoinTwitter :{
+        icon: FaXTwitter,
+        color: "#1D9BF0", 
+      }
     };
   const [tasks, setTasks] = useState(
     updatedContest.tasks
@@ -838,6 +842,16 @@ const twitterSubmit = ()=>{
 
                                 </div>
                             </div>
+                            )}
+                            {task.id === 'JoinTwitter' &&(
+                              <div className='flex flex-col gap-4'>
+                                <div className="text-white text-md">{`Task description :\n\n ${task.description}`}</div>
+                                <div className='w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg' style={{backgroundColor:bgColor}}>
+                                  <IoIosSend />
+                                  <div>Join Twitter</div> 
+                                </div>
+                              </div>
+                              
                             )}
                             <div className='flex items-center justify-center'>
                             {/* <button

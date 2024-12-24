@@ -45,10 +45,30 @@ const Contests = () => {
         //   console.log(`${index}th element in result:`, item);
         // });
 
-        
-        const updatedContests = contestsArray.map(contest => ({
-          ...contest
-        }));
+         //Previous/original one
+        // const updatedContests = contestsArray.map(contest => ({
+        //   ...contest
+        // }));
+
+        // Hard coded
+        const updatedContests = contestsArray.map((contest, index) => {
+          if (index === 0) { // Check for the first contest
+            return {
+              ...contest,
+              tasks: [
+                ...(contest.tasks || []), 
+                {
+                  JoinTwitter: { 
+                    id: (contest.tasks?.length || 0), 
+                    title: "Join Twitter Task Title",
+                    body: "Join Twitter Task Description",
+                  },
+                },
+              ],
+            };
+          }
+          return { ...contest }; // For other contests, return them unchanged
+        });
         // Hard coded card
         const newContest = {
           ...updatedContests[0], 

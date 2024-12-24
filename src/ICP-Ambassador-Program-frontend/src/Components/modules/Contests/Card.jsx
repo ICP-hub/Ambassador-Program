@@ -34,6 +34,10 @@ const Card = ({ contest,hub }) => {
       icon: FaFileUpload,
       color: "#de7515", 
     },
+    JoinTwitter :{
+      icon: FaXTwitter,
+      color: "#1D9BF0", 
+    }
   };
 
   useEffect(() => {
