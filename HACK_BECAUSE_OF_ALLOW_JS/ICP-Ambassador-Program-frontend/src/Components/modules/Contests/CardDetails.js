@@ -19,6 +19,15 @@ import 'quill/dist/quill.snow.css';
 import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
+import { FaLink, FaTextHeight } from "react-icons/fa";
+import { FaFileUpload } from "react-icons/fa";
+import { RiLoopLeftLine } from "react-icons/ri";
+import DoneIcon from '@mui/icons-material/Done';
+import { BiSolidSend } from "react-icons/bi";
+import { MdOutlineCloudUpload } from "react-icons/md";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { IoIosSend } from "react-icons/io";
 const auth = getAuth(app);
 const CardDetails = () => {
     const adminRegex = /^[A-Za-z0-9\s]+$/;
@@ -30,8 +39,49 @@ const CardDetails = () => {
     const [subStatus, setSubStatus] = useState("");
     const [authenticate, setAuth] = useState(false);
     const [twitterUser, setTwitterUser] = useState("");
+    const [isDragging, setIsDragging] = useState(false);
+    // const [expanded, setExpanded] = useState({});
+    // useEffect(() => {
+    //   if (tasks && tasks.length > 0) {
+    //     const initialExpandedState = tasks.reduce((acc, task) => {
+    //       // Set each task's state as expanded (true) by default
+    //       acc[task.task_id] = true;
+    //       return acc;
+    //     }, {});
+    //     setExpanded(initialExpandedState);
+    //   }
+    // }, [tasks]);
+    // const handleAccordionChange = (taskId) => {
+    //   setExpanded((prevExpanded) => ({
+    //     ...prevExpanded,
+    //     [taskId]: !prevExpanded[taskId], // Toggle the specific task's expanded state
+    //   }));
+    // };
     const nav = useNavigate();
+    const taskDetailsMap = {
+        SendTwitterPost: {
+            icon: FaXTwitter,
+            color: "#1D9BF0",
+        },
+        SendText: {
+            icon: FaFileUpload,
+            color: "#de7515",
+        },
+        SendUrl: {
+            icon: FaLink,
+            color: "#6d15de",
+        },
+        SendImage: {
+            icon: FaFileUpload,
+            color: "#de7515",
+        },
+        JoinTwitter: {
+            icon: FaXTwitter,
+            color: "#1D9BF0",
+        }
+    };
     const [tasks, setTasks] = useState(updatedContest.tasks);
+    console.log(tasks, updatedContest.tasks, "updatedcontest.tasks");
     const [twitterLink, setTwitterLink] = useState("");
     const handleInputTwitter = (e) => {
         setTwitterLink(e.target.value);
@@ -49,8 +99,8 @@ const CardDetails = () => {
                 const imageData = {
                     image_title: metadata.title,
                     name: metadata.name,
-                    content: [fileContent], // This is the field expected by the backend
-                    content_type: metadata.contentType // Ensure this matches backend expectations
+                    content: [fileContent],
+                    content_type: metadata.contentType
                 };
                 let res = await ICP_Ambassador_Program_backend.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER, imageData);
                 console.log("image upload promise response : ", res);
@@ -79,16 +129,27 @@ const CardDetails = () => {
                 let taskType = Object.keys(sub_tasks[i])[0];
                 console.log(taskType);
                 if (taskType == "SendText") {
-                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.text });
+                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.text, completed: true });
                 }
-                if (taskType == "SendImage") {
-                    new_tasks.push({ ...mission_tasks[i], image: sub_tasks[i][taskType]?.img, sampleImg: mission_tasks[i].image });
+                else if (taskType == "SendImage") {
+                    new_tasks.push({ ...mission_tasks[i], image: sub_tasks[i][taskType]?.img, sampleImg: mission_tasks[i].image, completed: true });
                 }
-                if (taskType == "SendUrl") {
-                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.url });
+                else if (taskType == "SendUrl") {
+                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.url, completed: true });
                 }
-                if (taskType == "SendTwitterPost") {
-                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.post });
+                else if (taskType == "SendTwitterPost") {
+                    console.log("parsing twitter post");
+                    new_tasks.push({ ...mission_tasks[i], content: sub_tasks[i][taskType]?.post, completed: true });
+                }
+                else if (taskType == "TwitterFollow") {
+                    new_tasks.push({ ...mission_tasks[i], completed: true });
+                }
+                else {
+                    if (mission_tasks[i]?.id == "SendTwitterPost") {
+                        console.log("unsubmitted twitter tasks left", authenticate);
+                        setUnsubmittedTwitterPost([...unsubmittedTwitterPost, mission_tasks[i]]);
+                    }
+                    new_tasks.push({ ...mission_tasks[i] });
                 }
             }
             console.log("parsed mission tasks : ", new_tasks);
@@ -106,7 +167,36 @@ const CardDetails = () => {
             if (res?.Ok) {
                 setSubStatus(Object.keys(res?.Ok?.status)[0]);
                 setSubmission(res?.Ok);
-                parseTasks(tasks, res?.Ok?.tasks_submitted);
+                let y = 0;
+                let sub_tasks = [];
+                let previous_sub_tasks = res?.Ok?.tasks_submitted;
+                for (let i = 0; i < tasks?.length; i++) {
+                    for (let j = 0; j < previous_sub_tasks?.length; j++) {
+                        if (i == previous_sub_tasks[j][Object.keys(previous_sub_tasks[j])[0]].id) {
+                            sub_tasks.push(previous_sub_tasks[j]);
+                            break;
+                        }
+                        else {
+                            if (j == (previous_sub_tasks?.length - 1)) {
+                                sub_tasks.push({});
+                            }
+                        }
+                    }
+                }
+                // for(let i=0;(i<tasks?.length);i++){
+                //   console.log(previous_sub_tasks[y],i)
+                //   if(y<previous_sub_tasks?.length){
+                //     if(i==previous_sub_tasks[y][Object.keys(previous_sub_tasks[y])[0]].id){
+                //       sub_tasks.push(previous_sub_tasks[y])
+                //       y+=1
+                //     }else{
+                //       sub_tasks.push({})
+                //     }
+                //   }else{
+                //     sub_tasks.push({})
+                //   }
+                // }
+                parseTasks(tasks, sub_tasks);
             }
             else {
                 let newSubmission = {
@@ -114,7 +204,8 @@ const CardDetails = () => {
                     mission_id: updatedContest.mission_id,
                     tasks_submitted: [],
                     user: user?.id,
-                    status: { Unread: null }
+                    status: { Unread: null },
+                    points_rewarded: false
                 };
                 console.log(newSubmission);
                 setSubStatus("Unread");
@@ -125,8 +216,7 @@ const CardDetails = () => {
             console.log("error while fetching submission : ", error);
         }
     }
-    const Check_authentication = async (e) => {
-        e.preventDefault();
+    const Check_authentication = async () => {
         const provider = new TwitterAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
@@ -284,9 +374,35 @@ const CardDetails = () => {
         const value = e.target.value;
         setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, content: value } : task));
     };
-    const handleFileChange = (e, taskId) => {
+    const fileInputRef = useRef(null);
+    const onFileChange = (e, taskId, task) => {
         const file = e.target.files[0];
-        setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, image: file } : task));
+        if (file) {
+            handleFileChange(e, taskId, task);
+            // Reset the input value
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
+        }
+    };
+    const handleFileChange = (e, taskId, task) => {
+        const file = e.target.files[0];
+        setTasks(prevTasks => prevTasks.map(task => task.task_id === taskId ? { ...task, uploading: true, image: file } : task));
+        setTimeout(() => {
+            setTasks((prevTasks) => prevTasks.map((t) => t.task_id === taskId ? { ...t, uploading: false, submitted: false } : t));
+        }, 2000);
+    };
+    const handleSend = (taskId, task) => {
+        if (!task.content)
+            return;
+        console.log(taskId);
+        console.log('Sending task:', taskId, task);
+        setTasks((prevTasks) => prevTasks.map((task) => task.task_id === taskId ? { ...task, submitted: true } : task));
+    };
+    const handleSendImage = (taskId, task) => {
+        console.log(taskId);
+        console.log('Sending task:', taskId, task);
+        setTasks((prevTasks) => prevTasks.map((t) => t.task_id === taskId ? { ...t, submitted: true } : t));
     };
     const handleSubmit = async (e, taskId) => {
         e.preventDefault();
@@ -351,6 +467,27 @@ const CardDetails = () => {
             });
         }
     }, [description]);
+    useEffect(() => {
+        console.log("Updated tasks:", tasks);
+    }, [tasks]);
+    const handleDeleteFile = (taskId) => {
+        setTasks((prevTasks) => prevTasks.map((t) => t.task_id === taskId ? { ...t, image: null, submitted: false } : t));
+    };
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+    const handleDrop = (e, taskId, task) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFileChange({ target: { files: [file] } }, taskId, task);
+        }
+    };
     if (loading) {
         return (<div className='flex justify-center items-center h-screen'>
         <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black"/>
@@ -358,6 +495,7 @@ const CardDetails = () => {
     }
     return (<div style={{
             background: `linear-gradient(to bottom, ${randomColor}, transparent)`,
+            className: 'font-poppins'
         }} className="h-full pt-3">
       <Navbar nav={nav}/>
       <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
@@ -369,11 +507,11 @@ const CardDetails = () => {
         // <div className="w-20 h-20 bg-gray-700 flex items-center justify-center rounded">
         // <span>No Image</span>
         // </div>
-        <img src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg' alt={title} className="lg:w-24 lg:h-24 sm:w-44 sm:h-24 object-cover rounded"/>)}
+        <img src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg' alt={title} className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded"/>)}
                 </div>
             </div>
             <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className='font-bold text-sm' style={{
+                <div className=' text-sm' style={{
             color: statusKey === 'Active'
                 ? '#1db851'
                 : statusKey === 'Draft'
@@ -385,7 +523,7 @@ const CardDetails = () => {
             ? statusKey
             : statusValue}</div>
                 <div>
-                    <div className='text-white text-xl font-bold'>{title}</div>
+                    <div className='text-white text-xl '>{title}</div>
                 </div>
                 <div className="flex items-center gap-3 ">
                     <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full"/>
@@ -398,102 +536,201 @@ const CardDetails = () => {
         </div>
         
         <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
-            {tasks.map((task, index) => (<div className='flex flex-col gap-3 relative rounded-xl' style={{ backgroundColor: '#1d1d21' }} key={index}>
+            {tasks.map((task, index) => {
+            const taskType = task.id;
+            const { icon: IconComponent, color: bgColor } = taskDetailsMap[taskType] || {};
+            return (<div className='flex flex-col gap-3 relative rounded-xl bg-[#171717]' style={{ backgroundColor: '#171717' }} key={index}>
                 <div className='relative rounded-lg' style={{
-                borderTop: `2px solid ${randomColor}`,
-                borderLeft: `2px solid ${randomColor}`,
-                borderRight: `2px solid ${randomColor}`,
-                borderBottom: 'none',
-                borderRadius: '0.5rem',
-            }}>
-                    <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white lg:text-md sm:text-xs"/>} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
-                        {task.title}
+                    borderTop: `2px solid ${bgColor}`,
+                    borderLeft: `2px solid transparent`,
+                    borderRight: `2px solid transparent`,
+                    borderBottom: 'none',
+                    borderRadius: '0.5rem',
+                    background: `linear-gradient(to bottom, ${bgColor} 0%, transparent 100%)`,
+                }}>
+                    <Accordion expanded={true} style={{ backgroundColor: '#1d1d21', color: 'white' }}>
+                    <AccordionSummary aria-controls="panel1-content" id="panel1-header" className="text-white  text-lg">
+                      <div className='flex justify-between w-full'>
+                        <div className='flex gap-4'>
+                          <div className="w-7 h-7 flex justify-center items-center rounded-full" style={{ backgroundColor: bgColor }}>
+                            {IconComponent ? <IconComponent className='text-[15px]'/> : null}
+                          </div>
+
+                          {task.title}
+                        </div>
+                        <div className='mt-1'>
+                            {task.submitted ? (<div className='lg:w-6 sm:w-6 lg:h-6 sm:h-6 bg-[#1DB954] text-black flex justify-center items-center rounded-full'>
+                                <DoneIcon style={{ fontSize: '15px' }}/>
+                              </div>) : (<div className='border border-[#FFFFFF14] bg-[#1e1e1e] w-6 h-6 rounded-full'></div>)}
+                        </div>
+                        
+                      </div>
+                      
+                        
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
                         {!task.submitted ? (<form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
                             {task.id === 'SendText' && (<>
-
-                                
-                                <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
-                                <div className="border border-gray-300 rounded-md custom-quill shadow-sm w-full">
+                                <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                                <div className="border border-[#FFFFFF14] m-2 rounded-md custom-quill shadow-sm w-full">
                                     {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
-                                    <textarea rows={10} className='w-full py-2 px-3 bg-[#1d1d21]' onChange={(e) => handleInputChange(e, task.task_id)} value={task.content}/>
+                                    <textarea rows={10} className='w-full py-2 px-3 mt-2 bg-[#1e1e1e]' onChange={(e) => handleInputChange(e, task.task_id)} value={task.content} placeholder='Input text here...'/>
                                 </div>
+                                {task.submitted ? (<div className='bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2'>
+                                      <DoneIcon />
+                                      <div>Completed</div>
+
+                                  </div>) : (<div className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? '' : 'opacity-40'}`} style={{ backgroundColor: bgColor }} onClick={() => handleSend(task.task_id, task)}>
+                                    <BiSolidSend />
+                                    <div>Send</div>
+                                    </div>)}  
                             </>)}
                             {task.id === 'SendUrl' && (<>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
-                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded text-black' value={task.content}/>
+                              <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                                  <input type='SendURL' placeholder='Enter URL' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 text-white bg-[#1e1e1e] border border-[#FFFFFF14] rounded text-black' value={task.content}/>
+                              {task.submitted ? (<div className='bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2'>
+                                      <DoneIcon />
+                                      <div>Completed</div>
+
+                                  </div>) : (<div className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? '' : 'opacity-40'}`} style={{ backgroundColor: bgColor }} onClick={() => handleSend(task.task_id, task)}>
+                                    <BiSolidSend />
+                                    <div>Sumbit</div>
+                                    </div>)}  
 
                               </div>
                             
                             
                             </>)}
-                            {task.id === "SendTwitterPost" && (<div className="flex flex-col gap-3 mt-3">  
-                                       <div className="text-white font-semibold lg:text-md sm:text-xs">{`Task description :\n\n ${task.description}`}</div>
+                            {task.id === "SendTwitterPost" && (<div className="flex flex-col gap-6 mt-3">  
+                                       <div className="text-white text-md">{`Task description :\n\n ${task.description}`}</div>
                                        <div className='flex w-full gap-4 items-center'>
-                                       <input type='text' value={task.content} placeholder='Share post link' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 rounded w-full text-black'/>
-                                         {!authenticate ? (<button className='w-12 lg:h-12 sm:h-10  bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e) => { Check_authentication(e); }}>
-                                           <PrivacyTipIcon className='text-black'/>
-                                           </button>) : (<div className='w-12 h-12 bg-white flex justify-center items-center rounded-full'>
-                                             <AdminPanelSettingsIcon className=' text-green-600'/>
-                                         </div>)}
+                                       <input type='text' value={task.content} placeholder='Share post link' onChange={(e) => handleInputChange(e, task.task_id)} className='outline-none p-3 text-white bg-[#1e1e1e] border border-[#FFFFFF14] rounded w-full text-black'/>
+                                         {/* {!authenticate ?(
+                          <button className='w-8 h-8   bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                          <PrivacyTipIcon className='text-black'/>
+                          </button>
+                         
+                        ):(
+                          <div className='lg:w-8 sm:w-10 lg:h-8 sm: bg-[#1DB954] text-black flex justify-center items-center rounded-full'>
+                            <DoneIcon />
+                        </div>
+                        )} */}
                                          
                                        </div>
-                                       {!authenticate ? (<div>
-                                             <p className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p>
-                                           </div>) : (<div>
-                                             <p className='text-green-500 text-sm font-semibold '>Authenticated</p>
+                                       {!authenticate ? (<div className='text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center ' onClick={Check_authentication} style={{ backgroundColor: bgColor }}>
+                                            <RiLoopLeftLine className='text-xl'/>
+                                             <div className='text-lg font-semibold text-white'>Verify</div>
+                                             {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
+                                           </div>) : (<div className='bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2'>
+                                             <DoneIcon />
+                                             <div>Completed</div>
+                                             {/* <p className='text-green-500 text-sm font-semibold '>Authenticated</p> */}
                                            </div>)}
                                        
                                        <div className='flex items-center justify-center'>
                                        {/* <button
-                        onClick={()=>{twitterSubmit()}}
+                            onClick={()=>{twitterSubmit()}}
+                            type="submit"
+                            className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                        >
+                            Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                        </button> */}
+                                       </div>
+                                   </div>)}
+                            {task.id === 'SendImage' && (<div className="mt-4 w-full ">
+                              <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                              {/* <div className='flex gap-5 my-5'>
+                          <div className="text-white font-semibold text-md  mt-4">Sample Image</div>
+                          <img src={task.sampleImg} className='w-52 rounded h-40' alt=''/>
+                        </div> */}
+                                
+                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
+                                  
+                                {(task.uploading || task.image) && (<div className="w-full bg-[#1e1e1e] border border-[#FFFFFF14] rounded-md my-4 p-2">
+                                    {task.uploading ? (<div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
+                                        <div className="flex justify-between items-center gap-2 w-full">
+                                          <div className="flex gap-2">
+                                            <AttachFileIcon />
+                                            <span>{task.image?.name || 'Uploading...'}</span>
+                                          </div>
+                                          <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-white"></div>
+                                        </div>
+                                      </div>) : task.image ? (<div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
+                                        <div className="flex gap-2">
+                                          <AttachFileIcon />
+                                          <span>{typeof task.image === 'object' ? task.image.name : task.image}</span>
+                                        </div>
+                                        <button className="text-red-500" onClick={() => handleDeleteFile(task.task_id)}>
+                                          <MdOutlineDeleteOutline />
+                                        </button>
+                                      </div>) : null}
+                                  </div>)}
+
+                                {task.image ? (null) : (<div className=' flex flex-col items-center mt-6  justify-center gap-2 text-white ' onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={(e) => handleDrop(e, task.task_id, task)}>
+                                    <MdOutlineCloudUpload className='text-3xl'/>
+                                    <div className='text-white font-semibold'>Drag your file here or</div>
+                                    <div className='text-gray-400'>JPG, PNG, PDF · Max size 5Mb</div>
+                                  </div>)}
+                                
+                                <div className='w-full'>
+                                  <label className="mt-4 w-full rounded">
+                                    <input type="file" className="hidden w-full" onChange={(e) => { onFileChange(e, task.task_id, task); }} ref={fileInputRef}/>
+                                    {!task.image && !task.uploading && !task.submitted && (<div className="w-full flex justify-center cursor-pointer items-center gap-2 text-md font-semibold py-2 text-white rounded-md" style={{ backgroundColor: bgColor }}>
+                                        {IconComponent ? <IconComponent /> : null}
+                                        <div>Upload Image</div>
+                                      </div>)}
+                                  </label>
+
+                                  {task.uploading && (<div className="w-full flex justify-center items-center gap-2 text-md font-semibold py-2 text-white" style={{ backgroundColor: bgColor }}>
+                                      <div className="flex justify-center items-center">
+                                        <div className="h-6 w-8 animate-spin rounded-full border border-white rounded-md"/>
+                                      </div>
+                                      Uploading...
+                                    </div>)}
+
+                                  {task.image && !task.submitted && !task.uploading && (<div className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md" style={{ backgroundColor: bgColor }} onClick={() => {
+                                handleSendImage(task.task_id, task);
+                            }}>
+                                      <DoneIcon />
+                                      <div>Confirm</div>
+                                    </div>)}
+
+                                  {task.submitted && (<div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                      <DoneIcon />
+                                      <div>Completed</div>
+                                    </div>)}
+                                </div>
+
+                                </div>
+                            </div>)}
+                            {task.id === 'JoinTwitter' && (<div className='flex flex-col gap-4'>
+                                <div className="text-white text-md">{`Task description :\n\n ${task.description}`}</div>
+                                <div className='w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg' style={{ backgroundColor: bgColor }}>
+                                  <IoIosSend />
+                                  <div>Join Twitter</div> 
+                                </div>
+                              </div>)}
+                            <div className='flex items-center justify-center'>
+                            {/* <button
                         type="submit"
                         className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
                     >
                         Submit <MdOutlineArrowOutward className="ml-3" size={24} />
                     </button> */}
-                                       </div>
-                                   </div>)}
-                            {task.id === 'SendImage' && (<div className="mt-4 w-full ">
-                              <div className="text-white font-semibold lg:text-md sm:text-xs">{task.description}</div>
-                              <div className='flex gap-5 my-5'>
-                                <div className="text-white font-semibold lg:text-md sm:text-xs mt-4">Sample Image</div>
-                                <img src={task.sampleImg} className='w-40 h-40' alt=''/>
-                              </div>
-                                
-                                <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
-                                {task.image ? (<img src={typeof task.image == 'object' ? URL.createObjectURL(task.image) : task.image} alt="Uploaded" className="object-contain sm:max-h-64 sm:w-full h-[300px] w-[400px]"/>) : (<img src={'upload_background.png'} alt="" className=""/>)}
-                                <div className='mt-4 text-gray-500'>drag file here or</div>
-                                <label className="mt-4 w-full bg-blue-500 rounded">
-                                    <input type="file" className="hidden" onChange={(e) => handleFileChange(e, task.task_id)}/>
-                                    <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-white text-black hover:text-white rounded-md b cursor-pointer hover:bg-blue-600">
-                                    BROWSE
-                                    </div>
-                                </label>
-                                </div>
-                            </div>)}
-                            <div className='flex items-center justify-center'>
-                            {/* <button
-                    type="submit"
-                    className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
-                >
-                    Submit <MdOutlineArrowOutward className="ml-3" size={24} />
-                </button> */}
                             </div>
                         </form>) : (
-            // <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
-            <></>)}
+                // <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
+                <></>)}
                         
                     </AccordionDetails>
                     </Accordion>
                     
                 </div>
-                </div>))}
+                </div>);
+        })}
              {/* <Accordion style={{ backgroundColor: '#1d1d21', color: 'white' }}>
                <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />} aria-controls="panel1-content" id="panel1-header" className="text-white font-semibold text-lg">
                    Twitter Post sample task title
@@ -545,17 +782,22 @@ const CardDetails = () => {
                    
                </AccordionDetails>
              </Accordion> */}
-            <div className='w-full flex justify-center'>
-              {subStatus == "Unread" ?
-            <button onClick={addSubmission} className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3">
-                  {submission?.submission_id == "" ? "Submit" : "Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24}/>
-                </button>
+            {/* <div className='w-full flex justify-center'>
+          {
+            subStatus=="Unread"?
+            <button
+              onClick={addSubmission}
+              className="w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+            >
+              {submission?.submission_id==""?"Submit":"Update Submission"} <MdOutlineArrowOutward className="ml-3" size={24} />
+            </button>
             :
-                <p className='w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3'>
-                  {`Submission ${subStatus}`}
-                </p>}
-              
-            </div>
+            <p className='w-1/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3'>
+              {`Submission ${subStatus}`}
+            </p>
+          }
+          
+        </div> */}
            
         
         

@@ -52,7 +52,6 @@ const Card = ({ contest,hub }) => {
           submitted: false,
           image: task[taskKey]?.img || null,
           sampleImg:task[taskKey]?.sampleImg || null,
-          submitted:task[taskKey].submitted=false,
           validation_rule:task[taskKey]?.validation_rule || '',
           task_id:task[taskKey]?.id
         };
@@ -112,7 +111,7 @@ const Card = ({ contest,hub }) => {
 
 
   return (
-    <div className=" text-white p-4 rounded-lg  shadow-lg font-poppins" style={{backgroundColor:'#1d1d21'}} onClick={handleCard} >
+    <div className=" text-white p-4 rounded-lg  shadow-lg font-poppins min-w-[350px]" style={{backgroundColor:'#1d1d21'}} onClick={handleCard} >
       <div className='flex justify-between items-center'>
         <div className='flex gap-2 items-center'>
           <div>

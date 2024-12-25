@@ -53,26 +53,27 @@ const Contests = () => {
 
         // Hard coded
         const updatedContests = contestsArray.map((contest, index) => {
-          if (index === 0) { // Check for the first contest
-            return {
-              ...contest,
-              tasks: [
-                ...(contest.tasks || []), 
-                {
-                  JoinTwitter: { 
-                    id: (contest.tasks?.length || 0), 
-                    title: "Join Twitter Task Title",
-                    body: "Join Twitter Task Description",
-                  },
-                },
-              ],
-            };
-          }
+          // if (index === 0) { // Check for the first contest
+          //   return {
+          //     ...contest,
+          //     tasks: [
+          //       ...(contest.tasks || []), 
+          //       {
+          //         JoinTwitter: { 
+          //           id: (contest.tasks?.length || 0), 
+          //           title: "Join Twitter Task Title",
+          //           body: "Join Twitter Task Description",
+          //         },
+          //       },
+          //     ],
+          //   };
+          // }
           return { ...contest }; // For other contests, return them unchanged
         });
         // Hard coded card
         const newContest = {
           ...updatedContests[0], 
+          mission_id:'',
           title: "updated mission title", 
           description: "space 2 mission 2 description", 
           status: { Active: null },
@@ -104,6 +105,7 @@ const Contests = () => {
               SendImage:{
 
                 id:3,
+                image:'',
                 sampleImg:'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
                 title:"Image task title ioejice",
                 body:"Image task description ejiejceuicjej"
@@ -218,7 +220,8 @@ const Contests = () => {
   return (
     <div className="overflow-y-scroll scrollbar-hide" >
       
-        <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full">
+        {/* <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full"> */}
+        <div className="flex flex-wrap gap-4">
           {
             displayedContests?.length>0?
             displayedContests.map((contest, index) => (

@@ -43,7 +43,6 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
       {task.type === 'img' && (<ImageTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
       {task.type === 'url' && (<SendURL task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
       {task.type === 'twitter_post' && (<TwitterTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
-
       {task.type === 'twitter_follow' && (<TwitterFollowTask task={task} onDelete={() => onDelete(task.id)} onUpdateField={(field, value) => handleUpdateTaskField(task.id, field, value)}/>)}
     </div>);
 };

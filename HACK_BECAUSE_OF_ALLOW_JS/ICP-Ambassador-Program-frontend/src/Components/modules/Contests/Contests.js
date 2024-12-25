@@ -9,12 +9,7 @@ const Contests = () => {
     const [selectedContest, setSelectContest] = useState('');
     const { selectedPlatform } = useFilterContext();
     const user = useSelector(state => state.user.value);
-    const [isOpenContestDetails, setIsOpenContestDetails] = useState(false);
     const contests = [];
-    const handleContestDetails = (contest) => {
-        setIsOpenContestDetails(!isOpenContestDetails);
-        setSelectContest(contest);
-    };
     const [displayedContests, setDisplayedContests] = useState(contests);
     const [hub, setHub] = useState('');
     useEffect(() => {
@@ -41,19 +36,81 @@ const Contests = () => {
                 // contestsArray.forEach((item, index) => {
                 //   console.log(`${index}th element in result:`, item);
                 // });
-                const updatedContests = contestsArray.map(contest => ({
-                    ...contest
-                }));
+                //Previous/original one
+                // const updatedContests = contestsArray.map(contest => ({
+                //   ...contest
+                // }));
+                // Hard coded
+                const updatedContests = contestsArray.map((contest, index) => {
+                    // if (index === 0) { // Check for the first contest
+                    //   return {
+                    //     ...contest,
+                    //     tasks: [
+                    //       ...(contest.tasks || []), 
+                    //       {
+                    //         JoinTwitter: { 
+                    //           id: (contest.tasks?.length || 0), 
+                    //           title: "Join Twitter Task Title",
+                    //           body: "Join Twitter Task Description",
+                    //         },
+                    //       },
+                    //     ],
+                    //   };
+                    // }
+                    return { ...contest }; // For other contests, return them unchanged
+                });
+                // Hard coded card
+                const newContest = {
+                    ...updatedContests[0],
+                    mission_id: '',
+                    title: "updated mission title",
+                    description: "space 2 mission 2 description",
+                    status: { Active: null },
+                    reward: 100,
+                    tasks: [
+                        {
+                            SendTwitterPost: {
+                                id: 0,
+                                title: "Twitter Task title",
+                                body: "Twitter Task Description eie eeiey eicei "
+                            }
+                        },
+                        {
+                            SendText: {
+                                id: 1,
+                                title: "Text task title ioejice",
+                                body: "Text task description ejiejceuicjej"
+                            }
+                        },
+                        {
+                            SendUrl: {
+                                id: 2,
+                                title: "URL task title ioejice",
+                                body: "URL task description ejiejceuicjej"
+                            }
+                        }, {
+                            SendImage: {
+                                id: 3,
+                                image: '',
+                                sampleImg: 'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
+                                title: "Image task title ioejice",
+                                body: "Image task description ejiejceuicjej"
+                            }
+                        }
+                    ]
+                };
+                // Append the new contest to the array
+                updatedContests.push(newContest);
                 console.log("updated contests : ", updatedContests);
-                let activeContests = [];
-                for (let i = 0; i < updatedContests.length; i++) {
-                    if (Object.keys(updatedContests[i]?.status)[0] == "Active") {
-                        activeContests.push(updatedContests[i]);
-                    }
-                }
-                console.log("Active contests : ", activeContests);
-                setDisplayedContests(activeContests);
-                // setDisplayedContests(updatedContests);
+                // let activeContests=[]
+                // for(let i=0;i<updatedContests.length;i++){
+                //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
+                //     activeContests.push(updatedContests[i])
+                //   }
+                // }
+                // console.log("Active contests : ",activeContests)
+                // setDisplayedContests(activeContests);
+                setDisplayedContests(updatedContests);
             }
         }
         catch (e) {
@@ -115,27 +172,18 @@ const Contests = () => {
         setDisplayedContests(combinedContests);
         //console.log("DisplyedContests",displayedContests)
     }, [selectedPlatform]);
-    return (<div className="rounded transition-all duration-500 delay-200 " style={{ height: 'calc(100vh - 100px)' }}>
-  <div className="flex gap-2 transition-all duration-500 delay-200">
-    
-    {/* Grid Section with Smooth Width Transition */}
-    <div className={`grid lg:grid-cols-3 h-screen transition-all duration-500 ${isOpenContestDetails ? 'w-[calc(100%-300px)]' : 'w-full'} sm:grid-cols-1 rounded-md md:grid-cols-2 gap-4 p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`} style={{
-            maxWidth: isOpenContestDetails ? 'calc(100% - 300px)' : '100%',
-            transition: 'max-width 0.5s ease-in-out'
-        }}>
-      {displayedContests?.length > 0 ?
-            displayedContests.map((contest, index) => (<div key={index} onClick={() => { handleContestDetails(contest); }}>
-            <Card contest={contest} hub={hub}/>
-          </div>)) :
-            <p className="text-white w-full text-center mt-20 text-2xl">No missions to show</p>}
-    </div>
-
-    {/* Contest Details Section with Sliding Transition */}
-    <div className={`transition-all duration-500 delay-200 transform ${isOpenContestDetails ? 'translate-x-0' : 'translate-x-full'}`}>
-      {isOpenContestDetails && (<Contest_Details closeContestDetails={handleContestDetails} contests={selectedContest}/>)}
-    </div>
-
-  </div>
+    return (<div className="overflow-y-scroll scrollbar-hide">
+      
+        <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full">
+          {displayedContests?.length > 0 ?
+            displayedContests.map((contest, index) => (<div>
+                <Card key={index} contest={contest} hub={hub}/>
+              </div>))
+            :
+                <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>}
+        </div>
+        
+      
     </div>);
 };
 export default Contests;

@@ -115,10 +115,10 @@ const Home = () => {
         <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black"/>
       </div>);
     }
-    return (<div className="flex flex-col rounded-md m-3 h-screen ">
+    return (<div className="flex flex-col rounded-md m-3 h-screen bg-[#16161a] ">
       <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading}/>
       <FilterProvider>
-        <div className="flex flex-grow  rounded-md overflow-y-scroll scrollbar-hide">
+        <div className="flex flex-grow p-2  rounded-md ">
           
           {/* <div className=" w-1/6 h-full lg:block sm:hidden">
           <Filter />
