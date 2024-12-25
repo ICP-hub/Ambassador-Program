@@ -33,6 +33,12 @@ const DiscordCallback = ({setOpen}) => {
         const userData = await response.json();
 
         console.log("userdata : ",userData)
+
+        if (userData.avatar) {
+          
+          const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`;
+          Cookies.set('user avatar', JSON.stringify(avatarUrl), { expires: 10 });
+        }
         
         Cookies.set('discord_user', JSON.stringify(userData), { expires: 10 });
         // const user=JSON.parse(userData);

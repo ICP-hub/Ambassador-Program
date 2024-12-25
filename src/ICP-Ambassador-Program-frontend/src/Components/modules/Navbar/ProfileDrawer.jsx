@@ -120,7 +120,7 @@ import Cookies from 'js-cookie';
 const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
   const [hub, setHub] = useState('');
   const baseReferral = `http://localhost:3000/ref?ref=`;
-
+   console.log("user in profile ==>",user)
   useEffect(() => {
     const HUB = Cookies.get('selectedHubName');
     setHub(HUB);
@@ -135,7 +135,7 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 w-96 h-full bg-white overflow-y-scroll scrollbar-hide my-2 shadow-lg p-6 z-50 transition-all duration-500 ease-in-out transform ${
+      className={`fixed top-0 right-0 lg:w-96 sm:w-full rounded-md h-full  overflow-y-scroll text-white font-poppins scrollbar-hide lg:my-3 sm:my-0 bg-[#1d1d21] shadow-lg p-6 z-50 transition-all duration-500 ease-in-out transform ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -144,42 +144,51 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
           onClick={onClose}
           className="hover:bg-black hover:text-white rounded-full h-9 w-9 flex justify-center items-center cursor-pointer"
         >
-          <MdClose className="text-black hover:text-white" style={{ fontSize: '20px' }} />
+          <MdClose className="text-white hover:text-white" style={{ fontSize: '20px' }} />
         </button>
       </div>
 
-      <h2 className="text-xl font-semibold mb-4">{user.username}</h2>
+      
 
-      <div className="flex justify-center items-center mb-3 mt-3">
-        <FaUserCircle className="w-20 h-20 rounded-full bg-gray-500" />
+      <div className="flex flex-col gap-2 justify-center items-center mb-3 ">
+        {user.avatar ? (
+          <img
+            src={`https://cdn.discordapp.com/avatars/${user.discord_id}/${user.avatar}.png`}
+            alt="User Avatar"
+            className="w-20 h-20 rounded-full"
+          />
+        ) : (
+          <FaUserCircle className="w-20 h-20 rounded-full bg-gray-500" />
+        )}
+        <h2 className=" text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-xl  mb-4">{user.username}</h2>
       </div>
 
       <div className="flex flex-col gap-3">
         <p className="mt-3 border-b border-gray-500 pb-4">
-          <strong>Discord ID:</strong> {user.discord_id}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Discord ID:</span> {user.discord_id}
         </p>
         <p className="mt-3 border-b border-gray-500 pb-4">
-          <strong>Current Level :</strong> {' ' + Object.keys(user.level)[0]}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Current Level :</span> {' ' + Object.keys(user.level)[0]}
         </p>
         <p className="mt-3">
-          <strong>Hub Connected To:</strong> {hub}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Hub Connected To:</span> {hub}
         </p>
       </div>
 
       <div className="flex flex-col gap-3">
         <div className="flex gap-4 items-center mt-4">
-          <div className="text-[#0d033e] text-sm font-semibold">Membership progress</div>
+          <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFD439] text-sm ">Membership progress</div>
           <hr className="flex-grow h-3/6 bg-black" />
         </div>
         <div className="flex flex-col justify-center gap-3">
           <div className="flex justify-around mt-4">
             <div className="flex flex-col justify-center items-center">
-              <div className="text-[#503cb6] text-2xl font-semibold">{user.xp_points.toString()}</div>
-              <div className="text-[#0d033e] text-sm font-semibold">XP Points</div>
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-2xl font-semibold">{user.xp_points.toString()}</div>
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-sm ">XP Points</div>
             </div>
             <div className="flex flex-col justify-center items-center">
-              <div className="text-[#503cb6] text-2xl font-semibold">{user.redeem_points.toString()}</div>
-              <div className="text-[#0d033e] text-sm font-semibold">Redeemable Points</div>
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-2xl font-semibold">{user.redeem_points.toString()}</div>
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-sm ">Redeemable Points</div>
             </div>
           </div>
         </div>
@@ -187,7 +196,7 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
 
       <div className="flex flex-col gap-3 mt-4">
         <div className="flex gap-4 items-center mt-4">
-          <div className="text-[#0d033e] text-sm font-semibold">Referrals</div>
+          <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF] text-sm font-semibold">Referrals</div>
           <hr className="flex-grow h-3/6 bg-black" />
         </div>
         <div className="flex flex-col items-center">

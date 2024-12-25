@@ -122,7 +122,7 @@ const Contests = () => {
         
         
 
-        console.log("updated contests : ",updatedContests)
+        //console.log("updated contests : ",updatedContests)
         // let activeContests=[]
         // for(let i=0;i<updatedContests.length;i++){
         //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){

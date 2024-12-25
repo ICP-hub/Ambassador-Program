@@ -111,11 +111,11 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex gap-3 items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-96">
+            <div className="text-white font-poppins bg-[#1d1d21] rounded-lg p-6 w-96">
                 {
                     !verified?
                     <>
-                        <h2 className="text-xl font-semibold mb-4">{joined?'Verify if you have joined':'Join Ambassador program'}</h2>
+                        <h2 className="text-xl  mb-4">{joined?'Verify if you have joined':'Join Ambassador program'}</h2>
                         {
                             !joined?
                             <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={()=>{
