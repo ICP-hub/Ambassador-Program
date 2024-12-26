@@ -71,52 +71,52 @@ const Contests = () => {
           return { ...contest }; // For other contests, return them unchanged
         });
         // Hard coded card
-        const newContest = {
-          ...updatedContests[0], 
-          mission_id:'',
-          title: "updated mission title", 
-          description: "space 2 mission 2 description", 
-          status: { Active: null },
-          reward:100,
-          tasks: [
-            {
-              SendTwitterPost: {
-                id: 0,
-                title: "Twitter Task title",
-                body: "Twitter Task Description eie eeiey eicei "
-              }
-            },
-            {
-              SendText:{
-                id:1,
-                title:"Text task title ioejice",
-                body:"Text task description ejiejceuicjej"
-              }
-            },
-            {
-              SendUrl:{
+        // const newContest = {
+        //   ...updatedContests[0], 
+        //   mission_id:'',
+        //   title: "updated mission title", 
+        //   description: "space 2 mission 2 description", 
+        //   status: { Active: null },
+        //   reward:100,
+        //   tasks: [
+        //     {
+        //       SendTwitterPost: {
+        //         id: 0,
+        //         title: "Twitter Task title",
+        //         body: "Twitter Task Description eie eeiey eicei "
+        //       }
+        //     },
+        //     {
+        //       SendText:{
+        //         id:1,
+        //         title:"Text task title ioejice",
+        //         body:"Text task description ejiejceuicjej"
+        //       }
+        //     },
+        //     {
+        //       SendUrl:{
 
-                id:2,
-                title:"URL task title ioejice",
-                body:"URL task description ejiejceuicjej"
+        //         id:2,
+        //         title:"URL task title ioejice",
+        //         body:"URL task description ejiejceuicjej"
 
-              }
-            },{
-              SendImage:{
+        //       }
+        //     },{
+        //       SendImage:{
 
-                id:3,
-                image:'',
-                sampleImg:'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
-                title:"Image task title ioejice",
-                body:"Image task description ejiejceuicjej"
+        //         id:3,
+        //         image:'',
+        //         sampleImg:'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
+        //         title:"Image task title ioejice",
+        //         body:"Image task description ejiejceuicjej"
 
-              }
-            }
-          ]
-        };
+        //       }
+        //     }
+        //   ]
+        // };
         
-        // Append the new contest to the array
-        updatedContests.push(newContest);
+        // // Append the new contest to the array
+        // updatedContests.push(newContest);
         
        
         
@@ -221,7 +221,7 @@ const Contests = () => {
     <div className="overflow-y-scroll scrollbar-hide" >
       
         {/* <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full"> */}
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-6 mt-8">
           {
             displayedContests?.length>0?
             displayedContests.map((contest, index) => (

@@ -89,7 +89,7 @@ const CardDetails = () => {
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
-  console.log(tasks,updatedContest.tasks,"updatedcontest.tasks")
+  console.log(tasks,updatedContest.tasks,updatedContest,"updatedcontest.tasks")
   const [twitterLink, setTwitterLink] = useState("");
   const handleInputTwitter = (e) => {
       setTwitterLink(e.target.value);
@@ -160,7 +160,7 @@ const CardDetails = () => {
         else{
           if(mission_tasks[i]?.id=="SendTwitterPost"){
             console.log("unsubmitted twitter tasks left",authenticate)
-            setUnsubmittedTwitterPost([...unsubmittedTwitterPost,mission_tasks[i]])
+            // setUnsubmittedTwitterPost([...unsubmittedTwitterPost,mission_tasks[i]])
           }
           new_tasks.push({...mission_tasks[i]})
         }
@@ -250,6 +250,11 @@ const CardDetails = () => {
       let newTask={}
 
       if(task?.id=="SendText"){
+        if(task?.content == ""){
+          setLoading(false)
+          toast.error("Cannot submit empty text")
+          return
+        }
         newTask={
           SendText:{
             id:task?.task_id,
@@ -288,6 +293,19 @@ const CardDetails = () => {
           }
         }
         
+      }
+      if(task?.id=="SendUrl"){
+        if(task?.content == ""){
+          setLoading(false)
+          toast.error("Cannot submit empty url")
+          return
+        }
+        newTask={
+          SendUrl:{
+            id:task?.task_id,
+            url:task?.content || ""
+          }
+        }
       }
       if(task?.id=="SendTwitterPost"){
         if(!authenticate){
@@ -687,7 +705,7 @@ const twitterSubmit = ()=>{
       className="h-full pt-3" >
       <Navbar nav={nav} />
       <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
-      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
+      <div className=' flex flex-col gap-8 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
@@ -700,13 +718,13 @@ const twitterSubmit = ()=>{
                     <img
                       src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
                       alt={title}
-                      className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded"
+                      className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded-lg"
                     />
                 )}
                 </div>
             </div>
             <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className=' text-sm' 
+                {/* <div className=' text-sm' 
                         style={{
                           
                           color:
@@ -720,20 +738,25 @@ const twitterSubmit = ()=>{
                         }}
                     >{statusValue === null || statusValue === undefined
                       ? statusKey
-                      : statusValue}</div>
+                      : statusValue}</div> */}
                 <div>
-                    <div className='text-white text-xl '>{title}</div>
+                  <p className="text-sm mb-3 text-white opacity-35">Once</p>
+                    <div className='text-white text-xl '>
+                      {title}
+
+                    </div>
                 </div>
                 <div className="flex items-center gap-3 ">
                     <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-                    <span className="text-md text-white font-semibold">{icons.platform}</span>
+                    <span className="text-sm text-white ">{icons.platform}</span>
                 </div>
                 <div className=" font-semibold text-gray-600 text-sm">
                     {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
                 </div>
-            </div>    
+            </div>  
+            
         </div>
-        
+        <div className='text-white font-poppins mb-4 max-w-[700px]'>{updatedContest?.description}</div>  
         <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
             {tasks.map((task,index) => {
               const taskType = task.id;  
@@ -805,7 +828,7 @@ const twitterSubmit = ()=>{
                                     style={{ backgroundColor: bgColor }}
                                     onClick={() =>{
                                         submitTask(task.task_id)
-                                        handleSend(task.task_id,task)
+                                        // handleSend(task.task_id,task)
                                       }}
                                     >
                                     <BiSolidSend />
@@ -840,7 +863,7 @@ const twitterSubmit = ()=>{
                                     style={{ backgroundColor: bgColor }}
                                     onClick={() => {
                                       submitTask(task.task_id)
-                                      handleSend(task.task_id,task)
+                                      // handleSend(task.task_id,task)
                                     }}
                                     >
                                     <BiSolidSend />
@@ -914,7 +937,7 @@ const twitterSubmit = ()=>{
                             )}
                             {task.id === 'SendImage' && (
                             <div className="mt-4 w-full ">
-                              <div className="text-white  text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
+                              <div className="text-white  text-md max-w-[95%] overflow-clip mb-4">{`Task description :\n\n ${task.description}`}</div>
                               {/* <div className='flex gap-5 my-5'>
                                 <div className="text-white font-semibold text-md  mt-4">Sample Image</div>
                                 <img src={task.sampleImg} className='w-52 rounded h-40' alt=''/>
@@ -934,7 +957,7 @@ const twitterSubmit = ()=>{
                                           <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-white"></div>
                                         </div>
                                       </div>
-                                    ) : task.image ? (
+                                    ) : task.image && !task.submitted ? (
                                       <div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
                                         <div className="flex gap-2">
                                           <AttachFileIcon />
@@ -951,7 +974,7 @@ const twitterSubmit = ()=>{
                                   </div>
                                 )}
 
-                                {task.image ?(
+                                {task.image || task.submitted ?(
                                   null
                                 ):(
                                   <div className=' flex flex-col items-center mt-6  justify-center gap-2 text-white ' onDragOver={handleDragOver}
@@ -1001,7 +1024,7 @@ const twitterSubmit = ()=>{
                                       className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
                                       style={{ backgroundColor: bgColor }}
                                       onClick={() => {
-                                        handleSendImage(task.task_id, task);
+                                        // handleSendImage(task.task_id, task);
                                         submitTask(task.task_id)
                                       }}
                                     >

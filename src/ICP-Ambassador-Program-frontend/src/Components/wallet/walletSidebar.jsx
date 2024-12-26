@@ -207,7 +207,7 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
     </div>
     <div className='flex flex-col justify-center items-center'>
         <div className='flex flex-col gap-5 justify-center items-center mt-8'>
-            <div className='font-semibold text-3xl text-[#88bef5]'>User Wallet</div>
+            <div className='font-semibold text-3xl text-white'>User Wallet</div>
             {
                 ledger?
                 <div 
@@ -228,8 +228,8 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
         </div>
         <div className='flex flex-col ml-8 gap-4 mt-16'>
                 <div className='flex flex-col gap-5'>
-                    <div className='text-md font-semibold text-[#88bef5]'>Total Points Earned : {updatedUser?.xp_points?.toString()}</div>
-                    <div className='text-md font-semibold text-[#88bef5]'>Redeembale Points : {updatedUser?.redeem_points?.toString()}</div>
+                    <div className='text-md font-semibold text-white'>Total Points Earned : {updatedUser?.xp_points?.toString()}</div>
+                    <div className='text-md font-semibold text-white'>Redeembale Points : {updatedUser?.redeem_points?.toString()}</div>
                 </div>
                 <div className='flex text-sm items-center gap-2 my-3 text-[#7064f5] font-semibold' >
                     <div>Conversion rate of your hub : 100p </div>

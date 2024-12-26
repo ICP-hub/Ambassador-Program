@@ -113,13 +113,13 @@ const Card = ({ contest,hub }) => {
   return (
     <div className=" text-white p-4 rounded-lg  shadow-lg font-poppins min-w-[350px]" style={{backgroundColor:'#1d1d21'}} onClick={handleCard} >
       <div className='flex justify-between items-center'>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-5 items-center'>
           <div>
             {img?.length>0 ? (
                 <img
                 src={img[0]}
                   alt={title}
-                  className="w-28 h-28 object-cover rounded"
+                  className="w-28 h-28 object-cover rounded-lg mr-1"
                 />
               ) : (
                 // <div className="w-24 h-24 bg-gray-700 text-white flex items-center justify-center rounded">
@@ -128,7 +128,7 @@ const Card = ({ contest,hub }) => {
                 <img
                 src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
                   alt={title}
-                  className="w-28 h-28 object-cover rounded"
+                  className="w-28 h-28 object-cover rounded-lg mr-1"
                 />
               )}
           </div>
@@ -165,6 +165,7 @@ const Card = ({ contest,hub }) => {
               {tasks.map((task, index) => {
                 const taskType = task.id;  // Get task type from the id
                 const { icon: IconComponent, color: bgColor } = taskDetailsMap[taskType] || {};  // Match task type to map
+                if(index>2) return
 
                 return (
                   <div
@@ -186,7 +187,7 @@ const Card = ({ contest,hub }) => {
           </div>
         </div>
         <div>
-          <div className="flex flex-col gap-4 items-end mb-4">
+          <div className="flex flex-col gap-4 items-end mb-4 min-w-24">
             <div className='text-xs'>Fixed rewards</div>
             <span className="text-sm font-semibold   rounded " >{parseInt(contest?.reward)+" "}points </span>
             <div className='text-sm text-gray-500 font-semibold'>$3.00</div>
