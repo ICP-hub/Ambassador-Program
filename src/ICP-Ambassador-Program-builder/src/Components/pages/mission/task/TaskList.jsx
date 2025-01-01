@@ -103,7 +103,8 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
     //   reader.readAsDataURL(file);
     // }
     setLogoImage(file)
-    onUpdateField('img',file,task.id)
+    //onUpdateField('img',file,task.id)
+    onUpdateField('sampleImg',file,task.id)
   };
 
   const handleTitleChange = (e) => {

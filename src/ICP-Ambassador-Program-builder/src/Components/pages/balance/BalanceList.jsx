@@ -280,7 +280,7 @@ const BalanceList = () => {
   const [balance,setBalance]=useState(0)
   const spaces=useSelector(state=>state.spaces.value)
   const actor=useSelector(state=>state.actor.value)
-  console.log("showing ==>",spaces,actor)
+  //console.log("showing space ==>",spaces,actor)
   const [lockedAm,setLockedAm]=useState(0)
   const [loading,setLoading]=useState(false)
 
