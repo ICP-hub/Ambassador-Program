@@ -413,7 +413,7 @@ const BalanceList = () => {
   }
 
   useEffect(()=>{
-    // getBalance()
+    getBalance()
     getFundDetails()
     console.log("balances useeffect : ",spaces,balance,actor?.ledgerActor)
   },[])
