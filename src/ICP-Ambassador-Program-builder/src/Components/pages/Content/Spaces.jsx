@@ -193,7 +193,7 @@ const Spaces = ({setLoading}) => {
               </div>
 
               
-              <div>
+              <div className='hidden'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Space chain type</label>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Select</InputLabel>
