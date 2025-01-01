@@ -274,11 +274,13 @@ import { formatTokenMetaData, stringToSubaccountBytes } from '../../../utils/uti
 import { Principal } from '@dfinity/principal';
 import { canisterId as ledgerId } from '../../../../../declarations/ledger';
 import toast from 'react-hot-toast';
+import { space } from 'postcss/lib/list';
 const BalanceList = () => {
   const [amount,setAmount]=useState(0)
   const [balance,setBalance]=useState(0)
   const spaces=useSelector(state=>state.spaces.value)
   const actor=useSelector(state=>state.actor.value)
+  console.log("showing ==>",spaces,actor)
   const [lockedAm,setLockedAm]=useState(0)
   const [loading,setLoading]=useState(false)
 
@@ -300,22 +302,58 @@ const BalanceList = () => {
     }
   }
 
-  async function getFundDetails(){
-    try{
-      let fundRes=await actor?.backendActor?.get_fund_details(spaces?.space_id)
-      console.log("fund fetch res: ",fundRes)
-      if(fundRes?.length>0){
-        let newBalance=parseFloat(parseInt(fundRes[0]?.balance)/Math.pow(10,8))
-        let locked=parseFloat(parseInt(fundRes[0]?.locked)/Math.pow(10,8))
-        console.log("funds are avalaible : ",newBalance,locked)
-        setBalance(newBalance)
-        setLockedAm(locked)
-        return
+  // async function getFundDetails(){
+  //   try{
+  //     let fundRes=await actor?.backendActor?.get_fund_details(spaces?.space_id)
+  //     console.log("fund fetch res: ",fundRes)
+  //     if(fundRes?.length>0){
+  //       let newBalance=parseFloat(parseInt(fundRes[0]?.balance)/Math.pow(10,8))
+  //       let locked=parseFloat(parseInt(fundRes[0]?.locked)/Math.pow(10,8))
+  //       console.log("funds are avalaible : ",newBalance,locked)
+  //       setBalance(newBalance)
+  //       setLockedAm(locked)
+  //       return
+  //     }
+  //   }catch(err){
+  //     console.log("fetching funds err : ",err)
+  //   }
+  // }
+  async function getFundDetails() {
+    try {
+      console.log("Spaces object:", spaces);
+      console.log("Space ID:", spaces?.space_id);
+  
+      if (!spaces?.space_id) {
+        console.error("Space ID is invalid or undefined.");
+        return;
       }
-    }catch(err){
-      console.log("fetching funds err : ",err)
+  
+      let fundRes = await actor?.backendActor?.get_fund_details(spaces?.space_id);
+      console.log("Fund fetch response:", fundRes);
+  
+      if (fundRes?.length > 0) {
+        const balanceRaw = fundRes[0]?.balance;
+        const lockedRaw = fundRes[0]?.locked;
+  
+        if (balanceRaw == null || lockedRaw == null) {
+          console.error("Invalid response data:", fundRes[0]);
+          return;
+        }
+  
+        let newBalance = parseFloat(parseInt(balanceRaw) / Math.pow(10, 8));
+        let locked = parseFloat(parseInt(lockedRaw) / Math.pow(10, 8));
+        console.log("Funds available:", newBalance, locked);
+  
+        setBalance(newBalance);
+        setLockedAm(locked);
+      } else {
+        console.log("No funds available.");
+      }
+    } catch (err) {
+      console.error("Fetching funds error:", err);
     }
   }
+  
 
   async function depositAmount(){
     try{
