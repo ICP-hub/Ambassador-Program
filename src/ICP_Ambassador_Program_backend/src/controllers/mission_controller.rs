@@ -1,26 +1,31 @@
 use ic_cdk::{caller, query, update};
 
-use crate::{check_anonymous, Errors, CreateMission, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_MAP};
+use crate::{check_anonymous, CreateMission, Errors, FundEntry, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_FUND_MAP, SPACE_MAP};
 
-use super::is_super_admin;
+use super::{is_super_admin, lock_funds, unlock_funds};
 
 #[update(guard = check_anonymous)]
-pub fn create_mission(mission:CreateMission)->Result<(),Errors>{
+pub fn create_mission(mission:CreateMission)->Result<(),String>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&mission.space_id));
     let mut space_val:Space;
 
     match space {
         Some(value) => {
             if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(Errors::NotOwnerOrSuperAdmin);
+                return Err(String::from("Not owner or super admin"));
             }
             space_val=value;
         },
-        None => return Err(Errors::NoSpaceFound)
+        None => return Err(String::from("No space found with this id"))
     }
 
     let id=format!("{}_{}",mission.space_id,space_val.mission_count);
     space_val.mission_count+=1;
+    let lock_fund_res=lock_funds(space_val.space_id.clone(), mission.pool);
+    match lock_fund_res {
+        Ok(_)=>{},
+        Err(e)=>return Err(e)
+    }
 
     let new_mission:Mission=Mission{
         mission_id:id,
@@ -46,7 +51,7 @@ pub fn create_mission(mission:CreateMission)->Result<(),Errors>{
             MISSION_MAP.with(|map| map.borrow_mut().insert(new_mission.mission_id.clone(), new_mission));
             return Ok(())
         },
-        None => return Err(Errors::ErrUpdatingMissionCount)
+        None => return Err(String::from("Err updating the mission count"))
     }
 
     
@@ -101,29 +106,48 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
 }
 
 #[update(guard = check_anonymous)]
-pub fn edit_mission(mission:Mission)->Result<(),Errors>{
+pub fn edit_mission(mission:Mission)->Result<(),String>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&mission.space_id));
-
+    let space_val:Space;
     match space {
         Some(value) => {
-            if value.owner!=caller() && !is_super_admin(caller()) {
-                return Err(Errors::NotOwnerOrSuperAdmin);
+            space_val=value;
+            if space_val.owner!=caller() && !is_super_admin(caller()) {
+                return Err(String::from("Not an owner or super admin"));
             }
         },
-        None => return Err(Errors::NoSpaceFound)
+        None => return Err(String::from("No space found with this id"))
     };
 
     let old_mission=MISSION_MAP.with(|map| map.borrow().get(&mission.mission_id));
 
-    if old_mission.is_none(){
-        return Err(Errors::MissionNotFound)
+    match old_mission {
+        Some(val)=>{
+            if val.pool>mission.pool{
+                let lock_fund_res=unlock_funds(space_val.space_id.clone(), val.pool-mission.pool);
+                match lock_fund_res {
+                    Ok(_)=>{},
+                    Err(e)=>return Err(e)
+                }
+            };
+            if val.pool<mission.pool{
+                let lock_fund_res=lock_funds(space_val.space_id.clone(), mission.pool-val.pool);
+                match lock_fund_res {
+                    Ok(_)=>{},
+                    Err(e)=>return Err(e)
+                }
+            }
+        },
+        None=>{
+            return Err(String::from("No mission found with this id"))
+        }
     }
     
     let updated=MISSION_MAP.with(|map| map.borrow_mut().insert(mission.mission_id.clone(), mission));
 
     match updated {
         Some(_) => return Ok(()),
-        None => return Err(Errors::ErrUpdatingMission)
+        None => return Err(String::from("Error updating the mission"))
     };
 }
 

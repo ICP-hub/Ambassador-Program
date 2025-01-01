@@ -43,6 +43,10 @@ thread_local! {
     pub static MISSION_TO_SUBMISSION_MAP:RefCell<StableBTreeMap<String,SubmissionArr,Memory>> = RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
     ));
+
+    pub static SPACE_FUND_MAP:RefCell<StableBTreeMap<String,FundEntry,Memory>> = RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
+    ));
     
     pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
@@ -51,6 +55,26 @@ thread_local! {
 }
 
 // storables
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct FundEntry{
+    pub space_id:String,
+    pub balance:u64,
+    pub locked:u64
+}
+
+impl Storable for FundEntry{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize fund entry");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize fund entry")
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct SubmissionArr{
     pub mission:String,
@@ -203,7 +227,8 @@ pub struct Submission{
     pub user:String,
     pub mission_id:String,
     pub tasks_submitted:Vec<TaskSubmitted>,
-    pub status:SubmissionStatus
+    pub status:SubmissionStatus,
+    pub points_rewarded:bool
     //needs to be optimized based on user inputs provided at frontend
 }
 

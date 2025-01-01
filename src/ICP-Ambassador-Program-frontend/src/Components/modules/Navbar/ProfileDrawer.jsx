@@ -119,7 +119,8 @@ import Cookies from 'js-cookie';
 
 const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
   const [hub, setHub] = useState('');
-  const baseReferral = `http://localhost:3000/ref?ref=`;
+  // const baseReferral = `http://localhost:3000/ref?ref=`;
+  const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
    console.log("user in profile ==>",user)
   useEffect(() => {
     const HUB = Cookies.get('selectedHubName');
@@ -160,18 +161,22 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
         ) : (
           <FaUserCircle className="w-20 h-20 rounded-full bg-gray-500" />
         )}
-        <h2 className=" text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-xl  mb-4">{user.username}</h2>
+        {/* <h2 className=" text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-xl  mb-4">{user.username}</h2> */}
+        <h2 className='text-white text-xl mb-4'>{user.username}</h2>
       </div>
 
       <div className="flex flex-col gap-3">
         <p className="mt-3 border-b border-gray-500 pb-4">
-          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Discord ID:</span> {user.discord_id}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Discord ID : </span> 
+          {user.discord_id}
         </p>
         <p className="mt-3 border-b border-gray-500 pb-4">
-          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Current Level :</span> {' ' + Object.keys(user.level)[0]}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Current Level :</span> 
+          {' ' + Object.keys(user.level)[0]}
         </p>
         <p className="mt-3">
-          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Hub Connected To:</span> {hub}
+          <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF]'>Hub Connected To : </span> 
+          {hub}
         </p>
       </div>
 
@@ -183,11 +188,11 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
         <div className="flex flex-col justify-center gap-3">
           <div className="flex justify-around mt-4">
             <div className="flex flex-col justify-center items-center">
-              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-2xl font-semibold">{user.xp_points.toString()}</div>
-              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-sm ">XP Points</div>
+              <div className="text-transparent text-white text-2xl font-semibold">{user.xp_points.toString()}</div>
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-sm">XP Points</div>
             </div>
             <div className="flex flex-col justify-center items-center">
-              <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-2xl font-semibold">{user.redeem_points.toString()}</div>
+              <div className="text-transparent text-white text-2xl font-semibold">{user.redeem_points.toString()}</div>
               <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FFFFFF] text-sm ">Redeemable Points</div>
             </div>
           </div>
@@ -196,7 +201,7 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
 
       <div className="flex flex-col gap-3 mt-4">
         <div className="flex gap-4 items-center mt-4">
-          <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#245ce2] to-[#FFFFFF] text-sm font-semibold">Referrals</div>
+          <div className="text-transparent text-white text-sm font-semibold">Referrals</div>
           <hr className="flex-grow h-3/6 bg-black" />
         </div>
         <div className="flex flex-col items-center">

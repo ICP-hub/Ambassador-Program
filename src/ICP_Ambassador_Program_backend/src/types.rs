@@ -87,6 +87,12 @@ pub enum Tasks{
         id:u8,
         title:String,
         body:String
+    },
+    TwitterFollow{
+        id:u8,
+        title:String,
+        body:String,
+        account:String
     }
  
     // These might be needed in future for implementation
@@ -173,6 +179,10 @@ pub enum TaskSubmitted{
     SendTwitterPost{
         id:u8,
         post:String
+    },
+    TwitterFollow{
+        id:u8,
+        followed:bool
     }
 }
 

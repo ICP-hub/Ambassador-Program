@@ -262,20 +262,41 @@ const BalanceList = () => {
     const [balance, setBalance] = useState(0);
     const spaces = useSelector(state => state.spaces.value);
     const actor = useSelector(state => state.actor.value);
+    const [lockedAm, setLockedAm] = useState(0);
     const [loading, setLoading] = useState(false);
     async function getBalance() {
         try {
-            let balance = await actor?.ledgerActor?.icrc1_balance_of({ owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND), subaccount: [stringToSubaccountBytes(spaces?.space_id)] });
+            let balance = await actor?.ledgerActor?.icrc1_balance_of({
+                owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND),
+                // subaccount: [stringToSubaccountBytes(spaces?.space_id)] 
+                subaccount: []
+            });
             let metadataRes = await actor?.ledgerActor?.icrc1_metadata();
             let metadata = formatTokenMetaData(metadataRes);
-            console.log("Spaces ==>", spaces);
-            console.log("Balance", balance);
-            console.log("Space ID:", spaces?.space_id);
-            console.log("space balance", parseInt(balance), parseInt(metadata?.["icrc1:decimals"]));
+            // console.log("space balance",spaces?.space_id,parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
+            // console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_0"))
+            // console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_1"))
             setBalance(parseFloat(balance) / Math.pow(10, parseInt(metadata?.["icrc1:decimals"])));
         }
         catch (error) {
             console.log(error);
+        }
+    }
+    async function getFundDetails() {
+        try {
+            let fundRes = await actor?.backendActor?.get_fund_details(spaces?.space_id);
+            console.log("fund fetch res: ", fundRes);
+            if (fundRes?.length > 0) {
+                let newBalance = parseFloat(parseInt(fundRes[0]?.balance) / Math.pow(10, 8));
+                let locked = parseFloat(parseInt(fundRes[0]?.locked) / Math.pow(10, 8));
+                console.log("funds are avalaible : ", newBalance, locked);
+                setBalance(newBalance);
+                setLockedAm(locked);
+                return;
+            }
+        }
+        catch (err) {
+            console.log("fetching funds err : ", err);
         }
     }
     async function depositAmount() {
@@ -285,18 +306,21 @@ const BalanceList = () => {
             let metadata = formatTokenMetaData(metadataRes);
             let amnt = parseInt(Number(amount) * Math.pow(10, parseInt(metadata?.["icrc1:decimals"])));
             let transaction = {
-                to: {
+                spender: {
                     owner: Principal.fromText(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND),
-                    subaccount: [stringToSubaccountBytes(spaces?.space_id)]
+                    subaccount: []
                 },
                 fee: [metadata?.["icrc1:fee"]],
                 memo: [],
                 from_subaccount: [],
                 created_at_time: [],
-                amount: amnt,
+                amount: amnt + metadata?.["icrc1:fee"],
+                expected_allowance: []
             };
-            let transferRes = await actor?.ledgerActor?.icrc1_transfer(transaction);
-            console.log(transferRes);
+            let approveRes = await actor?.ledgerActor?.icrc2_approve(transaction);
+            console.log(approveRes);
+            //call backend function to add funds here
+            // let transferRes=await actor?.backendAction
             setAmount(0);
             setLoading(false);
             toast.success("transferred funds to the hub");
@@ -308,8 +332,34 @@ const BalanceList = () => {
             console.log(err);
         }
     }
+    async function addFunds() {
+        try {
+            setLoading(true);
+            let finalAmount = Math.pow(10, 8) * amount;
+            console.log(amount);
+            // if(finalAmount>balance){
+            //   toast.error("Ca")
+            //   return
+            // }
+            let res = await actor?.backendActor?.add_funds(spaces?.space_id, finalAmount);
+            console.log("add fund res : ", res, finalAmount);
+            if (res?.Ok) {
+                toast.success("amount added");
+                getFundDetails();
+            }
+            else {
+                toast.error("" + res?.Err);
+            }
+            setLoading(false);
+        }
+        catch (err) {
+            setLoading(false);
+            console.log("error adding funds : ", err);
+        }
+    }
     useEffect(() => {
-        getBalance();
+        // getBalance()
+        getFundDetails();
         console.log("balances useeffect : ", spaces, balance, actor?.ledgerActor);
     }, []);
     if (loading) {
@@ -335,6 +385,9 @@ const BalanceList = () => {
             <div className='font-semibold text-lg mb-3'>
               Hub Balance : {balance} ICP
             </div>
+            <div className='font-semibold text-lg mb-3'>
+              Locked amount : {lockedAm} ICP
+            </div>
             
           </div>
 
@@ -348,7 +401,7 @@ const BalanceList = () => {
           </div>
 
           <div className='flex justify-between items-center mt-8'>
-            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer' onClick={depositAmount}>Deposit</button>
+            <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer' onClick={addFunds}>Deposit</button>
             {/* <button className='text-white bg-black flex justify-center items-center py-2 font-semibold  rounded px-6 cursor-pointer'>Withdraw All</button> */}
           </div>
         </div>

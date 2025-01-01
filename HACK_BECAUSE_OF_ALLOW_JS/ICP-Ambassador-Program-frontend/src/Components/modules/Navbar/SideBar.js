@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdClose } from "react-icons/md";
 const Sidebar = ({ isOpen, onClose }) => {
-    return (<div className={`fixed top-20 right-0 h-full w-96  shadow-lg transform transition-transform duration-700 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#1d1d21' }}>
+    return (<div className={`fixed top-20 right-0 h-full w-96  shadow-lg transform transition-transform duration-700 delay-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#1d1d21' }}>
       <div className="p-4">
         <div className='flex justify-between m-3'>
           <h3 className="text-lg text-white font-semibold">Notifications</h3>

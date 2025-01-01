@@ -43,6 +43,7 @@ type Errors = variant {
   AlreadySuperAdmin;
   NoUserFound;
 };
+type FundEntry = record { balance : nat64; locked : nat64; space_id : text };
 type Mission = record {
   img : opt text;
   max_users_rewarded : nat64;
@@ -63,16 +64,17 @@ type MissionStatus = variant { UnActive; Active; Draft };
 type ProfileImageData = record { content : opt blob };
 type Result = variant { Ok; Err : Errors };
 type Result_1 = variant { Ok : text; Err : text };
-type Result_10 = variant { Ok : Space; Err : Errors };
-type Result_11 = variant { Ok : Submission; Err : Errors };
-type Result_2 = variant { Ok : opt Space; Err : Errors };
-type Result_3 = variant { Ok : Admin; Err : Errors };
-type Result_4 = variant { Ok : vec text; Err : Errors };
-type Result_5 = variant { Ok : vec Mission; Err : Errors };
-type Result_6 = variant { Ok : vec record { text; Space }; Err : Errors };
-type Result_7 = variant { Ok : vec principal; Err : Errors };
-type Result_8 = variant { Ok : Benefactors; Err : text };
-type Result_9 = variant { Ok : Mission; Err : Errors };
+type Result_10 = variant { Ok : Mission; Err : Errors };
+type Result_11 = variant { Ok : Space; Err : Errors };
+type Result_12 = variant { Ok : Submission; Err : Errors };
+type Result_2 = variant { Ok; Err : text };
+type Result_3 = variant { Ok : opt Space; Err : Errors };
+type Result_4 = variant { Ok : Admin; Err : Errors };
+type Result_5 = variant { Ok : vec text; Err : Errors };
+type Result_6 = variant { Ok : vec Mission; Err : Errors };
+type Result_7 = variant { Ok : vec record { text; Space }; Err : Errors };
+type Result_8 = variant { Ok : vec principal; Err : Errors };
+type Result_9 = variant { Ok : Benefactors; Err : text };
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
 type Space = record {
   owner : principal;
@@ -99,6 +101,7 @@ type SpaceURLs = record {
 };
 type Submission = record {
   status : SubmissionStatus;
+  points_rewarded : bool;
   user : text;
   tasks_submitted : vec TaskSubmitted;
   submission_id : text;
@@ -108,12 +111,19 @@ type SubmissionArr = record { mission : text; submissions : vec text };
 type SubmissionStatus = variant { Approved; Rejected; Unread };
 type TaskSubmitted = variant {
   SendImage : record { id : nat8; img : text };
+  TwitterFollow : record { id : nat8; followed : bool };
   SendUrl : record { id : nat8; url : text };
   SendText : record { id : nat8; "text" : text };
   SendTwitterPost : record { id : nat8; post : text };
 };
 type Tasks = variant {
   SendImage : record { id : nat8; img : text; title : text; body : text };
+  TwitterFollow : record {
+    id : nat8;
+    title : text;
+    body : text;
+    account : text;
+  };
   SendUrl : record { id : nat8; title : text; body : text };
   SendText : record {
     id : nat8;
@@ -139,30 +149,34 @@ type UserProfile = record {
 };
 service : {
   add_admin_by_super_admin : (principal) -> (Result);
+  add_funds : (text, nat64) -> (Result_1);
   add_or_update_submission : (Submission) -> (Result);
+  add_task_submission : (Submission, TaskSubmitted) -> (Result_1);
   add_wallet : (text) -> (Result_1);
   approve_submission : (text) -> (Result_1);
   create_draft_mission : (text) -> (Result);
-  create_mission : (CreateMission) -> (Result);
-  create_space : (CreateSpace) -> (Result_2);
+  create_mission : (CreateMission) -> (Result_2);
+  create_space : (CreateSpace) -> (Result_3);
   create_user : (text, text, text, opt text) -> (Result_1);
-  edit_mission : (Mission) -> (Result);
-  get_admin : () -> (Result_3) query;
-  get_admin_by_principal : (principal) -> (Result_3) query;
-  get_all_admin_spaces : () -> (Result_4) query;
+  edit_mission : (Mission) -> (Result_2);
+  get_admin : () -> (Result_4) query;
+  get_admin_by_principal : (principal) -> (Result_4) query;
+  get_all_admin_spaces : () -> (Result_5) query;
   get_all_mission_submissions : (text) -> (opt SubmissionArr) query;
-  get_all_space_missions : (text) -> (Result_5) query;
-  get_all_spaces : () -> (Result_6) query;
-  get_all_super_admins : () -> (Result_7) query;
-  get_all_user_benefactors : (text) -> (Result_8);
-  get_mission : (text) -> (Result_9) query;
-  get_space : (text) -> (Result_10) query;
-  get_submission : (text) -> (Result_11) query;
+  get_all_space_missions : (text) -> (Result_6) query;
+  get_all_spaces : () -> (Result_7) query;
+  get_all_super_admins : () -> (Result_8) query;
+  get_all_user_benefactors : (text) -> (Result_9);
+  get_fund_details : (text) -> (opt FundEntry) query;
+  get_mission : (text) -> (Result_10) query;
+  get_space : (text) -> (Result_11) query;
+  get_submission : (text) -> (Result_12) query;
   get_user_data : (text) -> (opt UserProfile) query;
   promote_to_super_admin : (principal) -> (Result);
   register_admin : () -> (Result);
   reject_submission : (text) -> (Result_1);
   update_space : (Space) -> (Result);
   upload_profile_image : (text, ProfileImageData) -> (Result_1);
+  withdraw_funds : (text, nat64) -> (Result_1);
   withdraw_points : (text, nat64) -> (Result_1);
 }

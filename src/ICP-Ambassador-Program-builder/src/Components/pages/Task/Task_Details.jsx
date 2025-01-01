@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import Navbar from '../Navbar/Navbar'
 import { Button } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import TaskCard from './TaskCard';
 import toast from 'react-hot-toast';
@@ -12,6 +12,7 @@ const Task_Details = ({setLoading}) => {
     const [selectedUser, setSelectedUser] = useState(null); 
     const [isModalOpen, setIsModalOpen] = useState(false); 
     const actors=useSelector(state=>state.actor.value)
+    const nav=useNavigate()
     const [users,setUsers] = useState([
         // { id: 1, name: "993209495805239487", description: "User description for rjx25349" },
         // { id: 2, name: "abc12345", description: "User description for abc12345" },
@@ -114,7 +115,7 @@ const Task_Details = ({setLoading}) => {
 
   return (
     <div>
-    <Navbar/>
+    <Navbar nav={nav}/>
     <div className='flex flex-col   mx-20 my-10'>
         <div className=' flex flex-col'>
             <div className='font-semibold text-3xl mb-3'>Submissions</div>
@@ -178,8 +179,8 @@ const Task_Details = ({setLoading}) => {
 
             
             {isModalOpen && selectedUser && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-                    <div className="bg-white p-6  max-h-[80vh] rounded shadow-lg w-1/2">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 overflow-y-scroll">
+                    <div className="bg-white p-6  max-h-[80vh] rounded shadow-lg w-1/2 overflow-y-scroll">
                         <h2 className="text-lg font-bold mb-4">User Submission</h2>
                         <p>
                             <strong>Name:</strong> {selectedUser.user}

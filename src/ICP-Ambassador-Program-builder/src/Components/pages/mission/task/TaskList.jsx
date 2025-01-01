@@ -138,7 +138,7 @@ const ImageTask = ({ task, onDelete, onUpdateField }) => {
         <div>Change sample image</div>
         <label className="mt-4 w-full bg-blue-500 rounded">
           <input type="file" className="hidden" onChange={handleFileChange} />
-          <div className="w-full flex justify-center items-center text-sm font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
+          <div className="w-full flex justify-center items-center text-sm  font-semibold py-2 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-blue-600">
             BROWSE
           </div>
         </label>
@@ -162,14 +162,14 @@ const SendURL = ({ task, onDelete, onUpdateField }) => {
     setSendTitle(e.target.value);
     const field='title'
     
-    onUpdateField(field,e.target.value,task.id); // Update the parent state
+    onUpdateField(field,e.target.value,task.id); 
   };
 
   const handleDescriptionChange = (newDescription) => {
     setSendDescription(newDescription);
     const field='body'
     
-    onUpdateField(field,newDescription,task.id); // Update the parent state
+    onUpdateField(field,newDescription,task.id); 
   };
 
   return (

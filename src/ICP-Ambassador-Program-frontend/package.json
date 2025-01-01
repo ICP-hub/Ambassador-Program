@@ -17,6 +17,7 @@
     "@dfinity/identity": "^0.19.3",
     "@dfinity/principal": "^0.19.3",
     "@mui/icons-material": "^6.1.6",
+
     "axios": "^1.7.9",
     "firebase": "^11.0.2",
     "js-cookie": "^3.0.5",

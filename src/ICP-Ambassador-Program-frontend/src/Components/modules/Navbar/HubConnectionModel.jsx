@@ -118,19 +118,19 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
                         <h2 className="text-xl  mb-4">{joined?'Verify if you have joined':'Join Ambassador program'}</h2>
                         {
                             !joined?
-                            <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={()=>{
-                                window.open('https://discord.gg/qqpeDDWV')
+                            <button className='bg-black text-white px-4 py-2 rounded' onClick={()=>{
+                                window.open('https://discord.gg/yRjCXnZkGn')
                                 setJoined(true)
                             }} >Join us</button>
                             :
                             <>
                                 {
                                     verifying?
-                                        <p className='my-2 text-black text-xs font-semibold'>Verification in process...</p>
+                                        <p className='my-2 text-white text-xs font-semibold'>Verification in process...</p>
                                     :
-                                        <p className='my-2 text-black text-xs font-semibold'>Please Verify if you have joined our discord</p>
+                                        <p className='my-2 text-white text-xs font-semibold'>Please Verify if you have joined our discord</p>
                                 }
-                                <button disabled={verifying} className='bg-blue-500 text-white px-4 py-2 rounded mt-4' onClick={verifyGuildJoined}>Verify</button>
+                                <button disabled={verifying} className='bg-black text-white px-4 py-2 rounded mt-4' onClick={verifyGuildJoined}>Verify</button>
                                 
                                
                             </>
@@ -145,7 +145,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
                     <select
                         value={selectedHub}
                         onChange={handleSelectChange}
-                        className="border rounded p-2 w-full mb-4"
+                        className="border rounded p-2 w-full mb-4 text-black"
                     >
                         <option value="">Select a Hub</option>
                         {spaces.map(space => (
@@ -155,10 +155,10 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
                         ))}
                     </select>
                     <div className="flex justify-end">
-                        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button onClick={handleSubmit} className="bg-black text-white px-4 py-2 rounded">
                             Save
                         </button>
-                        <button onClick={onClose} className="ml-2 bg-gray-300 px-4 py-2 rounded">
+                        <button onClick={onClose} className="ml-2 bg-black px-4 py-2 rounded">
                             Cancel
                         </button>
                     </div>

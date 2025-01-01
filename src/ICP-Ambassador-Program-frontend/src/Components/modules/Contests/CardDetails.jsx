@@ -81,7 +81,7 @@ const CardDetails = () => {
         icon: FaFileUpload,
         color: "#de7515", 
       },
-      JoinTwitter :{
+      TwitterFollow :{
         icon: FaXTwitter,
         color: "#1D9BF0", 
       }
@@ -89,7 +89,7 @@ const CardDetails = () => {
   const [tasks, setTasks] = useState(
     updatedContest.tasks
   );
-  console.log(tasks)
+  console.log(tasks,updatedContest.tasks,updatedContest,"updatedcontest.tasks")
   const [twitterLink, setTwitterLink] = useState("");
   const handleInputTwitter = (e) => {
       setTwitterLink(e.target.value);
@@ -130,25 +130,39 @@ const CardDetails = () => {
           
       })
   }
+  
 
   function parseTasks(mission_tasks,sub_tasks){
     try {
       let new_tasks=[]
       console.log(mission_tasks,sub_tasks)
       for(let i=0;i<sub_tasks.length;i++){
+
         let taskType=Object.keys(sub_tasks[i])[0]
         console.log(taskType)
         if(taskType=="SendText"){
-          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.text})
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.text,submitted:true})
         }
-        if(taskType=="SendImage"){
-          new_tasks.push({...mission_tasks[i],image:sub_tasks[i][taskType]?.img,sampleImg:mission_tasks[i].image})
+        else if(taskType=="SendImage"){
+          new_tasks.push({...mission_tasks[i],image:sub_tasks[i][taskType]?.img,sampleImg:mission_tasks[i].image,submitted:true})
         }
-        if(taskType=="SendUrl"){
-          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.url})
+        else if(taskType=="SendUrl"){
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.url,submitted:true})
         }
-        if(taskType=="SendTwitterPost"){
-          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.post})
+        else if(taskType=="SendTwitterPost"){
+          console.log("parsing twitter post")
+          new_tasks.push({...mission_tasks[i],content:sub_tasks[i][taskType]?.post,submitted:true})
+        }
+        else if(taskType=="TwitterFollow"){
+          new_tasks.push({...mission_tasks[i],submitted:true})
+        
+        }
+        else{
+          if(mission_tasks[i]?.id=="SendTwitterPost"){
+            console.log("unsubmitted twitter tasks left",authenticate)
+            // setUnsubmittedTwitterPost([...unsubmittedTwitterPost,mission_tasks[i]])
+          }
+          new_tasks.push({...mission_tasks[i]})
         }
       }
       console.log("parsed mission tasks : ",new_tasks)
@@ -160,29 +174,196 @@ const CardDetails = () => {
 
   async function getSubmission() {
     try {
+      setLoading(true)
       let user=JSON.parse(Cookies.get('discord_user'))
       let res=await ICP_Ambassador_Program_backend.get_submission(`${updatedContest.mission_id}_${user.id}`)
       console.log("previous submission : ",res,updatedContest,`${updatedContest.mission_id}_${user.id}`)
       if(res?.Ok){
         setSubStatus(Object.keys(res?.Ok?.status)[0])
         setSubmission(res?.Ok)
-        parseTasks(tasks,res?.Ok?.tasks_submitted)
+        let y=0
+        let sub_tasks=[]
+        let previous_sub_tasks=res?.Ok?.tasks_submitted
+        for(let i=0;i<tasks?.length;i++){
+          for(let j=0;j<previous_sub_tasks?.length;j++){
+            if(i==previous_sub_tasks[j][Object.keys(previous_sub_tasks[j])[0]].id){
+              sub_tasks.push(previous_sub_tasks[j])
+              break
+            }else{
+              if(j==(previous_sub_tasks?.length-1)){
+                sub_tasks.push({})
+              }
+            }
+          }
+        }
+        // for(let i=0;(i<tasks?.length);i++){
+        //   console.log(previous_sub_tasks[y],i)
+        //   if(y<previous_sub_tasks?.length){
+        //     if(i==previous_sub_tasks[y][Object.keys(previous_sub_tasks[y])[0]].id){
+        //       sub_tasks.push(previous_sub_tasks[y])
+        //       y+=1
+        //     }else{
+        //       sub_tasks.push({})
+        //     }
+        //   }else{
+        //     sub_tasks.push({})
+        //   }
+          
+        // }
+        parseTasks(tasks,sub_tasks)
+        setLoading(false)
+
       }else{
         let newSubmission={
           submission_id:'',
           mission_id:updatedContest.mission_id,
           tasks_submitted:[],
           user:user?.id,
-          status:{Unread:null}
+          status:{Unread:null},
+          points_rewarded:false
         }
         console.log(newSubmission)
         setSubStatus("Unread")
         setSubmission(newSubmission)
+        setLoading(false)
       }
     } catch (error) {
       console.log("error while fetching submission : ",error)
+      setLoading(false)
+
+    }
+  
+  }
+
+  async function submitTask(taskid){
+    try{
+      let task={}
+      for(let i=0;i<tasks?.length;i++){
+        if(taskid==tasks[i]?.task_id){
+          task=tasks[i]
+        }
+      }
+      console.log(taskid,task)
+
+      setLoading(true)
+      let user=JSON.parse(Cookies.get('discord_user'))
+      let newTask={}
+
+      if(task?.id=="SendText"){
+        if(task?.content == ""){
+          setLoading(false)
+          toast.error("Cannot submit empty text")
+          return
+        }
+        newTask={
+          SendText:{
+            id:task?.task_id,
+            text:task?.content || ""
+          }
+        }
+      }
+      if(task?.id=="SendImage"){
+        if(task?.image==''){
+          toast.error("cannot send empty image")
+          setLoading(false)
+          return
+        }
+        if(typeof task?.image!='object'){
+          newTask={
+            SendImage:{
+              id:task?.task_id,
+              img:task?.image || ""
+            }
+          }
+          
+        }else{
+          console.log(task)
+          let metadata={
+            title: task?.image.name.split(".")[0], 
+            name: task?.image.name,
+            contentType: task?.image.type,
+            content: null, 
+          }
+          let img=await uploadImgAndReturnURL(metadata,task?.image)
+          newTask={
+            SendImage:{
+              id:task?.task_id,
+              img:img
+            }
+          }
+        }
+        
+      }
+      if(task?.id=="SendUrl"){
+        if(task?.content == ""){
+          setLoading(false)
+          toast.error("Cannot submit empty url")
+          return
+        }
+        newTask={
+          SendUrl:{
+            id:task?.task_id,
+            url:task?.content || ""
+          }
+        }
+      }
+      if(task?.id=="SendTwitterPost"){
+        if(!authenticate){
+          setLoading(false)
+          toast.error("Please authenticate using twitter for submitting a post")
+          return
+        }
+        const regex = /^https:\/\/x\.com\/[^/]+\/[^/]+\/[^/]+$/;
+        console.log("regex test : ",regex.test(task.content),task.content)
+        let testResult=regex.test(task.content)
+        if(!testResult){
+          setLoading(false)
+          toast.error("Invalid post link format")
+          return
+        }
+        if(!task.content?.includes(twitterUser)){
+          console.log("user check : ",twitterUser)
+          setLoading(false)
+          toast.error("Someone else's post cannot be submitted")
+          return
+        }
+        newTask={
+          SendTwitterPost:{
+            id:task?.task_id,
+            post:task?.content||""
+          }
+        }
+      }
+      if(task?.id=="TwitterFollow"){
+        window.open(`https://x.com/${task?.account}`,'_blank')
+        newTask={
+          TwitterFollow:{
+            id:task?.task_id,
+            followed:true
+          }
+        }
+      }
+
+      let res=await ICP_Ambassador_Program_backend.add_task_submission(submission,newTask)
+      console.log(res)
+      
+      if(typeof res=="object" && !res?.Err){
+        getSubmission()
+        setLoading(false)
+        toast.success(submission.submission_id==""?"Added new submission":'Updated the submission')
+        // nav('/')
+      }else{
+        setLoading(false)
+        toast.error("Some error occurred while submitting")
+      }
+    }catch(err){
+      setLoading(false)
+      toast.error("Something went wrong")
+      console.log(err)
     }
   }
+
+
   const Check_authentication = async () => {
    
     
@@ -524,7 +705,7 @@ const twitterSubmit = ()=>{
       className="h-full pt-3" >
       <Navbar nav={nav} />
       <div className='flex justify-center items-center lg:ml-20 sm:ml-0'>
-      <div className=' flex flex-col gap-16 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
+      <div className=' flex flex-col gap-8 justify-start items-start  lg:w-3/4 sm:w-full lg:p-0 sm:p-3  mt-10 h-full ' >
         <div className="flex items-center justify-center  gap-10">
             <div>
                 <div className="mb-4">
@@ -537,13 +718,13 @@ const twitterSubmit = ()=>{
                     <img
                       src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
                       alt={title}
-                      className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded"
+                      className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded-lg"
                     />
                 )}
                 </div>
             </div>
             <div className='flex flex-col gap-4 justify-start items-start'>
-                <div className=' text-sm' 
+                {/* <div className=' text-sm' 
                         style={{
                           
                           color:
@@ -557,20 +738,25 @@ const twitterSubmit = ()=>{
                         }}
                     >{statusValue === null || statusValue === undefined
                       ? statusKey
-                      : statusValue}</div>
+                      : statusValue}</div> */}
                 <div>
-                    <div className='text-white text-xl '>{title}</div>
+                  <p className="text-sm mb-3 text-white opacity-35">Once</p>
+                    <div className='text-white text-xl '>
+                      {title}
+
+                    </div>
                 </div>
                 <div className="flex items-center gap-3 ">
                     <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-                    <span className="text-md text-white font-semibold">{icons.platform}</span>
+                    <span className="text-sm text-white ">{icons.platform}</span>
                 </div>
                 <div className=" font-semibold text-gray-600 text-sm">
                     {/* 2024/10/09 04:30 - 2024/10/11 04:30 GMT +03:00 */}
                 </div>
-            </div>    
+            </div>  
+            
         </div>
-        
+        <div className='text-white font-poppins mb-4 max-w-[700px]'>{updatedContest?.description}</div>  
         <div className='w-full flex flex-col gap-6 overflow-y-auto mb-5'>
             {tasks.map((task,index) => {
               const taskType = task.id;  
@@ -613,11 +799,11 @@ const twitterSubmit = ()=>{
                     </AccordionSummary>
                     <div className='h-[1px] bg-gray-500 mx-4'></div>
                     <AccordionDetails>
-                        {!task.submitted ? (
-                        <form onSubmit={(e) => addSubmission(e, task.task_id)} className="flex flex-col gap-3 mt-3">
+                        {/* {!task.submitted ? ( */}
+                        <form  className="flex flex-col gap-3 mt-3">
                             {task.id === 'SendText' && (
                             <>
-                                <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                                <div className="text-white  text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
                                 <div className="border border-[#FFFFFF14] m-2 rounded-md custom-quill shadow-sm w-full">
                                     {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
                                     <textarea 
@@ -640,7 +826,10 @@ const twitterSubmit = ()=>{
                                       task.content ? '' : 'opacity-40'
                                     }`} 
                                     style={{ backgroundColor: bgColor }}
-                                    onClick={() => handleSend(task.task_id,task)}
+                                    onClick={() =>{
+                                        submitTask(task.task_id)
+                                        // handleSend(task.task_id,task)
+                                      }}
                                     >
                                     <BiSolidSend />
                                     <div>Send</div>
@@ -652,7 +841,7 @@ const twitterSubmit = ()=>{
                               <>
                               <div className='flex flex-col gap-3'>
 
-                              <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                              <div className="text-white  text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
                                   <input
                                   type='SendURL'
                                   placeholder='Enter URL'
@@ -672,10 +861,13 @@ const twitterSubmit = ()=>{
                                       task.content ? '' : 'opacity-40'
                                     }`} 
                                     style={{ backgroundColor: bgColor }}
-                                    onClick={() => handleSend(task.task_id,task)}
+                                    onClick={() => {
+                                      submitTask(task.task_id)
+                                      // handleSend(task.task_id,task)
+                                    }}
                                     >
                                     <BiSolidSend />
-                                    <div>Sumbit</div>
+                                    <div>Submit</div>
                                     </div>
                                 )}  
 
@@ -688,7 +880,7 @@ const twitterSubmit = ()=>{
                                
                                    
                                    <div  className="flex flex-col gap-6 mt-3">  
-                                       <div className="text-white text-md">{`Task description :\n\n ${task.description}`}</div>
+                                       <div className="text-white text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
                                        <div className ='flex w-full gap-4 items-center'>
                                        <input
                                              type='text'
@@ -709,19 +901,27 @@ const twitterSubmit = ()=>{
                                          )} */}
                                          
                                        </div>
-                                       {!authenticate ?(
-                                           <div className='text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center ' onClick={Check_authentication} style={{ backgroundColor: bgColor }}>
-                                            <RiLoopLeftLine className='text-xl'/>
-                                             <div className='text-lg font-semibold text-white'>Verify</div>
-                                             {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
-                                           </div>
-                                         ):(
-                                           <div className='bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2' >
+                                         {
+                                          task?.submitted?
+                                          <div className='bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2' >
                                              <DoneIcon />
                                              <div>Completed</div>
                                              {/* <p className='text-green-500 text-sm font-semibold '>Authenticated</p> */}
                                            </div>
-                                         )}
+                                           :
+                                           !authenticate?
+                                           <div className='text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center ' onClick={Check_authentication} style={{ backgroundColor: bgColor }}>
+                                            <FaXTwitter/>
+                                             <div className='text-lg  text-white'>Connect Twitter</div>
+                                             {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
+                                           </div>
+                                           :
+                                           <div className='text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center ' onClick={()=>submitTask(task.task_id)} style={{ backgroundColor: bgColor }}>
+                                            <FaXTwitter/>
+                                            <div className='text-lg  text-white'>Submit Post</div>
+                                             {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
+                                           </div>
+                                         }
                                        
                                        <div className='flex items-center justify-center'>
                                        {/* <button
@@ -737,7 +937,7 @@ const twitterSubmit = ()=>{
                             )}
                             {task.id === 'SendImage' && (
                             <div className="mt-4 w-full ">
-                              <div className="text-white  text-md ">{`Task description :\n\n ${task.description}`}</div>
+                              <div className="text-white  text-md max-w-[95%] overflow-clip mb-4">{`Task description :\n\n ${task.description}`}</div>
                               {/* <div className='flex gap-5 my-5'>
                                 <div className="text-white font-semibold text-md  mt-4">Sample Image</div>
                                 <img src={task.sampleImg} className='w-52 rounded h-40' alt=''/>
@@ -757,7 +957,7 @@ const twitterSubmit = ()=>{
                                           <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-white"></div>
                                         </div>
                                       </div>
-                                    ) : task.image ? (
+                                    ) : task.image && !task.submitted ? (
                                       <div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
                                         <div className="flex gap-2">
                                           <AttachFileIcon />
@@ -774,7 +974,7 @@ const twitterSubmit = ()=>{
                                   </div>
                                 )}
 
-                                {task.image ?(
+                                {task.image || task.submitted ?(
                                   null
                                 ):(
                                   <div className=' flex flex-col items-center mt-6  justify-center gap-2 text-white ' onDragOver={handleDragOver}
@@ -824,7 +1024,8 @@ const twitterSubmit = ()=>{
                                       className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
                                       style={{ backgroundColor: bgColor }}
                                       onClick={() => {
-                                        handleSendImage(task.task_id, task);
+                                        // handleSendImage(task.task_id, task);
+                                        submitTask(task.task_id)
                                       }}
                                     >
                                       <DoneIcon />
@@ -843,13 +1044,26 @@ const twitterSubmit = ()=>{
                                 </div>
                             </div>
                             )}
-                            {task.id === 'JoinTwitter' &&(
+                            {task.id === 'TwitterFollow' &&(
                               <div className='flex flex-col gap-4'>
-                                <div className="text-white text-md">{`Task description :\n\n ${task.description}`}</div>
-                                <div className='w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg' style={{backgroundColor:bgColor}}>
-                                  <IoIosSend />
-                                  <div>Join Twitter</div> 
-                                </div>
+                                <div className="text-white text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
+                                {
+                                  task.submitted?
+                                  <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                      <DoneIcon />
+                                      <div>Completed</div>
+                                    </div>
+                                  :
+                                  <div 
+                                    className='w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg' 
+                                    style={{backgroundColor:bgColor}}
+                                    onClick={()=>submitTask(task.task_id)}
+                                  >
+                                    <FaXTwitter/>
+                                    <div>Follow</div> 
+                                  </div>
+                                }
+                                
                               </div>
                               
                             )}
@@ -862,10 +1076,7 @@ const twitterSubmit = ()=>{
                             </button> */}
                             </div>
                         </form>
-                        ) : (
-                        // <div className="text-white text-md flex justify-center items-center">Already Submitted</div>
-                        <></>
-                        )}
+
                         
                     </AccordionDetails>
                     </Accordion>

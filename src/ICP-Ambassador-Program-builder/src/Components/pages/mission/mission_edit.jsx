@@ -95,15 +95,16 @@ const DraggableTask = ({ task, index, moveTask, onDelete, handleUpdateTaskField 
   
 };
 
-const MissionEdit = ({setLoading}) => {
+const MissionEdit = () => {
+  const [loading,setLoading]=useState(false)
   const actor=useSelector(state=>state.actor.value)
   const spaces=useSelector(state=>state.spaces.value)
   const mission=useSelector(state=>state.mission.value)
-  const [pool,setPool]=useState(0)
-  const timezone = 'Asia/Calcutta';
+  const [pool,setPool]=useState(parseFloat(parseInt(mission?.pool)/Math.pow(10,8))||0)
+  const timezone = 'UTC';
   const [logoImage, setLogoImage] = useState(null);
   const [startDate, setStartDate] = useState(moment().tz(timezone));
-  const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(moment().tz(timezone));
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [title,setTitle]=useState(mission?.title)
@@ -169,11 +170,11 @@ const MissionEdit = ({setLoading}) => {
 
   const handlesave = async(action) =>{
     try{
-      if((parseFloat(pool)+0.0001)>=(spaceBalance)){
-        console.log(pool,spaceBalance)
-        toast.error("Insufficient space balance, please add more funds")
-        return
-      }
+      // if((parseFloat(pool)+0.0001)>=(spaceBalance)){
+      //   console.log(pool,spaceBalance)
+      //   toast.error("Insufficient space balance, please add more funds")
+      //   return
+      // }
       const draft_data ={
         Title:title,
         Image:logoImage,
@@ -208,6 +209,16 @@ const MissionEdit = ({setLoading}) => {
               id:finalTasks?.length,
               title:tasks[i]?.title,
               body:tasks[i]?.body,
+            }
+          })
+        }
+        if(tasks[i]?.type=="twitter_follow"){
+          finalTasks.push({
+            TwitterFollow:{
+              id:finalTasks?.length,
+              title:tasks[i]?.title,
+              body:tasks[i]?.body,
+              account:tasks[i]?.account
             }
           })
         }
@@ -252,6 +263,14 @@ const MissionEdit = ({setLoading}) => {
           
         }
       }
+      let poolamount=parseInt(pool*Math.pow(10,8))
+      let minPoolForOneUser=parseInt(spaces.conversion)*Math.pow(10,6)
+      console.log("minimum pool calc : ",poolamount,minPoolForOneUser,Math.abs(poolamount/minPoolForOneUser))
+      if(poolamount<minPoolForOneUser){
+        setLoading(false)
+        toast.error("pool amount should be increased or points per user should be decreased to reward these points")
+        return
+      }
       let updatedMission={
         ...mission,
         title:title,
@@ -259,8 +278,8 @@ const MissionEdit = ({setLoading}) => {
         status:action=="save"?{Draft:null}:{Active:null},
         reward:parseInt(rewardsData),
         tasks:finalTasks,
-        pool:parseInt(pool*Math.pow(10,8)),
-        max_users_rewarded:0
+        pool:poolamount,
+        max_users_rewarded:Math.abs(poolamount/minPoolForOneUser)
       }
 
       if(imgMetadata){
@@ -269,14 +288,14 @@ const MissionEdit = ({setLoading}) => {
       }
   
       console.log("data ==>",draft_data,mission,actor,finalTasks)
-      
+      console.log("dates : ",startDate.toDate(),endDate.toDate())
       console.log("final updated mission : ",updatedMission,tasks)
       const res=await actor?.backendActor?.edit_mission(updatedMission)
       console.log(res)
       if(res!=null && res!=undefined && res?.Err==undefined){
         setLoading(false)
         toast.success('Mission updated successfully')
-        nav('/')
+        nav('/slug_url/mission')
       }else{
         setLoading(false)
         toast.error('Some error occurred')
@@ -318,6 +337,13 @@ const MissionEdit = ({setLoading}) => {
           id:i,
           type:"twitter_post",
           ...oldTasks[i]?.SendTwitterPost
+        })
+      }
+      if(oldTasks[i]?.TwitterFollow){
+        displayableTasks.push({
+          id:i,
+          type:"twitter_follow",
+          ...oldTasks[i]?.TwitterFollow
         })
       }
     }
@@ -378,6 +404,9 @@ const MissionEdit = ({setLoading}) => {
     }
     if(taskType=="text"){
       taskFields={title:"",body:"",sample:"",validation_rule:"",max_len:100}
+    }
+    if(taskType=="twitter_follow"){
+      taskFields={title:"",body:"",account:""}
     }
     setTasks([...tasks, { type: taskType, id: Date.now(),...taskFields }]);
     setSidebarOpen(false);
@@ -444,6 +473,14 @@ const MissionEdit = ({setLoading}) => {
     
     //console.log('Updated Participants Count:', updatedParticipantsCount);
   };
+
+  if(loading){
+    return(
+      <div className='flex justify-center items-center h-screen'>
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-4 border-t-black" />
+      </div>
+    )
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
