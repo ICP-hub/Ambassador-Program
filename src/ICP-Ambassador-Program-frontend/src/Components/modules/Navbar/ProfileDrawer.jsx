@@ -116,12 +116,14 @@ import React, { useState, useEffect } from 'react';
 import { MdClose } from "react-icons/md";
 import { FaUserCircle } from 'react-icons/fa';
 import Cookies from 'js-cookie';
-
+import { BASE_URL } from '../../../../../../DevelopmentConfig';
 const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
   const [hub, setHub] = useState('');
   // const baseReferral = `http://localhost:3000/ref?ref=`;
-  const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
-   console.log("user in profile ==>",user)
+  // const baseReferral=`https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=`
+
+  const baseReferral=`${BASE_URL}/ref?ref=`
+   console.log("user in profile & BASE url ==>",user,BASE_URL)
   useEffect(() => {
     const HUB = Cookies.get('selectedHubName');
     setHub(HUB);

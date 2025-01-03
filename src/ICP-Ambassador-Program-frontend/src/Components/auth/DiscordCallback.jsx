@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from './authdata';
+import { BASE_URL } from '../../../../../DevelopmentConfig';
 import { ICP_Ambassador_Program_backend } from '../../../../declarations/ICP_Ambassador_Program_backend';
 const DiscordCallback = ({setOpen}) => {
   const navigate = useNavigate();
@@ -87,7 +88,8 @@ const DiscordCallback = ({setOpen}) => {
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
     // params.append('redirect_uri', 'https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback');
-    params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
+    // params.append('redirect_uri', 'http://localhost:3000/auth/discord/callback');
+    params.append('redirect_uri', `${BASE_URL}/auth/discord/callback`);
 
     const response = await fetch('https://discord.com/api/v10/oauth2/token', {
       method: 'POST',

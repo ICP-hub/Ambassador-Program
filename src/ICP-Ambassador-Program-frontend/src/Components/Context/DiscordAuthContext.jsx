@@ -1,6 +1,6 @@
 // DiscordAuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-
+import { BASE_URL } from '../../../../../DevelopmentConfig';
 export const DiscordAuthContext = createContext();
 import { DISCORD_CLIENT_ID,DISCORD_CLIENT_SECRET } from '../auth/authdata';
 
@@ -54,7 +54,7 @@ export const DiscordAuthProvider = ({ children }) => {
     params.append('client_secret',DISCORD_CLIENT_SECRET); 
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
-    params.append('redirect_uri', "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback");
+    params.append('redirect_uri', `${BASE_URL}/auth/discord/callback`);
 
     const response = await fetch('https://discord.com/api/oauth2/token', {
       method: 'POST',

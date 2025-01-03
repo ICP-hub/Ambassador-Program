@@ -96,7 +96,7 @@ const Home = () => {
             const cookieUser = Cookies.get('discord_user');
             setUser(cookieUser ? JSON.parse(cookieUser) : null);
             const isLoggedIn = Cookies.get('isLoggedIn');
-            console.log("passing is logged in : ", isLoggedIn);
+            //console.log("passing is logged in : ",isLoggedIn)
             getUser(isLoggedIn);
             console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
             if (isLoggedIn) {

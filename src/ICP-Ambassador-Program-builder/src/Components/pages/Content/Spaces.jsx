@@ -132,8 +132,8 @@ const Spaces = ({setLoading}) => {
       
       
       {isModalOpen && (
-        <div className='fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center  overflow-y-scroll '>
-          <div className='bg-white px-8 py-2 rounded-md shadow-lg max-w-lg w-full max-h-fit mt-20 '>
+        <div className=' fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center  overflow-y-scroll '>
+          <div className='bg-white px-8 py-2 rounded-md shadow-lg max-w-lg w-full max-h-fit  '>
             <h2 className='text-2xl font-semibold mb-4'>Create space</h2>
 
             
@@ -152,9 +152,7 @@ const Spaces = ({setLoading}) => {
                 />
 
               </div>
-
-              
-              <div>
+              <div className='hidden'>
                 <label className='block text-sm font-medium text-gray-700'>Space slug</label>
                 <input
                   type="text"
@@ -193,7 +191,7 @@ const Spaces = ({setLoading}) => {
               </div>
 
               
-              <div>
+              <div className='hidden'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Space chain type</label>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Select</InputLabel>

@@ -33,10 +33,11 @@ const Navbar = ({ nav, openRefModal, setLoading }) => {
         if (Cookies.get('discord_user')) {
             try {
                 const user = JSON.parse(Cookies.get('discord_user'));
+                //console.log(JSON.parse(Cookies.get('discord_user')))
                 const email = user ? user.email : undefined;
-                // console.log("user ==>",user)
-                setDiscord_user(user);
-                // console.log("Discord user ==>",discordl_user)
+                //console.log("user ==>",user)
+                //setDiscord_user(user);
+                console.log("Discord user ==>", discordl_user);
                 if (email) {
                     setUserEmail(email);
                 }
@@ -54,8 +55,16 @@ const Navbar = ({ nav, openRefModal, setLoading }) => {
             //console.log(userId)
             const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
             console.log("Details from backend ==>", details);
-            dispatch(updateUser(details[0]));
-            setDiscord_user(details[0]);
+            const user = JSON.parse(Cookies.get('discord_user'));
+            console.log("Discord user from cookies ==>", user);
+            const updatedDetails = {
+                ...details[0],
+                avatar: user.avatar,
+            };
+            dispatch(updateUser(updatedDetails));
+            setDiscord_user(updatedDetails);
+            // dispatch(updateUser(details[0]))
+            // setDiscord_user(details[0])
         }
         catch (e) {
             console.log("Error ==>", e);
