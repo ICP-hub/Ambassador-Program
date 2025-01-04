@@ -103,19 +103,21 @@
 import React, { useEffect, useState } from 'react';
 import { MdClose } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa";
-import { DISCORD_CLIENT_ID } from '../../auth/authdata';
+//import { DISCORD_CLIENT_ID } from '../../auth/authdata';
 import Cookies from 'js-cookie'
-import { BASE_URL } from '../../../../../../DevelopmentConfig';
+import { BASE_URL, DISCORD_CLIENT_ID  } from '../../../../../../DevelopmentConfig';
 const LoginModel = ({ isOpen, onClose,isReferred }) => {
   // const [ref,setRef]=useState(false)
   
   if (!isOpen) return null;
 
   //const REDIRECT_URI = "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/auth/discord/callback";
-  const REDIRECT_URI = `${BASE_URL}/auth/discord/callback`;
+  //const REDIRECT_URI = `${BASE_URL}/auth/discord/callback`;
+  const REDIRECT_URI = encodeURIComponent(`${BASE_URL}/auth/discord/callback`);
   // const REDIRECT_URI = "http://localhost:3000/auth/discord/callback";
   // const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify email connections guilds.members.read`;
-  const DISCORD_OAUTH_URL= `https://discord.com/oauth2/authorize?client_id=1303682602825158676&response_type=code&redirect_uri=https%3A%2F%2Fkgmyp-myaaa-aaaao-a3u4a-cai.icp0.io%2Fauth%2Fdiscord%2Fcallback&scope=identify+email+connections`
+  //const DISCORD_OAUTH_URL= `https://discord.com/oauth2/authorize?client_id=1303682602825158676&response_type=code&redirect_uri=https%3A%2F%2Fkgmyp-myaaa-aaaao-a3u4a-cai.icp0.io%2Fauth%2Fdiscord%2Fcallback&scope=identify+email+connections`
+  const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=identify+email+connections`;
   const handleDiscordLogin = () => {https://discord.com/oauth2/authorize?client_id=1303682602825158676&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fdiscord%2Fcallback&scope=guilds.members.read+connections+email+identify
     window.location.href = DISCORD_OAUTH_URL;
   };
