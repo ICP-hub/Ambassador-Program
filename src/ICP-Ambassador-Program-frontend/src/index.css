@@ -38,6 +38,18 @@ html::-webkit-scrollbar {
     color: white; 
   }
 
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
  /* Target the toolbar icons in the Quill editor */
 /* .ql-toolbar .ql-stroke,
 .ql-toolbar .ql-fill,
