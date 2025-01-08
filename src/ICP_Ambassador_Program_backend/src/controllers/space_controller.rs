@@ -1,6 +1,7 @@
-use candid::Principal;
+use candid::{Nat, Principal};
 use ic_cdk::{caller,query,update};
 // use uuid::Uuid;
+use crate::deposit::deposit_icp_to_canister;
 
 use crate::{check_anonymous, Admin, CreateSpace, Errors, FundEntry, Space, SpaceURLs, ADMIN_MAP, SPACE_FUND_MAP, SPACE_MAP};
 
@@ -145,13 +146,21 @@ pub fn withdraw_funds(id:String,amount:u64)->Result<String,String>{
 }
 
 #[update]
-pub fn add_funds(id:String,amount:u64)->Result<String,String>{
+pub async fn add_funds(id:String,amount:u64)->Result<String,String>{
+    ic_cdk::println!("Adding funds to space {}",id);
+    ic_cdk::println!("Amount: {}",Nat::from(amount),);
+
     let space=SPACE_MAP.with(|map| map.borrow().get(&id));
     let space_val:Space;
     match space{
         Some(val)=>space_val=val,
         None=>return Err(String::from("No space found to add funds to"))
     }
+ 
+    // icrc transaction should take place here
+    deposit_icp_to_canister(amount).await?;
+
+    // -----------------------------------
     let funds=SPACE_FUND_MAP.with(|map| map.borrow().get(&space_val.space_id.clone()));
     let mut fund_val:FundEntry;
     match funds {
@@ -164,7 +173,6 @@ pub fn add_funds(id:String,amount:u64)->Result<String,String>{
             }
         }
     }
-    // icrc transaction should take place here
     fund_val.balance+=amount;
     SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(space_val.space_id,fund_val));
     return Ok(String::from("Added new funds, ICRC transfer needs to be implemented here"));
@@ -198,6 +206,7 @@ pub fn lock_funds(id:String,amount:u64)->Result<(),String>{
     return Ok(());
 
 }
+
 pub fn unlock_funds(id:String,amount:u64)->Result<(),String>{
     let space=SPACE_MAP.with(|map| map.borrow().get(&id));
     let space_val:Space;
