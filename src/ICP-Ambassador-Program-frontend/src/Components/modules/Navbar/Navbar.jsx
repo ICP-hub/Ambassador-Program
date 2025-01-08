@@ -190,7 +190,16 @@ const Navbar = ({nav,openRefModal,setLoading}) => {
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail} 
               <button className="ml-4 text-red-500">Logout</button> */}
-              <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/>
+              {discordl_user.avatar ? (
+                        <img
+                          src={`https://cdn.discordapp.com/avatars/${discordl_user.discord_id}/${discordl_user.avatar}.png`}
+                          alt="User Avatar"
+                          className="w-10 h-10 rounded-full"
+                        />
+                      ) : (
+                        <FaUserCircle className="w-20 h-20 rounded-full bg-gray-500" />
+                      )}
+              {/* <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/> */}
               {/* <img
                         src="https://static-00.iconduck.com/assets.00/profile-circle-icon-1023x1024-ucnnjrj1.png"
                         alt="not found"
