@@ -237,9 +237,10 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
                     <div>{`${parseFloat(conversion/10)} ICP`}</div>
                 </div>
                 <input 
-                    className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                    className='border px-3 py-3 w-full border-gray-300 text-black  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
                     placeholder='enter amount of points to redeem'   
                     onChange={(e)=>setAmount(e.target.value)}
+                    onWheel={(e) => e.target.blur()} 
                     type='number'
                 />
                 <div className=' py-3 w-full  hover:bg-black hover:border-black border border-gray-700 cursor-pointer transition-all  duration-500 font-semibold text-sm flex justify-center items-center rounded-md' onClick={withdraw}>Withdraw points</div>
@@ -247,13 +248,14 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
                     ledger?
                     <>
                     <input 
-                        className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                        className='border px-3 py-3 w-full border-gray-300  text-black cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
                         placeholder='enter amount to be sent in ICP'   
                         onChange={(e)=>setSendAmount(e.target.value)}
+                        onWheel={(e) => e.target.blur()} 
                         type='number'
                     />
                     <input 
-                        className='border px-3 py-3 w-full border-gray-300  cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
+                        className='border px-3 py-3 w-full border-gray-300 text-black cursor-pointer font-semibold text-sm flex justify-center items-center rounded'
                         placeholder='enter receiver principal'   
                         onChange={(e)=>setReceiver(e.target.value)}
                         type='text'
