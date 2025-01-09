@@ -197,7 +197,7 @@ const Navbar = ({nav,openRefModal,setLoading}) => {
                           className="w-10 h-10 rounded-full"
                         />
                       ) : (
-                        <FaUserCircle className="w-20 h-20 rounded-full bg-gray-500" />
+                        <FaUserCircle className="w-10 h-10 rounded-full bg-gray-500" />
                       )}
               {/* <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/> */}
               {/* <img
