@@ -207,7 +207,8 @@ pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
     match space{
         Some(space_val)=>{
             amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000;
-            let transfer_res=transfer_amount(amount, wallet, space_val.space_id).await;
+            // let transfer_res=transfer_amount(amount, wallet, space_val.space_id).await;
+            let transfer_res=transfer_amount(amount, wallet).await;
             match transfer_res{
                 Ok(_)=>{},
                 Err(e)=>return Err(e)
