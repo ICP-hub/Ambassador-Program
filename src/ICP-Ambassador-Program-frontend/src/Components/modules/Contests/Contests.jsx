@@ -5,8 +5,9 @@ import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Contest_Details from './ContestDetails';
+import WalletSidebar from '../../wallet/walletSidebar';
 
-const Contests = () => {
+const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) => {
   const [selectedContest,setSelectContest]=useState('')
   const { selectedPlatform } = useFilterContext();
   const user=useSelector(state=>state.user.value)
@@ -219,20 +220,39 @@ const Contests = () => {
   
   return (
     <div className="overflow-y-scroll scrollbar-hide" >
-      
-        {/* <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4  w-full"> */}
-        <div className="flex flex-wrap gap-6 mt-8">
-          {
-            displayedContests?.length>0?
-            displayedContests.map((contest, index) => (
-              <div >
-                <Card key={index} contest={contest} hub={hub} />
-              </div>
-            ))
-            :
-            <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
-          }
+        <div className="flex  transition-all duration-500 delay-200 relative ">
+
+          <div className={`grid  h-screen transition-all  duration-500 ${openWallet ? 'w-[calc(100%-390px)] lg:grid-cols-3' : 'w-full lg:grid-cols-4'} sm:grid-cols-1 rounded-md md:grid-cols-2 gap-4 p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}
+            style={{
+              maxWidth: openWallet ? 'calc(100% - 300px)' : '100%', 
+              transition: 'max-width 0.5s ease-in-out'
+            }}>
+                {/* <div className="flex flex-wrap gap-6 mt-8"> */}
+                  {
+                    displayedContests?.length>0?
+                    displayedContests.map((contest, index) => (
+                      <div >
+                        <Card key={index} contest={contest} hub={hub} />
+                      </div>
+                    ))
+                    :
+                    <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
+                  }
+          </div>
+          <div className=''>
+           
+            {openWallet && (
+              <WalletSidebar 
+                onClose={onCloseWallet} 
+                user={user} 
+                isOpen={openWallet} 
+                setDiscord_user={setDiscord_user} 
+              />
+            )}
+          </div>
+
         </div>
+        
         
       
     </div>

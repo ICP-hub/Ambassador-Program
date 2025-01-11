@@ -196,9 +196,11 @@ const WalletSidebar = ({onClose, isOpen,user,setDiscord_user}) => {
   return (
 
     <div
-    className={`fixed top-0 right-0 lg:w-96 sm:w-full h-full lg:my-3 sm:my-0 text-white font-poppins bg-[#1d1d21] shadow-lg p-6 z-50 transition-transform duration-500 ease-in-out transform overflow-y-auto scrollbar-hide  ${
+    className={`absolute top-0 right-0 lg:w-96 sm:w-full h-full lg:my-0 rounded-md sm:my-0 text-white font-poppins bg-[#1d1d21] shadow-lg p-6 z-50 transition-transform duration-500 delay-500 ease-in-out transform overflow-y-auto scrollbar-hide  ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-    }`}
+    }`} style={{
+        transition: 'transform 0.5s ease-in-out',
+      }}
 >
     <div className='flex justify-end'>
         <button onClick={onClose} className='  hover:bg-black hover:text-white rounded-full h-9 w-9 flex justify-center items-center cursor-pointer'>
