@@ -1,7 +1,9 @@
 use candid::Principal;
 use ic_cdk::{caller,update,query};
 
-use crate::{check_anonymous, Admin, AdminRole, Editors, Errors, Moderators, ADMIN_MAP, EDITOR_MAP, MODERATOR_MAP, SUPER_ADMIN};
+use crate::{check_anonymous, check_moderator, AdminRole, Editors, Errors, Moderators, Submission, SubmissionStatus, EDITOR_MAP, MISSION_MAP, MODERATOR_MAP, SUBMISSION_MAP};
+
+use super::{is_super_admin, user_controller};
 
 #[update(guard = check_anonymous)]
 pub fn register_moderator()->Result<(),Errors>{
@@ -40,82 +42,7 @@ pub fn register_editor()->Result<(),Errors>{
 }
 
 
-// #[update(guard = check_anonymous)]
-// pub fn add_admin_by_super_admin(id:Principal)->Result<(),Errors>{
-
-//     if !is_super_admin(caller()) {
-//         return Err(Errors::NotASuperAdmin)
-//     }
-
-//     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
-    
-//     if admin.is_some(){
-//         return Err(Errors::AlreadyAdmin);
-//     };
-
-//     let new_admin:Admin=Admin { 
-//         wallet_id: id,
-//         role:AdminRole::HubLeader,
-//         spaces:vec![]    
-//     };
-
-//     ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
-//     return Ok(());
-// }
-
-// #[update(guard = check_anonymous)]
-// pub fn promote_to_super_admin(id:Principal)->Result<(), Errors>{
-
-//     if !is_super_admin(caller()) {
-//         return Err(Errors::NotASuperAdmin)
-//     }
-
-//     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
-//     let old_admin:Admin;
-
-//     match admin {
-//         Some(value) => old_admin=value,
-//         None => return Err(Errors::NotRegisteredAsAdmin)
-//     }
-
-//     let super_admins=SUPER_ADMIN.with(|map| map.borrow().iter().any(|el| el==id));
-//     if super_admins{
-//         return Err(Errors::AlreadySuperAdmin);
-//     };
-
-//     let new_admin:Admin=Admin { 
-//         wallet_id: id,
-//         role:AdminRole::SuperAdmin,
-//         spaces:old_admin.spaces
-//     };
-//     let inserted = SUPER_ADMIN.with(|arr| arr.borrow_mut().push(&id));
-
-//     if inserted.is_err(){
-//         return Err(Errors::ErrorUpdatingAdmin)
-//     };
-
-//     let updated=ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
-//     match updated {
-//         Some(_) => return Ok(()),
-//         None => {
-//             return Err(Errors::ErrorUpdatingAdmin)
-//         }
-//     }
-// }
-
-
-// #[query(guard = check_anonymous)]
-// pub fn get_all_super_admins()->Result<Vec<Principal>,Errors>{
-
-//     if !is_super_admin(caller()) {
-//         return Err(Errors::NotASuperAdmin)
-//     }
-
-//     let super_admins:Vec<Principal> =  SUPER_ADMIN.with(|vec| vec.borrow().iter().collect());
-//     return  Ok(super_admins);
-// }
-
-#[query(guard = check_anonymous)]
+#[query(guard =check_moderator)]
 pub fn get_moderator()->Result<Moderators,Errors>{
     let moderator = MODERATOR_MAP.with(|map| map.borrow().get(&caller()));
     
@@ -134,20 +61,6 @@ pub fn get_editor()->Result<Editors,Errors>{
     }
 }
 
-// #[query(guard = check_anonymous)]
-// pub fn get_admin_by_principal(id:Principal)->Result<Admin,Errors>{
-
-//     if !is_super_admin(caller()) {
-//         return Err(Errors::NotASuperAdmin)
-//     }
-
-//     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
-    
-//     match admin{
-//         Some(value) => Ok(value),
-//         None => Err(Errors::NotRegisteredAsAdmin)
-//     }
-// }
 #[query(guard = check_anonymous)]
 pub fn get_moderator_by_principal(id:Principal)->Result<Moderators,Errors>{
 
@@ -176,6 +89,36 @@ pub fn get_editor_by_principal(id:Principal)->Result<Editors,Errors>{
         None => Err(Errors::NotRegisteredAsEditor)
     }
 }
+
+#[query(guard = check_moderator)]
+pub fn verify_task(id:String)->Result<String,String>{
+    let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
+    let mut new_submission:Submission;
+    match old_submission{
+        Some(val)=>new_submission=val,
+        None=>return Err("no submission found with this id".to_string())
+    }
+    let mission=MISSION_MAP.with(|map| map.borrow().get(&new_submission.mission_id.clone()));
+    match mission{
+        Some(mut val)=>{
+            if val.max_users_rewarded>0{
+                let res=user_controller::update_points(new_submission.user.clone(), val.reward);
+                match res{
+                    Err(e)=>return Err(e),
+                    Ok(_)=>{}
+                }
+                val.max_users_rewarded-=1;
+                new_submission.points_rewarded=true;
+                MISSION_MAP.with(|map| map.borrow_mut().insert(val.mission_id.clone(), val));
+            }  
+        },
+        None=>return Err("mission for this submission does not exists".to_string())
+    }
+    new_submission.status=SubmissionStatus::Approved;
+    SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(), new_submission));
+    return Ok("still in development".to_string()); 
+}
+
 
 
 

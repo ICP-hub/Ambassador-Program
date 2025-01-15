@@ -236,7 +236,6 @@ pub struct Submission{
     pub tasks_submitted:Vec<TaskSubmitted>,
     pub status:SubmissionStatus,
     pub points_rewarded:bool
-    //needs to be optimized based on user inputs provided at frontend
 }
 
 impl Storable for Submission{
@@ -260,12 +259,10 @@ pub struct ImageIdWrapper {
 }
 impl Storable for ImageIdWrapper {
     const BOUND: Bound = Unbounded;
-
     fn to_bytes(&self) -> Cow<[u8]> {
         let serialized = serde_cbor::to_vec(self).expect("Failed to serialize IMAGEID");
         Cow::Owned(serialized)
     }
-
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_cbor::from_slice(&bytes).expect("Failed to deserialize IMAGEID")
     }
