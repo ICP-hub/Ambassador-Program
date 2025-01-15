@@ -20,9 +20,69 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [filterMobile, setFilterMobile] = useState(false);
   const [refModal,openRefModal]=useState(false)
+  const [openWallet, setOpenWallet] = useState(false);
+  const [discordl_user,setDiscord_user]=useState()
   const nav=useNavigate()
   const dispatch=useDispatch()
 
+  const handleWalletToggle = () => {
+    console.log("open wallet")
+    setOpenWallet((prev) => !prev); // Toggle wallet sidebar
+  };
+
+  const handleCloseWallet = () => {
+    setOpenWallet(false); // Close wallet sidebar
+  };
+
+
+  useEffect(() => {
+          if (Cookies.get('discord_user')) {
+              try {
+                  const user = JSON.parse(Cookies.get('discord_user'));
+                  //console.log(JSON.parse(Cookies.get('discord_user')))
+                  const email = user ? user.email : undefined;
+                  //console.log("user ==>",user)
+                  //setDiscord_user(user);
+                  console.log("Discord user ==>",discordl_user)
+                  if (email) {
+                      setUserEmail(email);
+                  }
+                  
+                  if (user && user.id) {
+                      getUser_Details(user.id);
+                  }
+              } catch (error) {
+                  console.error("Error parsing discord_user cookie:", error);
+              }
+          }
+      }, []);
+      
+      
+  
+  
+        const getUser_Details = async(userId)=>{
+          try{
+              //console.log(userId)
+              const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
+              console.log("Details from backend ==>",details)
+              const user = JSON.parse(Cookies.get('discord_user'));
+              console.log("Discord user from cookies ==>", user);
+  
+              
+              const updatedDetails = {
+              ...details[0], 
+              avatar: user.avatar, 
+              };
+  
+              
+              dispatch(updateUser(updatedDetails));
+              setDiscord_user(updatedDetails);
+              // dispatch(updateUser(details[0]))
+              // setDiscord_user(details[0])
+          }catch(e){
+              console.log("Error ==>",e)
+          }
+        }
   const [space,setSpaces]=useState('');
     const loggedIn = Cookies.get('isLoggedIn')
     console.log("Looged In ==>",loggedIn)
@@ -139,8 +199,8 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col rounded-md m-3 h-screen bg-[#16161a] " >
-      <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading}/>
+    <div className="flex flex-col rounded-md m-3 bg-[#16161a] " >
+      <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading} onWalletClick={handleWalletToggle}/>
       <FilterProvider>
         <div className="flex flex-grow p-2  rounded-md ">
           
@@ -148,7 +208,10 @@ const Home = () => {
             <Filter />
           </div> */}
           <div className="w-full h-full">
-            <Contests />
+            <Contests openWallet={openWallet} 
+              onCloseWallet={handleCloseWallet} 
+              user_details={discordl_user} 
+              setDiscord_user={setDiscord_user} />
           </div>
         </div>
       </FilterProvider>

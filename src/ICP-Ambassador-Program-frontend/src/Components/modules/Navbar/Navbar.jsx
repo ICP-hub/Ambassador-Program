@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
 import { FaUserCircle } from "react-icons/fa";
 
-const Navbar = ({nav,openRefModal,setLoading}) => {
+const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
 
     const [isModelOpen,setModelOpen]=useState(false);
     const [isSideBarOpen,setSideBarOpen]=useState(false);
@@ -164,7 +164,7 @@ const Navbar = ({nav,openRefModal,setLoading}) => {
             </div> */}
             {
                 discordl_user?
-                <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer'onClick={handleWallet}>
+                <div className='flex    justify-between items-center gap-2 rounded-md hover:bg-gray-700 py-1 px-1 cursor-pointer'onClick={onWalletClick}>
                 
                     <FaWallet className='text-white' style={{fontSize:'20px'}}/>
                     
@@ -292,9 +292,9 @@ const Navbar = ({nav,openRefModal,setLoading}) => {
         {isDrawerOpen && (
                 <ProfileDrawer setLoading={setLoading} user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal} />
             )}
-        {openWallet &&(
+        {/* {openWallet &&(
                 <WalletSidebar onClose={handleCloseWallet} user={discordl_user} isOpen={openWallet} setDiscord_user={setDiscord_user}/>
-        )}
+        )} */}
            
     </div>
   )
