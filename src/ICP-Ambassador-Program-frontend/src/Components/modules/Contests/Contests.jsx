@@ -221,23 +221,27 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) 
   return (
     <div className="overflow-y-scroll scrollbar-hide" >
         <div className="flex  transition-all duration-500 delay-200 relative ">
+          <div className={` transition-all h-screen duration-500 ${openWallet ? 'w-[calc(100%-100px)] ' : 'w-full'} p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}>
 
-          <div className={`grid  h-screen transition-all  duration-500 ${openWallet ? 'w-[calc(100%-390px)] lg:grid-cols-3' : 'w-full lg:grid-cols-4'} sm:grid-cols-1 rounded-md md:grid-cols-2 gap-4 p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}
-            style={{
-              maxWidth: openWallet ? 'calc(100% - 300px)' : '100%', 
-              transition: 'max-width 0.5s ease-in-out'
-            }}>
-                {/* <div className="flex flex-wrap gap-6 mt-8"> */}
-                  {
-                    displayedContests?.length>0?
-                    displayedContests.map((contest, index) => (
-                      <div >
-                        <Card key={index} contest={contest} hub={hub} />
-                      </div>
-                    ))
-                    :
-                    <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
-                  }
+         
+            <div className={`grid w-full  ${openWallet ? ' lg:grid-cols-3' : 'lg:grid-cols-4'} sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
+              style={{
+                maxWidth: openWallet ? 'calc(100% - 300px)' : '100%', 
+                transition: 'max-width 0.5s ease-in-out',
+                rowGap: '2px'
+              }}>
+                  {/* <div className="flex flex-wrap gap-6 mt-8"> */}
+                    {
+                      displayedContests?.length>0?
+                      displayedContests.map((contest, index) => (
+                        <div className=' h-fit mt-2' >
+                          <Card key={index} contest={contest} hub={hub} />
+                        </div>
+                      ))
+                      :
+                      <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
+                    }
+            </div>
           </div>
           <div className=''>
            
