@@ -6,8 +6,9 @@ import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Contest_Details from './ContestDetails';
 import WalletSidebar from '../../wallet/walletSidebar';
+import ProfileDrawer from '../Navbar/ProfileDrawer';
 
-const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) => {
+const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isDrawerOpen,onCloseProfile,openRefModal,setLoading }) => {
   const [selectedContest,setSelectContest]=useState('')
   const { selectedPlatform } = useFilterContext();
   const user=useSelector(state=>state.user.value)
@@ -19,6 +20,7 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) 
   const [displayedContests, setDisplayedContests] = useState(contests);
   const [hub,setHub]=useState('')
     useEffect(()=>{
+        console.log("user details ==>",user_details)
         const HUB=Cookies.get('selectedHubName')
         const space_id=Cookies.get('selectedHub')
         //console.log(space_id)
@@ -224,9 +226,9 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) 
           <div className={` transition-all h-screen duration-500 ${openWallet ? 'w-[calc(100%-100px)] ' : 'w-full'} p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}>
 
          
-            <div className={`grid w-full  ${openWallet ? ' lg:grid-cols-3' : 'lg:grid-cols-4'} sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
+            <div className={`grid w-full  ${openWallet || isDrawerOpen ? ' lg:grid-cols-3' : 'lg:grid-cols-4'}   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
               style={{
-                maxWidth: openWallet ? 'calc(100% - 300px)' : '100%', 
+                maxWidth: openWallet ? 'calc(100% - 300px)' : (isDrawerOpen ? 'calc(100% - 400px)' : '100%'),
                 transition: 'max-width 0.5s ease-in-out',
                 rowGap: '2px'
               }}>
@@ -234,7 +236,7 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) 
                     {
                       displayedContests?.length>0?
                       displayedContests.map((contest, index) => (
-                        <div className=' h-fit mt-2' >
+                        <div className=' h-fit' >
                           <Card key={index} contest={contest} hub={hub} />
                         </div>
                       ))
@@ -253,6 +255,15 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user }) 
                 setDiscord_user={setDiscord_user} 
               />
             )}
+            {isDrawerOpen && (
+                <ProfileDrawer 
+                setLoading={setLoading} 
+                user={user} 
+                onClose={onCloseProfile} 
+                isOpen={isDrawerOpen} 
+                openRefModal={openRefModal} />
+            )}
+
           </div>
 
         </div>

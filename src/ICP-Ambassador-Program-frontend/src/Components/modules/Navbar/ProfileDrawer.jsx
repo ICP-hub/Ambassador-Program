@@ -138,7 +138,7 @@ const ProfileDrawer = ({ user, onClose, isOpen, openRefModal, setLoading }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 lg:w-96 sm:w-full rounded-md h-full  overflow-y-scroll text-white font-poppins scrollbar-hide lg:my-3 sm:my-0 bg-[#1d1d21] shadow-lg p-6 z-50 transition-all duration-500 ease-in-out transform ${
+      className={`absolute top-0 right-0 lg:w-96 sm:w-full rounded-md h-full  overflow-y-scroll text-white font-poppins scrollbar-hide lg:my-3 sm:my-0 bg-[#1d1d21] shadow-lg p-6  transition-all duration-500 ease-in-out transform ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
