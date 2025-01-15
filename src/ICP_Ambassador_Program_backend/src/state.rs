@@ -181,7 +181,9 @@ pub struct Space{
     pub bg_css:Option<String>,
     pub urls:types::SpaceURLs,
     pub mission_count:u16,
-    pub conversion:u16
+    pub conversion:u16,
+    pub moderators:Vec<Principal>,
+    pub editors:Vec<Principal>
 }
 
 impl Storable for Space{

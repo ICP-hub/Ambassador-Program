@@ -3,7 +3,7 @@ type Admin = record {
   spaces : vec text;
   wallet_id : principal;
 };
-type AdminRole = variant { HubLeader; SuperAdmin };
+type AdminRole = variant { HubLeader; Editor; SuperAdmin; Moderator };
 type Benefactors = record { benefactors : vec text; user : text };
 type CreateMission = record {
   max_users_rewarded : nat64;
@@ -25,12 +25,16 @@ type CreateSpace = record {
   conversion : nat16;
 };
 type Errors = variant {
+  AlreadyEditor;
   ErrorUpdatingAdmin;
   NoSpaceFound;
   ErrUpdatingMissionCount;
   NoSubmissionFound;
   NotRegisteredAsAdmin;
+  NotAuthorized;
   NotASuperAdmin;
+  NotRegisteredAsModerator;
+  AlreadyModerator;
   ReferrerNotFound;
   SubmissionAlreadyReviewed;
   ErrUpdatingSubmission;
@@ -41,6 +45,7 @@ type Errors = variant {
   MissionInActive;
   AlreadyAdmin;
   AlreadySuperAdmin;
+  NotRegisteredAsEditor;
   NoUserFound;
 };
 type FundEntry = record { balance : nat64; locked : nat64; space_id : text };
@@ -77,7 +82,9 @@ type Result_7 = variant { Ok : vec Mission; Err : Errors };
 type Result_8 = variant { Ok : vec record { text; Space }; Err : Errors };
 type Result_9 = variant { Ok : vec principal; Err : Errors };
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
+type Role = variant { Editor; Moderator };
 type Space = record {
+  editors : vec principal;
   owner : principal;
   shor_description : opt text;
   chain : text;
@@ -89,6 +96,7 @@ type Space = record {
   mission_count : nat16;
   bg_css : opt text;
   bg_img : opt text;
+  moderators : vec principal;
   conversion : nat16;
   space_id : text;
 };
@@ -152,6 +160,7 @@ service : {
   add_admin_by_super_admin : (principal) -> (Result);
   add_funds : (text, nat64) -> (Result_1);
   add_or_update_submission : (Submission) -> (Result);
+  add_role_to_space : (text, principal, Role) -> (Result_2);
   add_task_submission : (Submission, TaskSubmitted) -> (Result_1);
   add_wallet : (text) -> (Result_1);
   approve_submission : (text) -> (Result_1);

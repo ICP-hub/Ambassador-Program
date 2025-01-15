@@ -51,6 +51,7 @@ pub fn get_moderator()->Result<Moderators,Errors>{
         None => Err(Errors::NotRegisteredAsModerator)
     }
 }
+
 #[query(guard = check_anonymous)]
 pub fn get_editor()->Result<Editors,Errors>{
     let editor = EDITOR_MAP.with(|map| map.borrow().get(&caller()));

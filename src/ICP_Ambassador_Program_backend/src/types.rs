@@ -231,7 +231,8 @@ pub enum Errors{
     ErrUpdatingSubmission,
     NoSubmissionFound,
     ReferrerNotFound,
-    SubmissionAlreadyReviewed
+    SubmissionAlreadyReviewed,
+    NotAuthorized,
 }
 
 

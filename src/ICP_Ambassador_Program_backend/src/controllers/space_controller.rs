@@ -43,7 +43,9 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
             github:None
         },
         mission_count:0,
-        conversion:space.conversion
+        conversion:space.conversion,
+        moderators:Vec::new(),
+        editors:Vec::new()
     };
 
     let inserted=SPACE_MAP.with(|map| map.borrow_mut().insert(new_space.space_id.clone(), new_space));
@@ -51,6 +53,7 @@ pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
 }
 
 #[update(guard = check_anonymous)]
+// add guard to check if the caller is the owner of the space or a Moderator or ed
 pub fn update_space(updated_space:Space)->Result<(),Errors>{
 
     if !is_valid_admin(caller()){
