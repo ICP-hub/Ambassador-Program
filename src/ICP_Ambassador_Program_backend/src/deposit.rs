@@ -1,0 +1,144 @@
+use candid::{CandidType, Deserialize, Nat, Principal};
+pub(crate) use ic_cdk::api::call::call;
+use ic_cdk_macros::update;
+use icrc_ledger_types::icrc1::account::Account;
+use icrc_ledger_types::icrc1::transfer::{BlockIndex, NumTokens};
+use icrc_ledger_types::icrc2::approve::{ApproveArgs, ApproveError};
+use icrc_ledger_types::icrc2::transfer_from::{TransferFromArgs, TransferFromError};
+use serde::Serialize;
+
+#[derive(CandidType, Deserialize, Debug)]
+struct TransferArg {
+    from_subaccount: Option<Vec<u8>>,
+    to: Account,
+    amount: Nat,
+    fee: Option<u64>,
+    memo: Option<Vec<u8>>,
+    created_at_time: Option<u64>,
+}
+
+#[derive(CandidType, Deserialize)]
+enum TransferResult {
+    Ok(Nat),
+    Err(String),
+}
+
+#[derive(CandidType, Deserialize, Serialize)]
+pub struct TransferArgs {
+    amount: NumTokens,
+    to_account: Account,
+}
+
+#[update]
+pub async fn withdraw_icp_from_canister(
+    canister_id: Principal,
+    amount: Nat,
+) -> Result<Nat, String> {
+    let user_principal = ic_cdk::caller();
+    // Validate input amount
+    if amount == Nat::from(0u32) {
+        return Err("Transfer amount must be greater than zero.".to_string());
+    }
+
+    // Validate user principal
+    if user_principal == Principal::anonymous() {
+        return Err("Invalid user principal: Cannot be anonymous.".to_string());
+    }
+
+    // Validate canister ID
+    if canister_id == Principal::anonymous() {
+        return Err("Invalid canister ID: Cannot be anonymous.".to_string());
+    }
+
+    // Debug: Log input arguments
+    ic_cdk::println!(
+        "Debug: Initiating transfer to {} with amount {} from canister wallet {}",
+        user_principal,
+        amount,
+        canister_id
+    );
+
+    // Define the parameters for the ICRC2 transfer call
+    let args = TransferArg {
+        from_subaccount: None, // Optionally specify a subaccount if needed
+        to: Account {
+            owner: user_principal, // The recipient of the transfer
+            subaccount: None,
+        },
+        amount: amount.clone(), // The amount of tokens to transfer
+        fee: None,              // Specify a fee if required
+        memo: None,             // Optional memo for the transfer
+        created_at_time: None,  // Optional timestamp
+    };
+
+    // Debug: Log constructed transfer arguments
+    ic_cdk::println!("Debug: TransferArg constructed: {:?}", args);
+
+    // Make the call to the ICRC2 token canister with the transfer arguments
+    let (result,): (TransferResult,) = call(
+        canister_id,      // The canister ID of the token ledger (ICRC2)
+        "icrc1_transfer", // The method to call
+        (args,),          // Transfer arguments
+    )
+    .await
+    .map_err(|e| format!("Transfer failed: {:?}", e))?;
+
+    // Check if the call was successful
+    match result {
+        TransferResult::Ok(balance) => {
+            // Debug: Log successful transfer
+            ic_cdk::println!("Debug: Transfer successful. New balance: {}", balance);
+            Ok(balance)
+        }
+        TransferResult::Err(err) => {
+            // Debug: Log transfer error
+            ic_cdk::println!("Error: Transfer failed: {:?}", err);
+            Err(format!("Transfer failed: {:?}", err))
+        }
+    }
+}
+
+#[update]
+pub async fn deposit_icp_to_canister(amount: u64) -> Result<BlockIndex, String> {
+    ic_cdk::println!("Transferring {:?} tokens to Canister Wallet", amount);
+
+    let transfer_from_args = TransferFromArgs {
+        // the account we want to transfer tokens from (in this case we assume the caller approved the canister to spend funds on their behalf)
+        from: Account::from(ic_cdk::caller()),
+        // can be used to distinguish between transactions
+        memo: None,
+        // the amount we want to transfer
+        amount: amount.into(),
+        // the subaccount we want to spend the tokens from (in this case we assume the default subaccount has been approved)
+        spender_subaccount: None,
+        // if not specified, the default fee for the canister is used
+        fee: None,
+        // the account we want to transfer tokens to
+        to: Account::from(Principal::from_text("be2us-64aaa-aaaaa-qaabq-cai").unwrap()),
+        // a timestamp indicating when the transaction was created by the caller; if it is not specified by the caller then this is set to the current ICP time
+        created_at_time: None,
+    };
+
+    // let icpLedger = "ryjl3-tyaaa-aaaaa-aaaba-cai";
+
+    // 1. Asynchronously call another canister function using `ic_cdk::call`.
+    ic_cdk::call::<(TransferFromArgs,), (Result<BlockIndex, TransferFromError>,)>(
+        // 2. Convert a textual representation of a Principal into an actual `Principal` object. The principal is the one we specified in `dfx.json`.
+        //    `expect` will panic if the conversion fails, ensuring the code does not proceed with an invalid principal.
+        Principal::from_text("ryjl3-tyaaa-aaaaa-aaaba-cai")
+            .expect("Could not decode the principal."),
+        // 3. Specify the method name on the target canister to be called, in this case, "icrc1_transfer".
+        "icrc2_transfer_from",
+        // 4. Provide the arguments for the call in a tuple, here `transfer_args` is encapsulated as a single-element tuple.
+        (transfer_from_args,),
+    )
+    .await // 5. Await the completion of the asynchronous call, pausing the execution until the future is resolved.
+    // 6. Apply `map_err` to transform any network or system errors encountered during the call into a more readable string format.
+    //    The `?` operator is then used to propagate errors: if the result is an `Err`, it returns from the function with that error,
+    //    otherwise, it unwraps the `Ok` value, allowing the chain to continue.
+    .map_err(|e| format!("failed to call ledger: {:?}", e))?
+    // 7. Access the first element of the tuple, which is the `Result<BlockIndex, TransferError>`, for further processing.
+    .0
+    // 8. Use `map_err` again to transform any specific ledger transfer errors into a readable string format, facilitating error handling and debugging.
+    .map_err(|e| format!("ledger transfer error {:?}", e))
+}

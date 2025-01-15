@@ -23,8 +23,16 @@ pub enum UserLevel {
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub enum AdminRole{
     SuperAdmin,
-    HubLeader
+    HubLeader,
+    Moderator,
+    Editor
 }
+// pub enum ModeratorRole{
+// Moderator
+// }
+// pub enum EditorRole{
+//     Editor
+// }
 
 // spaces
 
@@ -206,7 +214,11 @@ pub enum Errors{
     NotASuperAdmin,
     NotOwnerOrSuperAdmin,
     NotRegisteredAsAdmin,
+    NotRegisteredAsModerator,
+    NotRegisteredAsEditor,
     AlreadyAdmin,
+    AlreadyModerator,
+    AlreadyEditor,
     AlreadySuperAdmin,
     ErrorUpdatingAdmin,
     NoSpaceFound,

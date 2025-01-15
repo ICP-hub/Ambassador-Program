@@ -12,7 +12,6 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
         Some(value) => user_val=value,
         None => return Err(String::from("NO user found with this id"))
     }
-
     let mission=MISSION_MAP.with(|map| map.borrow().get(&submission.mission_id));
         match mission {
             Some(_) => (),
@@ -20,7 +19,6 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
         }
         if submission.submission_id.is_empty() {
             let id:String=format!("{}_{}",submission.mission_id,user_val.discord_id);
-    
             let mut new_submission:Submission=Submission{
                 mission_id:submission.mission_id,
                 submission_id:id,
@@ -31,7 +29,7 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
             };
 
             new_submission.tasks_submitted.push(task);
-    
+
             let prev_submissions=MISSION_TO_SUBMISSION_MAP.with(|map| map.borrow().get(&new_submission.mission_id));
             let mut prev_sub_val:Vec<String>;
     
@@ -46,9 +44,7 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
                 mission:new_submission.mission_id.clone(),
                 submissions:prev_sub_val
             };
-    
             MISSION_TO_SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.mission_id.clone(), sub_arr));
-            
             SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(),new_submission));
             return Ok(String::from("Task submitted successfully"));
         }else{
@@ -59,51 +55,50 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
                         return Err(String::from("Submissio already reviwed, cannot submit more tasks"))
                     }
                     let mut taskAlreadyExists:bool=false;
-
                     let task_id:u8;
-                    match task.clone(){
+                    match task.clone()
+                    {
                         TaskSubmitted::SendText { id, text }=>{
-                            task_id=id
+                         task_id=id
                         },
                         TaskSubmitted::SendTwitterPost { id, post }=>{
-                            task_id=id
+                         task_id=id
                         },
                         TaskSubmitted::SendUrl { id, url }=>{
-                            task_id=id
+                         task_id=id
                         },
                         TaskSubmitted::TwitterFollow { id, followed }=>{
-                            task_id=id
+                         task_id=id
                         },
                         TaskSubmitted::SendImage { id, img }=>{
-                            task_id=id
+                         task_id=id
                         }
                     }
-                    
                     for i in value.tasks_submitted.iter_mut(){
                         match i{
                             TaskSubmitted::SendText { id, text }=>{
                                 if *id==task_id{
-                                    taskAlreadyExists=true
+                                 taskAlreadyExists=true
                                 }
                             },
                             TaskSubmitted::SendTwitterPost { id, post }=>{
                                 if *id==task_id{
-                                    taskAlreadyExists=true
+                                 taskAlreadyExists=true
                                 }
                             },
                             TaskSubmitted::SendUrl { id, url }=>{
                                 if *id==task_id{
-                                    taskAlreadyExists=true
+                                 taskAlreadyExists=true
                                 }
                             },
                             TaskSubmitted::TwitterFollow { id, followed }=>{
                                 if *id==task_id{
-                                    taskAlreadyExists=true
+                                 taskAlreadyExists=true
                                 }
                             },
                             TaskSubmitted::SendImage { id, img }=>{
                                 if *id==task_id{
-                                    taskAlreadyExists=true
+                                 taskAlreadyExists=true
                                 }
                             }
                         }

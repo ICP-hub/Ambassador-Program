@@ -23,6 +23,7 @@ thread_local! {
     pub static ADMIN_MAP:RefCell<StableBTreeMap<Principal,Admin,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(2)))
     ));
+   
 
     pub static SPACE_MAP:RefCell<StableBTreeMap<String,Space,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
@@ -51,7 +52,13 @@ thread_local! {
     pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
     ));
-
+    pub static MODERATOR_MAP:RefCell<StableBTreeMap<Principal,Moderators,Memory>>=RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
+    ));
+    pub static EDITOR_MAP:RefCell<StableBTreeMap<Principal,Editors,Memory>>=RefCell::new(StableBTreeMap::new(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
+    ));
+   
 }
 
 // storables
@@ -229,7 +236,6 @@ pub struct Submission{
     pub tasks_submitted:Vec<TaskSubmitted>,
     pub status:SubmissionStatus,
     pub points_rewarded:bool
-    //needs to be optimized based on user inputs provided at frontend
 }
 
 impl Storable for Submission{
@@ -253,14 +259,50 @@ pub struct ImageIdWrapper {
 }
 impl Storable for ImageIdWrapper {
     const BOUND: Bound = Unbounded;
-
     fn to_bytes(&self) -> Cow<[u8]> {
         let serialized = serde_cbor::to_vec(self).expect("Failed to serialize IMAGEID");
         Cow::Owned(serialized)
     }
-
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_cbor::from_slice(&bytes).expect("Failed to deserialize IMAGEID")
     }
     
+}
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Moderators{
+    pub wallet_id:Principal,
+    pub role:types::AdminRole,
+    pub spaces:Vec<String>
+}
+
+impl Storable for Moderators{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Moderator");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Moderator")
+    }
+}
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Editors{
+    pub wallet_id:Principal,
+    pub role:types::AdminRole,
+    pub spaces:Vec<String>
+}
+
+impl Storable for Editors{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Editor");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Editor")
+    }
 }

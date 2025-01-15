@@ -2,7 +2,6 @@ use candid::{encode_one, Nat, Principal};
 use ic_cdk::api::{self, call::{CallResult, RejectionCode}, management_canister::main::{CanisterInstallMode, WasmModule}};
 use icrc_ledger_types::icrc1::{account::Account, transfer::{TransferArg, TransferError,NumTokens}};
 use crate::{icp_ledger_id, CreateFileInput, ImageIdWrapper, ProfileImageData, ReturnResult, IMAGE_MAP};
-use sha2::{Sha256, Digest};
 
 
 #[ic_cdk::update]
@@ -50,24 +49,28 @@ pub async fn upload_profile_image(asset_canister_id: String, image_data: Profile
     }
 }
 
-pub async fn transfer_amount(amount:u64,user:Principal,space_id:String)->Result<Nat,String>{
-    // let space_slice=space_id.as_bytes().to_vec();
-    // let space_blob=space_slice.try_into().map_err(|_| "Invalid space_id vector length".to_string())?;
-    let space_blob: [u8; 32] = Sha256::digest(space_id.as_bytes()).into();
-    let tokens=NumTokens::from(amount);
-    let transfer_args=TransferArg{
-        to:Account{
-            owner:user,
-            subaccount:None
+pub async fn transfer_amount(amount: u64,user: Principal,) -> Result<Nat, String> {
+    // Prepare the transfer arguments
+    let tokens = NumTokens::from(amount); // Amount in e8s (1 ICP = 10^8 e8s)
+    let transfer_args = TransferArg {
+        to: Account {
+            owner: user, // The recipient's principal ID
+            subaccount: None, // No subaccount for the recipient
         },
-        from_subaccount:Some(space_blob),
-        fee:None,
-        created_at_time:None,
-        memo:None,
-        amount:tokens.clone()
+        from_subaccount: None, // Deduct from the canister's main wallet
+        fee: None, // Use default fee
+        created_at_time: None, // Optional timestamp (use None for now)
+        memo: None, // Optional memo
+        amount: tokens.clone(),
     };
+
+    // Specify the Ledger canister ID
     let ledger_canister_id = Principal::from_text(icp_ledger_id)
         .map_err(|_| "Invalid ledger canister ID".to_string())?;
+
+    ic_cdk::println!("Transfer Arguments: {:?}", transfer_args);
+
+    // Call the Ledger canister's icrc1_transfer method
     let (result,): (Result<Nat, TransferError>,) = ic_cdk::call(
         ledger_canister_id,
         "icrc1_transfer",
@@ -75,23 +78,18 @@ pub async fn transfer_amount(amount:u64,user:Principal,space_id:String)->Result<
     )
     .await
     .map_err(|e| format!("Transfer failed: {:?}", e))?;
-    Ok(tokens)
+
+    ic_cdk::println!("Transfer Result: {:?}", result);
+
+    // Process the transfer result
+    match result {
+        Ok(transaction_id) => {
+            ic_cdk::println!("Transfer Successful. Transaction ID: {:?}", transaction_id);
+            Ok(transaction_id)
+        }
+        Err(e) => Err(format!("Transfer failed: {:?}", e)),
+    }
 }
-
-
-// #[ic_cdk::query]
-// pub fn get_profile_image_id(id:String) -> Option<u32> {
-//     // let principal = ic_cdk::api::caller();
-
-//     IMAGE_MAP.with(|image_map| {
-//         image_map.borrow()
-//             .get(&id)
-//             .map(|wrapper| wrapper.image_id.parse::<u32>().ok())
-//             .flatten() // To convert Option<Result<u32, _>> to Option<u32>
-//     })
-// }
-
-
 
 
 

@@ -8,7 +8,8 @@
     "build": "npm run build --workspaces --if-present",
     "prebuild": "npm run prebuild --workspaces --if-present",
     "pretest": "npm run prebuild --workspaces --if-present",
-    "start": "npm start --workspaces --if-present",
+    "start:frontend": "PORT=3000 npm run start --workspace=src/ICP-Ambassador-Program-frontend",
+    "start:builder": "PORT=3001 npm run start --workspace=src/ICP-Ambassador-Program-builder",
     "test": "npm test --workspaces --if-present"
   },
   "type": "module",
