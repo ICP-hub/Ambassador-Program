@@ -22,6 +22,7 @@ dist/
 .svelte-kit/
 
 # environment variables
-.env
+.environment
+JS_BUILD/
 HACK_BECAUSE_OF_ALLOW_JS
 /src/ICP-Ambassador-Program-frontend/src/Components/auth/authdata.js
