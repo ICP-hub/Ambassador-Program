@@ -1,25 +1,24 @@
+use bincode::Options;
 use candid::Principal;
 use ic_cdk::{caller,update,query};
 
 use crate::{Admin, Errors, AdminRole, ADMIN_MAP, SUPER_ADMIN,check_anonymous};
 
 #[update(guard = check_anonymous)]
-// pass optional parameter 
-pub fn register_admin()->Result<(),Errors>{
-    let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
-    
-    if admin.is_some(){
+pub fn register_admin(id: Option<Principal>) -> Result<(), Errors> {
+    let target_id = id.unwrap_or_else(caller);
+    let admin = ADMIN_MAP.with(|map| map.borrow().get(&target_id));
+    if admin.is_some() {
         return Err(Errors::AlreadyAdmin);
+    }
+    let new_admin: Admin = Admin {
+        wallet_id: target_id,
+        role: AdminRole::HubLeader,
+        spaces: vec![],
     };
-
-    let new_admin:Admin=Admin { 
-        wallet_id: caller(),
-        role:AdminRole::HubLeader,
-        spaces:vec![]  
-    };
-
-    ADMIN_MAP.with(|map| map.borrow_mut().insert(caller(), new_admin));
-    return Ok(());
+    ADMIN_MAP.with(|map| map.borrow_mut().insert(target_id, new_admin));
+    
+    Ok(())
 }
 
 #[update(guard = check_anonymous)]
