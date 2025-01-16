@@ -1,5 +1,5 @@
 use candid::{Principal, CandidType};
-use ic_cdk::{caller, update};
+use ic_cdk::{caller, query, update};
 use serde::{Serialize, Deserialize};
 use crate::{check_anonymous, Space, SPACE_MAP};
 
@@ -15,13 +15,10 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
     let caller = caller();
 
     // Ensure only the owner of the space can add moderators or editors
-    // let space = get_space(space_id)
     let mut space = get_space_by_id(space_id.clone())?;
     if space.owner != caller {
         return Err("Only the owner of the space can add moderators or editors".to_string());
     }
-
-    // let mut space = get_space_by_id(space_id)?;
 
     match role {
         Role::Moderator => {
@@ -44,7 +41,7 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
     Ok(())
 }
 
-
+#[query]
 pub fn get_space_by_id(space_id: String) -> Result<Space, String> {
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
 
