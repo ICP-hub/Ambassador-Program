@@ -4,6 +4,7 @@ use ic_cdk::{caller,update,query};
 use crate::{Admin, Errors, AdminRole, ADMIN_MAP, SUPER_ADMIN,check_anonymous};
 
 #[update(guard = check_anonymous)]
+// pass optional parameter 
 pub fn register_admin()->Result<(),Errors>{
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&caller()));
     

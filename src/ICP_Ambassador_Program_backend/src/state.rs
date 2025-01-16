@@ -273,7 +273,7 @@ impl Storable for ImageIdWrapper {
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct Moderators{
     pub wallet_id:Principal,
-    pub role:types::AdminRole,
+    pub role:types::AdminRole, // remove this
     pub spaces:Vec<String>
 }
 
@@ -292,7 +292,7 @@ impl Storable for Moderators{
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub struct Editors{
     pub wallet_id:Principal,
-    pub role:types::AdminRole,
+    pub role:types::AdminRole, // remove this
     pub spaces:Vec<String>
 }
 

@@ -60,6 +60,8 @@ pub fn update_space(updated_space:Space)->Result<(),Errors>{
         return Err(Errors::NotRegisteredAsAdmin)
     }
 
+    // check if caller is moderator of the space
+
     let old_space=SPACE_MAP.with(|map| map.borrow().get(&updated_space.space_id));
 
     match old_space {
