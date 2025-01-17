@@ -221,6 +221,7 @@ pub enum Errors{
     AlreadyEditor,
     AlreadySuperAdmin,
     ErrorUpdatingAdmin,
+    NotASpaceModerator,
     NoSpaceFound,
     SpaceUpdateError,
     ErrUpdatingMissionCount,

@@ -5,7 +5,7 @@ use crate::deposit::deposit_icp_to_canister;
 
 use crate::{check_anonymous, Admin, CreateSpace, Errors, FundEntry, Space, SpaceURLs, ADMIN_MAP, SPACE_FUND_MAP, SPACE_MAP};
 
-use super::{is_super_admin, is_valid_admin};
+use super::{get_space_by_id, is_super_admin, is_valid_admin, register_admin};
 
 #[update(guard = check_anonymous)]
 pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
@@ -59,29 +59,26 @@ pub fn update_space(updated_space:Space)->Result<(),Errors>{
     if !is_valid_admin(caller()){
         return Err(Errors::NotRegisteredAsAdmin)
     }
-
     // check if caller is moderator of the space
-
-    let old_space=SPACE_MAP.with(|map| map.borrow().get(&updated_space.space_id));
-
-    match old_space {
-        Some(value) => {
-            if value.owner != caller() {
-                return Err(Errors::NotOwnerOrSuperAdmin)
-            };
-        },
-        None => return Err(Errors::NoSpaceFound)
-    };
-
-   
-
-    let updated= SPACE_MAP.with(|map| map.borrow_mut().insert(updated_space.space_id.clone(), updated_space));
-    match updated {
-        Some(_) => return Ok(()),
-        None => return Err(Errors::SpaceUpdateError)
-    }
-
-
+            if updated_space.moderators.contains(&caller()) {
+               register_admin(Some(caller()));
+               let old_space=SPACE_MAP.with(|map| map.borrow().get(&updated_space.space_id));
+               match old_space {
+                   Some(value) => {
+                       if value.owner != caller() {
+                           return Err(Errors::NotOwnerOrSuperAdmin)
+                       };
+                   },
+                   None => return Err(Errors::NoSpaceFound)
+               };
+               let updated= SPACE_MAP.with(|map| map.borrow_mut().insert(updated_space.space_id.clone(), updated_space));
+               match updated {
+                   Some(_) => return Ok(()),
+                   None => return Err(Errors::SpaceUpdateError)
+               }
+            }else {
+                return Err(Errors::NotASpaceModerator);
+            }
 }
 
 // #[query(guard = check_anonymous)]
