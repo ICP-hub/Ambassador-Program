@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/user/userSlice';
 import { FaUserCircle } from "react-icons/fa";
 
-const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
+const Navbar = ({nav,openRefModal,setLoading, onWalletClick,onProfileClick }) => {
 
     const [isModelOpen,setModelOpen]=useState(false);
     const [isSideBarOpen,setSideBarOpen]=useState(false);
@@ -41,7 +41,7 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
                 const email = user ? user.email : undefined;
                 //console.log("user ==>",user)
                 //setDiscord_user(user);
-                console.log("Discord user ==>",discordl_user)
+                //console.log("Discord user ==>",discordl_user)
                 if (email) {
                     setUserEmail(email);
                 }
@@ -62,9 +62,9 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
         try{
             //console.log(userId)
             const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
-            console.log("Details from backend ==>",details)
+            //console.log("Details from backend ==>",details)
             const user = JSON.parse(Cookies.get('discord_user'));
-            console.log("Discord user from cookies ==>", user);
+            //console.log("Discord user from cookies ==>", user);
 
             
             const updatedDetails = {
@@ -75,6 +75,7 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
             
             dispatch(updateUser(updatedDetails));
             setDiscord_user(updatedDetails);
+            
             // dispatch(updateUser(details[0]))
             // setDiscord_user(details[0])
         }catch(e){
@@ -106,23 +107,23 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
       }, []);
 
 
-      const handleProfileClick = () => {
-        setIsDrawerOpen(true);
-    };
+    //   const handleProfileClick = () => {
+    //     setIsDrawerOpen(true);
+    // };
 
-    const handleCloseDrawer = () => {
-        setIsDrawerOpen(false);
-    };
+    // const handleCloseDrawer = () => {
+    //     setIsDrawerOpen(false);
+    // };
 
-    const handleCloseWallet = () => {
+    // const handleCloseWallet = () => {
        
-        setOpenWallet(false);
-    };
+    //     setOpenWallet(false);
+    // };
 
-    const handleWallet =() =>{
+    // const handleWallet =() =>{
       
-        setOpenWallet(true);
-    }
+    //     setOpenWallet(true);
+    // }
 
     
     
@@ -186,7 +187,7 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
                     style={{ fontSize: '20px', cursor: 'pointer' }}/>   
             </div> */}
             {discordl_user ? (
-          <div className='lg:block ' onClick={handleProfileClick}>
+          <div className='lg:block ' onClick={onProfileClick}>
             <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
               {/* {userEmail} 
               <button className="ml-4 text-red-500">Logout</button> */}
@@ -246,7 +247,7 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
                                     <input className='text-white bg-transparent outline-none border-none placeholder:font-bold'  placeholder='Search'/>
                                 </div>
                                 {discordl_user ? (
-                                    <div className='lg:block sm:hidden' onClick={handleProfileClick}>
+                                    <div className='lg:block sm:hidden' onClick={onProfileClick}>
                                         <div className='text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer'>
                                         <FaUserCircle className='w-10 h-10 rounded-full text-gray-500'/>
                                         </div>
@@ -289,9 +290,9 @@ const Navbar = ({nav,openRefModal,setLoading, onWalletClick }) => {
             )}
         <LoginModel isOpen={isModelOpen} onClose={() => setModelOpen(false)} isReferred={isReferred} />
         <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)} />
-        {isDrawerOpen && (
+        {/* {isDrawerOpen && (
                 <ProfileDrawer setLoading={setLoading} user={discordl_user} onClose={handleCloseDrawer} isOpen={isDrawerOpen} openRefModal={openRefModal} />
-            )}
+            )} */}
         {/* {openWallet &&(
                 <WalletSidebar onClose={handleCloseWallet} user={discordl_user} isOpen={openWallet} setDiscord_user={setDiscord_user}/>
         )} */}

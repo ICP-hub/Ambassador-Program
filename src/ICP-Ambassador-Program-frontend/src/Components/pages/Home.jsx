@@ -22,17 +22,27 @@ const Home = () => {
   const [refModal,openRefModal]=useState(false)
   const [openWallet, setOpenWallet] = useState(false);
   const [discordl_user,setDiscord_user]=useState()
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const nav=useNavigate()
   const dispatch=useDispatch()
 
   const handleWalletToggle = () => {
-    console.log("open wallet")
-    setOpenWallet((prev) => !prev); // Toggle wallet sidebar
+    //console.log("open wallet")
+    setIsDrawerOpen(false)
+    setOpenWallet((prev) => !prev); 
   };
 
   const handleCloseWallet = () => {
-    setOpenWallet(false); // Close wallet sidebar
+    setOpenWallet(false); 
   };
+
+  const handleProfileToggle = () =>{
+    setOpenWallet(false)
+    setIsDrawerOpen((prev)=> !prev)
+  }
+  const handleCloseaProfile = () =>{
+    setIsDrawerOpen(false);
+  }
 
 
   useEffect(() => {
@@ -43,7 +53,7 @@ const Home = () => {
                   const email = user ? user.email : undefined;
                   //console.log("user ==>",user)
                   //setDiscord_user(user);
-                  console.log("Discord user ==>",discordl_user)
+                  //console.log("Discord user ==>",discordl_user)
                   if (email) {
                       setUserEmail(email);
                   }
@@ -64,19 +74,20 @@ const Home = () => {
           try{
               //console.log(userId)
               const details = await ICP_Ambassador_Program_backend.get_user_data(userId);
-              console.log("Details from backend ==>",details)
+              //console.log("Details from backend ==>",details)
               const user = JSON.parse(Cookies.get('discord_user'));
-              console.log("Discord user from cookies ==>", user);
+              //console.log("Discord user from cookies ==>", user);
   
               
               const updatedDetails = {
               ...details[0], 
               avatar: user.avatar, 
               };
-  
-              
+   
+              //console.log("user_details in home page ==>",updatedDetails)
               dispatch(updateUser(updatedDetails));
               setDiscord_user(updatedDetails);
+              setUser(updatedDetails)
               // dispatch(updateUser(details[0]))
               // setDiscord_user(details[0])
           }catch(e){
@@ -200,7 +211,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col rounded-md m-3 bg-[#16161a] " >
-      <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading} onWalletClick={handleWalletToggle}/>
+      <Navbar nav={nav} openRefModal={openRefModal} setLoading={setLoading} onWalletClick={handleWalletToggle} onProfileClick={handleProfileToggle}/>
       <FilterProvider>
         <div className="flex flex-grow p-2  rounded-md ">
           
@@ -210,8 +221,13 @@ const Home = () => {
           <div className="w-full h-full">
             <Contests openWallet={openWallet} 
               onCloseWallet={handleCloseWallet} 
-              user_details={discordl_user} 
-              setDiscord_user={setDiscord_user} />
+              user_details={user} 
+              setDiscord_user={setDiscord_user} 
+              isDrawerOpen={isDrawerOpen}
+              onCloseProfile={handleCloseaProfile}
+              openRefModal={openRefModal} 
+              setLoading={setLoading} 
+              />
           </div>
         </div>
       </FilterProvider>

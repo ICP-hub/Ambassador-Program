@@ -111,7 +111,7 @@ const Card = ({ contest,hub }) => {
 
 
   return (
-    <div className=" text-white p-4 rounded-lg  shadow-lg font-poppins min-w-[350px]" style={{backgroundColor:'#1d1d21'}} onClick={handleCard} >
+    <div className=" text-white p-4 rounded-lg  shadow-lg mb-2 font-poppins min-w-[350px]" style={{backgroundColor:'#1d1d21'}} onClick={handleCard} >
       <div className='flex justify-between items-center'>
         <div className='flex gap-5 items-center'>
           <div>
