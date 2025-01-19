@@ -1,16 +1,24 @@
 use bincode::Options;
-use candid::Principal;
+use candid::{CandidType, Principal};
 use ic_cdk::{caller,update,query};
+use serde::{Deserialize, Serialize};
 
 use crate::{Admin, Errors, AdminRole, ADMIN_MAP, SUPER_ADMIN,check_anonymous};
 
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub enum Role {
+    Moderator,
+    Editor
+}
+
 #[update(guard = check_anonymous)]
-pub fn register_admin(id: Option<Principal>) -> Result<(), Errors> {
-    let target_id = id.unwrap_or_else(caller);
+pub fn register_admin() -> Result<(), Errors> {
+    let target_id = caller();
     let admin = ADMIN_MAP.with(|map| map.borrow().get(&target_id));
     if admin.is_some() {
         return Err(Errors::AlreadyAdmin);
     }
+
     let new_admin: Admin = Admin {
         wallet_id: target_id,
         role: AdminRole::HubLeader,
@@ -19,6 +27,58 @@ pub fn register_admin(id: Option<Principal>) -> Result<(), Errors> {
     ADMIN_MAP.with(|map| map.borrow_mut().insert(target_id, new_admin));
     
     Ok(())
+}
+
+#[update(guard = check_anonymous)]
+pub fn register_admin_by_principal(id:Principal, role:Role)->Result<(),Errors>{
+
+    let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
+    if admin.is_some(){
+        return Err(Errors::AlreadyAdmin);
+    };
+
+
+    let new_admin = match role {
+        Role::Moderator => Admin {
+            wallet_id: id,
+            role: AdminRole::Moderator,
+            spaces: vec![],
+        },
+        Role::Editor => Admin {
+            wallet_id: id,
+            role: AdminRole::Editor,
+            spaces: vec![],
+        },
+    };
+
+    // match role {
+    //     Role::Moderator => {
+    //         let new_admin:Admin=Admin { 
+    //             wallet_id: id,
+    //             role:AdminRole::Moderator,
+    //             spaces:vec![]    
+    //         };
+    //         ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
+    //     },
+    //     Role::Editor => {
+    //         let new_admin:Admin=Admin { 
+    //             wallet_id: id,
+    //             role:AdminRole::Editor,
+    //             spaces:vec![]    
+    //         };
+    //         ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
+    //     }
+        
+    // }
+
+    // let new_admin:Admin=Admin { 
+    //     wallet_id: id,
+    //     role:Role::Moderator,
+    //     spaces:vec![]    
+    // };
+
+    ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
+    return Ok(());
 }
 
 #[update(guard = check_anonymous)]

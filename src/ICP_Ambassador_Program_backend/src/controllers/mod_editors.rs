@@ -1,7 +1,7 @@
 use candid::Principal;
 use ic_cdk::{caller,update,query};
 
-use crate::{check_anonymous, check_moderator, AdminRole, Editors, Errors, Moderators, Submission, SubmissionStatus, EDITOR_MAP, MISSION_MAP, MODERATOR_MAP, SUBMISSION_MAP};
+use crate::{check_anonymous, AdminRole, Editors, Errors, Moderators, Submission, SubmissionStatus, EDITOR_MAP, MISSION_MAP, MODERATOR_MAP, SUBMISSION_MAP};
 
 use super::{is_super_admin, user_controller};
 
@@ -42,7 +42,8 @@ pub fn register_editor()->Result<(),Errors>{
 }
 
 
-#[query(guard =check_moderator)]
+// #[query(guard = check_moderator)]
+#[query]
 pub fn get_moderator()->Result<Moderators,Errors>{
     let moderator = MODERATOR_MAP.with(|map| map.borrow().get(&caller()));
     
@@ -91,7 +92,8 @@ pub fn get_editor_by_principal(id:Principal)->Result<Editors,Errors>{
     }
 }
 
-#[query(guard = check_moderator)]
+// #[query(guard = check_moderator)]
+#[query]
 pub fn verify_task(id:String)->Result<String,String>{
     let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
     let mut new_submission:Submission;

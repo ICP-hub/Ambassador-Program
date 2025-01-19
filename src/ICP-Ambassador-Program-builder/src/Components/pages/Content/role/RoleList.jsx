@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SouthIcon from '@mui/icons-material/South';
 import {
   Autocomplete,
@@ -22,80 +22,100 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import { format } from 'date-fns';
 import { LoadingButton } from '@mui/lab';
 import { AutoCompleteUser } from '../../autoCompleteInputSearch/AutoCompleteUser';
-
-const sampleData = {
-  totalAmount: 3,
-  data: [
-    {
-      user: {
-        userId: '1',
-        userName: 'John Doe',
-      },
-      role: 'Admin',
-      createdAt: '2023-09-01T10:30:00Z',
-    },
-    {
-      user: {
-        userId: '2',
-        userName: 'Jane Smith',
-      },
-      role: 'Editor',
-      createdAt: '2023-09-10T14:20:00Z',
-    },
-    {
-      user: {
-        userId: '3',
-        userName: 'Sam Wilson',
-      },
-      role: 'Viewer',
-      createdAt: '2023-09-15T08:45:00Z',
-    },
-  ],
-};
-
-const staticUserProfiles = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Smith' },
-  { id: 3, name: 'Alice Johnson' },
-];
+import { useSelector } from 'react-redux';
+import { Principal } from '@dfinity/principal';
 
 const RoleList = () => {
   const [showAssignNewRoleModal, setShowAssignNewRoleModal] = useState(false);
-  const [data, setData] = useState(sampleData);
-  const [userToAdd, setUserToAdd] = useState(null);
+  const [data, setData] = useState([]);
+  const [userPrincipal, setUserPrincipal] = useState('');
   const [selectedRole, setSelectedRole] = useState(''); // State for selected role
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
 
-  const handleClose = () => {
-    setShowAssignNewRoleModal(false);
-    setUserToAdd(null);
-    setSelectedRole(''); 
+  const actors = useSelector(state => state.actor.value);
+
+  const spaces = useSelector(state => state.spaces.value);
+
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  const getRolesList = async () => {
+    try {
+      await actors?.backendActor.get_space(spaces?.space_id)
+        .then((res) => {
+          console.log("Roles list fetched successfully!");
+          const editors = res.Ok.editors || [];
+          const moderators = res.Ok.moderators || [];
+
+          const editorObjects = editors.map((editorId, index) => ({
+            id: `editor_${index}`,
+            wallet: editorId.toText(),
+            role: "Editor",
+          }));
+
+          const moderatorObjects = moderators.map((moderatorId, index) => ({
+            id: `moderator_${index}`,
+            wallet: moderatorId.toText(),
+            role: "Moderator",
+          }));
+
+          const rolesList = [...editorObjects, ...moderatorObjects];
+
+          console.log("rolesList: ", rolesList);
+
+          setData(rolesList);
+
+          setTotalAmount(rolesList.length);
+
+
+
+
+        })
+        .catch((err) => {
+          console.error("Error fetching roles list: ", err);
+        });
+    } catch (error) {
+      console.error('Error fetching roles list: ', error);
+    }
   };
 
-  const handleAddUser = () => {
-    if (userToAdd && selectedRole) {
-      const newUser = {
-        user: {
-          userId: (data.data.length + 1).toString(), 
-          userName: userToAdd.name,
-        },
-        role: selectedRole, 
-        createdAt: new Date().toISOString(),
-      };
+  const handleClose = () => {
+    setShowAssignNewRoleModal(false);
+    setSelectedRole('');
+  };
 
-      setData((prevData) => ({
-        ...prevData,
-        totalAmount: prevData.totalAmount + 1,
-        data: [...prevData.data, newUser],
-      }));
+  const handleAddUser = async () => {
+    if (userPrincipal && selectedRole) {
+      try {
+        const space_id = spaces?.space_id;
+        const user_principal = Principal.fromText(userPrincipal);
+        const roleVariant = { [selectedRole]: null }; // Correct variant format
+
+        console.log("space_id: ", space_id);
+        console.log("user_principal: ", user_principal);
+        console.log("roleVariant: ", roleVariant);
+
+        await actors?.backendActor.add_role_to_space(space_id, user_principal, roleVariant)
+          .then((res) => {
+            console.log("Role added successfully!");
+            console.log("res : ", res);
+          })
+          .catch((err) => {
+            console.error("Error adding role: ", err);
+          });
+
+      } catch (error) {
+        console.error("Error adding role: ", error);
+      }
 
       handleClose();
+      getRolesList();
     }
   };
 
@@ -107,6 +127,10 @@ const RoleList = () => {
     setLimit(parseInt(event.target.value, 10));
     setPage(1);
   };
+
+  useEffect(() => {
+    getRolesList();
+  }, []);
 
   return (
     <div>
@@ -127,21 +151,23 @@ const RoleList = () => {
               <DialogContent>
                 <DialogContentText>
                   <Box className="text-sm mb-2">Please type user name</Box>
-                  <AutoCompleteUser 
-                    options={staticUserProfiles}
-                    onSelected={(user) => setUserToAdd(user)}
-                    noOptionsText="No users found"
+                  <TextField
+                    fullWidth
                     label="Type user name"
+                    variant="outlined"
+                    value={userPrincipal}
+                    onChange={(e) => setUserPrincipal(e.target.value)}
                   />
+
+
                   <Box className="text-sm mt-2 mb-2">Role</Box>
                   <Select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value)}
                     fullWidth
                   >
-                    <MenuItem value="Owner">Owner</MenuItem>
                     <MenuItem value="Editor">Editor</MenuItem>
-                    <MenuItem value="Viewer">Viewer</MenuItem>
+                    <MenuItem value="Moderator">Moderator</MenuItem>
                   </Select>
                 </DialogContentText>
               </DialogContent>
@@ -162,37 +188,29 @@ const RoleList = () => {
             <Table sx={{ minWidth: 650 }} aria-label="List of roles" size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>User ID</TableCell>
-                  <TableCell>User Name</TableCell>
+                  <TableCell>Wallet</TableCell>
                   <TableCell>Role</TableCell>
-                  <TableCell className="flex gap-3">
-                    Joined at
-                    <IconButton>
-                      <SouthIcon style={{ fontSize: '20px' }} />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell />
                 </TableRow>
               </TableHead>
+
               <TableBody>
-                {data.data.map((userRole) => (
-                  <TableRow key={userRole.user.userId}>
-                    <TableCell>{userRole.user.userId}</TableCell>
-                    <TableCell>{userRole.user.userName}</TableCell>
-                    <TableCell>{userRole.role}</TableCell>
-                    <TableCell>
-                      {format(new Date(userRole.createdAt), 'yyyy, MMM d, HH:mm')}
-                    </TableCell>
-                    <TableCell />
-                  </TableRow>
-                ))}
+                {data.map((userRole) => {
+                  return (
+                    <TableRow key={userRole?.id}>
+                      <TableCell>{userRole?.wallet}</TableCell>
+                      <TableCell>{userRole?.role}</TableCell>
+                    </TableRow>
+                  );
+                }
+                )}
               </TableBody>
+
             </Table>
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[15, 50, 100]}
             component="div"
-            count={data.totalAmount}
+            count={totalAmount}
             rowsPerPage={limit}
             page={page - 1}
             onPageChange={handleChangePage}

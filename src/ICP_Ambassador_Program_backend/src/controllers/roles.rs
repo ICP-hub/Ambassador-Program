@@ -1,18 +1,22 @@
 use candid::{Principal, CandidType};
 use ic_cdk::{caller, query, update};
 use serde::{Serialize, Deserialize};
-use crate::{check_anonymous, Space, SPACE_MAP};
+use crate::{check_anonymous, Space, SPACE_MAP, };
+use super::register_admin_by_principal;
+use super::Role;
 
-#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-pub enum Role {
-    Moderator,
-    Editor,
-}
+// #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+// pub enum Role {
+//     Moderator,
+//     Editor
+// }
 
 // function to add a role (Moderator or Editor) to a space
 #[update(guard = check_anonymous)]
 pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role) -> Result<(), String> {
     let caller = caller();
+
+    let _ = register_admin_by_principal(user_principal, role.clone());
 
     // call register_admin function to register new moderators and editors
     // code here
@@ -37,6 +41,8 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
             }
         },
     }
+
+    // Update the Moderators and Editors records
 
     // Update the space in the space map
     SPACE_MAP.with(|map| map.borrow_mut().insert(space_id.clone(), space));

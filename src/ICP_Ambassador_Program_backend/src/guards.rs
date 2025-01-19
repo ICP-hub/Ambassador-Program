@@ -10,11 +10,3 @@ pub fn check_anonymous() -> Result<(), String> {
     }
     Ok(())
 }
-pub fn check_moderator() -> Result<(), String> {
-    let admin =MODERATOR_MAP.with(|map| map.borrow().get(&caller()));
-    
-    if admin.is_some(){
-        return Ok(());
-    }
-    return Err(String::from(ANONYMOUS_USER));
-}

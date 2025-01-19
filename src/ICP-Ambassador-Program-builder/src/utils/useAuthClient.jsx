@@ -84,7 +84,9 @@ export const useAuthClient = () => {
                             ? "https://identity.ic0.app/"
                             : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
                         onError: (error) => reject((error)),
-                        onSuccess: () => resolve(clientInfo(authClient)),
+                        onSuccess: () => {
+                            console.log("login success")
+                            resolve(clientInfo(authClient))},
                     });
                 }
             } catch (error) {

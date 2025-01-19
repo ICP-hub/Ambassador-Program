@@ -2,10 +2,10 @@ use candid::{Nat, Principal};
 use ic_cdk::{caller,query,update};
 // use uuid::Uuid;
 use crate::deposit::deposit_icp_to_canister;
+use super::{get_space_by_id, is_super_admin, is_valid_admin, register_admin};
 
 use crate::{check_anonymous, Admin, CreateSpace, Errors, FundEntry, Space, SpaceURLs, ADMIN_MAP, SPACE_FUND_MAP, SPACE_MAP};
 
-use super::{get_space_by_id, is_super_admin, is_valid_admin, register_admin};
 
 #[update(guard = check_anonymous)]
 pub fn create_space(space:CreateSpace)->Result<Option<Space>,Errors>{
@@ -61,7 +61,7 @@ pub fn update_space(updated_space:Space)->Result<(),Errors>{
     }
     // check if caller is moderator of the space
             if updated_space.moderators.contains(&caller()) {
-               register_admin(Some(caller()));
+            //    register_admin(Some(caller()));
                let old_space=SPACE_MAP.with(|map| map.borrow().get(&updated_space.space_id));
                match old_space {
                    Some(value) => {
