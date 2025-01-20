@@ -23,7 +23,7 @@ const Model = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="w-full max-w-xs bg-gray-900 text-white p-4 rounded-lg shadow-lg md:absolute md:top-16 md:right-2 sm:max-w-sm sm:w-64">
+      <div className="w-full max-w-xs bg-gray-900 text-white p-4 rounded-lg shadow-lg absolute top-16 right-2 sm:max-w-sm sm:w-64">
         <div className="mb-6">
           <p className="text-sm font-semibold text-gray-400">Principal ID</p>
           <div className="flex items-center justify-between space-x-4">
