@@ -44,7 +44,12 @@ const Navbar = ({ nav }) => {
           <FaUserCircle className="w-10 h-10 rounded-full text-black" />
 
           {showLogout && (
-            <Model principalId={admin?.wallet} handleLogout={handleLogout} />
+            <Model
+              principalId={admin?.wallet}
+              walletBalanceICP="10.5"
+              walletBalanceUSD="$150.25"
+              handleLogout={handleLogout}
+            />
           )}
         </div>
       </div>
