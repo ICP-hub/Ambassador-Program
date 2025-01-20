@@ -124,7 +124,7 @@ To deploy your project to the Internet Computer, you need to run the following c
 dfx deploy --network ic
 ```
 
-> [!TIP]
+> [!NOTE]
 ## Granting Permissions for Canister Calls
 If you encounter a permission error while calling a canister from the command line, you can grant the necessary permissions to the principal using the following commands:
 
