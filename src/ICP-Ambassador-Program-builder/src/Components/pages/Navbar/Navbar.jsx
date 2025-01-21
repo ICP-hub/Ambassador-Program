@@ -16,6 +16,9 @@ const Navbar = ({ nav }) => {
 
   const handleLogout = () => {
     toast.success("Logout Successful");
+    logout();
+    setIsAuthenticated(false);
+    window.location.reload();
   };
 
   return (

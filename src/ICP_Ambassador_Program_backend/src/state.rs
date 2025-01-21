@@ -10,7 +10,7 @@ use crate::{types, SubmissionStatus, TaskSubmitted, Tasks, UserLevel};
 type Memory=VirtualMemory<DefaultMemoryImpl>;
 
 thread_local! {
-    static MEMORY_MANAGER:RefCell<MemoryManager<DefaultMemoryImpl>>=RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
+    pub static MEMORY_MANAGER:RefCell<MemoryManager<DefaultMemoryImpl>>=RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
 
     pub static USER_PROFILE_MAP:RefCell<StableBTreeMap<String,UserProfile,Memory>>=RefCell::new(StableBTreeMap::new(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0)))
@@ -50,13 +50,13 @@ thread_local! {
     ));
     
     pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(9)))
     ));
     pub static MODERATOR_MAP:RefCell<StableBTreeMap<Principal,Moderators,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(10)))
     ));
     pub static EDITOR_MAP:RefCell<StableBTreeMap<Principal,Editors,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(11)))
     ));
    
 }
