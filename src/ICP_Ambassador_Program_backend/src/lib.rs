@@ -1,4 +1,3 @@
-use ic_cdk_macros::*;
 mod state;
 mod types;
 mod constant;
@@ -12,8 +11,7 @@ use controllers::*;
 use state::*;
 use types::*;
 use constant::*;
-use candid::{Principal, Nat};
+use candid::Principal;
 use icrc_ledger_types::icrc1::transfer::BlockIndex;
-use icrc_ledger_types::icrc1::account::Account;
 
 ic_cdk::export_candid!();

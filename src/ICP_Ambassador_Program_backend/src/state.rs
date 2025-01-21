@@ -1,5 +1,5 @@
 use ic_stable_structures::memory_manager::{MemoryId, MemoryManager,VirtualMemory};
-use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable,StableVec,storable::Bound::{self,Unbounded}};
+use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable,storable::Bound::{self,Unbounded}};
 use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
@@ -16,49 +16,38 @@ thread_local! {
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0)))
     ));
 
-    pub static SUPER_ADMIN:RefCell<StableVec<Principal,Memory>>=RefCell::new(StableVec::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(1)))
-    ).unwrap());
-
     pub static ADMIN_MAP:RefCell<StableBTreeMap<Principal,Admin,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(2)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(1)))
     ));
-   
 
     pub static SPACE_MAP:RefCell<StableBTreeMap<String,Space,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(2)))
     ));
 
     pub static MISSION_MAP:RefCell<StableBTreeMap<String,Mission,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(4)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(3)))
     ));
 
     pub static SUBMISSION_MAP:RefCell<StableBTreeMap<String,Submission,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(4)))
     ));
 
     pub static REFERRAL_BENEFICIARY_MAP:RefCell<StableBTreeMap<String,Benefactors,Memory>>  = RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(5)))
     ));
 
     pub static MISSION_TO_SUBMISSION_MAP:RefCell<StableBTreeMap<String,SubmissionArr,Memory>> = RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(6)))
     ));
 
     pub static SPACE_FUND_MAP:RefCell<StableBTreeMap<String,FundEntry,Memory>> = RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(7)))
     ));
     
+    // need clarification on this -------------------
     pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(9)))
-    ));
-    pub static MODERATOR_MAP:RefCell<StableBTreeMap<Principal,Moderators,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(10)))
-    ));
-    pub static EDITOR_MAP:RefCell<StableBTreeMap<Principal,Editors,Memory>>=RefCell::new(StableBTreeMap::new(
-        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(11)))
-    ));
-   
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
+    ));   
 }
 
 // storables
@@ -269,42 +258,4 @@ impl Storable for ImageIdWrapper {
         serde_cbor::from_slice(&bytes).expect("Failed to deserialize IMAGEID")
     }
     
-}
-#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-pub struct Moderators{
-    pub wallet_id:Principal,
-    pub role:types::AdminRole, // remove this
-    pub spaces:Vec<String>
-}
-
-impl Storable for Moderators{
-    const BOUND: Bound = Unbounded;
-
-    fn to_bytes(&self) -> Cow<[u8]> {
-        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Moderator");
-        Cow::Owned(serialized)
-    }
-
-    fn from_bytes(bytes: Cow<[u8]>) -> Self {
-        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Moderator")
-    }
-}
-#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-pub struct Editors{
-    pub wallet_id:Principal,
-    pub role:types::AdminRole, // remove this
-    pub spaces:Vec<String>
-}
-
-impl Storable for Editors{
-    const BOUND: Bound = Unbounded;
-
-    fn to_bytes(&self) -> Cow<[u8]> {
-        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize Editor");
-        Cow::Owned(serialized)
-    }
-
-    fn from_bytes(bytes: Cow<[u8]>) -> Self {
-        serde_cbor::from_slice(&bytes).expect("Failed to deserialize Editor")
-    }
 }

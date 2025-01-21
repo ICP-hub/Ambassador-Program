@@ -1,31 +1,22 @@
-use candid::{Principal, CandidType};
+use candid::Principal;
 use ic_cdk::{caller, query, update};
-use serde::{Serialize, Deserialize};
 use crate::{check_anonymous, Space, SPACE_MAP, };
-use super::register_admin_by_principal;
+use super::assign_admin_space;
 use super::Role;
 
-// #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
-// pub enum Role {
-//     Moderator,
-//     Editor
-// }
-
-// function to add a role (Moderator or Editor) to a space
+// Access Control : Owner/Admin
 #[update(guard = check_anonymous)]
 pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role) -> Result<(), String> {
     let caller = caller();
-
-    let _ = register_admin_by_principal(user_principal, role.clone());
-
-    // call register_admin function to register new moderators and editors
-    // code here
 
     // Ensure only the owner of the space can add moderators or editors
     let mut space = get_space_by_id(space_id.clone())?;
     if space.owner != caller {
         return Err("Only the owner of the space can add moderators or editors".to_string());
     }
+
+    // add space to the user's admin spaces
+    let _ = assign_admin_space(user_principal, space_id.clone());
 
     match role {
         Role::Moderator => {
@@ -42,9 +33,6 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
         },
     }
 
-    // Update the Moderators and Editors records
-
-    // Update the space in the space map
     SPACE_MAP.with(|map| map.borrow_mut().insert(space_id.clone(), space));
 
     Ok(())
@@ -60,34 +48,31 @@ pub fn get_space_by_id(space_id: String) -> Result<Space, String> {
     }
 }
 
-// check if the caller is a moderator or editor of the space
-
-pub fn check_moderator(space_id: String) -> Result<(), String> {
-    let caller = caller();
+pub fn check_moderator(principal: Principal , space_id: String) -> Result<(), String> {
     let space = get_space_by_id(space_id)?;
 
-    if space.owner == caller {
+    if space.owner == principal {
         return Ok(());
     }
 
-    if space.moderators.contains(&caller){
+    if space.moderators.contains(&principal){
         return Ok(());
     }
 
-    Err("You are not a moderator or editor of this space".to_string())
+    Err("Only Admins and Moderators can perform this action".to_string())
 }
 
-pub fn check_editor(space_id: String) -> Result<(), String> {
-    let caller = caller();
+pub fn check_editor(principal: Principal , space_id: String) -> Result<(), String> {
+ 
     let space = get_space_by_id(space_id)?;
 
-    if space.owner == caller {
+    if space.owner == principal {
         return Ok(());
     }
 
-    if space.editors.contains(&caller){
+    if space.editors.contains(&principal){
         return Ok(());
     }
 
-    Err("You are not a moderator or editor of this space".to_string())
+    Err("Only Admins and Editors can perform this action".to_string())
 }

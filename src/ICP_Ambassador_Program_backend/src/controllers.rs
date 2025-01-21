@@ -16,8 +16,5 @@ pub use submission_controller::*;
 mod api_update;
 pub use api_update::*;
 
-mod mod_editors;
-pub use mod_editors::*;
-
 mod roles;
 pub use roles::*;
