@@ -7,6 +7,9 @@ export const BASE_URL = production
 export const DISCORD_CLIENT_ID = production
  ? 1303682602825158676
  : 1297821230786940948;
+
+export const CRYPTO_EXCHANGE_RATE_URL = "https://api.coinbase.com/v2/exchange-rates?currency=";
+export const DEFAULT_CURRENCY = "ICP";
 export const ENV = production ? "production" : "development";
 
 // dfx canister call --network ic g65yi-ciaaa-aaaao-a3vta-cai grant_permission '(record {permission = variant {Prepare}; to_principal = principal "6y7ne-r6mj6-f3ch3-ppd2a-e76j3-pncjq-jislm-7vqik-54bj6-tmfbe-yqe"})'

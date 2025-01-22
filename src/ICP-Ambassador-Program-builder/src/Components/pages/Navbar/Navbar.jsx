@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuthClient } from "../../../utils/useAuthClient";
 import { FaUserCircle } from "react-icons/fa";
@@ -9,7 +9,7 @@ const Navbar = ({ nav }) => {
   const [showLogout, setShowLogout] = useState(false);
   const admin = useSelector((state) => state.admin.value);
   const { logout, setIsAuthenticated } = useAuthClient();
-
+  
   const handleToggle = () => {
     setShowLogout(!showLogout);
   };
@@ -49,7 +49,7 @@ const Navbar = ({ nav }) => {
           {showLogout && (
             <Model
               principalId={admin?.wallet}
-              walletBalanceICP={10}
+              // walletBalanceICP={walletBalance}
               handleLogout={handleLogout}
             />
           )}
