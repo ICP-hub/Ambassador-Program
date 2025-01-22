@@ -4,13 +4,12 @@ mod constant;
 mod controllers;
 mod guards;
 mod deposit;
-use deposit::*;
-use guards::*;
-use state::*;
-use controllers::*;
 use state::*;
 use types::*;
 use constant::*;
+use controllers::*;
+use guards::*;
+use deposit::*;
 use candid::Principal;
 use icrc_ledger_types::icrc1::transfer::BlockIndex;
 
