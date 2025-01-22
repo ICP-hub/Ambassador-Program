@@ -46,8 +46,7 @@ const Navbar = ({ nav }) => {
           {showLogout && (
             <Model
               principalId={admin?.wallet}
-              walletBalanceICP="10.5"
-              walletBalanceUSD="$150.25"
+              walletBalanceICP={10}
               handleLogout={handleLogout}
             />
           )}

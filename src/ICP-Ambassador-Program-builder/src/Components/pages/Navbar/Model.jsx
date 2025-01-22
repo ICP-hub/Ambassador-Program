@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FiCopy, FiLogOut } from "react-icons/fi";
 import { FaWallet } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-const Model = ({
-  principalId,
-  handleLogout,
-  walletBalanceICP,
-  walletBalanceUSD,
-}) => {
+const Model = ({ principalId, handleLogout, walletBalanceICP }) => {
+  const [exchangeRate, setExchangeRate] = useState(null);
+  const [walletBalanceUSD, setWalletBalanceUSD] = useState("Loading...");
+
+  // Fetch exchange rate from Coinbase API
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await fetch(
+          "https://api.coinbase.com/v2/exchange-rates?currency=ICP"
+        );
+        const data = await response.json();
+        console.log(data);
+        const rate = parseFloat(data?.data?.rates?.USD);
+        if (!isNaN(rate)) {
+          setExchangeRate(rate);
+          setWalletBalanceUSD((walletBalanceICP * rate).toFixed(2));
+        } else {
+          setWalletBalanceUSD("Error fetching rate");
+        }
+      } catch (error) {
+        console.error("Failed to fetch exchange rate:", error);
+        setWalletBalanceUSD("Error fetching rate");
+      }
+    };
+
+    fetchExchangeRate();
+  }, [walletBalanceICP]);
+
   // Function to handle copying the principal ID
   const handleCopy = () => {
     navigator.clipboard
