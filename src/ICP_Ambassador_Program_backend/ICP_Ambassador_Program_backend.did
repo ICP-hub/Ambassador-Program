@@ -49,6 +49,7 @@ type Mission = record {
   description : text;
   end_date : text;
   start_date : text;
+  expiry_date : text;
   reward_currency : RewardCurrency;
   space_id : text;
   mission_id : text;
@@ -164,6 +165,7 @@ service : {
   get_user_data : (text) -> (opt UserProfile) query;
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
+  say_hello : () -> (text) query;
   update_space : (Space) -> (Result_1);
   upload_profile_image : (text, ProfileImageData) -> (Result);
   withdraw_points : (text, nat64) -> (Result);
