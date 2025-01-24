@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { DISCORD_CLIENT_SECRET } from '../../auth/authdata';
 import axios from 'axios';
 const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
-    //console.log("Spaces ==>",spaces)
+    console.log("Spaces ==>",spaces)
     const [referralCode, setReferralCode] = useState('');
     const [selectedHub, setSelectedHub] = useState([]);
     const [verified,setVerified] = useState(false)

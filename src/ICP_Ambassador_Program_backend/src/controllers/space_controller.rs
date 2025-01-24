@@ -87,7 +87,7 @@ pub fn update_space(updated_space: Space) -> Result<(), Errors> {
 }
 
 // Access Control : Open
-#[query(guard = check_anonymous)]
+#[query]
 pub fn get_space(space_id: String) -> Result<Space, Errors> {
 
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
@@ -109,7 +109,7 @@ pub fn get_space(space_id: String) -> Result<Space, Errors> {
 // }
 
 // Access Control : Open
-#[query(guard = check_anonymous)]
+#[query]
 pub fn get_all_spaces() -> Result<Vec<(String, Space)>, Errors> {
     let spaces: Vec<(String, Space)> = SPACE_MAP.with(|map| map.borrow().iter().collect());
     return Ok(Vec::from_iter(spaces));
