@@ -1,6 +1,5 @@
 use candid::Principal;
 use ic_cdk::caller;
-use crate::MODERATOR_MAP;
 
 use crate::ANONYMOUS_USER;
 

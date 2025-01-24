@@ -1,9 +1,10 @@
-use ic_cdk::{query, update};
+use ic_cdk::{caller, query, update};
 
 use crate::{Errors, Submission, SubmissionArr, SubmissionStatus, TaskSubmitted, UserProfile, MISSION_MAP, MISSION_TO_SUBMISSION_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
 
-use super::user_controller;
+use super::{check_editor, user_controller};
 
+// Access Control : User/Open
 #[update]
 pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<String,String>{
     let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&submission.user));
@@ -54,56 +55,56 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
                     if value.status == SubmissionStatus::Approved || value.status==SubmissionStatus::Rejected{
                         return Err(String::from("Submissio already reviwed, cannot submit more tasks"))
                     }
-                    let mut taskAlreadyExists:bool=false;
+                    let mut task_already_exists:bool=false;
                     let task_id:u8;
                     match task.clone()
                     {
-                        TaskSubmitted::SendText { id, text }=>{
+                        TaskSubmitted::SendText { id, text:_ }=>{
                          task_id=id
                         },
-                        TaskSubmitted::SendTwitterPost { id, post }=>{
+                        TaskSubmitted::SendTwitterPost { id, post:_ }=>{
                          task_id=id
                         },
-                        TaskSubmitted::SendUrl { id, url }=>{
+                        TaskSubmitted::SendUrl { id, url:_ }=>{
                          task_id=id
                         },
-                        TaskSubmitted::TwitterFollow { id, followed }=>{
+                        TaskSubmitted::TwitterFollow { id, followed:_ }=>{
                          task_id=id
                         },
-                        TaskSubmitted::SendImage { id, img }=>{
+                        TaskSubmitted::SendImage { id, img:_ }=>{
                          task_id=id
                         }
                     }
                     for i in value.tasks_submitted.iter_mut(){
                         match i{
-                            TaskSubmitted::SendText { id, text }=>{
+                            TaskSubmitted::SendText { id, text:_ }=>{
                                 if *id==task_id{
-                                 taskAlreadyExists=true
+                                 task_already_exists=true
                                 }
                             },
-                            TaskSubmitted::SendTwitterPost { id, post }=>{
+                            TaskSubmitted::SendTwitterPost { id, post:_ }=>{
                                 if *id==task_id{
-                                 taskAlreadyExists=true
+                                 task_already_exists=true
                                 }
                             },
-                            TaskSubmitted::SendUrl { id, url }=>{
+                            TaskSubmitted::SendUrl { id, url:_ }=>{
                                 if *id==task_id{
-                                 taskAlreadyExists=true
+                                 task_already_exists=true
                                 }
                             },
-                            TaskSubmitted::TwitterFollow { id, followed }=>{
+                            TaskSubmitted::TwitterFollow { id, followed:_ }=>{
                                 if *id==task_id{
-                                 taskAlreadyExists=true
+                                 task_already_exists=true
                                 }
                             },
-                            TaskSubmitted::SendImage { id, img }=>{
+                            TaskSubmitted::SendImage { id, img:_ }=>{
                                 if *id==task_id{
-                                 taskAlreadyExists=true
+                                 task_already_exists=true
                                 }
                             }
                         }
                     }
-                    if taskAlreadyExists{
+                    if task_already_exists{
                         return Err(String::from("Cannot submit a task twice"));
                     }
                     value.tasks_submitted.push(task);
@@ -118,6 +119,7 @@ pub fn add_task_submission(submission:Submission,task:TaskSubmitted)->Result<Str
         }
 }
 
+// Access Control : User/Open
 #[update]
 pub fn add_or_update_submission(submission:Submission)->Result<(),Errors>{
 
@@ -184,6 +186,7 @@ pub fn add_or_update_submission(submission:Submission)->Result<(),Errors>{
     }
 }
 
+// Access Control : User/Open
 #[query]
 pub fn get_submission(id:String)->Result<Submission,Errors>{
     let submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id));
@@ -194,13 +197,23 @@ pub fn get_submission(id:String)->Result<Submission,Errors>{
     }
 }
 
+// Access Control : User/Open
 #[query]
 pub fn get_all_mission_submissions(id:String)->Option<SubmissionArr>{
     return MISSION_TO_SUBMISSION_MAP.with(|map| map.borrow().get(&id));
 }
 
+// Access Control : Editor
 #[update]
 pub fn approve_submission(id:String)->Result<String,String>{
+
+    let space_id = extract_space_id(&id);
+    
+    if !check_editor(caller(), space_id.clone()).is_ok(){
+        return Err("Only the editor of the space can approve submissions".to_string());
+    }
+
+
     let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
     let mut new_submission:Submission;
     match old_submission{
@@ -229,8 +242,16 @@ pub fn approve_submission(id:String)->Result<String,String>{
     return Ok("still in development".to_string()); 
 }
 
+// Access Control : Editor
 #[update]
 pub fn reject_submission(id:String)->Result<String,String>{
+
+    let space_id = extract_space_id(&id);
+    
+    if !check_editor(caller(), space_id.clone()).is_ok(){
+        return Err("Only the editor of the space can approve submissions".to_string());
+    }
+    
     let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
     let mut new_submission:Submission;
     match old_submission{
@@ -240,4 +261,11 @@ pub fn reject_submission(id:String)->Result<String,String>{
     new_submission.status=SubmissionStatus::Rejected;
     SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(), new_submission));
     return Ok("This submission is rejected".to_string());
+}
+
+pub fn extract_space_id(mission_id: &str) -> String {
+    match mission_id.rsplit_once('_') {
+        Some((space_id, _)) => space_id.to_string(),
+        None => mission_id.to_string(),
+    }
 }

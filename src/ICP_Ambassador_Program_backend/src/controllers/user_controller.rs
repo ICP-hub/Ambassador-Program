@@ -101,15 +101,15 @@ fn add_referral(referrer: String, user: String)->Result<(),String> {
     return Ok(());
 }
 
-#[update]
-pub fn get_all_user_benefactors(id:String)->Result<Benefactors,String>{
-    let benefactors=REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow().get(&id));
-
-    match benefactors{
-        Some(val)=>return Ok(val),
-        None=>return Err("No benefactors found!".to_string())
-    }
-}
+// func to get all benefactors of a user (Currently not used)
+// #[update]
+// pub fn get_all_user_benefactors(id:String)->Result<Benefactors,String>{
+//     let benefactors=REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow().get(&id));
+//     match benefactors{
+//         Some(val)=>return Ok(val),
+//         None=>return Err("No benefactors found!".to_string())
+//     }
+// }
 
 #[query]
 pub fn get_user_data(id:String)->Option<UserProfile>{
@@ -197,7 +197,7 @@ pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
         None=>return
          Err(String::from("user wallet not set"))
     }
-    if(points>user_mut.redeem_points){
+    if points>user_mut.redeem_points {
         return Err(String::from("Not enough redeemable points"))
     }
     let amount:u64;
@@ -207,7 +207,6 @@ pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
     match space{
         Some(space_val)=>{
             amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000;
-            // let transfer_res=transfer_amount(amount, wallet, space_val.space_id).await;
             let transfer_res=transfer_amount(amount, wallet).await;
             match transfer_res{
                 Ok(_)=>{},
@@ -221,50 +220,3 @@ pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
     return Ok(String::from("amount redeemed to user"))
 }
 
-// #[update]
-// fn add_points(discord_id: String, redeem_points: u64) -> Result<String, String> {
-//     if redeem_points == 0 {
-//         return Err("Points to add must be greater than zero".to_string());
-//     }
-
-//     let mut user_to_update = None;
-
-//     // Fetch the user profile to update if it exists
-//     USER_PROFILE_MAP.with(|map| {
-//         if let Some(user) = map.borrow().get(&discord_id).clone() {
-//             user_to_update = Some(user.clone());
-//         }
-//     });
-
-//     if let Some(mut user) = user_to_update {
-//         // Update the user's redeem_points and xp_points
-//         user.redeem_points += redeem_points;
-//         user.xp_points += redeem_points;
-
-//         // Check and update user level if necessary
-//         let old_level = user.level.clone();
-//         user.level = determine_level(user.xp_points);
-
-//         if user.level != old_level {
-//             apply_milestone_bonus(&mut user);
-//         }
-
-//         // Insert the updated user profile back into USER_PROFILE_MAP
-//         USER_PROFILE_MAP.with(|map| {
-//             map.borrow_mut().insert(discord_id.clone(), user);
-//         });
-
-//         // Fetch the referrer and reward them if they exist
-//         let referrer_principal = USER_PROFILE_MAP.with(|map| {
-//             map.borrow().get(&discord_id).and_then(|u| u.referrer)
-//         });
-
-//         if let Some(referrer) = referrer_principal {
-//             reward_referrer(&referrer, redeem_points);
-//         }
-
-//         Ok("Points added successfully".to_string())
-//     } else {
-//         Err("User not found".to_string())
-//     }
-// }

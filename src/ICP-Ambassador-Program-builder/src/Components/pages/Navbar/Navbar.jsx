@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuthClient } from "../../../utils/useAuthClient";
 import { FaUserCircle } from "react-icons/fa";
@@ -9,13 +9,16 @@ const Navbar = ({ nav }) => {
   const [showLogout, setShowLogout] = useState(false);
   const admin = useSelector((state) => state.admin.value);
   const { logout, setIsAuthenticated } = useAuthClient();
-
+  
   const handleToggle = () => {
     setShowLogout(!showLogout);
   };
 
   const handleLogout = () => {
     toast.success("Logout Successful");
+    logout();
+    setIsAuthenticated(false);
+    window.location.reload();
   };
 
   return (
@@ -46,8 +49,7 @@ const Navbar = ({ nav }) => {
           {showLogout && (
             <Model
               principalId={admin?.wallet}
-              walletBalanceICP="10.5"
-              walletBalanceUSD="$150.25"
+              // walletBalanceICP={walletBalance}
               handleLogout={handleLogout}
             />
           )}
