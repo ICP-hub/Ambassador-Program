@@ -37,7 +37,8 @@ use super::{check_editor, lock_funds, unlock_funds};
 //         img:None,
 //         tasks:vec![],
 //         max_users_rewarded:mission.max_users_rewarded,
-//         pool:mission.pool
+//         pool:mission.pool,
+//         expiry_date: mission.expiry_date
 //     };
 //     let updated=SPACE_MAP.with(|map| map.borrow_mut().insert(space_val.space_id.clone(), space_val));
 //     match updated {
@@ -82,7 +83,8 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
         img:None,
         tasks:vec![],
         max_users_rewarded:0,
-        pool:0
+        pool:0,
+        expiry_date: String::from("")
     };
 
     let updated=SPACE_MAP.with(|map| map.borrow_mut().insert(space_val.space_id.clone(), space_val));
