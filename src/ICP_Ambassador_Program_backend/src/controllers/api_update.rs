@@ -1,7 +1,7 @@
 use candid::{Nat, Principal};
 use ic_cdk::api::call::{CallResult, RejectionCode};
 use icrc_ledger_types::icrc1::{account::Account, transfer::{TransferArg, TransferError,NumTokens}};
-use crate::{ICP_LEDGER_ID, CreateFileInput, ProfileImageData, ReturnResult};
+use crate::{CKUSDC_LEDGER_ID, CreateFileInput, ProfileImageData, ReturnResult};
 
 
 #[ic_cdk::update]
@@ -65,7 +65,7 @@ pub async fn transfer_amount(amount: u64,user: Principal,) -> Result<Nat, String
     };
 
     // Specify the Ledger canister ID
-    let ledger_canister_id = Principal::from_text(ICP_LEDGER_ID)
+    let ledger_canister_id = Principal::from_text(CKUSDC_LEDGER_ID)
         .map_err(|_| "Invalid ledger canister ID".to_string())?;
 
     ic_cdk::println!("Transfer Arguments: {:?}", transfer_args);

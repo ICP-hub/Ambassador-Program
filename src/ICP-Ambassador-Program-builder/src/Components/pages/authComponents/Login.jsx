@@ -8,6 +8,7 @@ import { updateAdmin } from '../../../redux/admin/adminSlice';
 import { useNavigate } from 'react-router-dom';
 import { createActor as createLedgerActor } from '../../../../../declarations/ledger';
 import toast from 'react-hot-toast';
+import { LEDGER_CANISTER_ID } from "../../../../../../DevelopmentConfig";
 
 const Login = () => {
 
@@ -37,7 +38,7 @@ const Login = () => {
                     let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
                         identity:authClient.getIdentity()
                     }})
-                    let ledgerActor = createLedgerActor("ryjl3-tyaaa-aaaaa-aaaba-cai",{agentOptions:{
+                    let ledgerActor = createLedgerActor(LEDGER_CANISTER_ID || 'xevnm-gaaaa-aaaar-qafnq-cai',{agentOptions: {
                         identity:authClient.getIdentity()
                     }})
 
