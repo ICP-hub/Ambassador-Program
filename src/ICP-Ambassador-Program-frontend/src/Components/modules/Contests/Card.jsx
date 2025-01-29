@@ -8,6 +8,7 @@ import { FaFileUpload } from "react-icons/fa";
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { FaTwitter, FaLink, FaTextHeight, FaImage } from "react-icons/fa";
+import {formatDate} from "../../utils/formatDate"
 
 const Card = ({ contest,hub }) => {
   //console.log(hub)
@@ -159,6 +160,9 @@ const Card = ({ contest,hub }) => {
                 : statusValue}
                 Once
             </span> */}
+            <span className="text-sm text-gray-500">
+              End: {formatDate(contest?.end_date)}
+            </span>
             <span className='text-sm text-gray-500'>Once</span>
             <h3 className="text-md  mb-2">{title}</h3>
             <div className="flex space-x-2">

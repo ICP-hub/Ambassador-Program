@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { createActor } from '../../../declarations/ICP_Ambassador_Program_backend';
 import { Principal } from '@dfinity/principal';
@@ -13,23 +13,26 @@ import {LEDGER_CANISTER_ID} from '../../../../DevelopmentConfig'
 const AuthContext = createContext();
 
 export const useAuthClient = () => {
-    const [authClient, setAuthClient] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
-    const [identity, setIdentity] = useState(null);
-    const [principal, setPrincipal] = useState(null);
-    const dispatch=useDispatch()
-        
-    const clientInfo = async (client) => {
-        const isAuthenticated = await client.isAuthenticated();
-        const identity = client.getIdentity();
-        const principal = identity.getPrincipal();
-        console.log("principal : ",Principal.anonymous().compareTo(principal),principal.toText())
+  const [authClient, setAuthClient] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [identity, setIdentity] = useState(null);
+  const [principal, setPrincipal] = useState(null);
+  const dispatch = useDispatch();
 
-        setAuthClient(client);
-        setIsAuthenticated(isAuthenticated);
-        setIdentity(identity);
-        setPrincipal(principal);
+  const clientInfo = async (client) => {
+    const isAuthenticated = await client.isAuthenticated();
+    const identity = client.getIdentity();
+    const principal = identity.getPrincipal();
+    console.log(
+      "principal : ",
+      Principal.anonymous().compareTo(principal),
+      principal.toText()
+    );
 
+    setAuthClient(client);
+    setIsAuthenticated(isAuthenticated);
+    setIdentity(identity);
+    setPrincipal(principal);
         if (isAuthenticated && identity && principal && principal.isAnonymous() === false) {
             let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
                 identity:identity
@@ -38,90 +41,98 @@ export const useAuthClient = () => {
                 identity:identity
             }})
 
-            dispatch(updateActor({
-                backendActor,
-                ledgerActor
-            }))
-            let res=await backendActor.get_admin()
-            console.log("login res : ",res)
-            if(res!=null && res!=undefined && res?.Err==undefined){
-                setIsAuthenticated(true);
-                console.log({
-                    wallet:principal?.toText()||principal,
-                    role:Object.keys(res.Ok)[0],
-                    spaces:res?.Ok?.spaces
-                })
-                dispatch(updateAdmin({
-                    wallet:principal?.toText()||principal,
-                    role:Object.keys(res.Ok.role)[0],
-                    spaces:res?.Ok?.spaces
-                }))
-            }
-            else{
-                console.log("You are not an admin -->" + principal)
-
-            }
-            
-        }
-
-        return true;
-    }
-
-    useEffect(() => {
-        (async () => {
-            const authClient = await AuthClient.create();
-            clientInfo(authClient);
-        })();
-    }, []);
-
-    const login = async () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (authClient.isAuthenticated() && ((await authClient.getIdentity().getPrincipal().isAnonymous()) === false)) {
-                    resolve(clientInfo(authClient));
-                } else {
-                    await authClient.login({
-                        identityProvider: process.env.DFX_NETWORK === "ic"
-                            ? "https://identity.ic0.app/"
-                            : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
-                        onError: (error) => reject((error)),
-                        onSuccess: () => {
-                            console.log("login success")
-                            resolve(clientInfo(authClient))},
-                    });
-                }
-            } catch (error) {
-                reject(error);
-            }
+      dispatch(
+        updateActor({
+          backendActor,
+          ledgerActor,
+        })
+      );
+      let res = await backendActor.get_admin();
+      console.log("login res : ", res);
+      if (res != null && res != undefined && res?.Err == undefined) {
+        setIsAuthenticated(true);
+        console.log({
+          wallet: principal?.toText() || principal,
+          role: Object.keys(res.Ok)[0],
+          spaces: res?.Ok?.spaces,
         });
-    };
-
-    const logout = async () => {
-        await authClient?.logout();
+        dispatch(
+          updateAdmin({
+            wallet: principal?.toText() || principal,
+            role: Object.keys(res.Ok.role)[0],
+            spaces: res?.Ok?.spaces,
+          })
+        );
+      } else {
+        console.log("You are not an admin -->" + principal);
+      }
     }
 
-    return {
-        login, logout, authClient, isAuthenticated, identity, principal,setIsAuthenticated
-    };
-}
+    return true;
+  };
+
+  useEffect(() => {
+    (async () => {
+      const authClient = await AuthClient.create();
+      clientInfo(authClient);
+    })();
+  }, []);
+
+  const login = async () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (
+          authClient.isAuthenticated() &&
+          (await authClient.getIdentity().getPrincipal().isAnonymous()) ===
+            false
+        ) {
+          resolve(clientInfo(authClient));
+        } else {
+          await authClient.login({
+            identityProvider:
+              process.env.DFX_NETWORK === "ic"
+                ? "https://identity.ic0.app/"
+                : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
+            onError: (error) => reject(error),
+            onSuccess: () => {
+              console.log("login success");
+              resolve(clientInfo(authClient));
+            },
+          });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
+  const logout = async () => {
+    await authClient?.logout();
+  };
+
+  return {
+    login,
+    logout,
+    authClient,
+    isAuthenticated,
+    identity,
+    principal,
+    setIsAuthenticated,
+  };
+};
 
 export const AuthProvider = ({ children }) => {
-    const auth = useAuthClient();
-    if (!auth.isAuthenticated) {
-        return (
-            <Provider store={store}>
-                <AuthContext.Provider>
-                    <Login />
-                </AuthContext.Provider>
-            </Provider>
-        )    
-    }
+  const auth = useAuthClient();
+  if (!auth.isAuthenticated) {
     return (
-        
-        <AuthContext.Provider value={auth}>
-            {children}
+      <Provider store={store}>
+        <AuthContext.Provider>
+          <Login />
         </AuthContext.Provider>
-    )
+      </Provider>
+    );
+  }
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

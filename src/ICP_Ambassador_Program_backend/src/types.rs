@@ -56,11 +56,12 @@ pub struct CreateSpace{
 }
 
 // missions 
-#[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
+#[derive(Clone, Debug,CandidType,Deserialize,Serialize,PartialEq)]
 pub enum MissionStatus{
     Draft,
     Active,
-    UnActive
+    UnActive,
+    Expired,
 }
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]

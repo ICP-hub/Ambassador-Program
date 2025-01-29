@@ -54,7 +54,7 @@ type Mission = record {
   space_id : text;
   mission_id : text;
 };
-type MissionStatus = variant { UnActive; Active; Draft };
+type MissionStatus = variant { UnActive; Active; Draft; Expired };
 type ProfileImageData = record { content : opt blob };
 type Result = variant { Ok : text; Err : text };
 type Result_1 = variant { Ok; Err : Errors };
@@ -157,6 +157,7 @@ service : {
   get_admin : () -> (Result_5) query;
   get_all_mission_submissions : (text) -> (opt SubmissionArr) query;
   get_all_space_missions : (text) -> (Result_6) query;
+  get_all_space_missions_open : (text) -> (Result_6) query;
   get_all_spaces : () -> (Result_7) query;
   get_fund_details : (text) -> (opt FundEntry) query;
   get_space : (text) -> (Result_8) query;
