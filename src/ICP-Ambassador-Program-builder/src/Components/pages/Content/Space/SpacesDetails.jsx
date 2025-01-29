@@ -29,6 +29,7 @@ import toast from "react-hot-toast";
 import TaskIcon from "@mui/icons-material/Task";
 import { useAuthClient } from "../../../../utils/useAuthClient";
 import { Principal } from "@dfinity/principal";
+import { formatDate } from "../../../../utils/formatDate";
 const SpacesDetails = ({ setLoading }) => {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState("all");
@@ -296,7 +297,7 @@ const SpacesDetails = ({ setLoading }) => {
             <TableBody>
               {missionList.length > 0 ? (
                 missionList.map((row, index) => {
-                  console.log("filter : ", row);
+                  console.log("filter: ", row);
                   return (
                     <TableRow
                       key={index}
@@ -330,12 +331,14 @@ const SpacesDetails = ({ setLoading }) => {
                       <TableCell align="center">
                         {parseInt(row?.reward)}{" "}
                       </TableCell>
-                      <TableCell align="center"> - </TableCell>
+                      <TableCell align="center"> {BigInt(row?.pool)}</TableCell>
                       <TableCell align="center"> XP </TableCell>
                       <TableCell align="center">
                         {Object.keys(row?.status)[0]}
                       </TableCell>
-                      <TableCell align="center">{"----"}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(row?.end_date)}
+                      </TableCell>
                       <TableCell align="center"></TableCell>
 
                       <TableCell

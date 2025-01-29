@@ -1,55 +1,64 @@
-import React, { useEffect,useState } from 'react';
-import Card from './Card'; 
-import { useFilterContext } from '../../Context/FilterContext';
-import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
-import Cookies from 'js-cookie';
-import { useSelector } from 'react-redux';
-import Contest_Details from './ContestDetails';
-import WalletSidebar from '../../wallet/walletSidebar';
-import ProfileDrawer from '../Navbar/ProfileDrawer';
+import React, { useEffect, useState } from "react";
+import Card from "./Card";
+import { useFilterContext } from "../../Context/FilterContext";
+import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
+import Contest_Details from "./ContestDetails";
+import WalletSidebar from "../../wallet/walletSidebar";
+import ProfileDrawer from "../Navbar/ProfileDrawer";
 
-const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isDrawerOpen,onCloseProfile,openRefModal,setLoading }) => {
-  const [selectedContest,setSelectContest]=useState('')
+const Contests = ({
+  openWallet,
+  onCloseWallet,
+  user_details,
+  setDiscord_user,
+  isDrawerOpen,
+  onCloseProfile,
+  openRefModal,
+  setLoading,
+}) => {
+  const [selectedContest, setSelectContest] = useState("");
   const { selectedPlatform } = useFilterContext();
-  const user=useSelector(state=>state.user.value)
-  
+  const user = useSelector((state) => state.user.value);
 
-  const contests=[]
-  
+  const contests = [];
 
   const [displayedContests, setDisplayedContests] = useState(contests);
-  const [hub,setHub]=useState('')
-    useEffect(()=>{
-        console.log("user details ==>",user_details)
-        const HUB=Cookies.get('selectedHubName')
-        const space_id=Cookies.get('selectedHub')
-        //console.log(space_id)
-        setHub(HUB)
-        const cookieUser = Cookies.get('discord_user');
-        if(cookieUser){
-          //console.log("user space details")
-          get_user_mission(space_id)
-        }
-        else{
-          //console.log("all missions")
-          getMissions()
-        }
-    },[user])
+  const [hub, setHub] = useState("");
+  useEffect(() => {
+    console.log("user details ==>", user_details);
+    const HUB = Cookies.get("selectedHubName");
+    const space_id = Cookies.get("selectedHub");
+    //console.log(space_id)
+    setHub(HUB);
+    const cookieUser = Cookies.get("discord_user");
+    if (cookieUser) {
+      //console.log("user space details")
+      get_user_mission(space_id);
+    } else {
+      //console.log("all missions")
+      getMissions();
+    }
+  }, [user]);
 
-     const get_user_mission = async(spaceId)=>{
-      try{
-        
-        const user_contest= await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId)
-        console.log("user contest ==>",user_contest);
-        if (user_contest?.Ok) {
-          const contestsArray = Array.isArray(user_contest.Ok) ? user_contest.Ok : [user_contest.Ok];
-        
-        
+  const get_user_mission = async (spaceId) => {
+    try {
+      const user_contest =
+        await ICP_Ambassador_Program_backend.get_all_space_missions_open(
+          spaceId
+        );
+      console.log("user contest ==>", user_contest);
+      if (user_contest?.Ok) {
+        const contestsArray = Array.isArray(user_contest.Ok)
+          ? user_contest.Ok
+          : [user_contest.Ok];
+
         // contestsArray.forEach((item, index) => {
         //   console.log(`${index}th element in result:`, item);
         // });
 
-         //Previous/original one
+        //Previous/original one
         // const updatedContests = contestsArray.map(contest => ({
         //   ...contest
         // }));
@@ -60,10 +69,10 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isD
           //   return {
           //     ...contest,
           //     tasks: [
-          //       ...(contest.tasks || []), 
+          //       ...(contest.tasks || []),
           //       {
-          //         JoinTwitter: { 
-          //           id: (contest.tasks?.length || 0), 
+          //         JoinTwitter: {
+          //           id: (contest.tasks?.length || 0),
           //           title: "Join Twitter Task Title",
           //           body: "Join Twitter Task Description",
           //         },
@@ -75,10 +84,10 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isD
         });
         // Hard coded card
         // const newContest = {
-        //   ...updatedContests[0], 
+        //   ...updatedContests[0],
         //   mission_id:'',
-        //   title: "updated mission title", 
-        //   description: "space 2 mission 2 description", 
+        //   title: "updated mission title",
+        //   description: "space 2 mission 2 description",
         //   status: { Active: null },
         //   reward:100,
         //   tasks: [
@@ -117,13 +126,9 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isD
         //     }
         //   ]
         // };
-        
+
         // // Append the new contest to the array
         // updatedContests.push(newContest);
-        
-       
-        
-        
 
         //console.log("updated contests : ",updatedContests)
         // let activeContests=[]
@@ -134,27 +139,30 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isD
         // }
         // console.log("Active contests : ",activeContests)
         // setDisplayedContests(activeContests);
-        setDisplayedContests(updatedContests)
+        setDisplayedContests(updatedContests);
       }
-
-      }catch(e){
-        console.log("Error ==>",e)
-      }
+    } catch (e) {
+      console.log("Error ==>", e);
     }
-  
+  };
 
-  async function getMissions(){
+  async function getMissions() {
     try {
-      const res=await ICP_Ambassador_Program_backend.get_all_spaces()
-      console.log(res)
+      const res = await ICP_Ambassador_Program_backend.get_all_spaces();
+      console.log(res);
 
-      if(res!=undefined && res!=null && res?.Ok!=undefined){
-        let space_1=res?.Ok[0][0]
+      if (res != undefined && res != null && res?.Ok != undefined) {
+        let space_1 = res?.Ok[0][0];
         //console.log(space_1);
-        const space_details=await ICP_Ambassador_Program_backend.get_space(space_1);
+        const space_details = await ICP_Ambassador_Program_backend.get_space(
+          space_1
+        );
         //console.log("Space Details ==>",space_details.Ok.name)
-        setHub(space_details.Ok.name)
-        const mis_res=await ICP_Ambassador_Program_backend.get_all_space_missions(space_1)
+        setHub(space_details.Ok.name);
+        const mis_res =
+          await ICP_Ambassador_Program_backend.get_all_space_missions_open(
+            space_1
+          );
         console.log(mis_res);
 
         if (mis_res?.Ok) {
@@ -162,114 +170,120 @@ const Contests = ({ openWallet, onCloseWallet, user_details, setDiscord_user,isD
           //   console.log(`${index}th element in result:`, item);
           // });
         }
-        const updatedContests = mis_res.Ok.map(contest => ({
-          ...contest
+        const updatedContests = mis_res.Ok.map((contest) => ({
+          ...contest,
         }));
-        
-        let activeContests=[]
-        for(let i=0;i<updatedContests.length;i++){
-          if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-            activeContests.push(updatedContests[i])
+
+        let activeContests = [];
+        for (let i = 0; i < updatedContests.length; i++) {
+          if (Object.keys(updatedContests[i]?.status)[0] == "Active") {
+            activeContests.push(updatedContests[i]);
           }
         }
         // let activeMissions=[]
-        console.log("updated contests : ",activeContests)
+        console.log("updated contests : ", activeContests);
 
-        
         setDisplayedContests(activeContests);
         //console.log("Updated displayedContests:", updatedContests);
-        
       }
     } catch (error) {
-      console.log("err fetching missions : ",error)
+      console.log("err fetching missions : ", error);
     }
   }
 
-  
   // let displayedContests =contests
- 
+
   useEffect(() => {
     //getMissions()
-    const filteredContests = contests.filter(contest => {
-      // console.log('Current Contest:', contest); 
-      // console.log('Contest Social Platforms:', contest.social_platforms); 
-      // console.log('Selected Platforms:', selectedPlatform); 
-  
-      const matches = selectedPlatform.length === 0 || contest.social_platforms.some(platform => 
-          selectedPlatform.includes(platform.name)
-      );
-  
-      // console.log('Matches Found:', matches); 
-      return matches; 
-  },[selectedPlatform]);
-  
+    const filteredContests = contests.filter(
+      (contest) => {
+        // console.log('Current Contest:', contest);
+        // console.log('Contest Social Platforms:', contest.social_platforms);
+        // console.log('Selected Platforms:', selectedPlatform);
+
+        const matches =
+          selectedPlatform.length === 0 ||
+          contest.social_platforms.some((platform) =>
+            selectedPlatform.includes(platform.name)
+          );
+
+        // console.log('Matches Found:', matches);
+        return matches;
+      },
+      [selectedPlatform]
+    );
 
     //  console.log('Selected Platforms ',selectedPlatform)
     //  console.log("Filtered data",filteredContests)
-    const unmatchedContests = contests.filter(contest => 
-      !contest.social_platforms.some(platform => selectedPlatform.includes(platform.name))
+    const unmatchedContests = contests.filter(
+      (contest) =>
+        !contest.social_platforms.some((platform) =>
+          selectedPlatform.includes(platform.name)
+        )
     );
 
-    
-   const combinedContests = [...filteredContests, ...unmatchedContests];
+    const combinedContests = [...filteredContests, ...unmatchedContests];
     //  displayedContests = filteredContests
     setDisplayedContests(combinedContests);
-     //console.log("DisplyedContests",displayedContests)
-    
-  },[selectedPlatform]); 
+    //console.log("DisplyedContests",displayedContests)
+  }, [selectedPlatform]);
 
-  
-  
   return (
-    <div className="overflow-y-scroll scrollbar-hide" >
-        <div className="flex  transition-all duration-500 delay-200 relative ">
-          <div className={` transition-all h-screen duration-500 ${openWallet ? 'w-[calc(100%-100px)] ' : 'w-full'} p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}>
-
-         
-            <div className={`grid w-full  ${openWallet || isDrawerOpen ? ' lg:grid-cols-3' : 'lg:grid-cols-4'}   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
-              style={{
-                maxWidth: openWallet ? 'calc(100% - 300px)' : (isDrawerOpen ? 'calc(100% - 400px)' : '100%'),
-                transition: 'max-width 0.5s ease-in-out',
-                rowGap: '2px'
-              }}>
-                  {/* <div className="flex flex-wrap gap-6 mt-8"> */}
-                    {
-                      displayedContests?.length>0?
-                      displayedContests.map((contest, index) => (
-                        <div className=' h-fit' >
-                          <Card key={index} contest={contest} hub={hub} />
-                        </div>
-                      ))
-                      :
-                      <p className='text-white w-full text-center mt-20 text-2xl'>No missions to show</p>
-                    }
-            </div>
-          </div>
-          <div className=''>
-           
-            {openWallet && (
-              <WalletSidebar 
-                onClose={onCloseWallet} 
-                user={user} 
-                isOpen={openWallet} 
-                setDiscord_user={setDiscord_user} 
-              />
+    <div className="overflow-y-scroll scrollbar-hide">
+      <div className="flex  transition-all duration-500 delay-200 relative ">
+        <div
+          className={` transition-all h-screen duration-500 ${
+            openWallet ? "w-[calc(100%-100px)] " : "w-full"
+          } p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}
+        >
+          <div
+            className={`grid w-full  ${
+              openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-4"
+            }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
+            style={{
+              maxWidth: openWallet
+                ? "calc(100% - 300px)"
+                : isDrawerOpen
+                ? "calc(100% - 400px)"
+                : "100%",
+              transition: "max-width 0.5s ease-in-out",
+              rowGap: "2px",
+            }}
+          >
+            {/* <div className="flex flex-wrap gap-6 mt-8"> */}
+            {displayedContests?.length > 0 ? (
+              displayedContests.map((contest, index) => (
+                <div className=" h-fit">
+                  <Card key={index} contest={contest} hub={hub} />
+                </div>
+              ))
+            ) : (
+              <p className="text-white w-full text-center mt-20 text-2xl">
+                No missions to show
+              </p>
             )}
-            {isDrawerOpen && (
-                <ProfileDrawer 
-                setLoading={setLoading} 
-                user={user} 
-                onClose={onCloseProfile} 
-                isOpen={isDrawerOpen} 
-                openRefModal={openRefModal} />
-            )}
-
           </div>
-
         </div>
-        
-        
-      
+        <div className="">
+          {openWallet && (
+            <WalletSidebar
+              onClose={onCloseWallet}
+              user={user}
+              isOpen={openWallet}
+              setDiscord_user={setDiscord_user}
+            />
+          )}
+          {isDrawerOpen && (
+            <ProfileDrawer
+              setLoading={setLoading}
+              user={user}
+              onClose={onCloseProfile}
+              isOpen={isDrawerOpen}
+              openRefModal={openRefModal}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

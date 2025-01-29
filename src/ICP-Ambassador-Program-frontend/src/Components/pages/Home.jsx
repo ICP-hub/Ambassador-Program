@@ -150,7 +150,7 @@ const Home = () => {
     const Get_All_Spaces = async() =>{
         try{
 
-            const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
+            const spaces = await ICP_Ambassador_Program_backend.get_all_spaces_open();
             //console.log("Spaces ==>",spaces.Ok);
             const spacesObject = spaces.Ok.map(space => {
               const [spaceId, details] = space;

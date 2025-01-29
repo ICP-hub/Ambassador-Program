@@ -54,7 +54,7 @@ pub async fn deposit_icp_to_canister(amount: u64) -> Result<BlockIndex, String> 
     ic_cdk::call::<(TransferFromArgs,), (Result<BlockIndex, TransferFromError>,)>(
         // 2. Convert a textual representation of a Principal into an actual `Principal` object. The principal is the one we specified in `dfx.json`.
         //    `expect` will panic if the conversion fails, ensuring the code does not proceed with an invalid principal.
-        Principal::from_text("ryjl3-tyaaa-aaaaa-aaaba-cai")
+        Principal::from_text("b77ix-eeaaa-aaaaa-qaada-cai")
             .expect("Could not decode the principal."),
         // 3. Specify the method name on the target canister to be called, in this case, "icrc1_transfer".
         "icrc2_transfer_from",
