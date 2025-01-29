@@ -3,14 +3,14 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 // Imports and re-exports candid interface
 import { idlFactory } from "./ledger.did";
 export { idlFactory } from "./ledger.did";
+import {LEDGER_CANISTER_ID} from "../DevelopmentConfig";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const canisterId =
-  "ryjl3-tyaaa-aaaaa-aaaba-cai";
+export const canisterId = LEDGER_CANISTER_ID || "xevnm-gaaaa-aaaar-qafnq-cai";
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });

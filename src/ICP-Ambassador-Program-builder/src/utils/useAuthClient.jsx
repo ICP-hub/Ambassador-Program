@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from "../../../declarations/ICP_Ambassador_Program_backend";
-import { Principal } from "@dfinity/principal";
-import { Provider, useDispatch } from "react-redux";
-import { updateActor } from "../redux/actors/actorSlice";
-import Login from "../Components/pages/authComponents/Login";
-import { store } from "../redux/store";
-import { updateAdmin } from "../redux/admin/adminSlice";
-import { createActor as createLedgerActor } from "../../../declarations/ledger";
+import { createActor } from '../../../declarations/ICP_Ambassador_Program_backend';
+import { Principal } from '@dfinity/principal';
+import { Provider, useDispatch } from 'react-redux';
+import { updateActor } from '../redux/actors/actorSlice';
+import Login from '../Components/pages/authComponents/Login';
+import { store } from '../redux/store';
+import { updateAdmin } from '../redux/admin/adminSlice';
+import { createActor as createLedgerActor} from '../../../declarations/ledger';
+import {LEDGER_CANISTER_ID} from '../../../../DevelopmentConfig'
 
 const AuthContext = createContext();
 
@@ -32,26 +33,13 @@ export const useAuthClient = () => {
     setIsAuthenticated(isAuthenticated);
     setIdentity(identity);
     setPrincipal(principal);
-
-    if (
-      isAuthenticated &&
-      identity &&
-      principal &&
-      principal.isAnonymous() === false
-    ) {
-      let backendActor = createActor(
-        process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,
-        {
-          agentOptions: {
-            identity: identity,
-          },
-        }
-      );
-      let ledgerActor = createLedgerActor("b77ix-eeaaa-aaaaa-qaada-cai", {
-        agentOptions: {
-          identity: identity,
-        },
-      });
+        if (isAuthenticated && identity && principal && principal.isAnonymous() === false) {
+            let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
+                identity:identity
+            }})
+            let ledgerActor = createLedgerActor(LEDGER_CANISTER_ID || "xevnm-gaaaa-aaaar-qafnq-cai",{agentOptions:{
+                identity:identity
+            }})
 
       dispatch(
         updateActor({

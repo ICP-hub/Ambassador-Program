@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useAuthClient } from "../../../utils/useAuthClient";
-import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from "../../../../../declarations/ICP_Ambassador_Program_backend";
-import { useDispatch } from "react-redux";
-import { updateActor } from "../../../redux/actors/actorSlice";
-import { updateAdmin } from "../../../redux/admin/adminSlice";
-import { useNavigate } from "react-router-dom";
-import { createActor as createLedgerActor } from "../../../../../declarations/ledger";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from 'react'
+import { useAuthClient } from '../../../utils/useAuthClient'
+import { AuthClient } from '@dfinity/auth-client';
+import { createActor } from '../../../../../declarations/ICP_Ambassador_Program_backend';
+import { useDispatch } from 'react-redux';
+import { updateActor } from '../../../redux/actors/actorSlice';
+import { updateAdmin } from '../../../redux/admin/adminSlice';
+import { useNavigate } from 'react-router-dom';
+import { createActor as createLedgerActor } from '../../../../../declarations/ledger';
+import toast from 'react-hot-toast';
+import { LEDGER_CANISTER_ID } from "../../../../../../DevelopmentConfig";
 
 const Login = () => {
   const { setIsAuthenticated, isAuthenticated } = useAuthClient();
@@ -48,22 +49,40 @@ const Login = () => {
             },
           });
 
-          dispatch(
-            updateActor({
-              backendActor,
-              ledgerActor,
-            })
-          );
-          let res = await backendActor.get_admin();
-          console.log("login res : ", res);
-          if (res != null && res != undefined && res?.Err == undefined) {
-            setIsAuthenticated(true);
-            window.location.reload();
-          } else {
-            console.log(
-              "You are not an admin -->" +
-                authClient.getIdentity().getPrincipal()
-            );
+    async function login(){
+        try {
+            const authClient = await AuthClient.create();
+            setLoading(true)
+            await authClient.login({
+                identityProvider: process.env.DFX_NETWORK === "ic"
+                    ? "https://identity.ic0.app/"
+                    : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
+                onError: (error) => {
+                    toast.error("Some error occured while authentication")
+                    setLoading(false)
+                    console.log(error)
+                },
+                onSuccess: async() => {
+                    let backendActor = createActor(process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,{agentOptions:{
+                        identity:authClient.getIdentity()
+                    }})
+                    let ledgerActor = createLedgerActor(LEDGER_CANISTER_ID || 'xevnm-gaaaa-aaaar-qafnq-cai',{agentOptions: {
+                        identity:authClient.getIdentity()
+                    }})
+                    
+                    dispatch(updateActor({
+                        backendActor,
+                        ledgerActor,
+                     }))
+                    let res = await backendActor.get_admin();
+                    console.log("login res : ", res);
+                    if (res != null && res != undefined && res?.Err == undefined) {
+                        setIsAuthenticated(true);
+                        window.location.reload();
+                    }
+                    else {
+                      console.log("You are not an admin -->" + authClient.getIdentity().getPrincipal());
+
 
             let reg_res = await backendActor.register_admin();
             console.log("register admin response : ", reg_res);
@@ -74,8 +93,7 @@ const Login = () => {
                   wallet: authClient.getIdentity().getPrincipal().toText(),
                   role: "HubLeader",
                   spaces: [],
-                })
-              );
+                }));
               setIsAuthenticated(true);
               window.location.reload();
             }
