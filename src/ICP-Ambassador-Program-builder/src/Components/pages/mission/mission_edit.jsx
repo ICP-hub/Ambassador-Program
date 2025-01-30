@@ -279,7 +279,7 @@ const MissionEdit = () => {
         reward:parseInt(rewardsData),
         tasks:finalTasks,
         pool:poolamount,
-        max_users_rewarded:Math.abs(poolamount/minPoolForOneUser),
+        max_users_rewarded: Math.floor(Math.abs(poolamount / minPoolForOneUser)),
         start_date: String(Date.parse(startDate.toDate())),
         end_date: String(Date.parse(endDate.toDate()))
       }
