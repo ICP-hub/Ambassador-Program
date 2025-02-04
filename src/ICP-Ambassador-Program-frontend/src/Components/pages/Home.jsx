@@ -205,7 +205,7 @@ const Home = () => {
 
   return (
     <>
-      <div className=" flex flex-col  bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
+      <div className=" flex flex-col pb-8 bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
         <Navbar
           nav={nav}
           openRefModal={openRefModal}
@@ -245,27 +245,39 @@ const Home = () => {
                 </div>
                 <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
                   <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
-                    <Link className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]">
+                    <a
+                      href="https://x.com"
+                      target="_blank"
+                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    >
                       <img
                         src={xicon}
                         alt="discord icon"
                         className="w-[29px] h-[30px] "
                       />
-                    </Link>
-                    <Link className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]">
+                    </a>
+                    <a
+                      href="https://discord.com"
+                      target="_blank"
+                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    >
                       <img
                         src={discordicon}
                         alt="discord icon"
                         className="w-[30px] h-[30px] "
                       />
-                    </Link>
-                    <Link className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]">
+                    </a>
+                    <a
+                      href="https://www.linkedin.com"
+                      target="_blank"
+                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    >
                       <img
                         src={linkedinicon}
                         alt="discord icon"
                         className="w-[40px] h-[30px] "
                       />
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -284,7 +296,7 @@ const Home = () => {
                 <span className="my-auto">Sorting</span>
               </button>
             </div>
-            <div className="flex flex-col  pb-3 leading-none">
+            {/* <div className="flex flex-col  pb-3 leading-none">
               <input
                 type="text"
                 id="searchInput"
@@ -297,7 +309,7 @@ const Home = () => {
                 alt=""
                 className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
               />
-            </div>
+            </div> */}
           </div>
           <div className="h-0.5 bg-[#9173FF]"></div>
           <FilterProvider>
