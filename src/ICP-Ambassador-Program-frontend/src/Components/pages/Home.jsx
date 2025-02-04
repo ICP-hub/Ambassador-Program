@@ -300,26 +300,23 @@ const Home = () => {
             </div>
           </div>
           <div className="h-0.5 bg-[#9173FF]"></div>
-        </div>
-        {/* <FilterProvider>
-          <div className="flex flex-grow p-2  rounded-md "> */}
-        {/* <div className=" w-1/6 h-full lg:block sm:hidden">
-            <Filter />
-          </div> */}
-        {/* <div className="w-full h-full">
-              <Contests
-                openWallet={openWallet}
-                onCloseWallet={handleCloseWallet}
-                user_details={user}
-                setDiscord_user={setDiscord_user}
-                isDrawerOpen={isDrawerOpen}
-                onCloseProfile={handleCloseaProfile}
-                openRefModal={openRefModal}
-                setLoading={setLoading}
-              />
+          <FilterProvider>
+            <div className="flex flex-grow p-2  rounded-md ">
+              <div className="w-full h-full">
+                <Contests
+                  openWallet={openWallet}
+                  onCloseWallet={handleCloseWallet}
+                  user_details={user}
+                  setDiscord_user={setDiscord_user}
+                  isDrawerOpen={isDrawerOpen}
+                  onCloseProfile={handleCloseaProfile}
+                  openRefModal={openRefModal}
+                  setLoading={setLoading}
+                />
+              </div>
             </div>
-          </div>
-        </FilterProvider> */}
+          </FilterProvider>
+        </div>
 
         {isHubModalOpen && (
           <HubConnectionModal

@@ -1,43 +1,34 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-body{
-   background-color: #000000;
-   
+body {
+  background-color: #000000;
 }
-
-
-
-
-
+.custom-gradient {
+  background: linear-gradient(60deg, #382c62, #604ca6);
+}
 
 html {
-  scrollbar-width: none; 
- 
+  scrollbar-width: none;
 }
-
 
 html::-webkit-scrollbar {
-  display: none;  
+  display: none;
 }
 
-
 .scrollbar-hide {
-    overflow-y: scroll;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
 
-  .ql-editor.ql-blank::before {
-    color: white; 
-  }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
+.ql-editor.ql-blank::before {
+  color: white;
+}
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -45,12 +36,11 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-
 input[type="number"] {
   -moz-appearance: textfield;
 }
 
- /* Target the toolbar icons in the Quill editor */
+/* Target the toolbar icons in the Quill editor */
 /* .ql-toolbar .ql-stroke,
 .ql-toolbar .ql-fill,
 .ql-toolbar .ql-even {
@@ -62,11 +52,3 @@ input[type="number"] {
 .ql-toolbar .ql-picker-item {
   color: white !important;
 } */
-
-
-
-
- 
-
-  
-  

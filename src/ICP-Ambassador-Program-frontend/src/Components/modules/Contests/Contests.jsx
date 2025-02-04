@@ -45,9 +45,7 @@ const Contests = ({
   const get_user_mission = async (spaceId) => {
     try {
       const user_contest =
-        await ICP_Ambassador_Program_backend.get_all_space_missions_open(
-          spaceId
-        );
+        await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
       console.log("user contest ==>", user_contest);
       if (user_contest?.Ok) {
         const contestsArray = Array.isArray(user_contest.Ok)
@@ -160,9 +158,7 @@ const Contests = ({
         //console.log("Space Details ==>",space_details.Ok.name)
         setHub(space_details.Ok.name);
         const mis_res =
-          await ICP_Ambassador_Program_backend.get_all_space_missions_open(
-            space_1
-          );
+          await ICP_Ambassador_Program_backend.get_all_space_missions(space_1);
         console.log(mis_res);
 
         if (mis_res?.Ok) {
@@ -229,17 +225,17 @@ const Contests = ({
   }, [selectedPlatform]);
 
   return (
-    <div className="overflow-y-scroll scrollbar-hide">
+    <div className="overflow-y-scroll  scrollbar-hide">
       <div className="flex  transition-all duration-500 delay-200 relative ">
         <div
           className={` transition-all h-screen duration-500 ${
             openWallet ? "w-[calc(100%-100px)] " : "w-full"
-          } p-2 bg-[#16161a] overflow-y-scroll scrollbar-hide`}
+          } p-2    overflow-y-scroll scrollbar-hide`}
         >
           <div
             className={`grid w-full  ${
-              openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-4"
-            }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-4 `}
+              openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-3"
+            }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-3 `}
             style={{
               maxWidth: openWallet
                 ? "calc(100% - 300px)"
