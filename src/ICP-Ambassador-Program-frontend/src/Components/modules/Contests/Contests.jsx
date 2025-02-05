@@ -237,11 +237,7 @@ const Contests = ({
               openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-3"
             }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-3 `}
             style={{
-              maxWidth: openWallet
-                ? "calc(100% - 300px)"
-                : isDrawerOpen
-                ? "calc(100% - 400px)"
-                : "100%",
+              maxWidth: "100%",
               transition: "max-width 0.5s ease-in-out",
               rowGap: "2px",
             }}
@@ -259,25 +255,6 @@ const Contests = ({
               </p>
             )}
           </div>
-        </div>
-        <div className="">
-          {openWallet && (
-            <WalletSidebar
-              onClose={onCloseWallet}
-              user={user}
-              isOpen={openWallet}
-              setDiscord_user={setDiscord_user}
-            />
-          )}
-          {isDrawerOpen && (
-            <ProfileDrawer
-              setLoading={setLoading}
-              user={user}
-              onClose={onCloseProfile}
-              isOpen={isDrawerOpen}
-              openRefModal={openRefModal}
-            />
-          )}
         </div>
       </div>
     </div>

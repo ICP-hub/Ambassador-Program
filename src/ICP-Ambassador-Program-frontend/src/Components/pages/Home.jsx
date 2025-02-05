@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../modules/Navbar/Navbar";
 import Filter from "../modules/Filter/Filter";
 import Contests from "../modules/Contests/Contests";
+
 import { FilterProvider } from "../Context/FilterContext";
 import HubConnectionModal from "../modules/Navbar/HubConnectionModel";
 import FilterMobile from "../modules/Filter/FilterMobile";
@@ -18,6 +19,9 @@ import icpbanner from "../.../../../../public/icpbanner.png";
 import xicon from "../.../../../../public/icons/xicon.png";
 import linkedinicon from "../.../../../../public/icons/linkedin.png";
 import discordicon from "../.../../../../public/icons/discord.png";
+import awtar from "../../../public/icons/Avatar.png";
+import UserProfile from "../modules/Navbar/UserProfile";
+import WalletSidebar from "../wallet/walletSidebar";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -28,6 +32,7 @@ const Home = () => {
   const [openWallet, setOpenWallet] = useState(false);
   const [discordl_user, setDiscord_user] = useState();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const nav = useNavigate();
   const dispatch = useDispatch();
 
@@ -195,6 +200,8 @@ const Home = () => {
     setFilterMobile(true);
   };
 
+  console.log("Discord user ==>", discordl_user);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -213,6 +220,20 @@ const Home = () => {
           onWalletClick={handleWalletToggle}
           onProfileClick={handleProfileToggle}
         />
+        {isDrawerOpen && (
+          <UserProfile
+            onWalletClick={handleWalletToggle}
+            onProfileClick={handleProfileToggle}
+          />
+        )}
+        {openWallet && (
+          <WalletSidebar
+            onClose={handleCloseWallet}
+            user={user}
+            isOpen={openWallet}
+            setDiscord_user={setDiscord_user}
+          />
+        )}
 
         <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
           <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
