@@ -1,5 +1,6 @@
 use ic_cdk::{caller, query, update};
-
+use ic_cdk::api::time;
+use crate::state::{Reward, RewardHistory, REWARD_HISTORY_MAP};
 use crate::{Errors, Submission, SubmissionArr, SubmissionStatus, TaskSubmitted, UserProfile, MISSION_MAP, MISSION_TO_SUBMISSION_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
 
 use super::{check_editor, user_controller};
@@ -205,67 +206,129 @@ pub fn get_all_mission_submissions(id:String)->Option<SubmissionArr>{
 
 // Access Control : Editor
 #[update]
-pub fn approve_submission(id:String)->Result<String,String>{
-
-    let space_id = extract_space_id(&id);
+pub fn approve_submission(id: String) -> Result<String, String> {
+    // First get the submission
+    let submission = SUBMISSION_MAP.with(|map| map.borrow().get(&id));
     
-    if !check_editor(caller(), space_id.clone()).is_ok(){
+    let submission = match submission {
+        Some(sub) => {
+            if sub.status == SubmissionStatus::Approved {
+                return Err("Submission is already approved".to_string());
+            }
+            if sub.status == SubmissionStatus::Rejected {
+                return Err("Cannot approve a rejected submission".to_string());
+            }
+            sub
+        },
+        None => return Err("No submission found with this id".to_string())
+    };
+
+    // Get the mission to get the space_id
+    let mission = MISSION_MAP.with(|map| map.borrow().get(&submission.mission_id));
+    let mission = match mission {
+        Some(m) => m,
+        None => return Err("Mission not found".to_string())
+    };
+
+    // Check editor permissions with the correct space_id
+    if !check_editor(caller(), mission.space_id.clone()).is_ok() {
         return Err("Only the editor of the space can approve submissions".to_string());
     }
 
-
-    let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
-    let mut new_submission:Submission;
-    match old_submission{
-        Some(val)=>new_submission=val,
-        None=>return Err("no submission found with this id".to_string())
+    // Update submission status and points
+    let mut updated_submission = submission.clone();
+    if mission.max_users_rewarded > 0 && !updated_submission.points_rewarded {
+        match user_controller::update_points(updated_submission.user.clone(), mission.reward) {
+            Ok(_) => {
+                updated_submission.points_rewarded = true;
+                let mut updated_mission = mission.clone();
+                updated_mission.max_users_rewarded -= 1;
+                MISSION_MAP.with(|map| map.borrow_mut().insert(updated_mission.mission_id.clone(), updated_mission));
+            },
+            Err(e) => return Err(format!("Failed to update user points: {}", e))
+        }
     }
-    let mission=MISSION_MAP.with(|map| map.borrow().get(&new_submission.mission_id.clone()));
-    match mission{
-        Some(mut val)=>{
-            if val.max_users_rewarded>0{
-                let res=user_controller::update_points(new_submission.user.clone(), val.reward);
-                match res{
-                    Err(e)=>return Err(e),
-                    Ok(_)=>{}
-                }
-                val.max_users_rewarded-=1;
-                new_submission.points_rewarded=true;
-                MISSION_MAP.with(|map| map.borrow_mut().insert(val.mission_id.clone(), val));
-            }
+
+    // Add reward history after successful points update
+    if updated_submission.points_rewarded {
+        let current_time = time();
+        // let current_date = format!("{}", current_time / (24 * 60 * 60 * 1_000_000_000)); // Convert nanoseconds to days
+        
+        let reward = Reward {
+            mission_id: mission.mission_id.clone(),
+            mission_title: mission.title.clone(),
+            reward: mission.reward,
+            date: current_time.to_string(),
+        };
+
+        REWARD_HISTORY_MAP.with(|map| {
+            let mut map = map.borrow_mut();
+            let mut history = map.get(&updated_submission.user)  // user here is discord_id
+                .unwrap_or(RewardHistory {
+                    user: updated_submission.user.clone(),  // this is discord_id
+                    rewards: vec![]
+                });
             
-        },
-        None=>return Err("mission for this submission does not exists".to_string())
+            history.rewards.push(reward);
+            map.insert(updated_submission.user.clone(), history);  // user here is discord_id
+        });
     }
-    new_submission.status=SubmissionStatus::Approved;
-    SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(), new_submission));
-    return Ok("still in development".to_string()); 
-}
 
+    updated_submission.status = SubmissionStatus::Approved;
+    SUBMISSION_MAP.with(|map| map.borrow_mut().insert(updated_submission.submission_id.clone(), updated_submission));
+    
+    Ok("Submission successfully approved".to_string())
+}
 // Access Control : Editor
 #[update]
-pub fn reject_submission(id:String)->Result<String,String>{
-
+pub fn reject_submission(id: String) -> Result<String, String> {
     let space_id = extract_space_id(&id);
     
-    if !check_editor(caller(), space_id.clone()).is_ok(){
-        return Err("Only the editor of the space can approve submissions".to_string());
+    if !check_editor(caller(), space_id.clone()).is_ok() {
+        return Err("Only the editor of the space can reject submissions".to_string());
     }
+
+    let submission = SUBMISSION_MAP.with(|map| map.borrow().get(&id));
     
-    let old_submission=SUBMISSION_MAP.with(|map| map.borrow().get(&id.clone()));
-    let mut new_submission:Submission;
-    match old_submission{
-        Some(val)=>new_submission=val,
-        None=>return Err("no submission found with this id".to_string())
-    }
-    new_submission.status=SubmissionStatus::Rejected;
-    SUBMISSION_MAP.with(|map| map.borrow_mut().insert(new_submission.submission_id.clone(), new_submission));
-    return Ok("This submission is rejected".to_string());
+    let mut submission = match submission {
+        Some(sub) => {
+            if sub.status == SubmissionStatus::Approved {
+                return Err("Cannot reject an approved submission".to_string());
+            }
+            if sub.status == SubmissionStatus::Rejected {
+                return Err("Submission is already rejected".to_string());
+            }
+            sub
+        },
+        None => return Err("No submission found with this id".to_string())
+    };
+
+    submission.status = SubmissionStatus::Rejected;
+    SUBMISSION_MAP.with(|map| map.borrow_mut().insert(submission.submission_id.clone(), submission));
+    
+    Ok("Submission successfully rejected".to_string())
 }
 
 pub fn extract_space_id(mission_id: &str) -> String {
     match mission_id.rsplit_once('_') {
         Some((space_id, _)) => space_id.to_string(),
         None => mission_id.to_string(),
+    }
+}
+
+#[query]
+pub fn get_user_reward_history(discord_id: String) -> Result<RewardHistory, String> {
+    // Validate input
+    if discord_id.is_empty() {
+        return Err("Discord ID cannot be empty".to_string());
+    }
+
+    // Get reward history from map
+    match REWARD_HISTORY_MAP.with(|map| map.borrow().get(&discord_id)) {
+        Some(history) => Ok(history),
+        None => Ok(RewardHistory {
+            user: discord_id,
+            rewards: vec![]
+        })
     }
 }
