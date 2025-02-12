@@ -16,14 +16,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route
-            path="/contest_details"
-            element={<CardDetails open={open} setOpen={setOpen} />}
-          />
-          <Route
-            path="/auth/discord/callback"
-            element={<DiscordCallback setOpen={setOpen} />}
-          />
+          <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} />}/>
+          <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
           <Route path="/ref" element={<ReferralHandler />} />
         </Routes>
       </BrowserRouter>

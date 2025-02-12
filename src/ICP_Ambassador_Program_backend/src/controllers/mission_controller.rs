@@ -198,13 +198,16 @@ pub fn get_all_space_missions_open(space_id: String) -> Result<Vec<Mission>, Err
         let mission = MISSION_MAP.with(|map| map.borrow().get(&id));
 
         if let Some(mut value) = mission {
+            if value.status == MissionStatus::Draft {
+                count += 1;
+                continue;
+            }
             if value.end_date.is_empty() {
                 mission_list.push(value);
             } else {
                 match value.end_date.parse::<u64>() {
                     Ok(end_date_ms) => {
                         let current_time_ms = ic_cdk::api::time() / 1_000_000;
-
                         if current_time_ms < end_date_ms {
                             mission_list.push(value);
                         } else {
