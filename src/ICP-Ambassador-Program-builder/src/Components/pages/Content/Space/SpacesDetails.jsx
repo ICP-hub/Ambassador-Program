@@ -30,6 +30,10 @@ import TaskIcon from "@mui/icons-material/Task";
 import { useAuthClient } from "../../../../utils/useAuthClient";
 import { Principal } from "@dfinity/principal";
 import { formatDate } from "../../../../utils/formatDate";
+import { FaEdit } from "react-icons/fa";
+import { DEFAULT_CURRENCY } from '../../../../../../../DevelopmentConfig';
+
+
 const SpacesDetails = ({ setLoading }) => {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState("all");
@@ -122,29 +126,9 @@ const SpacesDetails = ({ setLoading }) => {
     }
   }, [spaces, principal]);
 
-  const rows = [
-    { id: 1, status: "draft", expired: "---" },
-    { id: 2, status: "draft", expired: "---" },
-    { id: 3, status: "draft", expired: "---" },
-    { id: 4, status: "draft", expired: "---" },
-    { id: 5, status: "draft", expired: "---" },
-  ];
-
-  const toggleStatusFilter = () => {
-    setStatusFilter((prevStatus) => (prevStatus === "all" ? "active" : "all"));
-  };
-
-  const toggleExpireFilter = () => {
-    setExpireFilter(!expireFilter);
-  };
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  useEffect(() => {
+    console.log("missionList : ", missionList);
+  }, [missionList]);
 
   const handleEdit = () => {
     navigate("/space_details");
@@ -166,12 +150,6 @@ const SpacesDetails = ({ setLoading }) => {
   const handleTasks = (row) => {
     navigate("/mission/223/tasks", { state: { row } });
   };
-
-  const filteredRows =
-    statusFilter === "all"
-      ? rows
-      : rows.filter((row) => row.status === "active");
-  // const fil
 
   return (
     <div className="">
@@ -221,73 +199,15 @@ const SpacesDetails = ({ setLoading }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Image</TableCell>
-                <TableCell align="center">Mission name</TableCell>
+                {editor && (
+                  <TableCell align="center">Edit</TableCell>
+                )}
+                <TableCell align="center">Mission Name</TableCell>
                 <TableCell align="center">Reward</TableCell>
                 <TableCell align="center">Pool</TableCell>
                 <TableCell align="center">Token</TableCell>
-                <TableCell
-                  align="center"
-                  style={{ cursor: "pointer", width: "150px" }}
-                  onClick={toggleStatusFilter}
-                >
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    Status ({statusFilter})
-                    {statusFilter === "all" ? (
-                      <ArrowDropDownIcon fontSize="small" />
-                    ) : (
-                      <ArrowDropUpIcon fontSize="small" />
-                    )}
-                  </Box>
-                </TableCell>
-                <TableCell
-                  align="center"
-                  style={{ cursor: "pointer", width: "150px" }}
-                  onClick={toggleExpireFilter}
-                >
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <div
-                      style={{
-                        cursor: "pointer",
-                        transition: "background-color 0.3s, transform 0.2s",
-                      }}
-                    >
-                      Expired
-                    </div>
-                    {expireFilter ? (
-                      <ArrowDropDownIcon fontSize="small" />
-                    ) : (
-                      <ArrowDropUpIcon fontSize="small" />
-                    )}
-                  </Box>
-                </TableCell>
-                <TableCell align="center" style={{ cursor: "pointer" }}>
-                  <IconButton onClick={handleMenuClick}>
-                    <FilterListIcon />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                  >
-                    <MenuItem onClick={handleMenuClose}>
-                      Recently deployed
-                    </MenuItem>
-                    <MenuItem onClick={handleMenuClose}>
-                      Time remaining
-                    </MenuItem>
-                    <MenuItem onClick={handleMenuClose}>Pending tasks</MenuItem>
-                    <MenuItem onClick={handleMenuClose}>Profitability</MenuItem>
-                  </Menu>
-                </TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Expiry Date</TableCell>
                 <TableCell align="center">
                   <TaskIcon />
                 </TableCell>
@@ -303,43 +223,51 @@ const SpacesDetails = ({ setLoading }) => {
                       key={index}
                       className="hover:bg-blue-100 cursor-pointer "
                     >
-                      <TableCell
-                        align="center"
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        {row?.img?.length > 0 ? (
+                      {editor && (
+                        <TableCell
+                          align="center"
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* {row?.img?.length > 0 ? (
                           <img
                             src={row?.img[0]}
                             className="w-[40px] h-[40px] rounded-sm object-fill"
                             onClick={() => handleMission(index)}
                           />
-                        ) : (
+                        ) : ( */}
                           <Avatar
                             variant="rounded"
                             sx={{ width: 40, height: 40 }}
                             onClick={() => handleMission(index)}
                           >
-                            M
+                            <FaEdit className="w-7 text-black" />
                           </Avatar>
-                        )}
-                      </TableCell>
+                          {/* )} */}
+                        </TableCell>
+                      )}
+
                       <TableCell align="center">{row?.title}</TableCell>
+
                       <TableCell align="center">
                         {parseInt(row?.reward)}{" "}
                       </TableCell>
-                      <TableCell align="center"> {BigInt(row?.pool)}</TableCell>
+
+                      <TableCell align="center"> {parseInt(row?.pool) / 10 ** 8} {DEFAULT_CURRENCY}</TableCell>
+
                       <TableCell align="center"> XP </TableCell>
+
                       <TableCell align="center">
                         {Object.keys(row?.status)[0]}
                       </TableCell>
+
                       <TableCell align="center">
                         {formatDate(row?.end_date)}
                       </TableCell>
-                      <TableCell align="center"></TableCell>
+                      {/* <TableCell align="center"></TableCell> */}
 
                       <TableCell
                         align="center"

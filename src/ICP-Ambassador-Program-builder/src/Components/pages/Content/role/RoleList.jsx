@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import SouthIcon from '@mui/icons-material/South';
+import React, { useEffect, useState } from "react";
+import SouthIcon from "@mui/icons-material/South";
+import toast from "react-hot-toast";
 import {
   Autocomplete,
   Box,
@@ -24,30 +25,33 @@ import {
   TableRow,
   TextField,
   Typography,
-} from '@mui/material';
-import { format } from 'date-fns';
-import { LoadingButton } from '@mui/lab';
-import { AutoCompleteUser } from '../../autoCompleteInputSearch/AutoCompleteUser';
-import { useSelector } from 'react-redux';
-import { Principal } from '@dfinity/principal';
+} from "@mui/material";
+import { format } from "date-fns";
+import { LoadingButton } from "@mui/lab";
+import { AutoCompleteUser } from "../../autoCompleteInputSearch/AutoCompleteUser";
+import { useSelector } from "react-redux";
+import { Principal } from "@dfinity/principal";
+import { useAuthClient } from "../../../../utils/useAuthClient";
 
 const RoleList = () => {
   const [showAssignNewRoleModal, setShowAssignNewRoleModal] = useState(false);
   const [data, setData] = useState([]);
-  const [userPrincipal, setUserPrincipal] = useState('');
-  const [selectedRole, setSelectedRole] = useState(''); // State for selected role
+  const [userPrincipal, setUserPrincipal] = useState("");
+  const [selectedRole, setSelectedRole] = useState(""); // State for selected role
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
+  const { principal } = useAuthClient();
 
-  const actors = useSelector(state => state.actor.value);
+  const actors = useSelector((state) => state.actor.value);
 
-  const spaces = useSelector(state => state.spaces.value);
+  const spaces = useSelector((state) => state.spaces.value);
 
   const [totalAmount, setTotalAmount] = useState(0);
 
   const getRolesList = async () => {
     try {
-      await actors?.backendActor.get_space(spaces?.space_id)
+      await actors?.backendActor
+        .get_space(spaces?.space_id)
         .then((res) => {
           console.log("Roles list fetched successfully!");
           const editors = res.Ok.editors || [];
@@ -72,22 +76,19 @@ const RoleList = () => {
           setData(rolesList);
 
           setTotalAmount(rolesList.length);
-
-
-
-
         })
         .catch((err) => {
           console.error("Error fetching roles list: ", err);
         });
     } catch (error) {
-      console.error('Error fetching roles list: ', error);
+      console.error("Error fetching roles list: ", error);
     }
   };
+  console.log("data: ", data);
 
   const handleClose = () => {
     setShowAssignNewRoleModal(false);
-    setSelectedRole('');
+    setSelectedRole("");
   };
 
   const handleAddUser = async () => {
@@ -97,28 +98,46 @@ const RoleList = () => {
         const user_principal = Principal.fromText(userPrincipal);
         const roleVariant = { [selectedRole]: null }; // Correct variant format
 
+        // Check if the user being assigned is the authenticated user (owner)
+        if (userPrincipal === principal?.toText()) {
+          toast.error(" You cannot assign a role to the Owner of the space.");
+          return;
+        }
+
+        // Check if userPrincipal (wallet) already exists in data
+        const existingUser = data.find((user) => user.wallet === userPrincipal);
+
+        if (existingUser) {
+          toast.error(
+            `User is already assigned as ${existingUser.role} in this space.`
+          );
+          return;
+        }
+
         console.log("space_id: ", space_id);
         console.log("user_principal: ", user_principal);
         console.log("roleVariant: ", roleVariant);
 
-        await actors?.backendActor.add_role_to_space(space_id, user_principal, roleVariant)
+        await actors?.backendActor
+          .add_role_to_space(space_id, user_principal, roleVariant)
           .then((res) => {
             console.log("Role added successfully!");
             console.log("res : ", res);
+            toast.success(`Role "${selectedRole}" added successfully!`);
           })
           .catch((err) => {
             console.error("Error adding role: ", err);
+            toast.error("Failed to add role.");
           });
-
       } catch (error) {
         console.error("Error adding role: ", error);
+        toast.error("An unexpected error occurred.");
       }
 
       handleClose();
       getRolesList();
     }
   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -147,7 +166,9 @@ const RoleList = () => {
           </Button>
           {showAssignNewRoleModal && (
             <Dialog open onClose={handleClose}>
-              <DialogTitle className="text-sm">Assign new role for the user</DialogTitle>
+              <DialogTitle className="text-sm">
+                Assign new role for the user
+              </DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   <Box className="text-sm mb-2">Please type user name</Box>
@@ -158,7 +179,6 @@ const RoleList = () => {
                     value={userPrincipal}
                     onChange={(e) => setUserPrincipal(e.target.value)}
                   />
-
 
                   <Box className="text-sm mt-2 mb-2">Role</Box>
                   <Select
@@ -171,11 +191,15 @@ const RoleList = () => {
                   </Select>
                 </DialogContentText>
               </DialogContent>
-              <DialogActions sx={{ justifyContent: 'space-between' }}>
+              <DialogActions sx={{ justifyContent: "space-between" }}>
                 <Button color="info" onClick={handleClose}>
                   Cancel
                 </Button>
-                <LoadingButton color="error" onClick={handleAddUser} disabled={!selectedRole}>
+                <LoadingButton
+                  color="error"
+                  onClick={handleAddUser}
+                  disabled={!selectedRole}
+                >
                   Add user
                 </LoadingButton>
               </DialogActions>
@@ -185,7 +209,11 @@ const RoleList = () => {
 
         <Box>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="List of roles" size="small">
+            <Table
+              sx={{ minWidth: 650 }}
+              aria-label="List of roles"
+              size="small"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Wallet</TableCell>
@@ -201,10 +229,8 @@ const RoleList = () => {
                       <TableCell>{userRole?.role}</TableCell>
                     </TableRow>
                   );
-                }
-                )}
+                })}
               </TableBody>
-
             </Table>
           </TableContainer>
           <TablePagination
