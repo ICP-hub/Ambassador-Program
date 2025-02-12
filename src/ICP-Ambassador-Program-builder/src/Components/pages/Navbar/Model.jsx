@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FiCopy, FiLogOut } from "react-icons/fi";
 import { FaWallet } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { CRYPTO_EXCHANGE_RATE_URL, DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
+import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 import { Principal } from "@dfinity/principal";
 import { useSelector } from "react-redux";
 
 const Model = ({ principalId, handleLogout }) => {
-  const [walletBalanceUSD, setWalletBalanceUSD] = useState("Loading...");
+  // const [walletBalanceUSD, setWalletBalanceUSD] = useState("Loading...");
   const [walletBalance, setWalletBalance] = useState(0);
 
   const actor = useSelector((state) => state.actor.value);
@@ -28,24 +28,24 @@ const Model = ({ principalId, handleLogout }) => {
     }
   };
 
-  const fetchExchangeRate = async () => {
-    try {
-      const response = await fetch(
-        `${CRYPTO_EXCHANGE_RATE_URL}${DEFAULT_CURRENCY}`
-      );
-      const data = await response.json();
-      console.log("Exchange rate fetch response:", data?.data?.rates?.USD);
-      const rate = parseFloat(data?.data?.rates?.USD);
-      if (!isNaN(rate)) {
-        setWalletBalanceUSD((Number(walletBalance) * Number(rate)).toFixed(2));
-      } else {
-        setWalletBalanceUSD("Error fetching rate");
-      }
-    } catch (error) {
-      console.error("Failed to fetch exchange rate:", error);
-      setWalletBalanceUSD("Error fetching rate");
-    }
-  };
+  // const fetchExchangeRate = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${CRYPTO_EXCHANGE_RATE_URL}${DEFAULT_CURRENCY}`
+  //     );
+  //     const data = await response.json();
+  //     console.log("Exchange rate fetch response:", data?.data?.rates?.USD);
+  //     const rate = parseFloat(data?.data?.rates?.USD);
+  //     if (!isNaN(rate)) {
+  //       setWalletBalanceUSD((Number(walletBalance) * Number(rate)).toFixed(2));
+  //     } else {
+  //       setWalletBalanceUSD("Error fetching rate");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch exchange rate:", error);
+  //     setWalletBalanceUSD("Error fetching rate");
+  //   }
+  // };
 
   // Function to handle copying the principal ID
   const handleCopy = () => {
@@ -63,11 +63,11 @@ const Model = ({ principalId, handleLogout }) => {
     fetchWalletBalance(principalId);
   }, [principalId]); // Only runs when principalId changes
   
-  useEffect(() => {
-    if (walletBalance > 0) {
-      fetchExchangeRate();
-    }
-  }, [walletBalance]); // Runs whenever walletBalance is updated
+  // useEffect(() => {
+  //   if (walletBalance > 0) {
+  //     fetchExchangeRate();
+  //   }
+  // }, [walletBalance]); // Runs whenever walletBalance is updated
   
 
   return (
@@ -93,7 +93,7 @@ const Model = ({ principalId, handleLogout }) => {
           </div>
           <div className="flex justify-between text-sm mt-2">
             <span>{DEFAULT_CURRENCY}: {walletBalance}</span>
-            <span>USD: {walletBalanceUSD}</span>
+            {/* <span>USD: {walletBalanceUSD}</span> */}
           </div>
         </div>
 
