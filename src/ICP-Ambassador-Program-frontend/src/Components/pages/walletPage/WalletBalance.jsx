@@ -1,5 +1,6 @@
 import React from "react";
 import walletIcon from "../../../../public/icons/smartwallet.png";
+import { RiWallet3Fill } from "react-icons/ri";
 
 export const WalletBalance = () => {
   return (
@@ -18,6 +19,9 @@ export const WalletBalance = () => {
               alt="wallet"
               className="w-[108px] h-[90px] "
             />
+            {/* <RiWallet3Fill
+              style={{ width: "140px", height: "120px", color: "#9173FF" }}
+            /> */}
             <p className="self-stretch px-16 py-7 my-auto w-full text-3xl font-medium text-center text-white bg-[#9173FF]/30  rounded-3xl max-md:px-5 max-md:mt-10">
               0.00 USD
             </p>

@@ -29,7 +29,7 @@ const LandingPage = () => {
   return (
     <>
       <div className="flex flex-col pb-10 bg-gradient-to-b from-[#1E0F33]/100 to-[#9173FF]/80">
-        <div className=" py-2 h-[135px] px-10 rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
+        <div className=" py-2 sticky top-0 z-50 h-[135px] px-10 rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
           <div className="flex items-center gap-5  ">
             <img src={atlaslogo} alt="atlas" className="h-[50px] " />
           </div>
