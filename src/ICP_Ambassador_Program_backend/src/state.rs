@@ -47,6 +47,11 @@ thread_local! {
     pub static IMAGE_MAP: RefCell<StableBTreeMap<String, ImageIdWrapper, Memory>> = RefCell::new(StableBTreeMap::init(
         MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(8)))
     ));
+    
+    // store user rewards records history
+    pub static REWARD_HISTORY_MAP: RefCell<StableBTreeMap<String, RewardHistory, Memory>> = RefCell::new(StableBTreeMap::init(
+        MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(9)))
+    ));
 }
 
 // storables
@@ -259,6 +264,35 @@ impl Storable for ImageIdWrapper {
     }
     
 }
+
+// reward hisotry
+
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct Reward{
+    pub mission_id:String,
+    pub mission_title:String,
+    pub reward:u64,
+    pub date:String
+}
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct RewardHistory{
+    pub user:String,
+    pub rewards:Vec<Reward>
+}
+
+impl Storable for RewardHistory{
+    const BOUND: Bound = Unbounded;
+
+    fn to_bytes(&self) -> Cow<[u8]> {
+        let serialized = serde_cbor::to_vec(self).expect("Failed to serialize RewardHistory");
+        Cow::Owned(serialized)
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        serde_cbor::from_slice(&bytes).expect("Failed to deserialize RewardHistory")
+    }
+}
+
 // #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 // pub struct Moderators{
 //     pub wallet_id:Principal,

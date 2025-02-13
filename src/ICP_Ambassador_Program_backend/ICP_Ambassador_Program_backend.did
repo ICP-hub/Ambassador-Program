@@ -59,6 +59,7 @@ type ProfileImageData = record { content : opt blob };
 type Result = variant { Ok : text; Err : text };
 type Result_1 = variant { Ok; Err : Errors };
 type Result_10 = variant { Ok : Submission; Err : Errors };
+type Result_11 = variant { Ok : RewardHistory; Err : text };
 type Result_2 = variant { Ok; Err : text };
 type Result_3 = variant { Ok : opt Space; Err : Errors };
 type Result_4 = variant { Ok : nat; Err : text };
@@ -67,7 +68,14 @@ type Result_6 = variant { Ok : vec Mission; Err : Errors };
 type Result_7 = variant { Ok : vec record { text; Space }; Err : Errors };
 type Result_8 = variant { Ok : Space; Err : Errors };
 type Result_9 = variant { Ok : Space; Err : text };
+type Reward = record {
+  reward : nat64;
+  mission_title : text;
+  date : text;
+  mission_id : text;
+};
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
+type RewardHistory = record { user : text; rewards : vec Reward };
 type Role = variant { Editor; Moderator };
 type Space = record {
   editors : vec principal;
@@ -164,6 +172,7 @@ service : {
   get_space_by_id : (text) -> (Result_9) query;
   get_submission : (text) -> (Result_10) query;
   get_user_data : (text) -> (opt UserProfile) query;
+  get_user_reward_history : (text) -> (Result_11) query;
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
   update_space : (Space) -> (Result_1);
