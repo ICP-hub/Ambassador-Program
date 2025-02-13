@@ -34,7 +34,7 @@ const Home = () => {
   const [openWallet, setOpenWallet] = useState(false);
   const [discordl_user, setDiscord_user] = useState();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  // const [userEmail, setUserEmail] = useState("");
+  const [spaceData, setSpaceData] = useState("");
 
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -106,6 +106,7 @@ const Home = () => {
   };
   const [space, setSpaces] = useState("");
   const loggedIn = Cookies.get("isLoggedIn");
+
   console.log("Looged In ==>", loggedIn);
   const getUser = async (isLoggedIn) => {
     try {
@@ -120,8 +121,24 @@ const Home = () => {
         dispatch(updateUser(details[0]));
         console.log("dispatching user");
         const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
+
         if (spaces?.Ok) {
-          console.log("getuser spaces : ", spaces);
+          console.log("getuser spaces:", spaces);
+
+          const space_id = Cookies.get("selectedHub");
+          console.log("Space ID from cookies:", space_id);
+
+          // Matching the ID inside spaces.Ok
+          const matchedSpace = spaces.Ok.find((space) => space[0] === space_id);
+
+          if (matchedSpace) {
+            console.log("Matched Space:", matchedSpace);
+            setSpaceData(matchedSpace);
+            // Store matched space wherever required
+          } else {
+            console.log("No matching space found.");
+          }
+
           for (let i = 0; i < spaces?.Ok?.length; i++) {
             if (spaces?.Ok[i][0] == details[0]?.hub) {
               Cookies.set("selectedHub", details[0]?.hub);
@@ -205,6 +222,8 @@ const Home = () => {
 
   console.log("Discord user ==>", discordl_user);
 
+  console.log(spaceData, "spacedata");
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -250,19 +269,20 @@ const Home = () => {
                     <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
                       <img
                         loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/ed2f326f1475d73512a13684d5427d3b26aa38afd4fc8b99adcb4c9bad4fda68?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
+                        src={spaceData[1]?.bg_img[0]}
                         alt="ICP HUB India Logo"
                         className="object-contain rounded-3xl aspect-square w-[100px]"
                       />
                     </div>
                     <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
                       <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
-                        ICP HUB India
+                        {spaceData[1]?.name}
                       </div>
                       <input
                         className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
                         type="text"
                         placeholder="add your info..."
+                        value={spaceData[1]?.description}
                       />
                     </div>
                   </div>
@@ -270,19 +290,18 @@ const Home = () => {
                 <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
                   <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
                     <a
-                      href="https://x.com"
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <img
                         src={xicon}
-                        alt="discord icon"
+                        alt=" twitter icon"
                         className="w-[29px] h-[30px] "
                       />
                     </a>
                     <a
-                      href="https://discord.com"
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <img
@@ -292,7 +311,6 @@ const Home = () => {
                       />
                     </a>
                     <a
-                      href="https://www.linkedin.com"
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
