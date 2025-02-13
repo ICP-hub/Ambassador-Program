@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import atlaslogo from "../../../../public/atlaslogo.png";
 import backgrounBanner from "../../../../public/backgroundA.png";
 import HubCard from "./HubCard";
@@ -8,8 +8,10 @@ import bgimg from "../../../../public/rewardBgImg.png";
 import downArrow from "../../../../public/icons/downarrowIcon.png";
 import A_icon from "../..//../../public/icons/A_icon.png";
 import Footer from "../../footer/Footer";
+import LoginModel from "../../modules/Navbar/LoginModel";
 
 const LandingPage = () => {
+  const [openLoginModal, setOpenLoginModal] = useState(false);
   const data = [
     {
       heading: "Quest",
@@ -31,10 +33,19 @@ const LandingPage = () => {
           <div className="flex items-center gap-5  ">
             <img src={atlaslogo} alt="atlas" className="h-[50px] " />
           </div>
-          <div className="w-[147px] h-[45px] rounded-lg flex items-center justify-center bg-[#9173FF] ">
+          <div
+            onClick={() => setOpenLoginModal(true)}
+            className="w-[147px] h-[45px] rounded-lg cursor-pointer flex items-center justify-center bg-[#9173FF] "
+          >
             <button className="text-white">Join</button>
           </div>
         </div>
+        {openLoginModal && (
+          <LoginModel
+            isOpen={openLoginModal}
+            onClose={() => setOpenLoginModal(false)}
+          />
+        )}
         <div className="w-full  ">
           <div
             style={{
@@ -72,7 +83,10 @@ const LandingPage = () => {
               <HubCard />
             </div>
             <div className="flex justify-center items-center">
-              <div className="mt-8  flex justify-center items-center font-medium  bg-[#9173FF]/50 w-[365px] h-[58px] rounded-full ">
+              <div
+                onClick={() => setOpenLoginModal(true)}
+                className="mt-8 cursor-pointer flex justify-center items-center font-medium  bg-[#9173FF]/50 w-[365px] h-[58px] rounded-full "
+              >
                 <span className="text-white text-3xl mr-2">
                   <IoArrowForwardCircleOutline />
                 </span>
@@ -88,8 +102,14 @@ const LandingPage = () => {
               </h2>
             </div>
             <div className="flex justify-center gap-10 px-6 my-10">
-              {data.map((item) => {
-                return <ReferalCard heading={item.heading} text={item.text} />;
+              {data.map((item, i) => {
+                return (
+                  <ReferalCard
+                    key={i}
+                    heading={item.heading}
+                    text={item.text}
+                  />
+                );
               })}
             </div>
             <div className="mt-10 px-10 flex justify-center items-center">
