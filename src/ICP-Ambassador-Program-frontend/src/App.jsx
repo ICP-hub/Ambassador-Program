@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Components/pages/Home";
 import CardDetails from "./Components/modules/Contests/CardDetails";
@@ -10,12 +10,20 @@ import LandingPage from "./Components/pages/landingpage/LandingPage";
 
 function App() {
   const [open, setOpen] = useState(false);
+  // const [user, setUser] = useState(false);
+  // useEffect(() => {
+  //   if (Cookies.get("discord_user")) {
+  //     setUser(true);
+  //   }
+  // }, []);
   return (
     <>
       <Toaster />
       <BrowserRouter>
         <Routes>
+          {/* <Route path="/" element={user ? <Home /> : <LandingPage />} /> */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} />}/>
           <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
           <Route path="/ref" element={<ReferralHandler />} />

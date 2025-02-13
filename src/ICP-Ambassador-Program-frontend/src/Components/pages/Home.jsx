@@ -22,6 +22,8 @@ import discordicon from "../.../../../../public/icons/discord.png";
 import awtar from "../../../public/icons/Avatar.png";
 import UserProfile from "../modules/Navbar/UserProfile";
 import WalletSidebar from "../wallet/walletSidebar";
+import Setting from "./Setting";
+import { WalletPage } from "./walletPage/WalletPage";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -32,6 +34,7 @@ const Home = () => {
   const [openWallet, setOpenWallet] = useState(false);
   const [discordl_user, setDiscord_user] = useState();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // const [userEmail, setUserEmail] = useState("");
 
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -63,9 +66,9 @@ const Home = () => {
         //console.log("user ==>",user)
         //setDiscord_user(user);
         //console.log("Discord user ==>",discordl_user)
-        if (email) {
-          setUserEmail(email);
-        }
+        // if (email) {
+        //   setUserEmail(email);
+        // }
 
         if (user && user.id) {
           getUser_Details(user.id);
