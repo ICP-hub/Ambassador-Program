@@ -17,16 +17,18 @@ pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
         return Err(Errors::NotRegisteredAsAdmin);
     }
 
-    let id = genrate_space_id(caller());
-    let space_id: String;
+    let space_id = match genrate_space_id(caller()) {
+        Ok(id) => id,
+        Err(e) => return Err(e),
+    };
 
-    match id {
-        Ok(value) => space_id = value,
-        Err(value) => return Err(value),
+    // Validate input data
+    if !is_valid_utf8(&space.name) || !is_valid_utf8(&space.slug) || !is_valid_utf8(&space.description) {
+        return Err(Errors::InvalidInput);
     }
 
-    let new_space: Space = Space {
-        space_id,
+    let new_space = Space {
+        space_id: space_id.clone(),
         name: space.name,
         slug: space.slug,
         description: space.description,
@@ -52,9 +54,14 @@ pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
 
     let inserted = SPACE_MAP.with(|map| {
         map.borrow_mut()
-            .insert(new_space.space_id.clone(), new_space)
+            .insert(space_id, new_space)
     });
-    return Ok(inserted);
+    Ok(inserted)
+}
+
+// Helper function to validate UTF-8
+fn is_valid_utf8(s: &str) -> bool {
+    std::str::from_utf8(s.as_bytes()).is_ok()
 }
 
 // Access Control : Moderator

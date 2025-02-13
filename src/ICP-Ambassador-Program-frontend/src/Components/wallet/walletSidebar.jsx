@@ -196,7 +196,7 @@ const WalletSidebar = ({ onClose, isOpen, setDiscord_user }) => {
         "subacc : ",
         user?.hub
       );
-      const finalAmount = parseFloat(sendAmount) * Math.pow(10, 8);
+      const finalAmount = parseFloat(sendAmount) * Math.pow(10, 6);
       const fees = Math.pow(10, 4);
       if (finalAmount + fees > parseInt(balance)) {
         toast.error("Insufficient balance");

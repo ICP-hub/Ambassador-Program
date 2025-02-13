@@ -14,6 +14,7 @@ type CreateSpace = record {
 type Errors = variant {
   AlreadyEditor;
   ErrorUpdatingAdmin;
+  InvalidInput;
   NoSpaceFound;
   ErrUpdatingMissionCount;
   NoSubmissionFound;
@@ -175,6 +176,7 @@ service : {
   get_user_reward_history : (text) -> (Result_11) query;
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
+  test_query : () -> (text) query;
   update_space : (Space) -> (Result_1);
   upload_profile_image : (text, ProfileImageData) -> (Result);
   withdraw_points : (text, nat64) -> (Result);

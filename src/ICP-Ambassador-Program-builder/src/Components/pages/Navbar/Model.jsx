@@ -21,31 +21,12 @@ const Model = ({ principalId, handleLogout }) => {
       })
 
       console.log("Wallet balance fetch response:", balance);
-      setWalletBalance(parseFloat(balance) / Math.pow(10, 8));
+      setWalletBalance(parseFloat(balance) / Math.pow(10, 6));
 
     } catch (error) {
       console.error("Failed to fetch wallet balance:", error);
     }
   };
-
-  // const fetchExchangeRate = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `${CRYPTO_EXCHANGE_RATE_URL}${DEFAULT_CURRENCY}`
-  //     );
-  //     const data = await response.json();
-  //     console.log("Exchange rate fetch response:", data?.data?.rates?.USD);
-  //     const rate = parseFloat(data?.data?.rates?.USD);
-  //     if (!isNaN(rate)) {
-  //       setWalletBalanceUSD((Number(walletBalance) * Number(rate)).toFixed(2));
-  //     } else {
-  //       setWalletBalanceUSD("Error fetching rate");
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to fetch exchange rate:", error);
-  //     setWalletBalanceUSD("Error fetching rate");
-  //   }
-  // };
 
   // Function to handle copying the principal ID
   const handleCopy = () => {
@@ -62,13 +43,6 @@ const Model = ({ principalId, handleLogout }) => {
   useEffect(() => {
     fetchWalletBalance(principalId);
   }, [principalId]); // Only runs when principalId changes
-  
-  // useEffect(() => {
-  //   if (walletBalance > 0) {
-  //     fetchExchangeRate();
-  //   }
-  // }, [walletBalance]); // Runs whenever walletBalance is updated
-  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
@@ -93,7 +67,6 @@ const Model = ({ principalId, handleLogout }) => {
           </div>
           <div className="flex justify-between text-sm mt-2">
             <span>{DEFAULT_CURRENCY}: {walletBalance}</span>
-            {/* <span>USD: {walletBalanceUSD}</span> */}
           </div>
         </div>
 
