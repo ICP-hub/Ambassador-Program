@@ -1,5 +1,6 @@
 import React from "react";
 import walletIcon from "../../../../public/icons/smartwallet.png";
+import { RiWallet3Fill } from "react-icons/ri";
 
 export const WalletBalance = ({ login, ledger, logout }) => {
   return (

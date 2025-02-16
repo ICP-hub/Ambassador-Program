@@ -16,14 +16,15 @@ import ReactModal from "react-modal";
 import ReferralModal from "../modules/Navbar/ReferralModal";
 import Footer from "../footer/Footer";
 import icpbanner from "../.../../../../public/icpbanner.png";
-import xicon from "../.../../../../public/icons/xicon.png";
-import linkedinicon from "../.../../../../public/icons/linkedin.png";
-import discordicon from "../.../../../../public/icons/discord.png";
 import awtar from "../../../public/icons/Avatar.png";
 import UserProfile from "../modules/Navbar/UserProfile";
 import WalletSidebar from "../wallet/walletSidebar";
 import Setting from "./Setting";
 import { WalletPage } from "./walletPage/WalletPage";
+import { BsTwitterX } from "react-icons/bs";
+import { FaLinkedinIn } from "react-icons/fa";
+import { FaDiscord } from "react-icons/fa";
+import { LuFilter } from "react-icons/lu";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -259,8 +260,12 @@ const Home = () => {
 
         <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
           <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
-            <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
-              <img src={icpbanner} alt="icp banner" className="w-full" />
+            <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[300px] max-md:mr-0.5">
+              <img
+                src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
+                alt="icp banner"
+                className="w-full rounded-3xl"
+              />
             </div>
             <div className="mt-5 w-full max-md:mr-1.5 max-md:max-w-full">
               <div className="flex gap-5 max-md:flex-col">
@@ -293,10 +298,8 @@ const Home = () => {
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
-                      <img
-                        src={xicon}
-                        alt=" twitter icon"
-                        className="w-[29px] h-[30px] "
+                      <BsTwitterX
+                        style={{ fontSize: "40px", color: "white" }}
                       />
                     </a>
                     <a
@@ -304,20 +307,14 @@ const Home = () => {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
-                      <img
-                        src={discordicon}
-                        alt="discord icon"
-                        className="w-[30px] h-[30px] "
-                      />
+                      <FaDiscord style={{ fontSize: "42px", color: "white" }} />
                     </a>
                     <a
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
-                      <img
-                        src={linkedinicon}
-                        alt="discord icon"
-                        className="w-[40px] h-[30px] "
+                      <FaLinkedinIn
+                        style={{ fontSize: "40px", color: "white" }}
                       />
                     </a>
                   </div>
@@ -329,12 +326,7 @@ const Home = () => {
           <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
             <div className="flex flex-1 gap-3 font-medium">
               <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/966d04a59e97db6f7131d23cc92a5602a64ac676858872643d10c077efc25719?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
-                  alt=""
-                  className="object-contain shrink-0 w-7 aspect-square"
-                />
+                <LuFilter style={{ fontSize: "30px", color: "white" }} />
                 <span className="my-auto">Sorting</span>
               </button>
             </div>
