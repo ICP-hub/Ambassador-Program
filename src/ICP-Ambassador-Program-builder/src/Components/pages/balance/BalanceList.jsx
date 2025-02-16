@@ -15,35 +15,11 @@ const BalanceList = () => {
   const [balance, setBalance] = useState(0);
   const spaces = useSelector((state) => state.spaces.value);
   const actor = useSelector((state) => state.actor.value);
-  //console.log("showing space ==>",spaces,actor)
   const [lockedAm, setLockedAm] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [metaData, setMetaData] = useState(null);
   const [walletBalance, setWalletBalance] = useState(0);
-
-  async function getBalance() {
-    try {
-      let balance = await actor?.ledgerActor?.icrc1_balance_of({
-        owner: Principal.fromText(
-          process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND
-        ),
-        // subaccount: [stringToSubaccountBytes(spaces?.space_id)]
-        subaccount: [],
-      });
-
-      console.log("Balance fetch res: ", balance);
-      // console.log("space balance",spaces?.space_id,parseInt(balance),parseInt(metadata?.["icrc1:decimals"]))
-      // console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_0"))
-      // console.log(stringToSubaccountBytes("uxi6s-eedvz-mgg63-2bcuy-fp5dh-2vswl-4xji2-he7zu-vszhg-wq5so-xae_1"))
-      setBalance(
-        parseFloat(balance) /
-          Math.pow(10, parseInt(metadata?.["icrc1:decimals"]))
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   async function getFundDetails() {
     try {
@@ -69,8 +45,8 @@ const BalanceList = () => {
           return;
         }
 
-        let newBalance = parseFloat(parseInt(balanceRaw) / Math.pow(10, 8));
-        let locked = parseFloat(parseInt(lockedRaw) / Math.pow(10, 8));
+        let newBalance = parseFloat(parseInt(balanceRaw) / Math.pow(10, 6));
+        let locked = parseFloat(parseInt(lockedRaw) / Math.pow(10, 6));
         console.log("Funds available:", newBalance, locked);
 
         setBalance(newBalance);
@@ -83,50 +59,13 @@ const BalanceList = () => {
     }
   }
 
-  async function depositAmount() {
-    try {
-      setLoading(true);
-      let metadataRes = await actor?.ledgerActor?.icrc1_metadata();
-      let metadata = formatTokenMetaData(metadataRes);
-      let amnt = parseInt(
-        Number(amount) * Math.pow(10, parseInt(metadata?.["icrc1:decimals"]))
-      );
-      let transaction = {
-        spender: {
-          owner: Principal.fromText(
-            process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND
-          ),
-          subaccount: [],
-        },
-        fee: [metadata?.["icrc1:fee"]],
-        memo: [],
-        from_subaccount: [],
-        created_at_time: [],
-        amount: amnt + metadata?.["icrc1:fee"],
-        expected_allowance: [],
-      };
-      let approveRes = await actor?.ledgerActor?.icrc2_approve(transaction);
-      console.log(approveRes);
-      //call backend function to add funds here
-      // let transferRes=await actor?.backendAction
-      setAmount(0);
-      setLoading(false);
-      toast.success("transferred funds to the hub");
-      getBalance();
-    } catch (err) {
-      toast.error("Some error occurred");
-      setLoading(false);
-      console.log(err);
-    }
-  }
-
   async function addFunds() {
     try {
       setLoading(true);
 
       await transferApprove(amount, spaces?.space_id, actor?.ledgerActor);
 
-      let finalAmount = Math.pow(10, 8) * Number(amount);
+      let finalAmount = Math.pow(10, 6) * Number(amount);
       console.log(spaces);
       // if(finalAmount>balance){
       //   toast.error("Ca")
@@ -237,7 +176,6 @@ const BalanceList = () => {
   };
 
   useEffect(() => {
-    // getBalance();
     getFundDetails();
     settingToken();
     getWalletBalance();

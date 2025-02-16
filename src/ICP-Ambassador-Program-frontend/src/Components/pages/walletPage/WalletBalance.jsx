@@ -2,7 +2,7 @@ import React from "react";
 import walletIcon from "../../../../public/icons/smartwallet.png";
 import { RiWallet3Fill } from "react-icons/ri";
 
-export const WalletBalance = () => {
+export const WalletBalance = ({ login, ledger, logout }) => {
   return (
     <section className="flex relative flex-col items-center max-w-full w-[711px]">
       <div className="self-stretch px-9 py-7 rounded-3xl border-[#9173FF] border-solid border-[3px] max-md:px-5 max-md:max-w-full">
@@ -19,12 +19,21 @@ export const WalletBalance = () => {
               alt="wallet"
               className="w-[108px] h-[90px] "
             />
-            {/* <RiWallet3Fill
-              style={{ width: "140px", height: "120px", color: "#9173FF" }}
-            /> */}
-            <p className="self-stretch px-16 py-7 my-auto w-full text-3xl font-medium text-center text-white bg-[#9173FF]/30  rounded-3xl max-md:px-5 max-md:mt-10">
-              0.00 USD
-            </p>
+            {ledger ? (
+              <button
+                className="  cursor-pointer   bg-[#9173ff6d] py-7 text-white font-semibold w-full text-2xl rounded-2xl flex justify-center items-center"
+                onClick={logout}
+              >
+                Disconnect wallet
+              </button>
+            ) : (
+              <button
+                className=" cursor-pointer transition-all  bg-[#9173ff6d] duration-500 text-white font-semibold text-2xl py-7 w-full rounded-2xl flex justify-center items-center"
+                onClick={login}
+              >
+                Connect wallet
+              </button>
+            )}
           </div>
         </div>
       </div>

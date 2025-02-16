@@ -235,6 +235,7 @@ pub enum Errors{
     ReferrerNotFound,
     SubmissionAlreadyReviewed,
     NotAuthorized,
+    InvalidInput,
 }
 
 

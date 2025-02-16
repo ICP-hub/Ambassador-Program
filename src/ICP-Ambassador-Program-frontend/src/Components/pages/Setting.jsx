@@ -13,13 +13,18 @@ import { LiaEdit } from "react-icons/lia";
 
 const Setting = () => {
   return (
-    <div className=" mx-12 pb-4 rounded-xl bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
-      <h2 className="text-3xl py-12 text-white pl-16 font-bold">Setting </h2>
-      <div className="mx-16 flex gap-4 justify-between items-center ">
-        <div className=" mt-6 rounded-xl w-[424px] h-[461px] flex flex-col items-center bg-gradient-to-b from-[#9173FF]/30 to-[#574599]/0 ">
-          <div className="mt-10 relative">
-            <div className="rounded-full bg-gradient-to-t from-[#9173FF] to-[#1E0F33] w-[260px] h-[256px] flex items-center justify-center">
-              <img src={settingProfile} alt="profile" className="" />
+    <>
+      <div className=" mx-12 pb-4 rounded-xl bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
+        <h2 className="text-3xl py-12 text-white pl-16 font-bold">Setting </h2>
+        <div className="mx-16 flex gap-4 justify-between items-center ">
+          <div className=" mt-6 rounded-xl w-[424px] h-[461px] flex flex-col items-center bg-gradient-to-b from-[#9173FF]/30 to-[#574599]/0 ">
+            <div className="mt-10 relative">
+              <div className="rounded-full bg-gradient-to-t from-[#9173FF] to-[#1E0F33] w-[260px] h-[256px] flex items-center justify-center">
+                <img src={settingProfile} alt="profile" className="" />
+              </div>
+              <div className="absolute w-[50px] h-[50px] bg-gray-300 rounded-full flex items-center justify-center bottom-14 -right-4">
+                <img src={editpen} alt="edit" className="w-[30px] h-[30px] " />
+              </div>
             </div>
             <div className="absolute w-[50px] h-[50px] bg-gray-300 rounded-full flex items-center justify-center bottom-14 -right-4">
               {/* <img src={editpen} alt="edit" className="w-[30px] h-[30px] " /> */}
@@ -42,38 +47,53 @@ const Setting = () => {
             <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
               <FaDiscord style={{ fontSize: "60px", color: "white" }} />
             </div>
-            <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
-              <p className="">@vijaykumar</p>
-            </div>
-            <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
-              remove
-            </button>
           </div>
-          <div className="flex gap-6 items-center">
-            <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
-              <BsTwitterX style={{ fontSize: "50px", color: "white" }} />
+          <div className="flex gap-6 flex-col w-[640px] h-[362px]">
+            <div className="flex gap-6 items-center">
+              <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
+                <img
+                  src={discord}
+                  alt="discord"
+                  className="w-[50px] h-[50px] "
+                />
+              </div>
+              <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
+                <p className="">@vijaykumar</p>
+              </div>
+              <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
+                remove
+              </button>
             </div>
-            <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
-              <p className="">@vijaykumar</p>
+            <div className="flex gap-6 items-center">
+              <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
+                <img src={xicon} alt="discord" className="w-[50px] h-[50px] " />
+              </div>
+              <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
+                <p className="">@vijaykumar</p>
+              </div>
+              <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
+                remove
+              </button>
             </div>
-            <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
-              remove
-            </button>
-          </div>
-          <div className="flex gap-6 items-center">
-            <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
-              <LiaTelegram style={{ fontSize: "60px", color: "white" }} />
+            <div className="flex gap-6 items-center">
+              <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
+                <img
+                  src={telegram}
+                  alt="discord"
+                  className="w-[50px] h-[50px] "
+                />
+              </div>
+              <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
+                <p className="">@vijaykumar</p>
+              </div>
+              <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
+                remove
+              </button>
             </div>
-            <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
-              <p className="">@vijaykumar</p>
-            </div>
-            <button className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md ">
-              remove
-            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
