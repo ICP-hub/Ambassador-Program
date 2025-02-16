@@ -47,14 +47,15 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={user ? <Home /> : <LandingPage />} /> */}
           <Route path="/" element={user ? <Home /> : <LandingPage />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} />}/>
+          {/* Below is the old route to single-mission-page */}
+          {/* <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} />}/> */}
           <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
           <Route path="/ref" element={<ReferralHandler />} />
           <Route path="/settings" element={<Setting />} />
           <Route path="/wallet" element={<WalletPage />} />
+          {/* Below is the NEW route to single-mission-page */}
           <Route path="/contest_details" element={<TaskRedemption />} />
         </Routes>
       </BrowserRouter>
