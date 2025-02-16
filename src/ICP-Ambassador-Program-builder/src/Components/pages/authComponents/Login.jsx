@@ -61,7 +61,6 @@ const Login = () => {
 
             let reg_res = await backendActor.register_admin();
             console.log("register admin response : ", reg_res);
-            alert("register admin response : ", reg_res);
             localStorage.setItem("admin", JSON.stringify(reg_res));
 
             if (reg_res?.Ok == null && res != null && res != undefined) {

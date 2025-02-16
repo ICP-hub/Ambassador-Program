@@ -246,15 +246,16 @@ export const WalletPage = () => {
             withdraw={withdraw}
           />
         </div>
-        <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full">
-          <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   ">
-            <TransactionHeader />
-            <div className="w-full ">
-              <TransactionTableBody />
-            </div>
+        {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
+        {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full"> */}
+          {/* <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   "> */}
+            {/* <TransactionHeader /> */}
+            {/* <div className="w-full "> */}
+              {/* <TransactionTableBody /> */}
+            {/* </div> */}
             {/* <TransactionPagination /> */}
-          </section>
-        </div>
+          {/* </section> */}
+        {/* </div> */}
       </div>
     </div>
   );

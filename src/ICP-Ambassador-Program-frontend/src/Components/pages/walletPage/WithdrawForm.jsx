@@ -35,7 +35,7 @@ export const WithdrawForm = ({ setAmount, setReceiver, withdraw }) => {
           </button>
         </div>
         <p className="px-5 py-2 mt-7 text-sm text-center text-white font-normal rounded-3xl bg-[#9173FF]/40  w-[165px]">
-          Fee: 3.41 ckUSDC
+          Fee: 0.01 ckUSDC
         </p>
         <button
           className="px-14 py-3 mt-7 text-xl font-medium text-white whitespace-nowrap rounded-xl border-2 border-white border-solid w-[187px] max-md:px-5"

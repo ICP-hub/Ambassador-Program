@@ -66,6 +66,7 @@ const BalanceList = () => {
       await transferApprove(amount, spaces?.space_id, actor?.ledgerActor);
 
       let finalAmount = Math.pow(10, 6) * Number(amount);
+      console.log("final amount : ", finalAmount);
       console.log(spaces);
       // if(finalAmount>balance){
       //   toast.error("Ca")
@@ -104,7 +105,7 @@ const BalanceList = () => {
 
       // let newBalance = parseFloat(parseInt(balance) / Math.pow(10, 8));
       setWalletBalance(balance);
-      console.log("User Wallet Balance: ", balance, "ICP");
+      console.log("User Wallet Balance: ", balance, "ckUSDC");
       return balance;
     } catch (error) {
       console.log("Error fetching user's balance: ", error);
