@@ -6,7 +6,7 @@ import {
 
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
-const MissionCard = () => {
+const MissionCard = ({ updatedContest }) => {
   const [activeIndex, setActiveIndex] = useState(2);
   const totalSlides = 5; // Adjust based on your content
 
@@ -34,7 +34,7 @@ const MissionCard = () => {
             1500 Points
           </button>
           <button className="border border-gray-500  bg-[#FFFFFF33] px-3 py-1 rounded-md text-sm">
-            3.5 ICP
+            {parseInt(updatedContest.reward)} ckbtc
           </button>
         </div>
       </div>
