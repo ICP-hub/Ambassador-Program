@@ -11,6 +11,8 @@ import LandingPage from "./Components/pages/landingpage/LandingPage";
 import Setting from "./Components/pages/Setting";
 import { WalletPage } from "./Components/pages/walletPage/WalletPage";
 import TaskRedemption from "./Components/pages/MissionSinglePage";
+import AccessDenied from "./Components/pages/AccessDenied";
+import NotFound from "./Components/pages/NotFound";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -48,15 +50,16 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={user ? <Home /> : <LandingPage />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={user ? <Home /> : <AccessDenied/>} />
           {/* Below is the old route to single-mission-page */}
-          {/* <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} />}/> */}
-          <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
-          <Route path="/ref" element={<ReferralHandler />} />
-          <Route path="/settings" element={<Setting />} />
-          <Route path="/wallet" element={<WalletPage />} />
+          {/* <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} /> : <AccessDenied/>}/> */}
+          <Route path="/auth/discord/callback" element={user ? <DiscordCallback setOpen={setOpen} /> : <AccessDenied/>}/>
+          <Route path="/ref" element={user ? <ReferralHandler /> : <AccessDenied/>} />
+          <Route path="/settings" element={user ? <Setting /> : <AccessDenied/>} />
+          <Route path="/wallet" element={user ? <WalletPage /> : <AccessDenied/>} />
           {/* Below is the NEW route to single-mission-page */}
-          <Route path="/contest_details" element={<TaskRedemption />} />
+          <Route path="/contest_details" element={user ? <TaskRedemption /> : <AccessDenied/>} />
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </BrowserRouter>
     </>
