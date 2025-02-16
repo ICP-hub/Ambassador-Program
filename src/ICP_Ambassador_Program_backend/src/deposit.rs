@@ -4,7 +4,7 @@ use icrc_ledger_types::icrc1::account::Account;
 use icrc_ledger_types::icrc1::transfer::{BlockIndex, NumTokens};
 use icrc_ledger_types::icrc2::transfer_from::{TransferFromArgs, TransferFromError};
 use serde::Serialize;
-use crate::CKUSDC_LEDGER_ID;
+use crate::{CKUSDC_LEDGER_ID,BACKEND_CANISTER_WALLET_ID};
 
 #[derive(CandidType, Deserialize, Debug)]
 struct TransferArg {
@@ -44,7 +44,7 @@ pub async fn deposit_icp_to_canister(amount: u64) -> Result<BlockIndex, String> 
         // if not specified, the default fee for the canister is used
         fee: None,
         // the account we want to transfer tokens to
-        to: Account::from(Principal::from_text("be2us-64aaa-aaaaa-qaabq-cai").unwrap()),
+        to: Account::from(Principal::from_text(BACKEND_CANISTER_WALLET_ID).unwrap()),
         // a timestamp indicating when the transaction was created by the caller; if it is not specified by the caller then this is set to the current ICP time
         created_at_time: None,
     };
