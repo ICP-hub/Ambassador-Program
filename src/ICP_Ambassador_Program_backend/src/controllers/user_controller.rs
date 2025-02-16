@@ -183,20 +183,21 @@ pub fn add_wallet(id:String)->Result<String,String>{
     return Ok(String::from("User wallet updated"))
 }
 
+// update this function to tranfer funds on provide wallet id
 #[update]
-pub async fn withdraw_points(id:String,points:u64)->Result<String,String>{
+pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<String,String>{
     let user=USER_PROFILE_MAP.with(|map| map.borrow().get(&id.clone()));
     let mut user_mut:UserProfile;
-    let wallet:Principal;
+    let wallet=receiver;
     match user{
         Some(val)=>user_mut=val,
         None=>return Err(String::from("User not found"))
     }
-    match user_mut.wallet {
-        Some(val)=>wallet=val,
-        None=>return
-         Err(String::from("user wallet not set"))
-    }
+    // match user_mut.wallet {
+    //     Some(val)=>wallet=val,
+    //     None=>return
+    //      Err(String::from("user wallet not set"))
+    // }
     if points>user_mut.redeem_points {
         return Err(String::from("Not enough redeemable points"))
     }
