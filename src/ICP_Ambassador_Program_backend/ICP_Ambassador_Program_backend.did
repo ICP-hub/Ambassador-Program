@@ -53,6 +53,7 @@ type Mission = record {
   expiry_date : text;
   reward_currency : RewardCurrency;
   space_id : text;
+  total_user_rewarded : nat64;
   mission_id : text;
 };
 type MissionStatus = variant { UnActive; Active; Draft; Expired };
@@ -176,7 +177,6 @@ service : {
   get_user_reward_history : (text) -> (Result_11) query;
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
-  test_query : () -> (text) query;
   update_space : (Space) -> (Result_1);
   upload_profile_image : (text, ProfileImageData) -> (Result);
   withdraw_points : (text, nat64) -> (Result);

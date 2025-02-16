@@ -100,7 +100,8 @@ const MissionEdit = () => {
   const actor=useSelector(state=>state.actor.value)
   const spaces=useSelector(state=>state.spaces.value)
   const mission=useSelector(state=>state.mission.value)
-  const [pool,setPool]=useState(parseFloat(parseInt(mission?.pool)/Math.pow(10,8))||0)
+
+  const [pool,setPool]=useState(parseFloat(parseInt(mission?.pool)/Math.pow(10,6))||0)
   const timezone = 'UTC';
   const [logoImage, setLogoImage] = useState(null);
   const [startDate, setStartDate] = useState(moment().tz(timezone));
@@ -117,6 +118,11 @@ const MissionEdit = () => {
   const [spaceBalance,setSpaceBalance]=useState(0)
   const [participantsCount, setParticipantsCount] = useState('');
   const nav=useNavigate()
+
+
+  const [participantsCount2, setParticipantsCount2] = useState(parseInt(mission?.max_users_rewarded) || 0);
+
+  // Change in this file
 
   async function getBalance(){
     try {
@@ -139,6 +145,7 @@ const MissionEdit = () => {
       reader.onerror = (error) => reject(error);
     });
     async function uploadImgAndReturnURL(metadata,file){
+
       return new Promise(async(resolve,reject)=>{
           try{
               const fileContent=await fileToUint8Array(file)
@@ -263,23 +270,27 @@ const MissionEdit = () => {
           
         }
       }
-      let poolamount=parseInt(pool*Math.pow(10,8))
-      let minPoolForOneUser=parseInt(spaces.conversion)*Math.pow(10,6)
-      console.log("minimum pool calc : ",poolamount,minPoolForOneUser,Math.abs(poolamount/minPoolForOneUser))
-      if(poolamount<minPoolForOneUser){
-        setLoading(false)
-        toast.error("pool amount should be increased or points per user should be decreased to reward these points")
-        return
-      }
+
+      // ------------ Rewatd pool calculations -----------------
+      let poolamount=parseInt(pool*Math.pow(10,6)) //token pool
+      // let minPoolForOneUser=parseInt(spaces.conversion)*Math.pow(10,6)
+      // console.log("minimum pool calc : ",poolamount,minPoolForOneUser,Math.abs(poolamount/minPoolForOneUser))
+      // if(poolamount<minPoolForOneUser){
+      //   setLoading(false)
+      //   toast.error("pool amount should be increased or points per user should be decreased to reward these points")
+      //   return
+      // }
       let updatedMission={
         ...mission,
         title:title,
         description:description,
         status:action=="save"?{Draft:null}:{Active:null},
-        reward:parseInt(rewardsData),
+        // reward:parseInt(rewardsData), // reward in POINTS
+        reward:100, // reward in POINTS (total)
         tasks:finalTasks,
-        pool:poolamount,
-        max_users_rewarded: Math.floor(Math.abs(poolamount / minPoolForOneUser)),
+        pool:poolamount, // pool in tokens
+        // max_users_rewarded: Math.floor(Math.abs(poolamount / minPoolForOneUser)), 
+        max_users_rewarded: parseInt(participantsCount2), 
         start_date: String(Date.parse(startDate.toDate())),
         end_date: String(Date.parse(endDate.toDate()))
       }
@@ -292,7 +303,10 @@ const MissionEdit = () => {
       console.log("data ==>",draft_data,mission,actor,finalTasks)
       console.log("dates : ",startDate.toDate(),endDate.toDate())
       console.log("final updated mission : ",updatedMission,tasks)
-      const res=await actor?.backendActor?.edit_mission(updatedMission)
+
+
+      const res=await actor?.backendActor?.edit_mission(updatedMission);
+
       console.log(res)
       if(res!=null && res!=undefined && res?.Err==undefined){
         setLoading(false)
@@ -440,22 +454,6 @@ const MissionEdit = () => {
     setTasks(updatedTasks);
   };
 
-  const sampleSearchFunction = async (input) => {
-    
-    const sampleSpaces = [
-      { id: '1', name: 'Space Alpha' },
-      { id: '2', name: 'Space Beta' },
-      { id: '3', name: 'Space Gamma' },
-      { id: '4', name: 'Space Delta' },
-      { id: '5', name: 'Space Epsilon' },
-    ];
-
-    
-    return sampleSpaces.filter((space) =>
-      space.name.toLowerCase().includes(input.toLowerCase())
-    );
-  };
-
   const handleSelectedCohosts = (selectedCohosts) => {
     //console.log("Selected Cohosts:", selectedCohosts);
     setSpace(selectedCohosts)
@@ -470,11 +468,12 @@ const MissionEdit = () => {
     //console.log('Updated Rewards:', updatedRewards);
   };
 
-  const handleParticipantsChange = (updatedParticipantsCount) => {
-    setParticipantsCount(updatedParticipantsCount);
+
+  // const handleParticipantsChange = (updatedParticipantsCount) => {
+  //   setParticipantsCount(updatedParticipantsCount);
     
-    //console.log('Updated Participants Count:', updatedParticipantsCount);
-  };
+  //   //console.log('Updated Participants Count:', updatedParticipantsCount);
+  // };
 
   if(loading){
     return(
@@ -592,6 +591,9 @@ const MissionEdit = () => {
             onParticipantsChange={(value)=>setRewardsData(value)} 
             pool={pool}
             setPool={setPool}
+
+            participantsCount={participantsCount2}
+            setParticipantsCount={setParticipantsCount2}
           />
           <div className=''>
             {tasks.length > 0 && (<div className="text-4xl border-b-2 border-gray-300 mb-4 py-2">Tasks</div>)}

@@ -13,10 +13,13 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
     <>
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div className="bg-[#9173ff] px-12 py-8 rounded-lg shadow-lg w-[800px] relative">
+          <button
+            className="absolute right-1 top-[-30px]"
+            onClick={onProfileClick}
+          >
+            <IoClose size={24} color="white" />
+          </button>
           <div className="flex items-center  space-x-4">
-            <button className="absolute right-1 top-1" onClick={onProfileClick}>
-              <IoClose size={24} color="white" />
-            </button>
             <div className="bg-[#503a8b] rounded-full size-20 overflow-hidden shadow-2xl">
               <img
                 src="https://s3-alpha-sig.figma.com/img/4f6f/31c6/bd17e030a4e340e85d148b82ba300180?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=bght5lwW6AxmBLlRrdZahJrx8HM8h4BlTetOT7TWK465aLkiCSiMgJSulw4R98YvwhJ-82xHFgt26NnUdyT-4lUZx3OW0TkNJ2ie1vRcNpee9l6VJYEmXcOSEZk32r-sGVe~FvBl7gxbW9mRd5bo0Wg4Zke-fqzMwC6lV9oWJzyuKqGtxOfccxZpf~hC9lg78bD-xwA3pHsVrZmOgs0iR84mrqnSQmx45JifTK4pQyBB0wvjJjVhUakkumNdRmHH~AYvAtJFSe81ZyNbc41dtSqdH56WN4ATxbK8eY1sM8IbDQLN-pdsdDWtFvckrEBp3kYL-cufL7TGX9AhaQqvzw__"
@@ -106,7 +109,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
             </table>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };

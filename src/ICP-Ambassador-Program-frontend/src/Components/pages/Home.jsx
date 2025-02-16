@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../modules/Navbar/Navbar";
 import Filter from "../modules/Filter/Filter";
 import Contests from "../modules/Contests/Contests";
-
 import { FilterProvider } from "../Context/FilterContext";
 import HubConnectionModal from "../modules/Navbar/HubConnectionModel";
 import FilterMobile from "../modules/Filter/FilterMobile";
@@ -16,6 +15,9 @@ import ReactModal from "react-modal";
 import ReferralModal from "../modules/Navbar/ReferralModal";
 import Footer from "../footer/Footer";
 import icpbanner from "../.../../../../public/icpbanner.png";
+import xicon from "../.../../../../public/icons/xicon.png";
+import linkedinicon from "../.../../../../public/icons/linkedin.png";
+import discordicon from "../.../../../../public/icons/discord.png";
 import awtar from "../../../public/icons/Avatar.png";
 import UserProfile from "../modules/Navbar/UserProfile";
 import WalletSidebar from "../wallet/walletSidebar";
@@ -301,14 +303,14 @@ const Home = () => {
                       <BsTwitterX
                         style={{ fontSize: "40px", color: "white" }}
                       />
-                    </a>
+                    </a >
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <FaDiscord style={{ fontSize: "42px", color: "white" }} />
-                    </a>
+                    </a >
                     <a
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
@@ -316,20 +318,20 @@ const Home = () => {
                       <FaLinkedinIn
                         style={{ fontSize: "40px", color: "white" }}
                       />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                    </a >
+                  </div >
+                </div >
+              </div >
+            </div >
+          </div >
           <div className="h-0.5 bg-[#9173FF]"></div>
           <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
             <div className="flex flex-1 gap-3 font-medium">
               <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
                 <LuFilter style={{ fontSize: "30px", color: "white" }} />
                 <span className="my-auto">Sorting</span>
-              </button>
-            </div>
+              </button >
+            </div >
             {/* <div className="flex flex-col  pb-3 leading-none">
               <input
                 type="text"
@@ -344,7 +346,7 @@ const Home = () => {
                 className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
               />
             </div> */}
-          </div>
+          </div >
           <div className="h-0.5 bg-[#9173FF]"></div>
           <FilterProvider>
             <div className="flex flex-grow p-2  rounded-md ">
@@ -362,7 +364,7 @@ const Home = () => {
               </div>
             </div>
           </FilterProvider>
-        </div>
+        </div >
 
         {isHubModalOpen && (
           <HubConnectionModal
@@ -398,7 +400,7 @@ const Home = () => {
         >
           <ReferralModal setOpen={openRefModal} />
         </ReactModal>
-      </div>
+      </div >
       <Footer />
     </>
   );

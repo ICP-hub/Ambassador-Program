@@ -286,15 +286,31 @@ fn genrate_space_id(id: Principal) -> Result<String, Errors> {
 }
 
 // func to assign a space to an admin (for Moderators and Editors)
+// pub fn assign_admin_space(id: Principal, space_id: String) -> Result<(), Errors> {
+//     let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
+//     let mut new_admin: Admin = admin.unwrap();
+//     new_admin.spaces.push(space_id.clone());
+
+//     let updated = ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
+
+//     match updated {
+//         Some(_) => Ok(()),
+//         None => Err(Errors::NotRegisteredAsAdmin),
+//     }
+// }
 pub fn assign_admin_space(id: Principal, space_id: String) -> Result<(), Errors> {
-    let admin = ADMIN_MAP.with(|map| map.borrow().get(&id));
-    let mut new_admin: Admin = admin.unwrap();
-    new_admin.spaces.push(space_id.clone());
+    let admin_opt = ADMIN_MAP.with(|map| map.borrow().get(&id));
 
-    let updated = ADMIN_MAP.with(|map| map.borrow_mut().insert(id, new_admin));
+    if let Some(mut admin) = admin_opt {
+        admin.spaces.push(space_id.clone());
 
-    match updated {
-        Some(_) => Ok(()),
-        None => Err(Errors::NotRegisteredAsAdmin),
+        let updated = ADMIN_MAP.with(|map| map.borrow_mut().insert(id, admin));
+
+        match updated {
+            Some(_) => Ok(()),
+            None => Err(Errors::NotRegisteredAsAdmin),
+        }
+    } else {
+        Err(Errors::NotRegisteredAsAdmin) // Handle case where admin does not exist
     }
 }

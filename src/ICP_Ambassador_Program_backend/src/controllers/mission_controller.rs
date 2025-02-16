@@ -1,5 +1,5 @@
 use ic_cdk::{caller, query, update};
-use crate::{check_anonymous, CreateMission, Errors, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_MAP};
+use crate::{check_anonymous, Errors, Mission, MissionStatus, RewardCurrency, Space, MISSION_MAP, SPACE_MAP};
 use super::{check_editor, lock_funds, unlock_funds};
 
 // func to create mission in a space (currently not used)
@@ -76,13 +76,14 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
         start_date:String::from(""),
         end_date:String::from(""),
         owner:caller(),
-        title:String::from("draft mission"),
+        title:String::from("Draft Mission"),
         status:MissionStatus::Draft,
         reward:0,
         reward_currency:RewardCurrency::ICP,
         img:None,
         tasks:vec![],
         max_users_rewarded:0,
+        total_user_rewarded:0,
         pool:0,
         expiry_date: String::from("")
     };

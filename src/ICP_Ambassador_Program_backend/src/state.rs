@@ -207,6 +207,7 @@ pub struct Mission{
     pub end_date:String,
     pub tasks:Vec<Tasks>,
     pub max_users_rewarded:u64,
+    pub total_user_rewarded:u64, // field to cound already rewarded users
     pub pool:u64,
     pub expiry_date:String // Add this line
 }

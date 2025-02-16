@@ -80,10 +80,14 @@ const SpacesDetails = ({ setLoading }) => {
       const res = await actors?.backendActor.create_draft_mission(
         spaces.space_id
       );
-      console.log(res);
+
+      console.log("create draft mission response : ", res);
       if (res?.Ok == null && res != undefined && res != null) {
         toast.success("Mission added as a draft successfully");
-        window.location.reload();
+        
+        setLoading(false);
+        // window.location.reload();
+        navigate("/slug_url/mission");
       } else {
         toast.error("Some error occurred!");
         setLoading(false);
@@ -256,7 +260,8 @@ const SpacesDetails = ({ setLoading }) => {
                         {parseInt(row?.reward)}{" "}
                       </TableCell>
 
-                      <TableCell align="center"> {parseInt(row?.pool) / 10 ** 8} {DEFAULT_CURRENCY}</TableCell>
+                      <TableCell align="center"> {parseInt(row?.pool) / 10 ** 6} {DEFAULT_CURRENCY}</TableCell>
+
 
                       <TableCell align="center"> XP </TableCell>
 

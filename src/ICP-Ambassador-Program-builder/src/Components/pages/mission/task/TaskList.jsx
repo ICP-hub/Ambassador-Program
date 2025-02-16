@@ -50,7 +50,8 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
   return (
     <Box className="flex flex-col gap-3 border border-gray-300 p-3 rounded w-full">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1" className="border-b-2 border-black">API Task</Typography>
+
+        <Typography variant="body1" className="border-b-2 border-black">Text Task</Typography>
         <IconButton onClick={() => onDelete(task.id)}>
           <DeleteIcon />
         </IconButton>
