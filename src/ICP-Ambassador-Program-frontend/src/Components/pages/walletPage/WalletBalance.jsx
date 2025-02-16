@@ -1,8 +1,31 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 import walletIcon from "../../../../public/icons/smartwallet.png";
 import { RiWallet3Fill } from "react-icons/ri";
+import {ICP_Ambassador_Program_backend} from "../../../../../declarations/ICP_Ambassador_Program_backend/index";
+export const WalletBalance = ({ user,login, ledger, logout }) => {
+  
+  // console.log("User in wallet modal : ", user);
+  const [conversionRate, setConversionRate] = useState();
 
-export const WalletBalance = ({ login, ledger, logout }) => {
+  const getSpaceConversion = async () => {
+    try {
+      console.log("HUB : ", user?.hub);
+      const space = await ICP_Ambassador_Program_backend.get_space(user?.hub);
+      console.log("Conversion : ", space.Ok.conversion/10);
+      if (space?.Ok) {
+        setConversionRate(parseInt(space?.Ok?.conversion)/10);
+      }
+    } catch (error) {
+      console.log("err fetching hub details : ", error);
+    }
+  };
+
+  useEffect(() => {
+    if(user){
+      getSpaceConversion();
+    }
+  }, [user]);
+
   return (
     <section className="flex relative flex-col items-center max-w-full w-[711px]">
       <div className="self-stretch px-9 py-7 rounded-3xl border-[#9173FF] border-solid border-[3px] max-md:px-5 max-md:max-w-full">
@@ -19,7 +42,7 @@ export const WalletBalance = ({ login, ledger, logout }) => {
               alt="wallet"
               className="w-[108px] h-[90px] "
             />
-            {ledger ? (
+            {/* {ledger ? (
               <button
                 className="  cursor-pointer   bg-[#9173ff6d] py-7 text-white font-semibold w-full text-2xl rounded-2xl flex justify-center items-center"
                 onClick={logout}
@@ -33,7 +56,11 @@ export const WalletBalance = ({ login, ledger, logout }) => {
               >
                 Connect wallet
               </button>
-            )}
+            )} */}
+            <div className=" cursor-pointer transition-all  bg-[#9173ff6d] duration-500 text-white font-semibold text-2xl py-7 w-full rounded-2xl flex justify-center items-center">
+              {user ? (parseInt(user.redeem_points) * conversionRate)/100 : 0} ckusdc
+
+            </div>
           </div>
         </div>
       </div>

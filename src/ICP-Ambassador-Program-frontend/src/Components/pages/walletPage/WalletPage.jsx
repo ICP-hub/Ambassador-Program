@@ -22,6 +22,8 @@ import {
 import { Principal } from "@dfinity/principal";
 
 import { useSelector } from "react-redux";
+import Navbar from "../../modules/Navbar/Navbar";
+import Footer from "../../footer/Footer";
 
 export const WalletPage = () => {
   const [hub, setHub] = useState("");
@@ -35,6 +37,7 @@ export const WalletPage = () => {
   const user = useSelector((state) => state.user.value);
 
   const [updatedUser, setUpdatedUser] = useState(user);
+
   useEffect(() => {
     const HUB = Cookies.get("selectedHubName");
     setHub(HUB);
@@ -139,20 +142,35 @@ export const WalletPage = () => {
     setLedger(null);
   }
 
+  // make changes in below 2 function
+  function calculatePoints(usd, conversionRate) {
+    return (usd * 100) / conversionRate;
+  }
   async function withdraw() {
     try {
-      console.log("withdraw", updatedUser?.redeem_points, amount, user);
-      if (updatedUser?.wallet?.length == 0) {
-        toast.error("You wallet is set, please connect a wallet");
-        return;
-      }
-      if (amount > parseInt(updatedUser?.redeem_points)) {
-        toast.error("Not enough redeemable points");
+      console.log("Amount : ", amount);
+      console.log("Receiver : ", receiver, Principal.fromText(receiver));
+      console.log("Conversion : ", conversion / 10);
+      console.log("Points : ", Math.round(calculatePoints(amount, conversion / 10)));
+
+      console.log("Type of receiver : ", typeof Principal.fromText(receiver));
+
+      const points = Math.round(calculatePoints(amount, conversion / 10));
+      // console.log("withdraw", updatedUser?.redeem_points, amount, user);
+      // if (updatedUser?.wallet?.length == 0) {
+      //   toast.error("You wallet is set, please connect a wallet");
+      //   return;
+      // }
+
+      if (points > parseInt(updatedUser?.redeem_points)) {
+        toast.error("Not enough balance to withdraw");
         return;
       }
       let withdrawRes = await ICP_Ambassador_Program_backend.withdraw_points(
         updatedUser?.discord_id,
-        parseInt(amount)
+        Principal.fromText(receiver), // receiver principal to withdraw points
+        parseInt(points) // parseInt(amount)
+        // parseInt(amount)
       );
       console.log(withdrawRes);
       if (withdrawRes?.Ok) {
@@ -160,7 +178,7 @@ export const WalletPage = () => {
         getUser();
       } else {
         toast.error(
-          "Cannot withdraw now, please try after some time or try reducing points"
+          "Cannot withdraw now, please try after some time or try reducing amount"
         );
       }
     } catch (error) {
@@ -231,32 +249,37 @@ export const WalletPage = () => {
     }
   }
   return (
-    <div className=" mx-12  ">
-      <div className="flex overflow-hidden w-full flex-col items-center">
-        <div
-          style={{
-            backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
-          }}
-          className="flex  flex-col justify-center items-center px-20 py-12 mt-2 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[701px] max-md:px-5 max-md:max-w-full"
-        >
-          <WalletBalance login={login} ledger={ledger} logout={logout} />
-          <WithdrawForm
-            setAmount={setAmount}
-            setReceiver={setReceiver}
-            withdraw={withdraw}
-          />
-        </div>
-        {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
-        {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full"> */}
+    <>
+      <Navbar />
+      <div className="mb-5 mx-12  ">
+        <div className="flex overflow-hidden w-full flex-col items-center">
+          <div
+            style={{
+              backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
+            }}
+            className="flex  flex-col justify-center items-center px-20 py-12 mt-2 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[701px] max-md:px-5 max-md:max-w-full"
+          >
+            <WalletBalance user={user} login={login} ledger={ledger} logout={logout} />
+            <WithdrawForm
+
+              setAmount={setAmount}
+              setReceiver={setReceiver}
+              withdraw={withdraw}
+            />
+          </div>
+          {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
+          {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full"> */}
           {/* <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   "> */}
-            {/* <TransactionHeader /> */}
-            {/* <div className="w-full "> */}
-              {/* <TransactionTableBody /> */}
-            {/* </div> */}
-            {/* <TransactionPagination /> */}
+          {/* <TransactionHeader /> */}
+          {/* <div className="w-full "> */}
+          {/* <TransactionTableBody /> */}
+          {/* </div> */}
+          {/* <TransactionPagination /> */}
           {/* </section> */}
-        {/* </div> */}
+          {/* </div> */}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };

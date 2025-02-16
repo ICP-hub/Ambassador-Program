@@ -179,5 +179,5 @@ service : {
   reject_submission : (text) -> (Result);
   update_space : (Space) -> (Result_1);
   upload_profile_image : (text, ProfileImageData) -> (Result);
-  withdraw_points : (text, nat64) -> (Result);
+  withdraw_points : (text, principal, nat64) -> (Result);
 }
