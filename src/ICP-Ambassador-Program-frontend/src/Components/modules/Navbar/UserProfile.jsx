@@ -5,10 +5,41 @@ import { FiLogOut } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { FaDiscord } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const UserProfile = ({ onWalletClick, onProfileClick }) => {
   const user = useSelector((state) => state.user.value);
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+     // Clear Local Storage
+     localStorage.clear();
+
+     // Clear Session Storage
+     sessionStorage.clear();
+ 
+     // Clear Cookies
+     document.cookie.split(";").forEach(cookie => {
+         const [name] = cookie.split("=");
+         document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+     });
+ 
+     // Clear IndexedDB
+     if (window.indexedDB) {
+         indexedDB.databases().then(databases => {
+             databases.forEach(db => {
+                 indexedDB.deleteDatabase(db.name);
+             });
+         }).catch(console.error);
+     }
+
+    
+    navigate('/');
+     window.location.reload();
+  };
+
+
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -65,7 +96,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                 <CiSettings className="text-white text-2xl cursor-pointer" />
               </Link>
               <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
-                <FiLogOut className="text-white text-2xl cursor-pointer" />
+                <FiLogOut className="text-white text-2xl cursor-pointer" onClick={logout} />
               </button>
             </div>
           </div>
