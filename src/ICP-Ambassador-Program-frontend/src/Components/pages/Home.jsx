@@ -281,7 +281,8 @@ const Home = () => {
                         className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
                         type="text"
                         placeholder="add your info..."
-                        value={spaceData[1]?.description}
+                        // value={spaceData[1]?.description}
+                        value="Start building on #Web3 Today | #ICP #WorldComputer"
                       />
                     </div>
                   </div>
