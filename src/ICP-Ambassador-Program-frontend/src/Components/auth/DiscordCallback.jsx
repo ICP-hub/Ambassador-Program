@@ -50,6 +50,7 @@ const DiscordCallback = ({ setOpen }) => {
       getUser(userData.id);
 
       navigate("/home");
+      window.location.reload();
       // setTimeout(() => {
       //     navigate('/');
       //   }, 10000);

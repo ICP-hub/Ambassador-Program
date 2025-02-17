@@ -52,13 +52,13 @@ function App() {
           <Route path="/" element={user ? <Home /> : <LandingPage />} />
           <Route path="/home" element={user ? <Home /> : <AccessDenied/>} />
           {/* Below is the old route to single-mission-page */}
-          {/* <Route path="/contest_details" element={<CardDetails open={open} setOpen={setOpen} /> : <AccessDenied/>}/> */}
-          <Route path="/auth/discord/callback" element={user ? <DiscordCallback setOpen={setOpen} /> : <AccessDenied/>}/>
+          <Route path="/contest_details" element={user ? <CardDetails open={open} setOpen={setOpen} /> : <AccessDenied/>}/>
+          <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
           <Route path="/ref" element={user ? <ReferralHandler /> : <AccessDenied/>} />
           <Route path="/settings" element={user ? <Setting /> : <AccessDenied/>} />
           <Route path="/wallet" element={user ? <WalletPage /> : <AccessDenied/>} />
           {/* Below is the NEW route to single-mission-page */}
-          <Route path="/contest_details" element={user ? <TaskRedemption /> : <AccessDenied/>} />
+          {/* <Route path="/contest_details" element={user ? <TaskRedemption /> : <AccessDenied/>} /> */}
           <Route path="*" element={<NotFound/>} />
         </Routes>
       </BrowserRouter>
