@@ -27,6 +27,8 @@ import { BsTwitterX } from "react-icons/bs";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
 import { LuFilter } from "react-icons/lu";
+import { MdOutlineStarBorder } from "react-icons/md";
+import ParentComponent from "./ParentComponent";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -235,30 +237,18 @@ const Home = () => {
     );
   }
 
-  return (
-    <>
-      <div className=" flex flex-col pb-8 bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
-        <Navbar
-          nav={nav}
-          openRefModal={openRefModal}
-          setLoading={setLoading}
-          onWalletClick={handleWalletToggle}
-          onProfileClick={handleProfileToggle}
-        />
-        {isDrawerOpen && (
-          <UserProfile
-            onWalletClick={handleWalletToggle}
-            onProfileClick={handleProfileToggle}
-          />
-        )}
-        {openWallet && (
+  return ( 
+    <ParentComponent>
+       
+        {/* No need of wallet-side bar */}
+        {/* {openWallet && (
           <WalletSidebar
             onClose={handleCloseWallet}
             user={user}
             isOpen={openWallet}
             setDiscord_user={setDiscord_user}
           />
-        )}
+        )} */}
 
         <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
           <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
@@ -297,42 +287,51 @@ const Home = () => {
                 <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
                   <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
                     <a
+                      href="https://x.com"
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <BsTwitterX
                         style={{ fontSize: "40px", color: "white" }}
                       />
-                    </a >
+                    </a>
                     <a
+                      href="https://discord.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <FaDiscord style={{ fontSize: "42px", color: "white" }} />
-                    </a >
+                    </a>
                     <a
+                      href="https://www.linkedin.com"
                       target="_blank"
                       className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                     >
                       <FaLinkedinIn
                         style={{ fontSize: "40px", color: "white" }}
                       />
-                    </a >
-                  </div >
-                </div >
-              </div >
-            </div >
-          </div >
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="h-0.5 bg-[#9173FF]"></div>
           <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
-            <div className="flex flex-1 gap-3 font-medium">
+            <div className="flex items-center flex-1 gap-3 font-medium">
               <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
                 <LuFilter style={{ fontSize: "30px", color: "white" }} />
                 <span className="my-auto">Sorting</span>
-              </button >
-            </div >
-            {/* <div className="flex flex-col  pb-3 leading-none">
+              </button>
+              <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
+                <MdOutlineStarBorder
+                  style={{ fontSize: "30px", color: "white" }}
+                />
+                <span className="my-auto">Newest</span>
+              </button>
+            </div>
+            <div className="flex flex-col  pb-3 leading-none">
               <input
                 type="text"
                 id="searchInput"
@@ -345,15 +344,15 @@ const Home = () => {
                 alt=""
                 className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
               />
-            </div> */}
-          </div >
+            </div>
+          </div>
           <div className="h-0.5 bg-[#9173FF]"></div>
           <FilterProvider>
             <div className="flex flex-grow p-2  rounded-md ">
               <div className="w-full h-full">
                 <Contests
                   openWallet={openWallet}
-                  onCloseWallet={handleCloseWallet}
+                  // onCloseWallet={handleCloseWallet}
                   user_details={user}
                   setDiscord_user={setDiscord_user}
                   isDrawerOpen={isDrawerOpen}
@@ -364,7 +363,7 @@ const Home = () => {
               </div>
             </div>
           </FilterProvider>
-        </div >
+        </div>
 
         {isHubModalOpen && (
           <HubConnectionModal
@@ -375,17 +374,6 @@ const Home = () => {
           />
         )}
 
-        {/* <div className='relative'>
-        <div className='absolute bottom-44 left-1/2 transform -translate-x-1/2 z-50 lg:hidden' onClick={handleFilterMobile}>
-          <div className='bg-white rounded py-2 px-5 font-semibold flex gap-3 justify-center items-center'>
-            <MdOutlineTune className='text-lg' /> Filter
-          </div>
-        </div>
-      </div> */}
-
-        {/* {filterMobile && (
-        <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
-      )} */}
         <ReactModal
           isOpen={refModal}
           className="modal"
@@ -400,9 +388,9 @@ const Home = () => {
         >
           <ReferralModal setOpen={openRefModal} />
         </ReactModal>
-      </div >
-      <Footer />
-    </>
+
+
+    </ParentComponent>
   );
 };
 
