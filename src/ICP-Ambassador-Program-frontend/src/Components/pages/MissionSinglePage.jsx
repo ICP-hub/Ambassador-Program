@@ -857,12 +857,23 @@ export default function TaskRedemption() {
                       </svg>
                     )}
                   </div>
-                  <div className="my-4 w-[3px] h-36 border-2 border-[#1E0F33]"></div>
+                  <div className="my-4 w-[3px] h-72 border-2 border-[#1E0F33]"></div>
                 </div>
 
                 <div className="bg-[#1E0F33] p-4 rounded-lg flex w-full">
                   <div>
-                    <span className="text-lg font-medium">{task.title}</span>
+                    <span className="text-lg font-medium flex  gap-4 mb-4">
+                      {" "}
+                      <span
+                        className="w-7 h-7 flex justify-center items-center rounded-full"
+                        style={{ backgroundColor: bgColor }}
+                      >
+                        {IconComponent ? (
+                          <IconComponent className="text-[15px]" />
+                        ) : null}
+                      </span>
+                      {task.title}
+                    </span>
                     <p className="text-[#A0A0A0] text-sm">{task.description}</p>
                     <div className="text-sm  flex items-center gap-1 mt-2 mb-4 font-semibold">
                       <svg
@@ -883,9 +894,337 @@ export default function TaskRedemption() {
                       </svg>
                       Details
                     </div>
-                    <button className="bg-[#9173FF] text-white px-4 py-2 rounded-md mt-2">
+                    {/* <button className="bg-[#9173FF] text-white px-4 py-2 rounded-md mt-2">
                       Connect Wallet
-                    </button>
+                    </button> */}
+                    <div
+                      className="flex flex-col relative rounded-xl "
+                      style={{ backgroundColor: "#171717" }}
+                      key={index}
+                    >
+                      <div>
+                        <Accordion
+                          expanded={true}
+                          style={{
+                            backgroundColor: "#1E0F33",
+                            color: "white",
+                            width: "700px",
+                            boxShadow: "none",
+                            margin: 0,
+                            padding: 0,
+                          }}
+                        >
+                          <AccordionSummary
+                            aria-controls="panel1-content"
+                            id="panel1-header"
+                            className="text-white  text-lg"
+                          >
+                            <div className="flex justify-between w-full">
+                              <div className="flex gap-4"></div>
+                              <div className="mt-1"></div>
+                            </div>
+                          </AccordionSummary>
+
+                          <AccordionDetails>
+                            {/* {!task.submitted ? ( */}
+                            <form className="flex flex-col gap-3 mt-3">
+                              {task.id === "SendText" && (
+                                <>
+                                  <div className="border border-[#FFFFFF14] m-2 rounded-md custom-quill w-full">
+                                    {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
+                                    <textarea
+                                      rows={2}
+                                      className="w-full py-2 px-3 mt-2  bg-[#1E0F33]"
+                                      onChange={(e) =>
+                                        handleInputChange(e, task.task_id)
+                                      }
+                                      value={task.content}
+                                      placeholder="Input text here..."
+                                    />
+                                  </div>
+                                  {task.submitted ? (
+                                    <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                      <DoneIcon />
+                                      <div>Completed</div>
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                        task.content ? "" : "opacity-40"
+                                      }`}
+                                      style={{ backgroundColor: bgColor }}
+                                      onClick={() => {
+                                        submitTask(task.task_id);
+                                        // handleSend(task.task_id,task)
+                                      }}
+                                    >
+                                      <BiSolidSend />
+                                      <div>Send</div>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                              {task.id === "SendUrl" && (
+                                <>
+                                  <div className="flex flex-col gap-3">
+                                    <input
+                                      type="SendURL"
+                                      placeholder="Enter URL"
+                                      onChange={(e) =>
+                                        handleInputChange(e, task.task_id)
+                                      }
+                                      className="outline-none p-3 text-white  bg-[#1E0F33] border border-[#FFFFFF14] rounded text-black"
+                                      value={task.content}
+                                    />
+                                    {task.submitted ? (
+                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                        <DoneIcon />
+                                        <div>Completed</div>
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                          task.content ? "" : "opacity-40"
+                                        }`}
+                                        style={{ backgroundColor: bgColor }}
+                                        onClick={() => {
+                                          submitTask(task.task_id);
+                                          // handleSend(task.task_id,task)
+                                        }}
+                                      >
+                                        <BiSolidSend />
+                                        <div>Submit</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+                              {task.id === "SendTwitterPost" && (
+                                <div className="flex flex-col gap-6 mt-3">
+                                  <div className="flex w-full gap-4 items-center">
+                                    <input
+                                      type="text"
+                                      value={task.content}
+                                      placeholder="Share post link"
+                                      onChange={(e) =>
+                                        handleInputChange(e, task.task_id)
+                                      }
+                                      className="outline-none p-3 text-white  bg-[#1E0F33] border border-[#FFFFFF14] rounded w-full text-black"
+                                    />
+                                    {/* {!authenticate ?(
+                                           <button className='w-8 h-8   bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
+                                           <PrivacyTipIcon className='text-black'/>
+                                           </button>
+                                          
+                                         ):(
+                                           <div className='lg:w-8 sm:w-10 lg:h-8 sm: bg-[#1DB954] text-black flex justify-center items-center rounded-full'>
+                                             <DoneIcon />
+                                         </div>
+                                         )} */}
+                                  </div>
+                                  {task?.submitted ? (
+                                    <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                      <DoneIcon />
+                                      <div>Completed</div>
+                                      {/* <p className='text-green-500 text-sm font-semibold '>Authenticated</p> */}
+                                    </div>
+                                  ) : !authenticate ? (
+                                    <div
+                                      className="text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center "
+                                      onClick={Check_authentication}
+                                      style={{ backgroundColor: bgColor }}
+                                    >
+                                      <FaXTwitter />
+                                      <div className="text-lg  text-white">
+                                        Connect Twitter
+                                      </div>
+                                      {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className="text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center "
+                                      onClick={() => submitTask(task.task_id)}
+                                      style={{ backgroundColor: bgColor }}
+                                    >
+                                      <FaXTwitter />
+                                      <div className="text-lg  text-white">
+                                        Submit Post
+                                      </div>
+                                      {/* <p  className='text-gray-400 text-sm font-semibold'>Authenticate Twitter before submitting. Click on top right icon  to authenticate</p> */}
+                                    </div>
+                                  )}
+
+                                  <div className="flex items-center justify-center">
+                                    {/* <button
+                                           onClick={()=>{twitterSubmit()}}
+                                           type="submit"
+                                           className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                                       >
+                                           Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                                       </button> */}
+                                  </div>
+                                </div>
+                              )}
+                              {task.id === "SendImage" && (
+                                <div className="mt-4 w-full ">
+                                  {/* <div className='flex gap-5 my-5'>
+                                <div className="text-white font-semibold text-md  mt-4">Sample Image</div>
+                                <img src={task.sampleImg} className='w-52 rounded h-40' alt=''/>
+                              </div> */}
+
+                                  <div className="flex flex-col gap-3 items-center justify-center rounded-lg w-full h-auto mx-auto">
+                                    {(task.uploading || task.image) && (
+                                      <div className="w-full   border border-[#1E0F33]   rounded-md my-4 p-2">
+                                        {task.uploading ? (
+                                          <div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
+                                            <div className="flex justify-between items-center gap-2 w-full">
+                                              <div className="flex gap-2">
+                                                <AttachFileIcon />
+                                                <span>
+                                                  {task.image?.name ||
+                                                    "Uploading..."}
+                                                </span>
+                                              </div>
+                                              <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-white"></div>
+                                            </div>
+                                          </div>
+                                        ) : task.image && !task.submitted ? (
+                                          <div className="w-full flex justify-between items-center gap-2 text-md font-semibold py-2 text-white">
+                                            <div className="flex gap-2">
+                                              <AttachFileIcon />
+                                              <span>
+                                                {typeof task.image === "object"
+                                                  ? task.image.name
+                                                  : task.image}
+                                              </span>
+                                            </div>
+                                            <button
+                                              className="text-red-500"
+                                              onClick={() =>
+                                                handleDeleteFile(task.task_id)
+                                              }
+                                            >
+                                              <MdOutlineDeleteOutline />
+                                            </button>
+                                          </div>
+                                        ) : null}
+                                      </div>
+                                    )}
+
+                                    {task.image || task.submitted ? null : (
+                                      <div
+                                        className=" flex flex-col items-center mt-6  justify-center gap-2 h-[50px] text-white "
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={(e) =>
+                                          handleDrop(e, task.task_id, task)
+                                        }
+                                      >
+                                        <MdOutlineCloudUpload className="text-3xl" />
+                                        <div className="text-white font-semibold">
+                                          Drag your file here or
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    <div className="w-full">
+                                      <label className="mt-4 w-full rounded">
+                                        <input
+                                          type="file"
+                                          className="hidden w-full"
+                                          onChange={(e) => {
+                                            onFileChange(e, task.task_id, task);
+                                          }}
+                                          ref={fileInputRef}
+                                        />
+                                        {!task.image &&
+                                          !task.uploading &&
+                                          !task.submitted && (
+                                            <div
+                                              className="w-full flex justify-center cursor-pointer items-center gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                              style={{
+                                                backgroundColor: bgColor,
+                                              }}
+                                            >
+                                              {IconComponent ? (
+                                                <IconComponent />
+                                              ) : null}
+                                              <div>Upload Image</div>
+                                            </div>
+                                          )}
+                                      </label>
+
+                                      {task.uploading && (
+                                        <div
+                                          className="w-full flex justify-center items-center gap-2 text-md font-semibold py-2 text-white"
+                                          style={{ backgroundColor: bgColor }}
+                                        >
+                                          <div className="flex justify-center items-center">
+                                            <div className="h-6 w-8 animate-spin rounded-full border border-white rounded-md" />
+                                          </div>
+                                          Uploading...
+                                        </div>
+                                      )}
+
+                                      {task.image &&
+                                        !task.submitted &&
+                                        !task.uploading && (
+                                          <div
+                                            className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                            style={{ backgroundColor: bgColor }}
+                                            onClick={() => {
+                                              // handleSendImage(task.task_id, task);
+                                              submitTask(task.task_id);
+                                            }}
+                                          >
+                                            <DoneIcon />
+                                            <div>Confirm</div>
+                                          </div>
+                                        )}
+
+                                      {task.submitted && (
+                                        <div className="bg-[#1DB954]  text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                          <DoneIcon />
+                                          <div>Completed</div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              {task.id === "TwitterFollow" && (
+                                <div className="flex flex-col gap-4">
+                                  <div className="text-white text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
+                                  {task.submitted ? (
+                                    <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                      <DoneIcon />
+                                      <div>Completed</div>
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className="w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg"
+                                      style={{ backgroundColor: bgColor }}
+                                      onClick={() => submitTask(task.task_id)}
+                                    >
+                                      <FaXTwitter />
+                                      <div>Follow</div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              <div className="flex items-center justify-center">
+                                {/* <button
+                                type="submit"
+                                className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
+                            >
+                                Submit <MdOutlineArrowOutward className="ml-3" size={24} />
+                            </button> */}
+                              </div>
+                            </form>
+                          </AccordionDetails>
+                        </Accordion>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -893,7 +1232,7 @@ export default function TaskRedemption() {
           })}
 
           {/* Reward Button */}
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <div className="bg-[#1E0F33] p-1.5 rounded-lg h-10 w-10 mt-4"></div>
             <div className=" bg-[#9173FF] w-full p-4 rounded-lg flex justify-between items-center">
               <span className="text-lg text-black font-medium">Reward</span>
@@ -912,7 +1251,7 @@ export default function TaskRedemption() {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
