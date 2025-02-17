@@ -27,6 +27,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
 import { LuFilter } from "react-icons/lu";
+import ParentComponent from "./ParentComponent";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -235,30 +236,18 @@ const Home = () => {
     );
   }
 
-  return (
-    <>
-      <div className=" flex flex-col pb-8 bg-gradient-to-b from-[#1E0F33] to-[#9173FF] ">
-        <Navbar
-          nav={nav}
-          openRefModal={openRefModal}
-          setLoading={setLoading}
-          onWalletClick={handleWalletToggle}
-          onProfileClick={handleProfileToggle}
-        />
-        {isDrawerOpen && (
-          <UserProfile
-            onWalletClick={handleWalletToggle}
-            onProfileClick={handleProfileToggle}
-          />
-        )}
-        {openWallet && (
+  return ( 
+    <ParentComponent>
+       
+        {/* No need of wallet-side bar */}
+        {/* {openWallet && (
           <WalletSidebar
             onClose={handleCloseWallet}
             user={user}
             isOpen={openWallet}
             setDiscord_user={setDiscord_user}
           />
-        )}
+        )} */}
 
         <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
           <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
@@ -353,7 +342,7 @@ const Home = () => {
               <div className="w-full h-full">
                 <Contests
                   openWallet={openWallet}
-                  onCloseWallet={handleCloseWallet}
+                  // onCloseWallet={handleCloseWallet}
                   user_details={user}
                   setDiscord_user={setDiscord_user}
                   isDrawerOpen={isDrawerOpen}
@@ -375,17 +364,6 @@ const Home = () => {
           />
         )}
 
-        {/* <div className='relative'>
-        <div className='absolute bottom-44 left-1/2 transform -translate-x-1/2 z-50 lg:hidden' onClick={handleFilterMobile}>
-          <div className='bg-white rounded py-2 px-5 font-semibold flex gap-3 justify-center items-center'>
-            <MdOutlineTune className='text-lg' /> Filter
-          </div>
-        </div>
-      </div> */}
-
-        {/* {filterMobile && (
-        <FilterMobile isOpen={filterMobile} onClose={() => setFilterMobile(false)} />
-      )} */}
         <ReactModal
           isOpen={refModal}
           className="modal"
@@ -400,9 +378,8 @@ const Home = () => {
         >
           <ReferralModal setOpen={openRefModal} />
         </ReactModal>
-      </div >
-      <Footer />
-    </>
+
+    </ParentComponent>
   );
 };
 
