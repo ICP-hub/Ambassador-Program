@@ -949,9 +949,8 @@ export default function TaskRedemption() {
                                     </div>
                                   ) : (
                                     <div
-                                      className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
-                                        task.content ? "" : "opacity-40"
-                                      }`}
+                                      className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? "" : "opacity-40"
+                                        }`}
                                       style={{ backgroundColor: bgColor }}
                                       onClick={() => {
                                         submitTask(task.task_id);
@@ -983,9 +982,8 @@ export default function TaskRedemption() {
                                       </div>
                                     ) : (
                                       <div
-                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
-                                          task.content ? "" : "opacity-40"
-                                        }`}
+                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? "" : "opacity-40"
+                                          }`}
                                         style={{ backgroundColor: bgColor }}
                                         onClick={() => {
                                           submitTask(task.task_id);
@@ -1258,7 +1256,7 @@ export default function TaskRedemption() {
       {/* Reward Section */}
       <div className="w-1/3  p-4 rounded-lg space-y-5">
         <div className="flex items-center justify-end mx-8 ">
-          <button className=" flex items-center  text-xl justify-end gap-2 font-semibold bg-[#FFFFFF33]  border-2 ml-4 border-[#FFFFFF33]  text-white  px-4 py-1 rounded-xl">
+          <button onClick={()=>nav('/')} className="flex items-center  text-xl justify-end gap-2 font-semibold bg-[#FFFFFF33]  border-2 ml-4 border-[#FFFFFF33]  text-white  px-4 py-1 rounded-xl">
             <FaRegArrowAltCircleLeft size={16} /> Back
           </button>
         </div>

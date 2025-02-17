@@ -1,4 +1,4 @@
-import React from "react";
+import {React,useState,useEffect} from "react";
 import { CiSettings } from "react-icons/ci";
 import { CiWallet } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
@@ -6,9 +6,13 @@ import { useSelector } from "react-redux";
 import { FaDiscord } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { Link,useNavigate } from "react-router-dom";
+import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 
 const UserProfile = ({ onWalletClick, onProfileClick }) => {
   const user = useSelector((state) => state.user.value);
+
+  const [conversionRate, setConversionRate] = useState();
 
   const navigate = useNavigate();
 
@@ -38,6 +42,25 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
     navigate('/');
      window.location.reload();
   };
+
+  const getSpaceConversion = async () => {
+      try {
+        console.log("HUB : ", user?.hub);
+        const space = await ICP_Ambassador_Program_backend.get_space(user?.hub);
+        console.log("Conversion : ", space.Ok.conversion/10);
+        if (space?.Ok) {
+          setConversionRate(parseInt(space?.Ok?.conversion)/10);
+        }
+      } catch (error) {
+        console.log("err fetching hub details : ", error);
+      }
+    };
+  
+    useEffect(() => {
+      if(user){
+        getSpaceConversion();
+      }
+    }, [user]);
 
 
   return (
@@ -83,7 +106,9 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                 </svg>
 
                 <span className="bg-[#654db0] p-1 rounded-sm w-full">
-                  Connect
+                  {/* Connect {conversionRate} */}
+                  {user ? (parseInt(user.redeem_points) * conversionRate)/100 : 0} {DEFAULT_CURRENCY}
+
                 </span>
               </Link>
               <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
@@ -114,7 +139,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                   className=" custom-model h-7.5 rounded-r-md"
                   style={{ width: "65%" }}
                 ></div>
-                <span className="flex items-center mr-4">324 / 500 XP</span>
+                <span className="flex items-center mr-4">{parseInt(user.xp_points)} / 500 XP</span>
               </div>
             </div>
 

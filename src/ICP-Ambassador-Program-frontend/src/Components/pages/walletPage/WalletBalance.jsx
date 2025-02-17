@@ -2,6 +2,7 @@ import React, {useState, useEffect } from "react";
 import walletIcon from "../../../../public/icons/smartwallet.png";
 import { RiWallet3Fill } from "react-icons/ri";
 import {ICP_Ambassador_Program_backend} from "../../../../../declarations/ICP_Ambassador_Program_backend/index";
+import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 export const WalletBalance = ({ user,login, ledger, logout }) => {
   
   // console.log("User in wallet modal : ", user);
@@ -23,6 +24,7 @@ export const WalletBalance = ({ user,login, ledger, logout }) => {
   useEffect(() => {
     if(user){
       getSpaceConversion();
+      console.log("UU : ", user);
     }
   }, [user]);
 
@@ -58,7 +60,7 @@ export const WalletBalance = ({ user,login, ledger, logout }) => {
               </button>
             )} */}
             <div className=" cursor-pointer transition-all  bg-[#9173ff6d] duration-500 text-white font-semibold text-2xl py-7 w-full rounded-2xl flex justify-center items-center">
-              {user ? (parseInt(user.redeem_points) * conversionRate)/100 : 0} ckusdc
+              {user ? (parseInt(user.redeem_points) * conversionRate)/100 : 0} {DEFAULT_CURRENCY}
 
             </div>
           </div>
