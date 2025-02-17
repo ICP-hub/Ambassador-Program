@@ -47,25 +47,6 @@ const MissionCard = ({ updatedContest }) => {
       </div>
 
       {/* Pagination Dots */}
-      <div className="flex  items-center justify-between  mt-4">
-        <button onClick={prevSlide} className="">
-          <IoArrowBackCircleOutline size={24} />
-        </button>
-        <div className="flex gap-1">
-          {Array.from({ length: totalSlides }).map((_, idx) => (
-            <div
-              key={idx}
-              className={`w-2 h-2 rounded-full ${
-                idx === activeIndex ? "bg-white" : "bg-gray-500"
-              }`}
-            ></div>
-          ))}
-        </div>
-
-        <button onClick={nextSlide} className="">
-          <IoArrowForwardCircleOutline size={24} />
-        </button>
-      </div>
     </div>
   );
 };
