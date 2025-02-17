@@ -136,7 +136,7 @@ const Card = ({ contest, hub }) => {
               {parseInt(contest?.reward) + " "}points{" "}
             </span>
             <span className="border border-white bg-[#FFFFFF33]  text-white text-xs px-3 py-1 rounded">
-              {parseInt(contest?.pool) + " " + DEFAULT_CURRENCY}
+              {parseInt(contest?.pool) / 1000000 + " " + DEFAULT_CURRENCY}
             </span>
           </div>
         </div>
