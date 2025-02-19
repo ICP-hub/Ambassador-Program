@@ -6,19 +6,19 @@ const ReferralBoard = () => {
       user: "Username",
       dateAdded: "01/01/2025",
       rank: "Master",
-      points: "78,543",
+      points: "151",
     },
     {
       user: "Username",
       dateAdded: "02/01/2025",
       rank: "Grand Master",
-      points: "78,543",
+      points: "148",
     },
     {
       user: "Username",
       dateAdded: "03/01/2025",
       rank: "Grand Master",
-      points: "78,543",
+      points: "123",
     },
   ];
 

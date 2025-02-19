@@ -12,19 +12,84 @@ const Leaderboard = () => {
     "Grand Master",
   ];
   const data = [
-    { position: 1, user: "Username", rank: "Grand Master", points: "78,543" },
-    { position: 2, user: "Username", rank: "Grand Master", points: "78,543" },
-    { position: 3, user: "Username", rank: "Grand Master", points: "78,543" },
-    { position: 4, user: "Username", rank: "Grand Master", points: "78,543" },
-    { position: 5, user: "Username", rank: "Master", points: "78,543" },
-    { position: 6, user: "Username", rank: "Master", points: "78,543" },
-    { position: 7, user: "Username", rank: "Knight", points: "78,543" },
-    { position: 8, user: "Username", rank: "Knight", points: "78,543" },
-    { position: 9, user: "Username", rank: "Padawan", points: "78,543" },
-    { position: 10, user: "Username", rank: "Padawan", points: "78,543" },
-    { position: 11, user: "Username", rank: "Padawan", points: "78,543" },
-    { position: 12, user: "Username", rank: "Initiate", points: "78,543" },
-    { position: 13, user: "Username", rank: "Initiate", points: "78,543" },
+    {
+      position: 1,
+      user: "1004417914935451721",
+      rank: "Grand Master",
+      points: "143",
+    },
+    {
+      position: 2,
+      user: "1004417914935451727",
+      rank: "Grand Master",
+      points: "173",
+    },
+    {
+      position: 3,
+      user: "1004417914935451774",
+      rank: "Grand Master",
+      points: "113",
+    },
+    {
+      position: 4,
+      user: "1004417914935451797",
+      rank: "Grand Master",
+      points: "163",
+    },
+    {
+      position: 5,
+      user: "1004417914935451701",
+      rank: "Master",
+      points: "153",
+    },
+    {
+      position: 6,
+      user: "1004417914935451761",
+      rank: "Master",
+      points: "134",
+    },
+    {
+      position: 7,
+      user: "1004417914935451711",
+      rank: "Knight",
+      points: "178",
+    },
+    {
+      position: 8,
+      user: "1004417914935451791",
+      rank: "Knight",
+      points: "157",
+    },
+    {
+      position: 9,
+      user: "1004417914935451771",
+      rank: "Padawan",
+      points: "193",
+    },
+    {
+      position: 10,
+      user: "1004417914935451751",
+      rank: "Padawan",
+      points: "161",
+    },
+    {
+      position: 11,
+      user: "1004417914935451741",
+      rank: "Padawan",
+      points: "141",
+    },
+    {
+      position: 12,
+      user: "1004417914935451731",
+      rank: "Initiate",
+      points: "187",
+    },
+    {
+      position: 13,
+      user: "1004417914935451722",
+      rank: "Initiate",
+      points: "165",
+    },
   ];
 
   return (
