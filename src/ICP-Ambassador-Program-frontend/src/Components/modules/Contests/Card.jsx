@@ -104,6 +104,10 @@ const Card = ({ contest, hub }) => {
       toast.error("Please login to view the details");
     }
   };
+  function getStatus(endDate) {
+    const currentTime = Date.now();
+    return currentTime < endDate ? "Ongoing" : "Expired";
+  }
 
   return (
     <div
@@ -112,7 +116,7 @@ const Card = ({ contest, hub }) => {
     >
       <div className=" custom-gradient h-[427px] rounded-xl  relative">
         <span className="absolute top-3 left-3  bg-[#4a0295]  text-white text-xs   px-2 py-1 rounded border border-white">
-          Ongoing
+        {getStatus(contest?.end_date)}
         </span>
 
         {img?.length > 0 ? (
