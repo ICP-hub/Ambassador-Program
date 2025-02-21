@@ -173,20 +173,20 @@ const SpacesDetails = ({ setLoading }) => {
               </div>
             )}
             {owner && (
-              <>
-                <div
-                  className="text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl"
-                  onClick={handleRole}
-                >
-                  ROLES
-                </div>
-                <div
-                  className="text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl"
-                  onClick={handleBalance}
-                >
-                  BALANCE
-                </div>
-              </>
+              <div
+                className="text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl"
+                onClick={handleRole}
+              >
+                ROLES
+              </div>
+            )}
+            {editor && (
+              <div
+                className="text-sm text-white bg-black py-2 hover:bg-blue-700 px-4 rounded cursor-pointer shadow-2xl"
+                onClick={handleBalance}
+              >
+                BALANCE
+              </div>
             )}
           </div>
           {editor && (

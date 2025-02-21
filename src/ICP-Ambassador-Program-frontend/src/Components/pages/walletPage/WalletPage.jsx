@@ -39,9 +39,14 @@ export const WalletPage = () => {
   const [updatedUser, setUpdatedUser] = useState(user);
 
   useEffect(() => {
+    setUpdatedUser(user);
+  },[]);
+
+  useEffect(() => {
     const HUB = Cookies.get("selectedHubName");
     setHub(HUB);
   }, []);
+
   async function getSpace() {
     try {
       const space = await ICP_Ambassador_Program_backend.get_space(
@@ -166,10 +171,12 @@ export const WalletPage = () => {
         toast.error("Not enough balance to withdraw");
         return;
       }
+
+      console.log(updatedUser?.discord_id, receiver,  parseFloat(points));
       let withdrawRes = await ICP_Ambassador_Program_backend.withdraw_points(
         updatedUser?.discord_id,
         Principal.fromText(receiver), // receiver principal to withdraw points
-        parseInt(points) // parseInt(amount)
+        parseFloat(points) // parseInt(amount)
         // parseInt(amount)
       );
       console.log(withdrawRes);
@@ -182,7 +189,8 @@ export const WalletPage = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log("The Error : ", error);
+      toast.error("Something went wrong while withdrawing points");
     }
   }
   function checkPrincipal() {

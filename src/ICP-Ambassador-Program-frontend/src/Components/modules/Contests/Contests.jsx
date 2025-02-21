@@ -47,90 +47,24 @@ const Contests = ({
     try {
       const user_contest = await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
       console.log("user contest ==>", user_contest);
+      
       if (user_contest?.Ok) {
-        const contestsArray = Array.isArray(user_contest.Ok)
-          ? user_contest.Ok
-          : [user_contest.Ok];
-
-        // contestsArray.forEach((item, index) => {
-        //   console.log(`${index}th element in result:`, item);
-        // });
-
-        //Previous/original one
-        // const updatedContests = contestsArray.map(contest => ({
-        //   ...contest
-        // }));
-
-        // Hard coded
-        // const updatedContests = contestsArray.map((contest, index) => {
-        //   return { ...contest }; // For other contests, return them unchanged
-        // });
-
+        const contestsArray = Array.isArray(user_contest.Ok) ? user_contest.Ok : [user_contest.Ok];
+        
         const updatedContests = contestsArray
-          .filter((contest) => Object.keys(contest.status)[0] === "Active") // Filter out only active contests
-          .map((contest, index) => {
-            return { ...contest }; // Make a copy of each active contest
+          .filter((contest) => {
+            const contestStatus = Object.keys(contest.status)[0] === "Active";
+            const currentTime = Date.now();
+            const contestEndDate = contest.end_date; // Assuming the end_date is a timestamp in milliseconds
+            
+            // Include only active contests whose end_date is not in the past
+            return contestStatus && contestEndDate > currentTime;
+          })
+          .map((contest) => {
+            return { ...contest }; // Make a copy of each active and valid contest
           });
-
-
+  
         console.log("updated contests : ", updatedContests);
-        // Hard coded card
-        // const newContest = {
-        //   ...updatedContests[0],
-        //   mission_id:'',
-        //   title: "updated mission title",
-        //   description: "space 2 mission 2 description",
-        //   status: { Active: null },
-        //   reward:100,
-        //   tasks: [
-        //     {
-        //       SendTwitterPost: {
-        //         id: 0,
-        //         title: "Twitter Task title",
-        //         body: "Twitter Task Description eie eeiey eicei "
-        //       }
-        //     },
-        //     {
-        //       SendText:{
-        //         id:1,
-        //         title:"Text task title ioejice",
-        //         body:"Text task description ejiejceuicjej"
-        //       }
-        //     },
-        //     {
-        //       SendUrl:{
-
-        //         id:2,
-        //         title:"URL task title ioejice",
-        //         body:"URL task description ejiejceuicjej"
-
-        //       }
-        //     },{
-        //       SendImage:{
-
-        //         id:3,
-        //         image:'',
-        //         sampleImg:'https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg',
-        //         title:"Image task title ioejice",
-        //         body:"Image task description ejiejceuicjej"
-
-        //       }
-        //     }
-        //   ]
-        // };
-
-        // // Append the new contest to the array
-        // updatedContests.push(newContest);
-
-        //console.log("updated contests : ",updatedContests)
-        // let activeContests=[]
-        // for(let i=0;i<updatedContests.length;i++){
-        //   if(Object.keys(updatedContests[i]?.status)[0]=="Active"){
-        //     activeContests.push(updatedContests[i])
-        //   }
-        // }
-        // console.log("Active contests : ",activeContests)
-        // setDisplayedContests(activeContests);
         setDisplayedContests(updatedContests);
       }
     } catch (e) {

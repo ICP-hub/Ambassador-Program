@@ -94,29 +94,56 @@ const Card = ({ contest, hub }) => {
     Upload: FaFileUpload,
   };
 
-  const handleCard = () => {
+  const handleCard = (status) => {
     //console.log("Contest",contest)
-    console.log("Clicked");
-    let user = Cookies.get("discord_user");
-    if (user) {
-      navigate("/contest_details", { state: { updatedContest } });
-    } else {
-      toast.error("Please login to view the details");
+
+    if (status === "Ongoing") {
+      console.log("Clicked");
+      let user = Cookies.get("discord_user");
+      if (user) {
+        navigate("/contest_details", { state: { updatedContest } });
+      } else {
+        toast.error("Please login to view the details");
+      }
+    }
+    else{
+      toast.error("Contest is not active yet");
     }
   };
-  function getStatus(endDate) {
-    const currentTime = Date.now();
-    return currentTime < endDate ? "Ongoing" : "Expired";
+
+  function getStatus(startDate) {
+    const currentTime = Date.now(); // Current time in milliseconds
+    const timeRemaining = startDate - currentTime; // Time remaining in milliseconds
+
+    if (timeRemaining < 0) {
+      return "Ongoing"; // Start date has passed, it's ongoing
+    }
+
+    // If the remaining time is within 48 hours (48 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    if (timeRemaining <= 48 * 60 * 60 * 1000) {
+      const remainingHours = Math.floor(timeRemaining / (60 * 60 * 1000));
+      return `Start in ${remainingHours} hr${remainingHours > 1 ? 's' : ''}`;
+    }
+
+    // If the remaining time is within 3 days (3 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    if (timeRemaining <= 3 * 24 * 60 * 60 * 1000) {
+      const remainingDays = Math.floor(timeRemaining / (24 * 60 * 60 * 1000));
+      return `Start in ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+    }
+
+    // If the remaining time is more than 3 days
+    return "Start in more than 3 days";
   }
+
 
   return (
     <div
       className=" text-white p-4    mb-2 font-poppins min-w-[350px]"
-      onClick={handleCard}
+      onClick={() => handleCard(getStatus(contest?.start_date))}
     >
       <div className=" custom-gradient h-[427px] rounded-xl  relative">
         <span className="absolute top-3 left-3  bg-[#4a0295]  text-white text-xs   px-2 py-1 rounded border border-white">
-        {getStatus(contest?.end_date)}
+          {getStatus(contest?.start_date)}
         </span>
 
         {img?.length > 0 ? (

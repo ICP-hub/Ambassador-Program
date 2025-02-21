@@ -50,8 +50,7 @@ const RoleList = () => {
 
   const getRolesList = async () => {
     try {
-      await actors?.backendActor
-        .get_space(spaces?.space_id)
+      await actors?.backendActor.get_space(spaces?.space_id)
         .then((res) => {
           console.log("Roles list fetched successfully!");
           const editors = res.Ok.editors || [];
@@ -76,7 +75,7 @@ const RoleList = () => {
           //   role: "Super Admin",
           // }));
 
-          const rolesList = [...editorObjects, ...moderatorObjects, ...superAdminObjects];
+          const rolesList = [...editorObjects, ...moderatorObjects];
 
           console.log("rolesList: ", rolesList);
 
@@ -91,7 +90,6 @@ const RoleList = () => {
       console.error("Error fetching roles list: ", error);
     }
   };
-  console.log("data: ", data);
 
   const handleClose = () => {
     setShowAssignNewRoleModal(false);
