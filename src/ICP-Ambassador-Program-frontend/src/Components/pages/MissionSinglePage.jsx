@@ -44,7 +44,7 @@ const auth = getAuth(app);
 export default function TaskRedemption() {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
   const location = useLocation();
-  const { updatedContest } = location.state || {};
+  const { updatedContest } = location.state || {}; // Find why tasks are manupulated ?
   const [description, setDescription] = useState("");
   const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -82,6 +82,7 @@ export default function TaskRedemption() {
   }
 
   const nav = useNavigate();
+
   const taskDetailsMap = {
     SendTwitterPost: {
       icon: FaXTwitter,
@@ -104,6 +105,7 @@ export default function TaskRedemption() {
       color: "#1D9BF0",
     },
   };
+
   const [tasks, setTasks] = useState(updatedContest?.tasks);
   console.log(
     tasks,
@@ -112,9 +114,10 @@ export default function TaskRedemption() {
     "updatedcontest.tasks"
   );
   const [twitterLink, setTwitterLink] = useState("");
-  const handleInputTwitter = (e) => {
-    setTwitterLink(e.target.value);
-  };
+
+  // const handleInputTwitter = (e) => {
+  //   setTwitterLink(e.target.value);
+  // };
 
   const fileToUint8Array = (file) =>
     new Promise((resolve, reject) => {
@@ -281,9 +284,10 @@ export default function TaskRedemption() {
       for (let i = 0; i < tasks?.length; i++) {
         if (taskid == tasks[i]?.task_id) {
           task = tasks[i];
+          console.log("task found : ", task);
         }
       }
-      console.log(taskid, task);
+      console.log("task found : ", taskid, task);
 
       setLoading(true);
       let user = JSON.parse(Cookies.get("discord_user"));
@@ -346,13 +350,23 @@ export default function TaskRedemption() {
         };
       }
       if (task?.id == "SendTwitterPost") {
-        if (!authenticate) {
+
+        // if (!authenticate && twitterUser == "") {
+        //   setLoading(false);
+        //   toast.error(
+        //     "Please authenticate using twitter for submitting a post"
+        //   );
+        //   return;
+        // }
+        if (!authenticate && !sessionStorage.getItem('twitterUser')) {
           setLoading(false);
           toast.error(
-            "Please authenticate using twitter for submitting a post"
+            "Please authenticate using Twitter for submitting a post"
           );
           return;
-        }
+      }
+      
+
         const regex = /^https:\/\/x\.com\/[^/]+\/[^/]+\/[^/]+$/;
         console.log("regex test : ", regex.test(task.content), task.content);
         let testResult = regex.test(task.content);
@@ -361,7 +375,7 @@ export default function TaskRedemption() {
           toast.error("Invalid post link format");
           return;
         }
-        if (!task.content?.includes(twitterUser)) {
+        if (!task.content?.includes(twitterUser || sessionStorage.getItem('twitterUser'))) {
           console.log("user check : ", twitterUser);
           setLoading(false);
           toast.error("Someone else's post cannot be submitted");
@@ -374,6 +388,7 @@ export default function TaskRedemption() {
           },
         };
       }
+
       if (task?.id == "TwitterFollow") {
         window.open(`https://x.com/${task?.account}`, "_blank");
         newTask = {
@@ -425,6 +440,7 @@ export default function TaskRedemption() {
       if (username) {
         setAuth(true);
         setTwitterUser(username);
+        sessionStorage.setItem("twitterUser", username);
         console.log("Authentication successful");
         toast.success("Authenticated using twitter");
       } else {
@@ -435,11 +451,11 @@ export default function TaskRedemption() {
       console.error("Error during Twitter login:", error);
     }
   };
-  const twitterSubmit = () => {
-    if (!authenticate) {
-      alert("Authenticate twitter before submitting .....");
-    }
-  };
+  // const twitterSubmit = () => {
+  //   if (!authenticate) {
+  //     alert("Authenticate twitter before submitting .....");
+  //   }
+  // };
 
   async function addSubmission() {
     try {
@@ -615,25 +631,25 @@ export default function TaskRedemption() {
     }, 2000);
   };
 
-  const handleSend = (taskId, task) => {
-    if (!task.content) return;
-    console.log(taskId);
-    //console.log('Sending task:', taskId, task);
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.task_id === taskId ? { ...task, submitted: true } : task
-      )
-    );
-  };
-  const handleSendImage = (taskId, task) => {
-    console.log(taskId);
-    //console.log('Sending task:', taskId, task);
-    setTasks((prevTasks) =>
-      prevTasks.map((t) =>
-        t.task_id === taskId ? { ...t, submitted: true } : t
-      )
-    );
-  };
+  // const handleSend = (taskId, task) => {
+  //   if (!task.content) return;
+  //   console.log(taskId);
+  //   //console.log('Sending task:', taskId, task);
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((task) =>
+  //       task.task_id === taskId ? { ...task, submitted: true } : task
+  //     )
+  //   );
+  // };
+  // const handleSendImage = (taskId, task) => {
+  //   console.log(taskId);
+  //   //console.log('Sending task:', taskId, task);
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((t) =>
+  //       t.task_id === taskId ? { ...t, submitted: true } : t
+  //     )
+  //   );
+  // };
 
   const handleSubmit = async (e, taskId) => {
     e.preventDefault();

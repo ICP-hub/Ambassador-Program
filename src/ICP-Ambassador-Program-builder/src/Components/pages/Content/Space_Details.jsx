@@ -355,7 +355,7 @@ const Space_Details = ({setLoading}) => {
                     </div>
 
                     <div>
-                        <label className='block text-sm font-medium text-gray-700'>Midum URL</label>
+                        <label className='block text-sm font-medium text-gray-700'>Medium URL</label>
                         <input
                         type="text"
                         className="mt-1 block w-full border-2 outline-none border-gray-300 rounded-md shadow-sm p-3
