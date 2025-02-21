@@ -19,7 +19,7 @@ const SpaceCard = ({handleSpace,item}) => {
 
                <div className=' px-3 py-2'>
                 <div className='text-sm font-bold'>{item?.name}</div>
-                <div className='text-sm font-semibold text-gray-500'>{`\n\nid : ${item?.description}`}</div>
+                <div className='text-sm font-semibold text-gray-500'>{`\n ${item?.description}`}</div>
                </div>
         </div>        
   )

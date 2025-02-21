@@ -26,6 +26,7 @@ const Contests = ({
 
   const [displayedContests, setDisplayedContests] = useState(contests);
   const [hub, setHub] = useState("");
+  
   useEffect(() => {
     console.log("user details ==>", user_details);
     const HUB = Cookies.get("selectedHubName");

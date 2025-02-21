@@ -283,7 +283,7 @@ const Space_Details = ({ setLoading }) => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">
               Space slug
             </label>
@@ -325,7 +325,7 @@ const Space_Details = ({ setLoading }) => {
             <p className="text-sm text-gray-500">
               Please select what type is used by this chain
             </p>
-          </div>
+          </div> */}
 
           <div className="">
             <label className="block text-sm font-medium text-gray-700 ">
