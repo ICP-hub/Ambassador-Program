@@ -123,7 +123,7 @@ const Card = ({ contest, hub }) => {
           <img
             src={img[0]}
             alt={title}
-            className="h-[272px]  file: rounded-t-xl "
+            className="h-[272px] w-full file: rounded-t-xl "
           />
         ) : (
           <img

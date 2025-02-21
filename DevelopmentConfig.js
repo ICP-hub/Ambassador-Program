@@ -1,18 +1,18 @@
 // const production = process.env.NODE_ENV === "production" || false;
 const production = false;
-export const BASE_URL = production 
-  ? "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io" 
+export const BASE_URL = production
+  ? "https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io"
   : "http://localhost:3000";
 
 export const DISCORD_CLIENT_ID = production
- ? 1303682602825158676
- : 1297821230786940948;
+  ? 1303682602825158676
+  : 1297821230786940948;
 
-export const CRYPTO_EXCHANGE_RATE_URL = "https://api.coinbase.com/v2/exchange-rates?currency=";
+export const CRYPTO_EXCHANGE_RATE_URL =
+  "https://api.coinbase.com/v2/exchange-rates?currency=";
 export const DEFAULT_CURRENCY = "ckUSDC"; //ckUSDC
 export const LEDGER_CANISTER_ID = "xevnm-gaaaa-aaaar-qafnq-cai"; //ckUSDC
 // ICP Ledger Canister ID : ryjl3-tyaaa-aaaaa-aaaba-cai
-
 
 export const ENV = production ? "production" : "development";
 
