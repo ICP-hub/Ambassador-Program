@@ -1,11 +1,11 @@
-import {React,useState,useEffect} from "react";
+import { React, useState, useEffect } from "react";
 import { CiSettings } from "react-icons/ci";
 import { CiWallet } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { FaDiscord } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 
@@ -13,55 +13,78 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
   const user = useSelector((state) => state.user.value);
 
   const [conversionRate, setConversionRate] = useState();
+  const [userRewardHistory, setUserRewardHistory] = useState();
 
   const navigate = useNavigate();
 
   const logout = () => {
-     // Clear Local Storage
-     localStorage.clear();
+    // Clear Local Storage
+    localStorage.clear();
 
-     // Clear Session Storage
-     sessionStorage.clear();
- 
-     // Clear Cookies
-     document.cookie.split(";").forEach(cookie => {
-         const [name] = cookie.split("=");
-         document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-     });
- 
-     // Clear IndexedDB
-     if (window.indexedDB) {
-         indexedDB.databases().then(databases => {
-             databases.forEach(db => {
-                 indexedDB.deleteDatabase(db.name);
-             });
-         }).catch(console.error);
-     }
+    // Clear Session Storage
+    sessionStorage.clear();
 
-    
-    navigate('/');
-     window.location.reload();
+    // Clear Cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const [name] = cookie.split("=");
+      document.cookie =
+        name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    });
+
+    // Clear IndexedDB
+    if (window.indexedDB) {
+      indexedDB
+        .databases()
+        .then((databases) => {
+          databases.forEach((db) => {
+            indexedDB.deleteDatabase(db.name);
+          });
+        })
+        .catch(console.error);
+    }
+
+    navigate("/");
+    window.location.reload();
   };
 
   const getSpaceConversion = async () => {
-      try {
-        console.log("HUB : ", user?.hub);
-        const space = await ICP_Ambassador_Program_backend.get_space(user?.hub);
-        console.log("Conversion : ", space.Ok.conversion/10);
-        if (space?.Ok) {
-          setConversionRate(parseInt(space?.Ok?.conversion)/10);
-        }
-      } catch (error) {
-        console.log("err fetching hub details : ", error);
+    try {
+      console.log("HUB : ", user?.hub);
+      const space = await ICP_Ambassador_Program_backend.get_space(user?.hub);
+      console.log("Conversion : ", space.Ok.conversion / 10);
+      if (space?.Ok) {
+        setConversionRate(parseInt(space?.Ok?.conversion) / 10);
       }
-    };
-  
-    useEffect(() => {
-      if(user){
-        getSpaceConversion();
-      }
-    }, [user]);
+    } catch (error) {
+      console.log("err fetching hub details : ", error);
+    }
+  };
 
+  useEffect(() => {
+    if (user) {
+      getSpaceConversion();
+    }
+  }, [user]);
+
+  const getUserRewardHistory = async () => {
+    try {
+      const rewdardHistory =
+        await ICP_Ambassador_Program_backend.get_user_reward_history(
+          user?.discord_id
+        );
+      console.log("rewdardHistory : ", rewdardHistory);
+      if (rewdardHistory?.Ok) {
+        setUserRewardHistory(rewdardHistory?.rewards);
+      }
+    } catch (error) {
+      console.log("err fetching hub details : ", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("user =>", user);
+    getUserRewardHistory();
+  }, []);
 
   return (
     <>
@@ -76,7 +99,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
           <div className="flex items-center  space-x-4">
             <div className="bg-[#503a8b] rounded-full size-20 overflow-hidden shadow-2xl">
               <img
-                src="https://s3-alpha-sig.figma.com/img/4f6f/31c6/bd17e030a4e340e85d148b82ba300180?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=bght5lwW6AxmBLlRrdZahJrx8HM8h4BlTetOT7TWK465aLkiCSiMgJSulw4R98YvwhJ-82xHFgt26NnUdyT-4lUZx3OW0TkNJ2ie1vRcNpee9l6VJYEmXcOSEZk32r-sGVe~FvBl7gxbW9mRd5bo0Wg4Zke-fqzMwC6lV9oWJzyuKqGtxOfccxZpf~hC9lg78bD-xwA3pHsVrZmOgs0iR84mrqnSQmx45JifTK4pQyBB0wvjJjVhUakkumNdRmHH~AYvAtJFSe81ZyNbc41dtSqdH56WN4ATxbK8eY1sM8IbDQLN-pdsdDWtFvckrEBp3kYL-cufL7TGX9AhaQqvzw__"
+                src="https://s3-alpha-sig.figma.com/img/4f6f/31c6/bd17e030a4e340e85d148b82ba300180?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mJJy-sq7coOiM~UlVCcircsfNS2meOlw~jPf4Vb9oyzunN~YfV6HgNfLKuNnlEaly6CeYROoShnurmHh5YDCgYLxAI05cT7XeYyd2IwOwtPTLZXl8Pyq7Y0kFhpp4Itu5bRKpqh2H5IGZiVC-nT2YMa63GmRGLxuhgzn7EL6vakt4y7UcyUPTgx60wH8zz6koqOwdoi6stSUvuwZarqm~k56r0flqZSLHxm2QFJzOpP3TGcry3xD-SSSnYj0cZVAcJ1SiduQmTtrI3Gs2jt2VFiao-Dpt9X2pDHXJ1gEx3UE3MMC2N4WSWvC2yvBeG0-yCWzN7QY96vt7lbTEc29nQ__"
                 alt="Avatar"
               />
             </div>
@@ -107,8 +130,10 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
 
                 <span className="bg-[#654db0] p-1 rounded-sm w-full">
                   {/* Connect {conversionRate} */}
-                  {user ? (parseInt(user.redeem_points) * conversionRate)/100 : 0} {DEFAULT_CURRENCY}
-
+                  {user
+                    ? (parseInt(user.redeem_points) * conversionRate) / 100
+                    : 0}{" "}
+                  {DEFAULT_CURRENCY}
                 </span>
               </Link>
               <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
@@ -121,7 +146,10 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                 <CiSettings className="text-white text-2xl cursor-pointer" />
               </Link>
               <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
-                <FiLogOut className="text-white text-2xl cursor-pointer" onClick={logout} />
+                <FiLogOut
+                  className="text-white text-2xl cursor-pointer"
+                  onClick={logout}
+                />
               </button>
             </div>
           </div>
@@ -139,7 +167,9 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                   className=" custom-model h-7.5 rounded-r-md"
                   style={{ width: "65%" }}
                 ></div>
-                <span className="flex items-center mr-4">{parseInt(user.xp_points)} / 500 XP</span>
+                <span className="flex items-center mr-4">
+                  {parseInt(user.xp_points)} / 500 XP
+                </span>
               </div>
             </div>
 
@@ -152,20 +182,21 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                 </tr>
               </thead>
               <tbody>
-                {Array(5)
-                  .fill(0)
-                  .map((_, index) => (
+                {userRewardHistory &&
+                  userRewardHistory.map((_, index) => (
                     <tr key={index} className="border-b text-sm">
-                      <td className="py-3">02/17/2025</td>
-                      <td className="py-3">xxxxxxxxx</td>
-                      <td className="py-3 flex items-center">+10</td>
+                      <td className="py-3">{userRewardHistory?.date}</td>
+                      <td className="py-3">{userRewardHistory?.mission_id}</td>
+                      <td className="py-3 flex items-center">
+                        {userRewardHistory?.reward}
+                      </td>
                     </tr>
                   ))}
               </tbody>
             </table>
           </div>
         </div>
-      </div >
+      </div>
     </>
   );
 };
