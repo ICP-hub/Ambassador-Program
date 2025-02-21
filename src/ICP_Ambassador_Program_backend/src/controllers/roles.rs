@@ -31,6 +31,9 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
                 space.editors.push(user_principal);
             }
         },
+        // Role::SuperAdmin => {
+        //     return Err("Super Admin role is not allowed".to_string());
+        // }
     }
 
     SPACE_MAP.with(|map| map.borrow_mut().insert(space_id.clone(), space));

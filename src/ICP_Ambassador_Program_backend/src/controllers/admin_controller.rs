@@ -7,7 +7,8 @@ use crate::{Admin, Errors, AdminRole, ADMIN_MAP,check_anonymous};
 #[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
 pub enum Role {
     Moderator,
-    Editor
+    Editor,
+    // SuperAdmin
 }
 
 #[update(guard = check_anonymous)]

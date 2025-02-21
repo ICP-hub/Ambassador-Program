@@ -249,6 +249,8 @@ pub fn approve_submission(id: String) -> Result<String, String> {
         }
     }
 
+    // ---- may be we need to moove in above if block------
+    
     // Add reward history after successful points update
     if updated_submission.points_rewarded {
         let current_time = time();

@@ -129,7 +129,7 @@ const BalanceList = () => {
     setLoading(true);
     console.log("metaData[decimals]", metaData);
     let amnt = parseInt(
-      Number(sendAmount) * Math.pow(10, parseInt(metaData?.["icrc1:decimals"]))
+      Number(sendAmount) * Math.pow(10,6)
     );
     console.log("amount", amnt, spaces.owner, sendPrincipal);
 

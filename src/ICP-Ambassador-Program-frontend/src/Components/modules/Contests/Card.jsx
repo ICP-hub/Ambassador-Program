@@ -57,6 +57,7 @@ const Card = ({ contest, hub }) => {
           sampleImg: task[taskKey]?.sampleImg || null,
           validation_rule: task[taskKey]?.validation_rule || "",
           task_id: task[taskKey]?.id,
+          account: task[taskKey]?.account || "",
         };
       });
       //console.log("formatted :",formattedTasks)
