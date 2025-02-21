@@ -29,6 +29,7 @@ import { FaDiscord } from "react-icons/fa";
 import { LuFilter } from "react-icons/lu";
 import { MdOutlineStarBorder } from "react-icons/md";
 import ParentComponent from "./ParentComponent";
+import { LiaTelegram } from "react-icons/lia";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -237,11 +238,10 @@ const Home = () => {
     );
   }
 
-  return ( 
+  return (
     <ParentComponent>
-       
-        {/* No need of wallet-side bar */}
-        {/* {openWallet && (
+      {/* No need of wallet-side bar */}
+      {/* {openWallet && (
           <WalletSidebar
             onClose={handleCloseWallet}
             user={user}
@@ -250,149 +250,148 @@ const Home = () => {
           />
         )} */}
 
-        <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
-          <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
-            <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
-              <img
-                src={icpbanner}
-                // src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
-                alt="icp banner"
-                className="w-full rounded-3xl"
-              />
-            </div>
-            <div className="mt-5 w-full max-md:mr-1.5 max-md:max-w-full">
-              <div className="flex gap-5 max-md:flex-col">
-                <div className="flex flex-col w-[82%] max-md:ml-0 max-md:w-full">
-                  <div className="flex flex-wrap grow gap-4 max-md:mt-10 max-md:max-w-full">
-                    <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
-                      <img
-                        loading="lazy"
-                        src="https://s3-alpha-sig.figma.com/img/428a/1085/c0498a1431ddc50d10aee6cfa57dc1e1?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nw3vJFYuswKZG9EO~LG592g48nNw8q0sB4O26nvqudD-J8xmoEUDJ5TikvsJmpmIss1Z6KNxCCUmceB76oL3uo9Rvu7FT9BIOhhCkYTsNhmOwWcowwlh9nYEfOlmF69~EZ7nhUp~HWPCkaZF8mIfvGEZs5LFMkQk9-o1hlpHpOaa3v793kfTobDhHxm1U4bbELCWKdulkzr~-zyOZv4BgVGajeLJxh1sHAmP6IQreVLF3KVYfLNZZwfpiFX5P4g-dq1TzGfs9jdRzazh850Fa7of7bOqzD2yrvSxa5GZjvnPnGX6nWKKHrAUZQFzrN5s~UudbsrAx51VF20b~Ig6Xg__"
-                        // src={spaceData[1]?.bg_img[0]}
-                        alt="ICP HUB India Logo"
-                        className="object-contain rounded-3xl aspect-square w-[100px]"
-                      />
+      <div className="mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
+        <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
+          <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
+            <img
+              src={spaceData[1]?.bg_img[0]}
+              // src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
+              alt="icp banner"
+              className="w-full rounded-3xl"
+            />
+          </div>
+          <div className="mt-5 w-full max-md:mr-1.5 max-md:max-w-full">
+            <div className="flex gap-5 max-md:flex-col">
+              <div className="flex flex-col w-[82%] max-md:ml-0 max-md:w-full">
+                <div className="flex flex-wrap grow gap-4 max-md:mt-10 max-md:max-w-full">
+                  <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
+                    <img
+                      loading="lazy"
+                      // src="https://s3-alpha-sig.figma.com/img/428a/1085/c0498a1431ddc50d10aee6cfa57dc1e1?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nw3vJFYuswKZG9EO~LG592g48nNw8q0sB4O26nvqudD-J8xmoEUDJ5TikvsJmpmIss1Z6KNxCCUmceB76oL3uo9Rvu7FT9BIOhhCkYTsNhmOwWcowwlh9nYEfOlmF69~EZ7nhUp~HWPCkaZF8mIfvGEZs5LFMkQk9-o1hlpHpOaa3v793kfTobDhHxm1U4bbELCWKdulkzr~-zyOZv4BgVGajeLJxh1sHAmP6IQreVLF3KVYfLNZZwfpiFX5P4g-dq1TzGfs9jdRzazh850Fa7of7bOqzD2yrvSxa5GZjvnPnGX6nWKKHrAUZQFzrN5s~UudbsrAx51VF20b~Ig6Xg__"
+                      src={spaceData[1]?.logo[0]}
+                      alt="ICP HUB India Logo"
+                      className="object-contain rounded-3xl aspect-square w-[100px]"
+                    />
+                  </div>
+                  <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
+                    <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
+                      {spaceData[1]?.name}
                     </div>
-                    <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
-                      <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
-                        {spaceData[1]?.name}
-                      </div>
-                      <input
-                        className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
-                        type="text"
-                        placeholder="add your info..."
-                        // value={spaceData[1]?.description}
-                        value="Start building on #Web3 Today | #ICP #WorldComputer"
-                      />
-                    </div>
+                    <input
+                      className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
+                      type="text"
+                      placeholder="add your info..."
+                      value={spaceData[1]?.description}
+                      writable="false"
+                      disabled
+                      // value="Start building on #Web3 Today | #ICP #WorldComputer"
+                    />
                   </div>
                 </div>
-                <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
-                  <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
-                    <a
-                      href="https://x.com"
-                      target="_blank"
-                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
-                    >
-                      <BsTwitterX
-                        style={{ fontSize: "40px", color: "white" }}
-                      />
-                    </a>
-                    <a
-                      href="https://discord.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
-                    >
-                      <FaDiscord style={{ fontSize: "42px", color: "white" }} />
-                    </a>
-                    <a
-                      href="https://www.linkedin.com"
-                      target="_blank"
-                      className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
-                    >
-                      <FaLinkedinIn
-                        style={{ fontSize: "40px", color: "white" }}
-                      />
-                    </a>
-                  </div>
+              </div>
+              <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
+                <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
+                  <a
+                    // href="https://x.com"
+                    href={spaceData[1]?.urls?.twitter[0]}
+                    target="_blank"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                  >
+                    <BsTwitterX style={{ fontSize: "40px", color: "white" }} />
+                  </a>
+                  <a
+                    // href="https://discord.com"
+                    href={spaceData[1]?.urls?.discord[0]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                  >
+                    <FaDiscord style={{ fontSize: "50px", color: "white" }} />
+                  </a>
+                  <a
+                    // href="https://www.linkedin.com"
+                    href={spaceData[1]?.urls?.telegram[0]}
+                    target="_blank"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                  >
+                    <LiaTelegram style={{ fontSize: "50px", color: "white" }} />
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-          <div className="h-0.5 bg-[#9173FF]"></div>
-          <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
-            <div className="flex items-center flex-1 gap-3 font-medium">
-              {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
-                <LuFilter style={{ fontSize: "30px", color: "white" }} />
-                <span className="my-auto">Sorting</span>
-              </button> */}
-              <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
-                <MdOutlineStarBorder
-                  style={{ fontSize: "30px", color: "white" }}
-                />
-                <span className="my-auto">Newest</span>
-              </button>
-            </div>
-            {/* <div className="flex flex-col  pb-3 leading-none">
-              <input
-                type="text"
-                id="searchInput"
-                className="overflow-hidden self-stretch px-4 py-2 rounded-3xl bg-white bg-opacity-20 text-white"
-                placeholder="Search"
-              />
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/085a2850ffba14b649faa1413a9e4c4e326930be68c485bdaef028a572f18c69?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
-                alt=""
-                className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
-              />
-            </div> */}
-          </div>
-          <div className="h-0.5 bg-[#9173FF]"></div>
-          <FilterProvider>
-            <div className="flex flex-grow p-2  rounded-md ">
-              <div className="w-full h-full">
-                <Contests
-                  openWallet={openWallet}
-                  // onCloseWallet={handleCloseWallet}
-                  user_details={user}
-                  setDiscord_user={setDiscord_user}
-                  isDrawerOpen={isDrawerOpen}
-                  onCloseProfile={handleCloseaProfile}
-                  openRefModal={openRefModal}
-                  setLoading={setLoading}
-                />
-              </div>
-            </div>
-          </FilterProvider>
         </div>
+        <div className="h-0.5 bg-[#9173FF]"></div>
+        <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
+          <div className="flex items-center flex-1 gap-3 font-medium">
+            <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
+              <LuFilter style={{ fontSize: "30px", color: "white" }} />
+              <span className="my-auto">Sorting</span>
+            </button>
+            <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
+              <MdOutlineStarBorder
+                style={{ fontSize: "30px", color: "white" }}
+              />
+              <span className="my-auto">Newest</span>
+            </button>
+          </div>
+          <div className="flex flex-col  pb-3 leading-none">
+            <input
+              type="text"
+              id="searchInput"
+              className="overflow-hidden self-stretch px-4 py-2 rounded-3xl bg-white bg-opacity-20 text-white"
+              placeholder="Search"
+            />
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/085a2850ffba14b649faa1413a9e4c4e326930be68c485bdaef028a572f18c69?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
+              alt=""
+              className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
+            />
+          </div>
+        </div>
+        <div className="h-0.5 bg-[#9173FF]"></div>
+        <FilterProvider>
+          <div className="flex flex-grow p-2  rounded-md ">
+            <div className="w-full h-full">
+              <Contests
+                openWallet={openWallet}
+                // onCloseWallet={handleCloseWallet}
+                user_details={user}
+                setDiscord_user={setDiscord_user}
+                isDrawerOpen={isDrawerOpen}
+                onCloseProfile={handleCloseaProfile}
+                openRefModal={openRefModal}
+                setLoading={setLoading}
+              />
+            </div>
+          </div>
+        </FilterProvider>
+      </div>
 
-        {isHubModalOpen && (
-          <HubConnectionModal
-            setLoading={setLoading}
-            isOpen={isHubModalOpen}
-            onClose={() => setIsHubModalOpen(false)}
-            spaces={space}
-          />
-        )}
+      {isHubModalOpen && (
+        <HubConnectionModal
+          setLoading={setLoading}
+          isOpen={isHubModalOpen}
+          onClose={() => setIsHubModalOpen(false)}
+          spaces={space}
+        />
+      )}
 
-        <ReactModal
-          isOpen={refModal}
-          className="modal"
-          ariaHideApp={false}
-          style={{
-            overlay: {
-              backdropFilter: "blur(3px)",
-              zIndex: 50,
-              backgroundColor: "rbg(0,0,0,0%)",
-            },
-          }}
-        >
-          <ReferralModal setOpen={openRefModal} />
-        </ReactModal>
-
-
+      <ReactModal
+        isOpen={refModal}
+        className="modal"
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            backdropFilter: "blur(3px)",
+            zIndex: 50,
+            backgroundColor: "rbg(0,0,0,0%)",
+          },
+        }}
+      >
+        <ReferralModal setOpen={openRefModal} />
+      </ReactModal>
     </ParentComponent>
   );
 };
