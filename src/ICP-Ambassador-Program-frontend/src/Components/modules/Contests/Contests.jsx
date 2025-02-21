@@ -45,8 +45,7 @@ const Contests = ({
 
   const get_user_mission = async (spaceId) => {
     try {
-      const user_contest =
-        await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
+      const user_contest = await ICP_Ambassador_Program_backend.get_all_space_missions(spaceId);
       console.log("user contest ==>", user_contest);
       if (user_contest?.Ok) {
         const contestsArray = Array.isArray(user_contest.Ok)
@@ -63,24 +62,18 @@ const Contests = ({
         // }));
 
         // Hard coded
-        const updatedContests = contestsArray.map((contest, index) => {
-          // if (index === 0) { // Check for the first contest
-          //   return {
-          //     ...contest,
-          //     tasks: [
-          //       ...(contest.tasks || []),
-          //       {
-          //         JoinTwitter: {
-          //           id: (contest.tasks?.length || 0),
-          //           title: "Join Twitter Task Title",
-          //           body: "Join Twitter Task Description",
-          //         },
-          //       },
-          //     ],
-          //   };
-          // }
-          return { ...contest }; // For other contests, return them unchanged
-        });
+        // const updatedContests = contestsArray.map((contest, index) => {
+        //   return { ...contest }; // For other contests, return them unchanged
+        // });
+
+        const updatedContests = contestsArray
+          .filter((contest) => Object.keys(contest.status)[0] === "Active") // Filter out only active contests
+          .map((contest, index) => {
+            return { ...contest }; // Make a copy of each active contest
+          });
+
+
+        console.log("updated contests : ", updatedContests);
         // Hard coded card
         // const newContest = {
         //   ...updatedContests[0],
@@ -229,14 +222,12 @@ const Contests = ({
     <div className="overflow-y-scroll  scrollbar-hide">
       <div className="flex  transition-all duration-500 delay-200 relative ">
         <div
-          className={` transition-all h-screen duration-500 ${
-            openWallet ? "w-[calc(100%-100px)] " : "w-full"
-          } p-2    overflow-y-scroll scrollbar-hide`}
+          className={` transition-all h-screen duration-500 ${openWallet ? "w-[calc(100%-100px)] " : "w-full"
+            } p-2    overflow-y-scroll scrollbar-hide`}
         >
           <div
-            className={`grid w-full  ${
-              openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-3"
-            }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-3 `}
+            className={`grid w-full  ${openWallet || isDrawerOpen ? " lg:grid-cols-3" : "lg:grid-cols-3"
+              }   sm:grid-cols-1  rounded-md md:grid-cols-2 gap-3 `}
             style={{
               maxWidth: "100%",
               transition: "max-width 0.5s ease-in-out",

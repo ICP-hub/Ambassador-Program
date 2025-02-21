@@ -891,7 +891,7 @@ export default function TaskRedemption() {
                       {task.title}
                     </span>
                     <p className="text-[#A0A0A0] text-sm">{task.description}</p>
-                    <div className="text-sm  flex items-center gap-1 mt-2 mb-4 font-semibold">
+                    {/* <div className="text-sm  flex items-center gap-1 mt-2 mb-4 font-semibold">
                       <svg
                         width="16"
                         height="16"
@@ -908,8 +908,8 @@ export default function TaskRedemption() {
                           fill="#FAFAFA"
                         />
                       </svg>
-                      Details
-                    </div>
+                      Detailssss
+                    </div> */}
                     {/* <button className="bg-[#9173FF] text-white px-4 py-2 rounded-md mt-2">
                       Connect Wallet
                     </button> */}

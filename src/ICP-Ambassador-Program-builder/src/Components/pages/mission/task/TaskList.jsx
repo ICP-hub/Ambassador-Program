@@ -63,7 +63,7 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
         value={apiTitle} 
         onChange={handleTitleChange}
       />
-      <TextField
+      {/* <TextField
         label="Validation"
         placeholder="validation..."
         size="small"
@@ -71,7 +71,7 @@ const ApiTask = ({ task, onDelete, onUpdateField }) => {
         onChange={handleValidationChange}
         error={validationError}
         helperText={validationError ? 'Invalid format' : `${validationInput.length}/${maxLen} characters`}
-      />
+      /> */}
       <TextField 
         label="Sample" 
         placeholder="Sample..." 
@@ -237,7 +237,7 @@ const TwitterFollowTask=({task,onDelete,onUpdateField})=>{
       />
       <TextField 
         label="Twitter acoount" 
-        placeholder="Twitter account to follow..." 
+        placeholder="Twitter account username to follow..." 
         size="small" 
         value={account} 
         onChange={handleAccountChange} 
