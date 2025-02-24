@@ -13,15 +13,16 @@ import { WalletPage } from "./Components/pages/walletPage/WalletPage";
 import TaskRedemption from "./Components/pages/MissionSinglePage";
 import AccessDenied from "./Components/pages/AccessDenied";
 import NotFound from "./Components/pages/NotFound";
+import ReferalPage from "./Components/pages/referalPage/ReferalPage";
 
 function App() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(false);
 
   function getCookie(name) {
-    const cookies = document.cookie.split('; ');
+    const cookies = document.cookie.split("; ");
     for (const cookie of cookies) {
-      const [key, value] = cookie.split('=');
+      const [key, value] = cookie.split("=");
       if (key === name) {
         return decodeURIComponent(value);
       }
@@ -31,7 +32,7 @@ function App() {
 
   // Example usage:
   useEffect(() => {
-    const discordUser = getCookie('discord_user');
+    const discordUser = getCookie("discord_user");
 
     if (discordUser) {
       try {
@@ -43,23 +44,40 @@ function App() {
       }
     }
   }, []);
-  
+
   return (
     <>
       <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={user ? <Home /> : <LandingPage />} />
-          <Route path="/home" element={user ? <Home /> : <AccessDenied/>} />
+          <Route path="/home" element={user ? <Home /> : <AccessDenied />} />
+          <Route path="/referal" element={<ReferalPage />} />
+
           {/* Below is the old route to single-mission-page */}
           {/* <Route path="/contest_details" element={user ? <CardDetails open={open} setOpen={setOpen} /> : <AccessDenied/>}/> */}
-          <Route path="/auth/discord/callback" element={<DiscordCallback setOpen={setOpen} />}/>
-          <Route path="/ref" element={user ? <ReferralHandler /> : <AccessDenied/>} />
-          <Route path="/settings" element={user ? <Setting /> : <AccessDenied/>} />
-          <Route path="/wallet" element={user ? <WalletPage /> : <AccessDenied/>} />
+          <Route
+            path="/auth/discord/callback"
+            element={<DiscordCallback setOpen={setOpen} />}
+          />
+          <Route
+            path="/ref"
+            element={user ? <ReferralHandler /> : <AccessDenied />}
+          />
+          <Route
+            path="/settings"
+            element={user ? <Setting /> : <AccessDenied />}
+          />
+          <Route
+            path="/wallet"
+            element={user ? <WalletPage /> : <AccessDenied />}
+          />
           {/* Below is the NEW route to single-mission-page */}
-          <Route path="/contest_details" element={user ? <TaskRedemption /> : <AccessDenied/>} />
-          <Route path="*" element={<NotFound/>} />
+          <Route
+            path="/contest_details"
+            element={user ? <TaskRedemption /> : <AccessDenied />}
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>

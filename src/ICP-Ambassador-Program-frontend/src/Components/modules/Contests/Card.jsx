@@ -105,8 +105,7 @@ const Card = ({ contest, hub }) => {
       } else {
         toast.error("Please login to view the details");
       }
-    }
-    else{
+    } else {
       toast.error("Contest is not active yet");
     }
   };
@@ -122,19 +121,18 @@ const Card = ({ contest, hub }) => {
     // If the remaining time is within 48 hours (48 hours * 60 minutes * 60 seconds * 1000 milliseconds)
     if (timeRemaining <= 48 * 60 * 60 * 1000) {
       const remainingHours = Math.floor(timeRemaining / (60 * 60 * 1000));
-      return `Start in ${remainingHours} hr${remainingHours > 1 ? 's' : ''}`;
+      return `Start in ${remainingHours} hr${remainingHours > 1 ? "s" : ""}`;
     }
 
     // If the remaining time is within 3 days (3 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
     if (timeRemaining <= 3 * 24 * 60 * 60 * 1000) {
       const remainingDays = Math.floor(timeRemaining / (24 * 60 * 60 * 1000));
-      return `Start in ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+      return `Start in ${remainingDays} day${remainingDays > 1 ? "s" : ""}`;
     }
 
     // If the remaining time is more than 3 days
     return "Start in more than 3 days";
   }
-
 
   return (
     <div
@@ -156,7 +154,7 @@ const Card = ({ contest, hub }) => {
           <img
             src="https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
             alt={title}
-            className="h-[272px]  rounded-t-xl "
+            className="h-[272px] w-full rounded-t-xl "
           />
         )}
         <div className="px-4">
