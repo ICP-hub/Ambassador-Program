@@ -853,7 +853,7 @@ export default function TaskRedemption() {
 
             return (
               <div key={index} className="flex gap-4">
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center ">
                   <div className="bg-[#1E0F33] p-1.5 rounded-lg size-10">
                     {task.submitted && (
                       <svg
@@ -873,7 +873,9 @@ export default function TaskRedemption() {
                       </svg>
                     )}
                   </div>
-                  <div className="my-4 w-[3px] h-72 border-2 border-[#1E0F33]"></div>
+                  {tasks.length > index + 1 && (
+                    <div className="my-4 w-[3px] h-72 border-2 border-[#1E0F33]"></div>
+                  )}
                 </div>
 
                 <div className="bg-[#1E0F33] p-4 rounded-lg flex w-full">
