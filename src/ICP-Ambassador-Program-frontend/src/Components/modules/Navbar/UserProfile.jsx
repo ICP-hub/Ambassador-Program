@@ -8,12 +8,15 @@ import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
+import { formatDate } from "../../utils/formatDate";
 
 const UserProfile = ({ onWalletClick, onProfileClick }) => {
   const user = useSelector((state) => state.user.value);
 
   const [conversionRate, setConversionRate] = useState();
   const [userRewardHistory, setUserRewardHistory] = useState();
+  const [points, setPoints] = useState();
+  const [percent, setPercent] = useState();
 
   const navigate = useNavigate();
 
@@ -59,10 +62,21 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
       console.log("err fetching hub details : ", error);
     }
   };
+  const fetchPoints = () => {
+    if (user?.xp_points) {
+      const xpPoints = parseInt(user.xp_points);
+      const maxXP = Math.pow(10, user.xp_points.toString().length) - 1;
+      const percentage = (xpPoints / maxXP) * 100;
+
+      setPoints(maxXP);
+      setPercent(percentage);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       getSpaceConversion();
+      fetchPoints();
     }
   }, [user]);
 
@@ -74,7 +88,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
         );
       console.log("rewdardHistory : ", rewdardHistory);
       if (rewdardHistory?.Ok) {
-        setUserRewardHistory(rewdardHistory?.rewards);
+        setUserRewardHistory(rewdardHistory?.Ok?.rewards);
       }
     } catch (error) {
       console.log("err fetching hub details : ", error);
@@ -137,7 +151,12 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                 </span>
               </Link>
               <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
-                <FaDiscord className="text-white text-2xl cursor-pointer" />
+                <a
+                  target="_blank"
+                  href="https://discord.com/channels/1309834458777653279/1309834458777653282"
+                >
+                  <FaDiscord className="text-white text-2xl cursor-pointer" />
+                </a>
               </button>
               <Link
                 className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center"
@@ -165,10 +184,11 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
               <div className="w-full  border-2 border-[#503a8b] h-8  text-sm rounded-md flex justify-between">
                 <div
                   className=" custom-model h-7.5 rounded-r-md"
-                  style={{ width: "65%" }}
+                  style={{ width: `${percent}%` }}
                 ></div>
                 <span className="flex items-center mr-4">
-                  {parseInt(user.xp_points)} / 500 XP
+                  {/* {parseInt(user.xp_points)} / 500 XP */}
+                  {parseInt(user.xp_points)} / {parseInt(points)} XP
                 </span>
               </div>
             </div>
@@ -183,12 +203,14 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
               </thead>
               <tbody>
                 {userRewardHistory &&
-                  userRewardHistory.map((_, index) => (
+                  userRewardHistory.map((items, index) => (
                     <tr key={index} className="border-b text-sm">
-                      <td className="py-3">{userRewardHistory?.date}</td>
-                      <td className="py-3">{userRewardHistory?.mission_id}</td>
+                      <td className="py-3">
+                        {formatDate(parseInt(items?.date) / 1_000_000)}
+                      </td>
+                      <td className="py-3">{items?.mission_title}</td>
                       <td className="py-3 flex items-center">
-                        {userRewardHistory?.reward}
+                        {parseInt(items?.reward)}
                       </td>
                     </tr>
                   ))}
