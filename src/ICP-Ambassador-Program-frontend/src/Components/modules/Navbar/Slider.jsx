@@ -78,7 +78,7 @@ const MissionCard = ({ updatedContest }) => {
             {parseInt(updatedContest.reward)} Points
           </button>
           <button className="border border-gray-500  bg-[#FFFFFF33] px-3 py-1 rounded-md text-sm">
-            {parseInt(updatedContest.pool) / 1000000} {DEFAULT_CURRENCY}
+            {(parseInt(updatedContest.pool) / (10**6))/ (parseInt(updatedContest.total_user_rewarded))} {DEFAULT_CURRENCY}
           </button>
         </div>
       </div>
