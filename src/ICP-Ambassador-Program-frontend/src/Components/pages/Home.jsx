@@ -336,20 +336,20 @@ const Home = () => {
           </div>
         </div>
         <div className="h-0.5 bg-[#9173FF]"></div>
-        <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
-          <div className="flex items-center flex-1 gap-3 font-medium">
-            {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
+        {/* <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
+          <div className="flex items-center flex-1 gap-3 font-medium"> */}
+        {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
               <LuFilter style={{ fontSize: "30px", color: "white" }} />
               <span className="my-auto">Sorting</span>
             </button> */}
-            <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
+        {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
               <MdOutlineStarBorder
                 style={{ fontSize: "30px", color: "white" }}
               />
               <span className="my-auto">Newest</span>
             </button>
-          </div>
-          {/* <div className="flex flex-col  pb-3 leading-none">
+          </div> */}
+        {/* <div className="flex flex-col  pb-3 leading-none">
             <input
               type="text"
               id="searchInput"
@@ -363,10 +363,10 @@ const Home = () => {
               className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
             />
           </div> */}
-        </div>
-        <div className="h-0.5 bg-[#9173FF]"></div>
+        {/* </div>
+        <div className="h-0.5 bg-[#9173FF]"></div> */}
         <FilterProvider>
-          <div className="flex flex-grow p-2  rounded-md ">
+          <div className="flex flex-grow   rounded-md ">
             <div className="w-full h-full">
               <Contests
                 openWallet={openWallet}
