@@ -10,8 +10,9 @@ import SpaceCard from './SpaceCard';
 import { useDispatch } from 'react-redux';
 import { updateSpace } from '../../../redux/spaces/spaceSlice';
 import toast from 'react-hot-toast';
+import { TextField } from '@mui/material';
 
-const Spaces = ({setLoading}) => {
+const Spaces = ({setLoading}) => { 
   const navigate=useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -24,7 +25,7 @@ const Spaces = ({setLoading}) => {
   const [newSpace,setNewSpace]=useState({
     name:"",
     slug:"",
-    description:"THis is a sample description",
+    description:"Start building on #Web3 Today | #ICP #WorldComputer",
     chain:chain,
     conversion:convRate
   })
@@ -212,10 +213,19 @@ const Spaces = ({setLoading}) => {
               </div>
 
              
-              <div>
-                
-                <RichTextEditor/>
-              </div>
+              {/* <div>
+                <RichTextEditor newSpace={newSpace} setNewSpace={setNewSpace}/>
+              </div> */}
+              <label className='block text-sm font-medium text-gray-700'>Description</label>
+              <TextField 
+                id="outlined-basic" 
+                label="Description" 
+                variant="outlined" 
+                fullWidth
+                multiline
+                rows={4}
+                onChange={(e)=>setNewSpace({...newSpace,description:e.target.value})}
+              />
             </div>
 
             
