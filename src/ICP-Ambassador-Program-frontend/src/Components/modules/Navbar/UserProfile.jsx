@@ -15,7 +15,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
 
   const [conversionRate, setConversionRate] = useState();
   const [userRewardHistory, setUserRewardHistory] = useState();
-  const [points, setPoints] = useState();
+  const [points, setPoints] = useState(99);
   const [percent, setPercent] = useState();
 
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
   const fetchPoints = () => {
     if (user?.xp_points) {
       const xpPoints = parseInt(user.xp_points);
-      const maxXP = Math.pow(10, user.xp_points.toString().length) - 1;
+      const maxXP = xpPoints === 0 ? 99 : Math.pow(10, user.xp_points.toString().length) - 1;
       const percentage = (xpPoints / maxXP) * 100;
 
       setPoints(maxXP);
@@ -210,7 +210,7 @@ const UserProfile = ({ onWalletClick, onProfileClick }) => {
                       </td>
                       <td className="py-3">{items?.mission_title}</td>
                       <td className="py-3 flex items-center">
-                        {parseInt(items?.reward)}
+                       +{parseInt(items?.reward)}
                       </td>
                     </tr>
                   ))}

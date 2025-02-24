@@ -9,7 +9,7 @@ use crate::{
     check_anonymous, Admin, CreateSpace, Errors, FundEntry, Space, SpaceURLs, ADMIN_MAP,
     SPACE_FUND_MAP, SPACE_MAP,
 };
- 
+
 // Access Control : Owner/Admin
 #[update(guard = check_anonymous)]
 pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
@@ -23,7 +23,10 @@ pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
     };
 
     // Validate input data
-    if !is_valid_utf8(&space.name) || !is_valid_utf8(&space.slug) || !is_valid_utf8(&space.description) {
+    if !is_valid_utf8(&space.name)
+        || !is_valid_utf8(&space.slug)
+        || !is_valid_utf8(&space.description)
+    {
         return Err(Errors::InvalidInput);
     }
 
@@ -52,10 +55,7 @@ pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
         editors: Vec::new(),
     };
 
-    let inserted = SPACE_MAP.with(|map| {
-        map.borrow_mut()
-            .insert(space_id, new_space)
-    });
+    let inserted = SPACE_MAP.with(|map| map.borrow_mut().insert(space_id, new_space));
     Ok(inserted)
 }
 
@@ -72,9 +72,8 @@ pub fn update_space(updated_space: Space) -> Result<(), Errors> {
 
     match old_space {
         Some(_) => {
-            
             // Ensure the caller has the right permissions to update the space
-            if !check_moderator(caller(), updated_space.space_id.clone()).is_ok(){
+            if !check_moderator(caller(), updated_space.space_id.clone()).is_ok() {
                 return Err(Errors::NotAuthorized);
             }
 
@@ -96,7 +95,6 @@ pub fn update_space(updated_space: Space) -> Result<(), Errors> {
 // Access Control : Open
 #[query]
 pub fn get_space(space_id: String) -> Result<Space, Errors> {
-
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
 
     match space {
@@ -170,34 +168,32 @@ pub async fn add_funds(id: String, amount: u64) -> Result<String, String> {
     match space {
         Some(val) => {
             space_val = val;
-            // Ensure the caller is the owner of the space
-            if space_val.owner != caller(){
+            let caller = caller();
+            if space_val.owner != caller && !space_val.editors.contains(&caller) {
                 return Err(String::from("Not authorized to add funds"));
-            } else {
-                ic_cdk::println!("Caller is authorized to add funds");
+            }
+            ic_cdk::println!("Caller is authorized to add funds");
 
-                // icrc transaction should take place here
-                deposit_icp_to_canister(amount).await?;
+            // icrc transaction should take place here
+            deposit_icp_to_canister(amount).await?;
 
-                let funds =
-                    SPACE_FUND_MAP.with(|map| map.borrow().get(&space_val.space_id.clone()));
-                let mut fund_val: FundEntry;
-                match funds {
-                    Some(val) => fund_val = val,
-                    None => {
-                        fund_val = FundEntry {
-                            balance: 0,
-                            locked: 0,
-                            space_id: space_val.space_id.clone(),
-                        }
+            let funds = SPACE_FUND_MAP.with(|map| map.borrow().get(&space_val.space_id.clone()));
+            let mut fund_val: FundEntry;
+            match funds {
+                Some(val) => fund_val = val,
+                None => {
+                    fund_val = FundEntry {
+                        balance: 0,
+                        locked: 0,
+                        space_id: space_val.space_id.clone(),
                     }
                 }
-                fund_val.balance += amount;
-                SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(space_val.space_id, fund_val));
-                return Ok(String::from(
-                    "Added new funds, ICRC transfer needs to be implemented here",
-                ));
             }
+            fund_val.balance += amount;
+            SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(space_val.space_id, fund_val));
+            return Ok(String::from(
+                "Added new funds, ICRC transfer needs to be implemented here",
+            ));
         }
         None => return Err(String::from("No space found to add funds to")),
     }
