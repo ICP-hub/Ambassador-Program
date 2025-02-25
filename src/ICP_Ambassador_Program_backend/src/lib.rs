@@ -10,7 +10,7 @@ use constant::*;
 use controllers::*;
 use guards::*;
 use deposit::*;
-use candid::Principal;
+use candid::{Principal, Nat};
 use icrc_ledger_types::icrc1::transfer::BlockIndex;
 
 ic_cdk::export_candid!();

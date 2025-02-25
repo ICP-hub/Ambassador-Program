@@ -14,6 +14,7 @@ const BalanceList = () => {
   const [amount, setAmount] = useState(0);
   const [balance, setBalance] = useState(0);
   const spaces = useSelector((state) => state.spaces.value);
+  const admin = useSelector((state) => state.admin.value);
   const actor = useSelector((state) => state.actor.value);
   const [lockedAm, setLockedAm] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -92,11 +93,11 @@ const BalanceList = () => {
   }
 
   async function getWalletBalance() {
-    console.log("Owner Address: ", spaces?.owner);
+    console.log("Owner Address: ", Principal.fromText(admin.wallet));
     console.log("Ledger : ", actor?.ledgerActor);
 
     try {
-      const owner = spaces?.owner;
+      const owner = Principal.fromText(admin.wallet);
 
       let balance = await actor?.ledgerActor?.icrc1_balance_of({
         owner: owner,
@@ -180,7 +181,7 @@ const BalanceList = () => {
     getFundDetails();
     settingToken();
     getWalletBalance();
-    console.log("XYZ : ", spaces?.owner);
+    console.log("XYZ : ", admin.wallet);
     console.log("balances useeffect : ", spaces, balance, actor?.ledgerActor);
   }, []);
 
@@ -202,7 +203,7 @@ const BalanceList = () => {
         <div className=" w-1/3">
           <div className=" flex flex-col my-6">
             <div className="font-semibold text-lg mb-3">
-              ICP hub India Crewsphere
+              {spaces?.name}
             </div>
 
             <div className="font-semibold text-lg mb-3">
@@ -213,8 +214,8 @@ const BalanceList = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-4 my-3">
-            <div className="font-semibold text-md">
+          <div className="flex items-center gap-4 my-3">
+            <div className="w-1/2 font-semibold text-md">
               Deposit Amount (in {DEFAULT_CURRENCY}) :
             </div>
             <div className="w-1/2 -mt-5">

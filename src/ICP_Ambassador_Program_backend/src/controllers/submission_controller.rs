@@ -285,8 +285,12 @@ pub fn approve_submission(id: String) -> Result<String, String> {
 #[update]
 pub fn reject_submission(id: String) -> Result<String, String> {
     let space_id = extract_space_id(&id);
+
+    ic_cdk::print(&format!("extracted space {}", space_id.clone()));
+
+    let caller = caller();
     
-    if !check_editor(caller(), space_id.clone()).is_ok() {
+    if !check_editor(caller, space_id.clone()).is_ok() {
         return Err("Only the editor of the space can reject submissions".to_string());
     }
 
@@ -311,10 +315,18 @@ pub fn reject_submission(id: String) -> Result<String, String> {
     Ok("Submission successfully rejected".to_string())
 }
 
+// pub fn extract_space_id(mission_id: &str) -> String {
+//     match mission_id.rsplit_once('_') {
+//         Some((space_id, _)) => space_id.to_string(),
+//         None => mission_id.to_string(),
+//     }
+// }
 pub fn extract_space_id(mission_id: &str) -> String {
-    match mission_id.rsplit_once('_') {
-        Some((space_id, _)) => space_id.to_string(),
-        None => mission_id.to_string(),
+    let parts: Vec<&str> = mission_id.split('_').collect();
+    if parts.len() == 4 && parts[1].len() == 1 && parts[1].chars().all(char::is_numeric) {
+        format!("{}_{}", parts[0], parts[1])
+    } else {
+        mission_id.to_string()
     }
 }
 
