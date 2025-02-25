@@ -107,13 +107,13 @@ const MissionEdit = () => {
 
   const [startDate, setStartDate] = useState(
     mission?.start_date
-    ? moment(parseInt(mission.start_date)).tz(timezone)
-    : moment().tz(timezone)
+      ? moment(parseInt(mission.start_date)).tz(timezone)
+      : moment().tz(timezone)
   );
 
   const [endDate, setEndDate] = useState(
-    mission?.end_date 
-      ? moment(parseInt(mission.end_date)).tz(timezone) 
+    mission?.end_date
+      ? moment(parseInt(mission.end_date)).tz(timezone)
       : moment().tz(timezone)
   );
 
@@ -186,18 +186,8 @@ const MissionEdit = () => {
   }
 
   function calculatePointsPerUser(totalParticipants, rewardPool, conversionRate) {
-    // Ensure inputs are valid numbers and greater than 0
-    if (totalParticipants <= 0 || rewardPool < 0 || conversionRate <= 0) {
-      return 0; // Return 0 for invalid inputs
-    }
-
-    // Calculate points: (R / N) * (100 / CR)
-    const points = (rewardPool / totalParticipants) * (100 / conversionRate);
-
-    console.log("Calculated points : ", points)
-
-    // Cap points at 100
-    return Math.min(100, points);
+    const usd = rewardPool / totalParticipants;
+    return (usd * 100) / conversionRate;
   }
 
   const handlesave = async (action) => {

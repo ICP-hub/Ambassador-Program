@@ -3,7 +3,7 @@ use ic_cdk::caller;
 use ic_cdk_macros::*;
 
 
-use crate::{Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP, USER_PROFILE_MAP};
+use crate::{state::{FundEntry, Space}, Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP,SPACE_FUND_MAP, USER_PROFILE_MAP};
 
 use super::transfer_amount;
     
@@ -205,8 +205,10 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
     
     //transfer amount to user's wallet
     let space=SPACE_MAP.with(|map| map.borrow().get(&user_mut.hub.clone()));
+    let fetched_space: Space;
     match space{
         Some(space_val)=>{
+            fetched_space=space_val.clone();
             amount=points*u64::from(space_val.conversion)*ICRC_DECIMALS/1000;
             let transfer_res=transfer_amount(amount, wallet).await;
             match transfer_res{
@@ -218,6 +220,18 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
     }
     user_mut.redeem_points-=points;
     USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id,user_mut));
+
+    let funds = SPACE_FUND_MAP.with(|map| map.borrow().get(&fetched_space.space_id));
+    let mut funds_val:FundEntry;
+    match funds{
+        Some(val)=>funds_val=val,
+        None=>return Err(String::from("No funds found for the hub"))
+    }
+    funds_val.balance-=amount;
+    funds_val.locked-=amount;
+
+    SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(fetched_space.space_id.clone(), funds_val));
+
     return Ok(String::from("amount redeemed to user"))
 }
 
