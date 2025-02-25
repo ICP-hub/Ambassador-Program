@@ -138,19 +138,19 @@ pub fn update_points(discord_id: String,points:u64)->Result<(),String>{
             UserLevel::Initiate=>{},
             UserLevel::Padawan=>{
                 new_user.xp_points+=10;
-                new_user.redeem_points+=10
+                // new_user.redeem_points+=10
             },
             UserLevel::Knight=>{
                 new_user.xp_points+=100;
-                new_user.redeem_points+=100;
+                // new_user.redeem_points+=100;
             },
             UserLevel::Master=>{
                 new_user.xp_points+=1000;
-                new_user.redeem_points+=1000;
+                // new_user.redeem_points+=1000;
             },
             UserLevel::GrandMaster=>{
                 new_user.xp_points+=10000;
-                new_user.redeem_points+=10000;
+                // new_user.redeem_points+=10000;
             }
         }
     }
