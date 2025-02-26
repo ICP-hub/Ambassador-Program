@@ -58,10 +58,11 @@ const Contests = ({
           .filter((contest) => {
             const contestStatus = Object.keys(contest.status)[0] === "Active";
             const currentTime = Date.now();
-            const contestEndDate = contest.end_date; // Assuming the end_date is a timestamp in milliseconds
+            // const contestEndDate = contest.end_date; // Assuming the end_date is a timestamp in milliseconds
 
             // Include only active contests whose end_date is not in the past
-            return contestStatus && contestEndDate > currentTime;
+            // return contestStatus && contestEndDate > currentTime;
+            return contestStatus;
           })
           .map((contest) => {
             return { ...contest }; // Make a copy of each active and valid contest

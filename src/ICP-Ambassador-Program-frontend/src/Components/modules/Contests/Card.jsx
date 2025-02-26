@@ -94,25 +94,29 @@ const Card = ({ contest, hub }) => {
     Upload: FaFileUpload,
   };
 
-  const handleCard = (status) => {
-    //console.log("Contest",contest)
-
+  const handleCard = (status, updatedContest) => {
     if (status === "Ongoing") {
-      console.log("Clicked");
       let user = Cookies.get("discord_user");
       if (user) {
         navigate("/contest_details", { state: { updatedContest } });
       } else {
         toast.error("Please login to view the details");
       }
+    }
+    else if (status === "Expired") {
+      toast.error("Contest is expired");
     } else {
       toast.error("Contest is not active yet");
     }
   };
 
-  function getStatus(startDate) {
+  function getStatus(startDate, endDate) {
     const currentTime = Date.now(); // Current time in milliseconds
     const timeRemaining = startDate - currentTime; // Time remaining in milliseconds
+    // Check if the event is expired (endDate has passed)
+    if (currentTime > endDate) {
+      return "Expired"; // End date has passed, it's expired
+    }
 
     if (timeRemaining < 0) {
       return "Ongoing"; // Start date has passed, it's ongoing
@@ -137,11 +141,11 @@ const Card = ({ contest, hub }) => {
   return (
     <div
       className=" text-white p-4    mb-2 font-poppins min-w-[350px]"
-      onClick={() => handleCard(getStatus(contest?.start_date))}
+      onClick={() => handleCard(getStatus(contest?.start_date, contest?.end_date), updatedContest)}
     >
       <div className=" custom-gradient h-[427px] rounded-xl  relative">
         <span className="absolute top-3 left-3  bg-[#4a0295]  text-white text-xs   px-2 py-1 rounded border border-white">
-          {getStatus(contest?.start_date)}
+          {getStatus(contest?.start_date, contest?.end_date)}
         </span>
 
         {img?.length > 0 ? (
