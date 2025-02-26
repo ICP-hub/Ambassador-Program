@@ -24,8 +24,12 @@ import awtar from "../../../../public/icons/Avatar.png";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 
-
-const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => {
+const Navbar = ({
+  openRefModal,
+  setLoading,
+  onWalletClick,
+  onProfileClick,
+}) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
@@ -111,10 +115,8 @@ const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
     <div className="py-2 h-[120px] px-10 z-50 w-[97%] rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
-
       <div className="flex items-center gap-5  " onClick={() => nav("/")}>
         <img src={atlaslogo} alt="atlas" className="h-14" />
       </div>
@@ -165,7 +167,6 @@ const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => 
                 )}
               </div>
             </div>
-
           </>
         ) : (
           <div className="lg:block ">
@@ -179,16 +180,16 @@ const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => 
         )}
       </div>
 
-      {isDrawerOpen && (
-        <UserProfile
-          onProfileClick={handleProfileToggle}
-        />
-      )}
+      <UserProfile
+        onProfileClick={handleProfileToggle}
+        isDrawerOpen={isDrawerOpen}
+      />
 
       {isSideBar && (
         <div
-          className={`fixed top-0 right-0 h-full w-full   shadow-lg transition-transform duration-1000 ease-in-out ${isSideBar ? "translate-x-0" : "translate-x-full"
-            }`}
+          className={`fixed top-0 right-0 h-full w-full   shadow-lg transition-transform duration-1000 ease-in-out ${
+            isSideBar ? "translate-x-0" : "translate-x-full"
+          }`}
           style={{ backgroundColor: "#1d1d21" }}
         >
           <div className="flex flex-col h-full justify-between">
@@ -300,7 +301,6 @@ const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => 
         isReferred={isReferred}
       />
       <Sidebar isOpen={isSideBarOpen} onClose={() => setSideBarOpen(false)} />
-
     </div>
   );
 };
