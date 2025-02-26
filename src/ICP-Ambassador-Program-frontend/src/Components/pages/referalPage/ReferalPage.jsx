@@ -4,11 +4,15 @@ import ReferalEarnings from "./ReferalEarnings";
 import ParentComponent from "../ParentComponent";
 import { useSelector } from "react-redux";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import { BASE_URL } from "../../../../../../DevelopmentConfig";
+import toast, { Toaster } from "react-hot-toast";
 
 const ReferalPage = () => {
   const user = useSelector((state) => state.user.value);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const baseReferral = `${BASE_URL}/ref?ref=`;
 
   async function getRefers() {
     try {
@@ -32,6 +36,22 @@ const ReferalPage = () => {
       console.log("Error while fetching refers : ", error);
     }
   }
+
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(baseReferral + user.discord_id)
+      .then(() => {
+        setCopied(true);
+        toast.success("Copied to clipboard", {
+          icon: "📋",
+        });
+        setTimeout(() => setCopied(false), 5000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+      });
+  };
+
   console.log("users", users);
   console.log("user", user);
 
@@ -42,19 +62,26 @@ const ReferalPage = () => {
     <div className="flex flex-col  bg-gradient-to-b from-[#1E0F33]/100 to-[#9173FF]/5 ">
       <ParentComponent>
         <div className="bg-[#1E0F33] mt-1 mx-10 rounded-xl p-6 ">
-          <ReferalEarnings />
+          <ReferalEarnings user={user} />
           <div className="mt-6 bg-[#9173FF]/20 h-[119px] px-6 rounded-2xl flex items-center  w-full ">
             <h2 className="font-semibold w-[20%] text-xl text-white">
               Your Referral Code:
             </h2>
             <div className="border-b border-[#9173FF] w-[60%] flex items-center justify-center px-4 ">
-              <p className="text-xl text-white">
-                https://kgmyp-myaaa-aaaao-a3u4a-cai.icp0.io/ref?ref=1071106227200868393
-              </p>
+              <a
+                href={baseReferral + user.discord_id}
+                target="_blank"
+                className="text-white text-xl  cursor-pointer"
+              >
+                {baseReferral + user.discord_id}
+              </a>
             </div>
             <div className="flex justify-end w-[20%] gap-4">
-              <button className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5">
-                Copy
+              <button
+                onClick={copyToClipboard}
+                className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5"
+              >
+                {copied ? "Copied!" : "Copy"}
               </button>
               <button className="rounded-lg border-[#9173FF] text-white bg-[#1E0F33] px-4 py-1.5">
                 Share
