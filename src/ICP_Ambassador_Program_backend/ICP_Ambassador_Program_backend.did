@@ -177,7 +177,6 @@ service : {
   get_user_reward_history : (text) -> (Result_11) query;
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
-  transfer_amount : (nat64, principal) -> (Result_4);
   update_space : (Space) -> (Result_1);
   upload_profile_image : (text, ProfileImageData) -> (Result);
   withdraw_points : (text, principal, nat64) -> (Result);

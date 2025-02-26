@@ -49,7 +49,7 @@ pub async fn upload_profile_image(asset_canister_id: String, image_data: Profile
     }
 }
 
-#[ic_cdk::update]
+
 pub async fn transfer_amount(amount: u64,user: Principal,) -> Result<Nat, String> {
     // Prepare the transfer arguments
     let tokens = NumTokens::from(amount); // Amount in e8s (1 ICP = 10^8 e8s)
