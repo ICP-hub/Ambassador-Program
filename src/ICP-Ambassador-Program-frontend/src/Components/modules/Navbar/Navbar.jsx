@@ -113,62 +113,64 @@ const Navbar = ({ openRefModal, setLoading, onWalletClick, onProfileClick }) => 
 
 
   return (
-    <div className=" py-2 h-[135px] px-10 z-50  rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
+    <div className="py-2 h-[120px] px-10 z-50 w-[97%] rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
 
       <div className="flex items-center gap-5  " onClick={() => nav("/")}>
         <img src={atlaslogo} alt="atlas" className="h-14" />
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
-          <div className="flex flex-col ">
-            <button
-              onClick={() => nav("/")}
-              className="px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-80 max-md:px-5"
-            >
-              Missons
-            </button>
-          </div>
-          <div className="flex flex-col">
-            <button
-              disabled
-              className="px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
-            >
-              Leaderboard
-            </button>
-          </div>
-          <div className="flex flex-col">
-            <button
-              disabled
-              className="px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
-            >
-              Referrals
-            </button>
-          </div>
-        </div>
-
         {discordl_user ? (
-          <div className="lg:block " onClick={handleProfileToggle}>
-            <div className="text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer">
-              {discordl_user.avatar ? (
-                <img
-                  src={`https://cdn.discordapp.com/avatars/${discordl_user.discord_id}/${discordl_user.avatar}.png`}
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-full"
-                />
-              ) : (
-                <img
-                  src={awtar}
-                  alt="awtaricon"
-                  className="w-[72px] h-[72px] "
-                />
-              )}
+          <>
+            <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
+              <div className="flex flex-col ">
+                <button
+                  onClick={() => nav("/")}
+                  className="px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-80 max-md:px-5"
+                >
+                  Missons
+                </button>
+              </div>
+              <div className="flex flex-col">
+                <button
+                  disabled
+                  className="px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
+                >
+                  Leaderboard
+                </button>
+              </div>
+              <div className="flex flex-col">
+                <button
+                  disabled
+                  className="px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
+                >
+                  Referrals
+                </button>
+              </div>
             </div>
-          </div>
+            <div className="lg:block " onClick={handleProfileToggle}>
+              <div className="text-black py-1 px-2 rounded-md text-sm font-semibold cursor-pointer">
+                {discordl_user.avatar ? (
+                  <img
+                    src={`https://cdn.discordapp.com/avatars/${discordl_user.discord_id}/${discordl_user.avatar}.png`}
+                    alt="User Avatar"
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <img
+                    src={awtar}
+                    alt="awtaricon"
+                    className="w-[72px] h-[72px] "
+                  />
+                )}
+              </div>
+            </div>
+
+          </>
         ) : (
           <div className="lg:block ">
             <button
-              className="bg-white text-black py-1 px-8 rounded-md text-sm font-semibold cursor-pointer"
+              className="bg-white text-black py-2 px-8 rounded-md text-sm font-semibold cursor-pointer"
               onClick={() => setModelOpen(true)}
             >
               Login

@@ -140,6 +140,7 @@ const Home = () => {
           if (matchedSpace) {
             console.log("Matched Space:", matchedSpace);
             setSpaceData(matchedSpace);
+            localStorage.setItem("spaceData", JSON.stringify(matchedSpace));
             // Store matched space wherever required
           } else {
             console.log("No matching space found.");
@@ -281,7 +282,7 @@ const Home = () => {
                   </div>
                   <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
                     <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
-                      {spaceData[1]?.name || "ICP HUB "}
+                      {spaceData[1]?.name || "ALL ICP HUBS "}
                     </div>
                     <input
                       className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
