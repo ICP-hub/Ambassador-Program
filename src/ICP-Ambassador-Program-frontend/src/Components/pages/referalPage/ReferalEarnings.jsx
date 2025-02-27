@@ -3,8 +3,8 @@ import { IoArrowForwardCircleOutline } from "react-icons/io5";
 
 const ReferalEarnings = ({ user }) => {
   return (
-    <div className="flex items-center gap-6 justify-between">
-      <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[404px] h-[341px] flex flex-col justify-between ">
+    <div className="flex w-full items-center gap-6 justify-between">
+      <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[25%] h-[341px] flex flex-col justify-between ">
         <h2 className="text-4xl text-white font-semibold mb-10 ">
           Your Referral Earnings
         </h2>
@@ -21,7 +21,7 @@ const ReferalEarnings = ({ user }) => {
         style={{
           backgroundImage: `url(https://s3-alpha-sig.figma.com/img/1e1d/8ca7/3c08c53bbaf67f97adfcb10cb09224dd?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=eIfqinmWMzuJdTas6QVj241u1FCRUSUF-a9qPRhwWiD2r4rGaK~7GbfdhmSjuXIKQDSweWfInwNEfOi9zr4fzWTTfmxglY5qTgmnQXoRSAfWlADjtuFhYoLC6ZI7PKy~GMqlQ7a1dYuyhEnIP4Mlwpf5zlwvsVxKfXB5LwJEbJzOeK-WBwhsv5WutgwT079t5y2LPwYOR0EnWTNLsarhAl6CeiOJLYCkcoCRuSo6TX4h4czeItFA9pin-nfgpy2GKKjbSwiZy16QUGbq-kINguFVLWE5zWuUJcNrdHBpHrhGsBQ5wikb47ZI5efLTv9WwVDZxTsOOGDNbI3qgSJbqA__)`,
         }}
-        className="w-full h-[341px] rounded-2xl flex items-end "
+        className="w-[75%] h-[341px] rounded-2xl flex items-end "
       >
         <div className="p-6 flex flex-col items-end w-full">
           <div className="flex justify-between items-center w-full">

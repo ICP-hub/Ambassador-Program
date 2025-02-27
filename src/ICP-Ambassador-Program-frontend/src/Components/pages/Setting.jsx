@@ -65,57 +65,63 @@ const Setting = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="mt-1 mb-5 mx-12 pb-4 rounded-xl bg-gradient-to-b from-[#1E0F33] to-[#9173FF]">
-        <h2 className="text-3xl py-12 text-white pl-16 font-bold">Setting</h2>
-        <div className="flex gap-2 justify-between">
-          <div className="mx-16 flex flex-col gap-2 items-center">
-            <div className="rounded-xl w-[424px] h-[300px] flex flex-col items-center bg-gradient-to-b from-[#9173FF]/30 to-[#574599]/0">
-              <div className="mt-10 relative">
-                <div className="rounded-full bg-gradient-to-t from-[#9173FF] to-[#1E0F33] w-[260px] h-[256px] flex items-center justify-center">
-                  <img src={settingProfile} alt="profile" />
+      <div className="w-full pb-4 px-4 bg-gradient-to-b from-[#1E0F33] to-[#9173FF]/5">
+        <Navbar />
+        <div className="mt-1  mx-12 pb-4 rounded-2xl bg-gradient-to-b from-[#1E0F33]/90 to-[#9173FF]/35">
+          <h2 className="text-3xl py-10 text-white pl-16 font-bold">Setting</h2>
+          <div className="flex w-full pl-16 ">
+            <div className=" w-[35%]  pb-6 items-center justify-center  flex-col gap-2 ">
+              <div className="rounded-xl px-12 h-[300px] flex flex-col items-center bg-gradient-to-b from-[#9173FF]/30 to-[#574599]/0">
+                <div className="mt-10 ">
+                  <div className="rounded-full bg-gradient-to-t from-[#9173FF] to-[#1E0F33] w-[260px] h-[256px] flex items-center justify-center">
+                    <img src={settingProfile} alt="profile" />
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-400 text-center mt-3 text-xs">
+                Image size <br /> at least 300 × 300
+              </p>
+              <div className="flex justify-center items-center mt-3">
+                <div className="text-white rounded-xl px-4 w-[16rem]  py-3 bg-[#9173FF]/40 flex items-center justify-center mb-8 ">
+                  <p className="mr-5 font-semibold text-center text-xl">
+                    @{userName}{" "}
+                  </p>
                 </div>
               </div>
             </div>
-            <p className="text-gray-400 text-center text-xs">
-              Image size <br /> at least 300 × 300
-            </p>
-            <div className="text-white rounded-xl px-4 py-3 bg-[#9173FF]/40 flex items-center justify-center mb-8 w-[280px]">
-              <p className="mr-5 font-semibold text-xl">@{userName} </p>
-            </div>
-          </div>
 
-          <div className="flex flex-col gap-6 w-[640px]">
-            <SocialInput
-              platform="discordUrl"
-              icon={<FaDiscord className="text-white text-5xl" />}
-              placeholder="Enter Discord username"
-              url={url}
-              urlState={urlState}
-              handleChange={handleChange}
-              handleConnect={handleConnect}
-              handleRemove={handleRemove}
-            />
-            <SocialInput
-              platform="xUrl"
-              icon={<BsTwitterX className="text-white text-5xl" />}
-              placeholder="Enter X username"
-              url={url}
-              urlState={urlState}
-              handleChange={handleChange}
-              handleConnect={handleConnect}
-              handleRemove={handleRemove}
-            />
-            <SocialInput
-              platform="telegramUrl"
-              icon={<LiaTelegram className="text-white text-5xl" />}
-              placeholder="Enter Telegram username"
-              url={url}
-              urlState={urlState}
-              handleChange={handleChange}
-              handleConnect={handleConnect}
-              handleRemove={handleRemove}
-            />
+            <div className="flex flex-col items-center gap-6 w-[60%]">
+              <SocialInput
+                platform="discordUrl"
+                icon={<FaDiscord className="text-white text-5xl" />}
+                placeholder="Enter Discord username"
+                url={url}
+                urlState={urlState}
+                handleChange={handleChange}
+                handleConnect={handleConnect}
+                handleRemove={handleRemove}
+              />
+              <SocialInput
+                platform="xUrl"
+                icon={<BsTwitterX className="text-white text-5xl" />}
+                placeholder="Enter X username"
+                url={url}
+                urlState={urlState}
+                handleChange={handleChange}
+                handleConnect={handleConnect}
+                handleRemove={handleRemove}
+              />
+              <SocialInput
+                platform="telegramUrl"
+                icon={<LiaTelegram className="text-white text-5xl" />}
+                placeholder="Enter Telegram username"
+                url={url}
+                urlState={urlState}
+                handleChange={handleChange}
+                handleConnect={handleConnect}
+                handleRemove={handleRemove}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -136,28 +142,28 @@ const SocialInput = ({
 }) => {
   return (
     <div className="flex gap-6 items-center">
-      <div className="flex justify-center items-center bg-[#9173FF]/30 w-[80px] h-[80px] rounded-md">
+      <div className="flex justify-center items-center bg-[#9173FF]/30 w-[70px] h-[70px] rounded-md">
         {icon}
       </div>
       {urlState[platform] ? (
-        <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10 w-[360px] h-[50px] justify-center items-center rounded-md">
-          <p>@{url[platform]}</p>
+        <div className="flex text-white text-lg font-medium bg-[#D9D9D9]/10  w-[22rem] h-[40px] pl-4 justify-start  items-center rounded-lg">
+          <p className="line-clamp-1 break-all">@{url[platform]}</p>
         </div>
       ) : (
         <input
           onChange={(e) => handleChange(platform, e.target.value)}
           type="text"
           placeholder={placeholder}
-          className="pl-4 text-lg font-medium w-[360px] h-[50px] rounded-md bg-[#D9D9D9]/10 text-white"
+          className="pl-4 text-lg font-medium w-[22rem] h-[40px] rounded-lg bg-[#D9D9D9]/10 text-white"
         />
       )}
       <button
         onClick={() =>
           urlState[platform] ? handleRemove(platform) : handleConnect(platform)
         }
-        className="py-1 border-[#9173FF] border-2 px-2 text-[#9173FF] text-lg font-medium rounded-md"
+        className="py-0.5 border-[#9173FF] border px-2 text-[#9173FF] text-lg font-medium rounded-lg"
       >
-        {urlState[platform] ? "Remove" : "Connect"}
+        {urlState[platform] ? "remove" : "connect"}
       </button>
     </div>
   );

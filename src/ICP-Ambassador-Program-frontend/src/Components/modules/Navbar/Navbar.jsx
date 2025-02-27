@@ -116,8 +116,8 @@ const Navbar = ({
   }, []);
 
   return (
-    <div className="py-2 h-[120px] px-10 z-50 w-[97%] rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
-      <div className="flex items-center gap-5  " onClick={() => nav("/")}>
+    <div className="py-2 h-[120px] px-10 z-50 w-full rounded-b-xl flex justify-between items-center  bg-[#1F1035]/50">
+      <div className="flex items-center gap-5 pl-3 " onClick={() => nav("/")}>
         <img src={atlaslogo} alt="atlas" className="h-14" />
       </div>
 
