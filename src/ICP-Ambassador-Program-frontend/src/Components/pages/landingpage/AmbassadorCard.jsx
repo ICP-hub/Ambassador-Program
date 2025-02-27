@@ -3,7 +3,7 @@ import icpindia from "../../../../public/icons/icpIndiaImage.png";
 
 function AmbassadorCard({ number, country }) {
   return (
-    <div className="flex flex-col items-center  border border-white border-solid  rounded-t-full ">
+    <div className="flex w-full flex-col items-center  border border-white border-solid  rounded-t-full ">
       <div className="w-[90px] h-[90px] mb-3 rounded-full  flex items-center justify-center">
         <img src={icpindia} alt="icpIndonesia" />
       </div>
