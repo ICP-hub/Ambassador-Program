@@ -7,13 +7,13 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
+        sans: ["Montserrat", "Poppins", "sans-serif"],
       },
     },
     screens: {
-      sm: '340px', 
-      md:'600px',
-      lg: '1024px',
+      sm: "340px",
+      md: "600px",
+      lg: "1024px",
     },
   },
   plugins: [],

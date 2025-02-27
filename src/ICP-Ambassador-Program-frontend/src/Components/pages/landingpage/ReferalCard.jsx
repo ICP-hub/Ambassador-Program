@@ -8,7 +8,7 @@ const ReferalCard = ({ heading, text }) => {
         <img src={A_logo} alt="atlas" className="w-[43px] h-[30px] " />
         <h2 className="text-white text-2xl font-semibold">{heading}</h2>
       </div>
-      <div className="w-[65%] p-4">
+      <div className="w-[75%] p-4">
         <p className="text-white font-medium text-xl">{text}</p>
       </div>
     </div>
