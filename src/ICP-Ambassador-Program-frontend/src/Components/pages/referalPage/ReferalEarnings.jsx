@@ -1,7 +1,7 @@
 import React from "react";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
 
-const ReferalEarnings = () => {
+const ReferalEarnings = ({ user }) => {
   return (
     <div className="flex items-center gap-6 justify-between">
       <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[404px] h-[341px] flex flex-col justify-between ">
@@ -9,7 +9,9 @@ const ReferalEarnings = () => {
           Your Referral Earnings
         </h2>
         <div className="">
-          <h3 className="text-3xl mb-4 text-white font-semibold">0 points</h3>
+          <h3 className="text-3xl mb-4 text-white font-semibold">
+            {parseInt(user?.xp_points)} points
+          </h3>
           <div className="py-1 px-2 bg-[#1E0F33] w-[137px] h-[46px] flex items-center justify-center rounded-lg ">
             <h4 className="text-lg font-medium text-white">0.00 USD</h4>
           </div>
