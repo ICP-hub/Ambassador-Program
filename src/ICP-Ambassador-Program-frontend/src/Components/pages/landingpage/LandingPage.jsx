@@ -33,7 +33,7 @@ const LandingPage = () => {
     <>
       <div className="flex flex-col pb-10 bg-gradient-to-b from-[#1E0F33]/60 to-[#9173FF]/10">
         <div
-          className={`py-2 sticky top-0 z-50 h-[8rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/60 `}
+          className={`py-2 sticky top-0 z-50 h-[7rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/60 `}
         >
           <div className="flex items-center gap-5 ml-6 ">
             <img src={atlaslogo} alt="atlas" className="h-[2.6rem] " />
@@ -88,7 +88,7 @@ const LandingPage = () => {
             <div className="flex justify-center items-center">
               <div
                 onClick={() => setOpenLoginModal(true)}
-                className="mt-8 cursor-pointer flex justify-center items-center font-medium  bg-[#9173FF]/50 w-[365px] h-[58px] rounded-full "
+                className="mt-8 cursor-pointer flex justify-center items-center font-medium  bg-[#9173FF]/50 px-7 py-2 rounded-3xl "
               >
                 <span className="text-white text-3xl mr-2">
                   <IoArrowForwardCircleOutline />
@@ -126,8 +126,8 @@ const LandingPage = () => {
                 }}
                 className="rounded-2xl w-full flex justify-between"
               >
-                <div className="w-[30%] flex flex-col justify-end px-5 mb-4 py-6">
-                  <h2 className="fone-semibold w-[75%] text-4xl text-white ">
+                <div className="w-[35%] flex flex-col justify-end px-5 mb-4 py-6">
+                  <h2 className="font-medium  text-4xl text-white ">
                     Earn rewards by being ICP Ambassador
                   </h2>
                 </div>

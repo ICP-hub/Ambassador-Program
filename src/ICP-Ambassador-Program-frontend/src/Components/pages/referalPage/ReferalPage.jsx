@@ -59,15 +59,15 @@ const ReferalPage = () => {
     getRefers();
   }, []);
   return (
-    <div className="flex flex-col  bg-gradient-to-b from-[#1E0F33]/100 to-[#9173FF]/5 ">
-      <ParentComponent>
-        <div className="bg-[#1E0F33] mt-1 mx-10 rounded-xl p-6 ">
+    <ParentComponent>
+      <div className="w-full flex flex-col items-center px-12">
+        <div className="bg-[#1E0F33] w-full mt-1  rounded-xl p-6 ">
           <ReferalEarnings user={user} />
           <div className="mt-6 bg-[#9173FF]/20 h-[119px] px-6 rounded-2xl flex items-center  w-full ">
-            <h2 className="font-semibold w-[20%] text-xl text-white">
+            <h2 className="font-semibold w-[16%] text-xl text-white">
               Your Referral Code:
             </h2>
-            <div className="border-b border-[#9173FF] w-[60%] flex items-center justify-center px-4 ">
+            <div className="border-b border-[#9173FF] w-[71%] flex items-center justify-center px-4 ">
               <a
                 href={baseReferral + user.discord_id}
                 target="_blank"
@@ -76,7 +76,7 @@ const ReferalPage = () => {
                 {baseReferral + user.discord_id}
               </a>
             </div>
-            <div className="flex justify-end w-[20%] gap-4">
+            <div className="flex justify-end w-[13%] gap-4">
               <button
                 onClick={copyToClipboard}
                 className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5"
@@ -88,19 +88,19 @@ const ReferalPage = () => {
               </button>
             </div>
           </div>
-          <div className="mt-6 justify-between flex gap-6">
-            <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[404px] h-[306px] flex flex-col justify-end items-center ">
+          <div className="mt-6 w-full justify-between flex gap-6">
+            <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[25%] h-[306px] flex flex-col justify-end items-center ">
               <h2 className="text-4xl text-white font-semibold mb-4 ">
                 Your Referrals
               </h2>
             </div>
-            <div className="flex flex-col w-full rounded-xl pb-8 bg-gradient-to-b from-[#D9D9D9]/5 to-[#9173FF]/3">
+            <div className="flex flex-col w-[75%] rounded-xl pb-8 bg-gradient-to-b from-[#D9D9D9]/5 to-[#9173FF]/3">
               <ReferralBoard />
             </div>
           </div>
         </div>
-      </ParentComponent>
-    </div>
+      </div>
+    </ParentComponent>
   );
 };
 
