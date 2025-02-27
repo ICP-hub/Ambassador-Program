@@ -213,7 +213,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                 </tr>
               </thead>
               <tbody>
-                {userRewardHistory &&
+                {userRewardHistory && userRewardHistory.length > 0 ? (
                   userRewardHistory.map((items, index) => (
                     <tr key={index} className="border-b text-sm">
                       <td className="py-3">
@@ -221,10 +221,15 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                       </td>
                       <td className="py-3">{items?.mission_title}</td>
                       <td className="py-3 flex items-center">
-                        +{parseInt(items?.reward)}
+                        +{Number(items?.reward) || 0}
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center h-[150px]">No rewards earned yet</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
