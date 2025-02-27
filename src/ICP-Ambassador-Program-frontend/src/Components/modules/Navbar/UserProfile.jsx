@@ -69,6 +69,8 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
       // const maxXP = xpPoints === 0 ? 99 : Math.pow(10, user.xp_points.toString().length) - 1;
       const maxXP =
         Math.pow(10, Math.max(2, user.xp_points.toString().length)) - 1;
+      const maxXP =
+        Math.pow(10, Math.max(2, user.xp_points.toString().length)) - 1;
       const percentage = (xpPoints / maxXP) * 100;
 
       setPoints(maxXP);
@@ -204,37 +206,41 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                   </div>
                 </div>
 
-            <table className="w-full mt-4 text-white ">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">Date</th>
-                  <th className="text-left py-2">Mission</th>
-                  <th className="text-left py-2">Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userRewardHistory && userRewardHistory.length > 0 ? (
-                  userRewardHistory.map((items, index) => (
-                    <tr key={index} className="border-b text-sm">
-                      <td className="py-3">
-                        {formatDate(parseInt(items?.date) / 1_000_000)}
-                      </td>
-                      <td className="py-3">{items?.mission_title}</td>
-                      <td className="py-3 flex items-center">
-                        +{Number(items?.reward) || 0}
-                      </td>
+                <table className="w-full mt-4 text-white ">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-2">Date</th>
+                      <th className="text-left py-2">Mission</th>
+                      <th className="text-left py-2">Points</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center h-[150px]">No rewards earned yet</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+                  </thead>
+                  <tbody>
+                    {userRewardHistory && userRewardHistory.length > 0 ? (
+                      userRewardHistory.map((items, index) => (
+                        <tr key={index} className="border-b text-sm">
+                          <td className="py-3">
+                            {formatDate(parseInt(items?.date) / 1_000_000)}
+                          </td>
+                          <td className="py-3">{items?.mission_title}</td>
+                          <td className="py-3 flex items-center">
+                            +{Number(items?.reward) || 0}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="text-center h-[150px]">
+                          No rewards earned yet
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
