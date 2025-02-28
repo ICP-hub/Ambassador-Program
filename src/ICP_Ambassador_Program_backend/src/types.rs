@@ -1,6 +1,7 @@
 use candid::{CandidType, Nat, Principal};
 use serde::{Deserialize, Serialize};
 use serde_bytes::ByteBuf;
+use std::fmt;
 
 #[derive(CandidType,Deserialize)]
 pub struct UpdateUser{
@@ -16,6 +17,18 @@ pub enum UserLevel {
     Knight,   
     Master,   
     GrandMaster,
+}
+
+impl fmt::Display for UserLevel {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            UserLevel::Initiate => write!(f, "Initiate"),
+            UserLevel::Padawan => write!(f, "Padawan"),
+            UserLevel::Knight => write!(f, "Knight"),
+            UserLevel::Master => write!(f, "Master"),
+            UserLevel::GrandMaster => write!(f, "GrandMaster"),
+        }
+    }
 }
 
 // admin
@@ -270,3 +283,12 @@ pub struct ProfileImageData {
 }
 
 pub type ReturnResult = Result<u32, String>;
+
+
+// define leaderboard types
+#[derive(Clone, CandidType, Serialize, Deserialize)]
+pub struct LeaderboardEntry {
+    pub name: String,
+    pub rank: String,
+    pub points: u64,
+}

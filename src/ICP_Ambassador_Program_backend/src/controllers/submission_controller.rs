@@ -1,7 +1,7 @@
 use ic_cdk::{caller, query, update};
 use ic_cdk::api::time;
 use crate::state::{Reward, RewardHistory, REWARD_HISTORY_MAP};
-use crate::{Errors, Submission, SubmissionArr, SubmissionStatus, TaskSubmitted, UserProfile, MISSION_MAP, MISSION_TO_SUBMISSION_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
+use crate::{Errors, Submission, SubmissionArr, SubmissionStatus,LeaderboardEntry,SPACE_MAP, TaskSubmitted, UserProfile, MISSION_MAP, MISSION_TO_SUBMISSION_MAP, SUBMISSION_MAP, USER_PROFILE_MAP};
 
 use super::{check_editor, user_controller};
 
@@ -345,4 +345,32 @@ pub fn get_user_reward_history(discord_id: String) -> Result<RewardHistory, Stri
             rewards: vec![]
         })
     }
+}
+
+// create leaderboard for user by hubs
+#[query]
+pub fn get_leaderboard(hub: String) -> Result<Vec<LeaderboardEntry>, String> {
+    // check if the hub exists
+    let hub_exists = SPACE_MAP.with(|map| map.borrow().contains_key(&hub));
+    if !hub_exists {
+        return Err("Hub does not exist".to_string());
+    }
+
+    let mut leaderboard: Vec<LeaderboardEntry> = vec![];
+    
+    USER_PROFILE_MAP.with(|map| {
+        let borrowed_map = map.borrow();
+        for (_, user) in borrowed_map.iter() {
+            if user.hub == hub {
+                leaderboard.push(LeaderboardEntry {
+                    name: user.username.clone(),
+                    rank: user.level.to_string(),
+                    points: user.xp_points,
+                });
+            }
+        }
+    });
+
+    leaderboard.sort_by(|a, b| b.points.cmp(&a.points));
+    Ok(leaderboard)
 }
