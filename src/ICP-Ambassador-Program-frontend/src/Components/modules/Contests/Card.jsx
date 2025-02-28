@@ -140,7 +140,7 @@ const Card = ({ contest, hub }) => {
 
   return (
     <div
-      className=" text-white p-4    mb-2 font-poppins min-w-[350px]"
+      className="text-white p-4 mb-2 font-poppins min-w-[350px]"
       onClick={() => handleCard(getStatus(contest?.start_date, contest?.end_date), updatedContest)}
     >
       <div className=" custom-gradient h-[427px] rounded-xl  relative">
@@ -165,7 +165,7 @@ const Card = ({ contest, hub }) => {
           <div className="mt-4 text-white text-2xl  ">
             {title?.length > 50 ? `${title?.substring(0, 50)}...` : title}
           </div>
-          <div className="mt-2 flex justify-end items-center space-x-2 bottom-4 absolute right-2">
+          <div className="mt-2 flex justify-end items-center space-x-2 bottom-4 absolute right-4">
             <span className="  border border-white text-white text-xs  px-3 py-1 rounded">
               {parseInt(contest?.reward) + " "}points{" "}
             </span>
@@ -175,158 +175,6 @@ const Card = ({ contest, hub }) => {
           </div>
         </div>
       </div>
-      {/* <div className="flex justify-between items-center">
-        <div className="flex gap-5 items-center">
-          <div>
-            {img?.length > 0 ? (
-              <img
-                src={img[0]}
-                alt={title}
-                className="h-[272px] bg-[#9173ff] rounded-t-xl "
-              />
-            ) : (
-              <img
-                src="https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
-                alt={title}
-                className="h-[272px] bg-[#9173ff] rounded-t-xl "
-              />
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            {/* <span
-              className={`text-sm py-1 px-2 rounded-md w-1/2 flex justify-center items-center `}
-              style={{
-                backgroundColor:
-                  statusKey === 'Active'
-                    ? '#1d2d27'
-                    : statusKey === 'Draft'
-                    ? '#29292c'
-                    : statusValue === 'In Active' 
-                    ? '#f0f0f0'
-                    : '#331a1e',
-                color:
-                  statusKey === 'Active'
-                    ? '#1db851'
-                    : statusKey === 'Draft'
-                    ? '#b8b8b8'
-                    : statusValue === 'In Active' 
-                    ? '#a0a0a0'
-                    : '#e20203',
-              }}
-            >
-              {statusValue === null || statusValue === undefined
-                ? statusKey
-                : statusValue}
-                Once
-            </span> */}
-      {/* <span className="text-sm text-gray-500">Once</span>
-            <h3 className="text-md  mb-2">{title}</h3>
-            <div className="flex space-x-2">
-              {tasks.map((task, index) => {
-                const taskType = task.id; // Get task type from the id
-                const { icon: IconComponent, color: bgColor } =
-                  taskDetailsMap[taskType] || {}; // Match task type to map
-                if (index > 2) return;
-
-                return (
-                  <div
-                    key={index}
-                    className="text-white w-6 h-6 rounded-full flex justify-center items-center"
-                    style={{ backgroundColor: bgColor, fontSize: "16px" }}
-                    title={task.title}
-                  >
-                    {IconComponent ? <IconComponent /> : null}
-                  </div>
-                );
-              })}
-            </div> */}
-      {/* <div className="mt-4 flex items-center space-x-2">
-              <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-              <span className="text-sm ">{icons.platform}</span>
-            </div> */}
-      {/* </div>
-        </div> */}
-      {/* <div>
-          <div className="flex flex-col gap-4 items-end mb-4 min-w-24">
-            <div className="text-xs">Fixed rewards</div>
-            <span className="text-sm font-semibold   rounded ">
-              {parseInt(contest?.reward) + " "}points{" "}
-            </span>
-            <div className="text-sm text-gray-500 font-semibold">$3.00</div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <div className="flex justify-between items-center mb-4">
-        <span className="text-sm  py-1 px-2 rounded" style={{backgroundColor:'#29292c'}}>{parseInt(contest?.reward)+" "}points </span>
-        <span
-          className={`text-sm py-1 px-2 rounded-md `}
-          style={{
-            backgroundColor:
-              statusKey === 'Active'
-                ? '#1d2d27'
-                : statusKey === 'Draft'
-                ? '#29292c'
-                : statusValue === 'In Active' 
-                ? '#f0f0f0'
-                : '#331a1e',
-            color:
-              statusKey === 'Active'
-                ? '#1db851'
-                : statusKey === 'Draft'
-                ? '#b8b8b8'
-                : statusValue === 'In Active' 
-                ? '#a0a0a0'
-                : '#e20203',
-          }}
-        >
-          {statusValue === null || statusValue === undefined
-            ? statusKey
-            : statusValue}
-        </span>
-      </div> */}
-      {/* <div className='flex justify-between '>
-        <div className='w-[70%] overflow-hidden'>
-            <h3 className="text-md  mb-2">{title}</h3>
-            <div className='mt-4 text-sm text-gray-600 w-full '>{description?.length>50?`${description?.substring(0,45)}...`:description}</div>
-            {social_platforms(
-                    <div className="flex space-x-2">
-                {social_platforms.map((platform, index) => {
-                  const IconComponent = iconMap[platform.name]; 
-                  
-                  return (
-                    <div key={index} className={`text-white w-6 h-6 rounded-full flex justify-center items-center`} style={{ backgroundColor: platform.bgcolor,fontSize:'12px' }} >
-                      {IconComponent ? <IconComponent /> : null} 
-                    </div>
-                  );
-                })}
-              </div>)}
-        </div>
-        
-        <div className="mb-4">
-        {img?.length>0 ? (
-            <img
-            src={img[0]}
-              alt={title}
-              className="w-24 h-24 object-cover rounded"
-            />
-          ) : (
-            // <div className="w-24 h-24 bg-gray-700 text-white flex items-center justify-center rounded">
-            //   <span>No Image</span>
-            // </div>
-            <img
-            src='https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg'
-              alt={title}
-              className="w-24 h-24 object-cover rounded"
-            />
-          )}
-        </div> 
-      </div> */}
-
-      {/* <div className="mt-4 flex items-center space-x-2">
-        <img src={icons.platform_logo} alt={icons.platform} className="w-8 h-4 rounded-full" />
-        <span className="text-sm ">{icons.platform}</span>
-      </div> */}
     </div>
   );
 };

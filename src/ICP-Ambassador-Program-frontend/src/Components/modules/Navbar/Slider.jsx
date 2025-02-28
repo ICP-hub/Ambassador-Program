@@ -61,7 +61,7 @@ const MissionCard = ({ updatedContest }) => {
   }
 
   return (
-    <div className="w-[400px] h-[520px] bg-[#1E0F33] text-white p-5 rounded-md">
+    <div className="w-[400px] h-[520px] ml-14 bg-[#1E0F33] text-white p-5 rounded-md">
       {/* Time Remaining */}
       <div className="flex justify-between font-semibold items-center mb-3">
         <span className="text-gray-400 text-sm">Time Remaining</span>
