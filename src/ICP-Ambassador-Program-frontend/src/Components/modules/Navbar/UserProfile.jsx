@@ -227,9 +227,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="text-center h-[150px]">
-                          No rewards earned yet
-                        </td>
+                        <td colSpan="3" className="text-center h-[150px]">No rewards earned yet</td>
                       </tr>
                     )}
                   </tbody>

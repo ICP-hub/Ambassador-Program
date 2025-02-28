@@ -785,7 +785,7 @@ export default function TaskRedemption() {
   };
   return (
     <ParentComponent>
-      <div className="mt-1 rounded-xl  sm:flex sm:flex-col md:flex-row  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6 flex gap-6 w-[80vw]">
+      <div className="mt-1 rounded-xl  sm:flex sm:flex-col md:flex-row  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6 flex gap-6 w-[92%]">
         <div className="w-[65%]">
           <div className="flex items-center justify-between">
             <div className="flex gap-2 items-center">
@@ -1249,7 +1249,7 @@ export default function TaskRedemption() {
         </div>
 
         {/* Reward Section */}
-        <div className="w-[33%] rounded-lg space-y-5">
+        <div className="w-[35%] rounded-lg space-y-5">
           <div className="flex items-center justify-end">
             <button onClick={() => nav('/')} className="flex items-center  text-xl justify-end gap-2 font-semibold bg-[#FFFFFF33]  border-2 ml-4 border-[#FFFFFF33]  text-white m-4  px-4 py-1 rounded-xl">
               <FaRegArrowAltCircleLeft size={16} /> Back

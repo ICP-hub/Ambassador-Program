@@ -251,7 +251,7 @@ const Home = () => {
           />
         )} */}
 
-      <div className="mx-12 w-[94%] bg-[#1E0F33] mt-1 rounded-xl pb-4">
+      <div className="w-[93%] mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
         <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
