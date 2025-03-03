@@ -131,13 +131,13 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                 <input
                   type="text"
                   value={user?.username}
-                  className="bg-[#a78fff] text-white px-4 py-2 rounded-md outline-none w-[300px]  "
+                  className="bg-[#a78fff] text-white px-4 py-2 rounded-md outline-none w-[280px]  "
                   readOnly
                 />
 
                 <div className="flex items-center space-x-3">
                   <Link
-                    className="bg-[#503A8b] text-white w-32 px-2  space-x-2 text-xs rounded-lg flex items-center"
+                    className="bg-[#503A8b] text-white w-34 px-2  space-x-2 text-xs rounded-[8px] flex items-center"
                     to={`/wallet`}
                   >
                     <svg
@@ -153,7 +153,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                       />
                     </svg>
 
-                    <span className="bg-[#654db0] p-1 rounded-sm w-full">
+                    <span className="bg-[#654db0] p-[6.5px] rounded-[4px] w-full">
                       {/* Connect {conversionRate} */}
                       {user
                         ? (parseInt(user.redeem_points) * conversionRate) / 100
