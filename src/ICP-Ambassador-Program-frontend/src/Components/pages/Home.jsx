@@ -30,6 +30,8 @@ import { LuFilter } from "react-icons/lu";
 import { MdOutlineStarBorder } from "react-icons/md";
 import ParentComponent from "./ParentComponent";
 import { LiaTelegram } from "react-icons/lia";
+import defaulBanner from "../../../public/defaultBanner.jpg";
+import defaultHubLogo from "../../../public/defaultHubLogo.jpeg";
 
 const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
@@ -236,8 +238,8 @@ const Home = () => {
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
               src={
-                spaceData?.[1]?.bg_img?.[0] ||
-                "https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
+                spaceData?.[1]?.bg_img?.[0] || defaulBanner
+                // "https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
               }
               // src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
               alt="icp banner"
@@ -253,8 +255,8 @@ const Home = () => {
                       loading="lazy"
                       // src="https://s3-alpha-sig.figma.com/img/428a/1085/c0498a1431ddc50d10aee6cfa57dc1e1?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nw3vJFYuswKZG9EO~LG592g48nNw8q0sB4O26nvqudD-J8xmoEUDJ5TikvsJmpmIss1Z6KNxCCUmceB76oL3uo9Rvu7FT9BIOhhCkYTsNhmOwWcowwlh9nYEfOlmF69~EZ7nhUp~HWPCkaZF8mIfvGEZs5LFMkQk9-o1hlpHpOaa3v793kfTobDhHxm1U4bbELCWKdulkzr~-zyOZv4BgVGajeLJxh1sHAmP6IQreVLF3KVYfLNZZwfpiFX5P4g-dq1TzGfs9jdRzazh850Fa7of7bOqzD2yrvSxa5GZjvnPnGX6nWKKHrAUZQFzrN5s~UudbsrAx51VF20b~Ig6Xg__"
                       src={
-                        spaceData?.[1]?.logo?.[0] ||                   
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8OzZiYJ7WJ5lp4Nf9y6aRHhRFFhfAbXj4xQ&s"
+                        spaceData?.[1]?.logo?.[0] || defaultHubLogo
+                        // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8OzZiYJ7WJ5lp4Nf9y6aRHhRFFhfAbXj4xQ&s"
                       }
                       alt="ICP HUB India Logo"
                       className="object-contain rounded-3xl aspect-square w-[100px]"
@@ -282,7 +284,7 @@ const Home = () => {
               <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
                 <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
                   <a
-                   href={spaceData?.[1]?.urls?.twitter?.[0] || "https://x.com"}
+                    href={spaceData?.[1]?.urls?.twitter?.[0] || "https://x.com"}
                     target="_blank"
                     className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                   >
@@ -316,7 +318,7 @@ const Home = () => {
           </div>
         </div>
         <div className="h-0.5 bg-[#9173FF]"></div>
- 
+
         <FilterProvider>
           <div className="flex flex-grow   rounded-md ">
             <div className="w-full h-full">

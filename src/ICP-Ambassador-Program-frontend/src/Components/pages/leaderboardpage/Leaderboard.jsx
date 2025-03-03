@@ -1,8 +1,9 @@
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import bgImg from "../../../../public/leaderboardBg.png";
 import { IoSearch } from "react-icons/io5";
 import ParentComponent from "../ParentComponent";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import background from "../../../../public/rewardBgImg.png";
 
 const Leaderboard = () => {
   const ranks = [
@@ -98,17 +99,20 @@ const Leaderboard = () => {
 
   const getLeaderboard = async () => {
     try {
-      console.log("Space ID in leaderboard :", JSON.parse(localStorage.getItem("spaceData"))[0] );
-      const space_id = JSON.parse(localStorage.getItem("spaceData"))[0]
-      
-      const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+      console.log(
+        "Space ID in leaderboard :",
+        JSON.parse(localStorage.getItem("spaceData"))[0]
+      );
+      const space_id = JSON.parse(localStorage.getItem("spaceData"))[0];
+
+      const leaderboard_res =
+        await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
 
       console.log("Leaderboard:", leaderboard_res.Ok);
 
-      setLeaderboard(leaderboard_res.Ok)
-      
+      setLeaderboard(leaderboard_res.Ok);
     } catch (error) {
-      console.error("Error fetching leaderboard:", error);      
+      console.error("Error fetching leaderboard:", error);
     }
   };
 
@@ -117,15 +121,17 @@ const Leaderboard = () => {
   }, []);
 
   return (
-
     <ParentComponent>
-      <div className="w-[93%] mt-2 rounded-[45px]
-       bg-[#1E0F33] flex flex-col items-center justify-center ">
+      <div
+        className="w-[93%] mt-2 rounded-[45px]
+       bg-[#1E0F33] flex flex-col items-center justify-center "
+      >
         <div className="w-full p-6   ">
           <div
             className="relative w-full  h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
             style={{
-              backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
+              backgroundImage: `url(${background})`,
+              // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
             }}
           >
             <img src={bgImg} alt="logo" className="h-full w-full relative " />
@@ -148,10 +154,11 @@ const Leaderboard = () => {
           {ranks.map((rank, index) => (
             <button
               key={index}
-              className={`w-[187px] py-1 text-lg font-medium rounded-md transition ${rank === "All"
+              className={`w-[187px] py-1 text-lg font-medium rounded-md transition ${
+                rank === "All"
                   ? "bg-[#9173FF]/80 text-white"
                   : "bg-[#9173FF]/20 text-gray-300"
-                } hover:bg-[#9173FF]`}
+              } hover:bg-[#9173FF]`}
             >
               {rank}
             </button>
@@ -177,7 +184,7 @@ const Leaderboard = () => {
                     key={index}
                     className="border-b text-2xl font-medium border-[#9173FF]/10"
                   >
-                    <td className="p-3">{index+1}</td>
+                    <td className="p-3">{index + 1}</td>
                     <td className="p-3">{row.name}</td>
                     <td className="p-3">{row.rank}</td>
                     <td className="p-3">{parseInt(row.points)}</td>
