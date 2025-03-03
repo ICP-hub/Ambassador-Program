@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { BsTwitterX } from "react-icons/bs";
+import footerImg from "../../../public/footerImg.png";
 
 export default function Footer() {
   return (
@@ -16,17 +18,14 @@ export default function Footer() {
         <Link to="#" className="grow shrink w-[107px]">
           Contact Us
         </Link>
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/4bf297d0c81c88857f7bf827b363d91f430b95774fabe6d082fcb6890fb71dff?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
-          alt=""
-          className="object-contain shrink-0 w-6 aspect-square"
-        />
+        <Link to={"https://twitter.com"} target="_blank">
+          <BsTwitterX className="w-6 h-6" />
+        </Link>
       </div>
       <img
         loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/9e6cbb194662cfbb5fc834f0d9eaebd58ab3b760f55d64589fea9227159347a2?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
-        alt=""
+        src={footerImg} // "https://cdn.builder.io/api/v1/image/assets/TEMP/9e6cbb194662cfbb5fc834f0d9eaebd58ab3b760f55d64589fea9227159347a2?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
+        alt="footer image"
         className="object-contain mt-9 w-full aspect-[5.75]  max-w-[1314px] max-md:max-w-full"
       />
     </div>

@@ -10,6 +10,7 @@ import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 import { formatDate } from "../../utils/formatDate";
 import { motion, AnimatePresence } from "framer-motion";
+import settingProfile from "../../../../public/icons/settingProfile.png";
 
 const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
   const user = useSelector((state) => state.user.value);
@@ -69,8 +70,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
       // const maxXP = xpPoints === 0 ? 99 : Math.pow(10, user.xp_points.toString().length) - 1;
       const maxXP =
         Math.pow(10, Math.max(2, user.xp_points.toString().length)) - 1;
-      const maxXP =
-        Math.pow(10, Math.max(2, user.xp_points.toString().length)) - 1;
+
       const percentage = (xpPoints / maxXP) * 100;
 
       setPoints(maxXP);
@@ -124,20 +124,20 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
               <div className="flex items-center  space-x-4">
                 <div className="bg-[#503a8b] rounded-full size-20 overflow-hidden shadow-2xl">
                   <img
-                    src="https://s3-alpha-sig.figma.com/img/4f6f/31c6/bd17e030a4e340e85d148b82ba300180?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mJJy-sq7coOiM~UlVCcircsfNS2meOlw~jPf4Vb9oyzunN~YfV6HgNfLKuNnlEaly6CeYROoShnurmHh5YDCgYLxAI05cT7XeYyd2IwOwtPTLZXl8Pyq7Y0kFhpp4Itu5bRKpqh2H5IGZiVC-nT2YMa63GmRGLxuhgzn7EL6vakt4y7UcyUPTgx60wH8zz6koqOwdoi6stSUvuwZarqm~k56r0flqZSLHxm2QFJzOpP3TGcry3xD-SSSnYj0cZVAcJ1SiduQmTtrI3Gs2jt2VFiao-Dpt9X2pDHXJ1gEx3UE3MMC2N4WSWvC2yvBeG0-yCWzN7QY96vt7lbTEc29nQ__"
+                    src={settingProfile}
                     alt="Avatar"
                   />
                 </div>
                 <input
                   type="text"
                   value={user?.username}
-                  className="bg-[#a78fff] text-white px-4 py-2 rounded-md outline-none w-[300px]  "
+                  className="bg-[#a78fff] text-white px-4 py-2 rounded-md outline-none w-[280px]  "
                   readOnly
                 />
 
                 <div className="flex items-center space-x-3">
                   <Link
-                    className="bg-[#503A8b] text-white w-32 px-2  space-x-2 text-xs rounded-lg flex items-center"
+                    className="bg-[#503A8b] text-white w-34 px-2  space-x-2 text-xs rounded-[8px] flex items-center"
                     to={`/wallet`}
                   >
                     <svg
@@ -153,7 +153,8 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                       />
                     </svg>
 
-                    <span className="bg-[#654db0] p-1 rounded-sm w-full">
+
+                    <span className="bg-[#654db0] p-[6.5px] rounded-[4px] w-full">
                       {/* Connect {conversionRate} */}
                       {user
                         ? (parseInt(user.redeem_points) * conversionRate) / 100

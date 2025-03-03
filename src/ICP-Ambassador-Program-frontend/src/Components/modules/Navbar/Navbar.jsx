@@ -24,18 +24,12 @@ import awtar from "../../../../public/icons/Avatar.png";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 
-const Navbar = ({
-  openRefModal,
-  setLoading,
-  onWalletClick,
-  onProfileClick,
-}) => {
+
+const Navbar = ({onProfileClick}) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
-  const [userEmail, setUserEmail] = useState(null);
   const [discordl_user, setDiscord_user] = useState();
-  const [openWallet, setOpenWallet] = useState(false);
   const [isReferred, setIsReferred] = useState(false);
   const dispatch = useDispatch();
 
@@ -44,7 +38,6 @@ const Navbar = ({
   const nav = useNavigate();
 
   const handleProfileToggle = () => {
-    setOpenWallet(false);
     setIsDrawerOpen((prev) => !prev);
   };
 
@@ -52,17 +45,9 @@ const Navbar = ({
     if (Cookies.get("discord_user")) {
       try {
         const user = JSON.parse(Cookies.get("discord_user"));
-        //console.log(JSON.parse(Cookies.get('discord_user')))
-        const email = user ? user.email : undefined;
-        //console.log("user ==>",user)
-        //setDiscord_user(user);
-        //console.log("Discord user ==>",discordl_user)
-        if (email) {
-          setUserEmail(email);
-        }
 
         if (user && user.id) {
-          getUser(user.id);
+          getUser(user.id,user.avatar);
         }
       } catch (error) {
         console.error("Error parsing discord_user cookie:", error);
@@ -70,26 +55,19 @@ const Navbar = ({
     }
   }, []);
 
-  const getUser = async (userId) => {
+  const getUser = async (userId,avatar) => {
     try {
-      //console.log(userId)
       const details = await ICP_Ambassador_Program_backend.get_user_data(
         userId
       );
-      //console.log("Details from backend ==>",details)
-      const user = JSON.parse(Cookies.get("discord_user"));
-      //console.log("Discord user from cookies ==>", user);
 
       const updatedDetails = {
         ...details[0],
-        avatar: user.avatar,
+        avatar: avatar,
       };
 
       dispatch(updateUser(updatedDetails));
       setDiscord_user(updatedDetails);
-
-      // dispatch(updateUser(details[0]))
-      // setDiscord_user(details[0])
     } catch (e) {
       console.log("Error ==>", e);
     }
@@ -125,7 +103,8 @@ const Navbar = ({
         {discordl_user ? (
           <>
             <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
-              <div className="flex flex-col ">
+
+              <div className="flex flex-col">
                 <button
                   onClick={() => nav("/")}
                   className="px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-80 max-md:px-5"
@@ -135,7 +114,6 @@ const Navbar = ({
               </div>
               <div className="flex flex-col">
                 <button
-                  // disabled
                   onClick={() => nav("/leaderboard")}
                   className="px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
                 >
@@ -144,14 +122,15 @@ const Navbar = ({
               </div>
               <div className="flex flex-col">
                 <button
-                  disabled
+                  onClick={() => nav("/referal")}
                   className="px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
                 >
                   Referrals
                 </button>
               </div>
             </div>
-            <div className="lg:block " onClick={handleProfileToggle}>
+
+            <div className="lg:block" onClick={handleProfileToggle}>
               <div className="text-black py-1 rounded-md text-sm font-semibold cursor-pointer">
                 {discordl_user.avatar ? (
                   <img

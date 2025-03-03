@@ -67,7 +67,8 @@ const ReferalPage = () => {
             <h2 className="font-semibold w-[16%] text-xl text-white">
               Your Referral Code:
             </h2>
-            <div className="border-b border-[#9173FF] w-[71%] flex items-center justify-center px-4 ">
+
+            <div className="border-b border-[#9173FF] w-[70%] flex items-center justify-center px-4 ">
               <a
                 href={baseReferral + user.discord_id}
                 target="_blank"
@@ -76,7 +77,8 @@ const ReferalPage = () => {
                 {baseReferral + user.discord_id}
               </a>
             </div>
-            <div className="flex justify-end w-[13%] gap-4">
+
+            <div className="flex justify-end w-[14%] gap-4">
               <button
                 onClick={copyToClipboard}
                 className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5"

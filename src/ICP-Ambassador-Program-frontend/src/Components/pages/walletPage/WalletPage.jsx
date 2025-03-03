@@ -20,7 +20,7 @@ import {
 } from "../../../../../declarations/ledger";
 // import {A} from '@dfinity/agent'
 import { Principal } from "@dfinity/principal";
-
+import bgImage from "../../../../public/rewardBgImg.png";
 import { useSelector } from "react-redux";
 import Navbar from "../../modules/Navbar/Navbar";
 import Footer from "../../footer/Footer";
@@ -40,7 +40,7 @@ export const WalletPage = () => {
 
   useEffect(() => {
     setUpdatedUser(user);
-  },[]);
+  }, []);
 
   useEffect(() => {
     const HUB = Cookies.get("selectedHubName");
@@ -156,7 +156,10 @@ export const WalletPage = () => {
       console.log("Amount : ", amount);
       console.log("Receiver : ", receiver, Principal.fromText(receiver));
       console.log("Conversion : ", conversion / 10);
-      console.log("Points : ", Math.round(calculatePoints(amount, conversion / 10)));
+      console.log(
+        "Points : ",
+        Math.round(calculatePoints(amount, conversion / 10))
+      );
 
       console.log("Type of receiver : ", typeof Principal.fromText(receiver));
 
@@ -172,7 +175,7 @@ export const WalletPage = () => {
         return;
       }
 
-      console.log(updatedUser?.discord_id, receiver,  parseFloat(points));
+      console.log(updatedUser?.discord_id, receiver, parseFloat(points));
       let withdrawRes = await ICP_Ambassador_Program_backend.withdraw_points(
         updatedUser?.discord_id,
         Principal.fromText(receiver), // receiver principal to withdraw points
@@ -263,13 +266,20 @@ export const WalletPage = () => {
         <div className="flex overflow-hidden w-full flex-col items-center">
           <div
             style={{
-              backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
+              backgroundImage: `url(${bgImage})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
             }}
             className="flex  flex-col justify-center items-center px-20 py-12 mt-2 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[701px] max-md:px-5 max-md:max-w-full"
           >
-            <WalletBalance user={user} login={login} ledger={ledger} logout={logout} />
+            <WalletBalance
+              user={user}
+              login={login}
+              ledger={ledger}
+              logout={logout}
+            />
             <WithdrawForm
-
               setAmount={setAmount}
               setReceiver={setReceiver}
               withdraw={withdraw}
