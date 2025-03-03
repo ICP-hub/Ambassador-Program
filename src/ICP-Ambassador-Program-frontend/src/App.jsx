@@ -63,7 +63,7 @@ function App() {
           />
           <Route
             path="/ref"
-            element={user ? <ReferralHandler /> : <AccessDenied />}
+            element={<ReferralHandler /> }
           />
           <Route
             path="/settings"
