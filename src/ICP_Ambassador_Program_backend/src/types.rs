@@ -282,6 +282,13 @@ pub struct ProfileImageData {
     // You can add more fields if necessary
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, CandidType)]
+pub struct UserReferDetails {
+    pub username: String,
+    pub rank: UserLevel,
+    pub xp_points: u64,
+}
+
 pub type ReturnResult = Result<u32, String>;
 
 

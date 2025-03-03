@@ -4,6 +4,7 @@ use ic_cdk_macros::*;
 
 
 use crate::{state::{FundEntry, Space}, Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_MAP,SPACE_FUND_MAP, USER_PROFILE_MAP};
+use crate::types::UserReferDetails;
 
 use super::transfer_amount;
     
@@ -233,5 +234,34 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
     SPACE_FUND_MAP.with(|map| map.borrow_mut().insert(fetched_space.space_id.clone(), funds_val));
 
     return Ok(String::from("amount redeemed to user"))
+}
+
+#[query]
+pub fn get_user_refers(discord_id: String) -> Result<Vec<UserReferDetails>, String> {
+    let user = USER_PROFILE_MAP.with(|map| map.borrow().get(&discord_id));
+    let user_profile: UserProfile;
+
+    match user {
+        Some(val) => user_profile = val,
+        None => return Err("User not found".to_string()),
+    }
+
+    let mut refer_details: Vec<UserReferDetails> = Vec::new();
+
+    for refer_id in user_profile.direct_refers {
+        let refer_user = USER_PROFILE_MAP.with(|map| map.borrow().get(&refer_id));
+        match refer_user {
+            Some(refer_profile) => {
+                refer_details.push(UserReferDetails {
+                    username: refer_profile.username.clone(),
+                    rank: refer_profile.level.clone(),
+                    xp_points: refer_profile.xp_points,
+                });
+            }
+            None => continue,
+        }
+    }
+
+    Ok(refer_details)
 }
 
