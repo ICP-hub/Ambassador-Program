@@ -1,6 +1,6 @@
 import React from "react";
 
-const ReferralBoard = () => {
+const ReferralBoard = (userRefered) => {
   const data = [
     {
       user: "Username",
@@ -29,35 +29,47 @@ const ReferralBoard = () => {
           <thead className="bg-transparent font-semibold  text-3xl text-[#9173FF] ">
             <tr>
               <th className="p-3">User</th>
-              <th className="p-3">Date Added</th>
+              {/* <th className="p-3">Date Added</th> */}
               <th className="p-3">Rank</th>
               <th className="p-3">Points</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => (
-              <tr
-                key={index}
-                className="border-b text-2xl font-medium border-[#9173FF]/10"
-              >
-                <td className="p-3">{row.user}</td>
-                <td className="p-3">{row.dateAdded}</td>
-                <td className="p-3">{row.rank}</td>
-                <td className="p-3">{row.points}</td>
+            {userRefered.length > 0 ? (
+              userRefered.map((row, index) => (
+                <tr
+                  key={index}
+                  className="border-b text-2xl font-medium border-[#9173FF]/10"
+                >
+                  <td className="p-3">{row?.username}</td>
+                  {/* <td className="p-3">{row?.dateAdded}</td> */}
+                  <td className="p-3">{row?.rank}</td>
+                  <td className="p-3">{parseInt(row?.xp_points)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="3"
+                  className="p-3 text-center pt-10 font-medium text-2xl"
+                >
+                  You haven't referred anyone yet.
+                </td>
               </tr>
-            ))}
+            )}
 
-            {[...Array(7)].map((_, index) => (
-              <tr
-                key={`empty-${index}`}
-                className="border-b border-[#9173FF]/10"
-              >
-                <td className="p-3 text-transparent">-</td>
-                <td className="p-3 text-transparent">-</td>
-                <td className="p-3 text-transparent">-</td>
-                <td className="p-3 text-transparent">-</td>
-              </tr>
-            ))}
+            {userRefered.length > 0 &&
+              [...Array(7)].map((_, index) => (
+                <tr
+                  key={`empty-${index}`}
+                  className="border-b border-[#9173FF]/10"
+                >
+                  <td className="p-3 text-transparent">-</td>
+                  {/* <td className="p-3 text-transparent">-</td> */}
+                  <td className="p-3 text-transparent">-</td>
+                  <td className="p-3 text-transparent">-</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

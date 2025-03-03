@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 const ReferalPage = () => {
   const user = useSelector((state) => state.user.value);
+  const [userRefered, setUserRefered] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -36,6 +37,20 @@ const ReferalPage = () => {
       console.log("Error while fetching refers : ", error);
     }
   }
+  const getUserRefered = async () => {
+    try {
+      let res = await ICP_Ambassador_Program_backend.get_user_refers(
+        user?.discord_id
+      );
+      console.log("user refered : ", res?.Ok);
+      if (res?.Ok) {
+        setUserRefered(res?.Ok);
+      }
+    } catch (error) {
+      console.log("Error while fetching user refered : ", error);
+    }
+  };
+  console.log("user refered is : ", userRefered);
 
   const copyToClipboard = () => {
     navigator.clipboard
@@ -56,6 +71,7 @@ const ReferalPage = () => {
   console.log("user", user);
 
   useEffect(() => {
+    getUserRefered();
     getRefers();
   }, []);
   return (
@@ -67,18 +83,16 @@ const ReferalPage = () => {
             <h2 className="font-semibold w-[16%] text-xl text-white">
               Your Referral Code:
             </h2>
-
             <div className="border-b border-[#9173FF] w-[70%] flex items-center justify-center px-4 ">
               <a
                 href={baseReferral + user.discord_id}
                 target="_blank"
-                className="text-white text-xl  cursor-pointer"
+                className="text-white text-xl line-clamp-1 break-all cursor-pointer"
               >
                 {baseReferral + user.discord_id}
               </a>
             </div>
-
-            <div className="flex justify-end w-[14%] gap-4">
+            <div className="flex justify-end w-[14%] flex-wrap gap-4">
               <button
                 onClick={copyToClipboard}
                 className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5"
@@ -97,7 +111,7 @@ const ReferalPage = () => {
               </h2>
             </div>
             <div className="flex flex-col w-[75%] rounded-xl pb-8 bg-gradient-to-b from-[#D9D9D9]/5 to-[#9173FF]/3">
-              <ReferralBoard />
+              <ReferralBoard userRefered={userRefered} />
             </div>
           </div>
         </div>

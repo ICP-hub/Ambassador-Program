@@ -21,10 +21,14 @@ const Leaderboard = () => {
 
   const getLeaderboard = async () => {
     try {
-      console.log("Space ID in leaderboard :", JSON.parse(localStorage.getItem("spaceData"))[0]);
+      console.log(
+        "Space ID in leaderboard :",
+        JSON.parse(localStorage.getItem("spaceData"))[0]
+      );
       const space_id = JSON.parse(localStorage.getItem("spaceData"))[0];
 
-      const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+      const leaderboard_res =
+        await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
       console.log("Leaderboard:", leaderboard_res.Ok);
 
       setLeaderboard(leaderboard_res.Ok);
@@ -40,7 +44,9 @@ const Leaderboard = () => {
   // Filter the leaderboard based on the selected rank and search query
   const filteredLeaderboard = leaderboard.filter((row) => {
     const matchesRank = selectedRank === "All" || row.rank === selectedRank;
-    const matchesSearch = row.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = row.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesRank && matchesSearch;
   });
 
@@ -49,9 +55,8 @@ const Leaderboard = () => {
   }, []);
 
   return (
-
     <ParentComponent>
-      <div className="w-[93%] mt-2 rounded-[45px] bg-[#1E0F33] flex flex-col items-center justify-center ">
+      <div className="w-[93%] mt-1 rounded-[45px] bg-[#1E0F33] flex flex-col items-center justify-center ">
         <div className="w-full p-6">
           <div
             className="relative w-full h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
@@ -61,7 +66,10 @@ const Leaderboard = () => {
           >
             <img src={bgImg} alt="logo" className="h-full w-full relative " />
             <div className="absolute top-[60%] left-[30%] w-[40%] flex items-center justify-center mt-4">
-              <IoSearch style={{ fontSize: 30 }} className="text-[#9173FF]/50 mr-1 " />
+              <IoSearch
+                style={{ fontSize: 30 }}
+                className="text-[#9173FF]/50 mr-1 "
+              />
               <input
                 type="text"
                 placeholder="Search..."
@@ -78,10 +86,11 @@ const Leaderboard = () => {
           {ranks.map((rank, index) => (
             <button
               key={index}
-              className={`w-[187px] py-1 text-lg font-medium rounded-md transition ${rank === selectedRank
-                ? "bg-[#9173FF]/80 text-white"
-                : "bg-[#9173FF]/20 text-gray-300"
-                } hover:bg-[#9173FF]`}
+              className={`w-[187px] py-1 text-lg font-medium rounded-md transition ${
+                rank === selectedRank
+                  ? "bg-[#9173FF]/80 text-white"
+                  : "bg-[#9173FF]/20 text-gray-300"
+              } hover:bg-[#9173FF]`}
               onClick={() => setSelectedRank(rank)} // Set the selected rank on button click
             >
               {rank}
