@@ -15,6 +15,24 @@ const Leaderboard = () => {
     "Grand Master",
   ];
 
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [selectedRank, setSelectedRank] = useState("All"); // State to track the selected rank
+  const [searchQuery, setSearchQuery] = useState(""); // State to track the search query
+
+  const getLeaderboard = async () => {
+    try {
+      console.log("Space ID in leaderboard :", JSON.parse(localStorage.getItem("spaceData"))[0]);
+      const space_id = JSON.parse(localStorage.getItem("spaceData"))[0];
+
+      const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+      console.log("Leaderboard:", leaderboard_res.Ok);
+
+      setLeaderboard(leaderboard_res.Ok);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    }
+  };
+
   useEffect(() => {
     getLeaderboard();
   }, []);
@@ -25,24 +43,6 @@ const Leaderboard = () => {
     const matchesSearch = row.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesRank && matchesSearch;
   });
-
-  const [leaderboard, setLeaderboard] = useState(data);
-
-  const getLeaderboard = async () => {
-    try {
-      console.log("Space ID in leaderboard :", JSON.parse(localStorage.getItem("spaceData"))[0] );
-      const space_id = JSON.parse(localStorage.getItem("spaceData"))[0]
-      
-      const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
-
-      console.log("Leaderboard:", leaderboard_res.Ok);
-
-      setLeaderboard(leaderboard_res.Ok)
-      
-    } catch (error) {
-      console.error("Error fetching leaderboard:", error);      
-    }
-  };
 
   useEffect(() => {
     getLeaderboard();
