@@ -135,7 +135,8 @@ const Navbar = ({
               </div>
               <div className="flex flex-col">
                 <button
-                  disabled
+                  // disabled
+                  onClick={() => nav("/leaderboard")}
                   className="px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
                 >
                   Leaderboard

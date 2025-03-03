@@ -45,20 +45,6 @@ const Home = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
 
-  const handleWalletToggle = () => {
-    //console.log("open wallet")
-    setIsDrawerOpen(false);
-    setOpenWallet((prev) => !prev);
-  };
-
-  const handleCloseWallet = () => {
-    setOpenWallet(false);
-  };
-
-  const handleProfileToggle = () => {
-    setOpenWallet(false);
-    setIsDrawerOpen((prev) => !prev);
-  };
   const handleCloseaProfile = () => {
     setIsDrawerOpen(false);
   };
@@ -111,10 +97,8 @@ const Home = () => {
     }
   };
   const [space, setSpaces] = useState("");
-  const loggedIn = Cookies.get("isLoggedIn");
 
-  console.log("Looged In ==>", loggedIn);
-  const getUser = async (isLoggedIn) => {
+  const getUser = async (loggedIn) => {
     try {
       //console.log(userId)
 
@@ -168,6 +152,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (Cookies.get("discord_user")) {
       const user = JSON.parse(Cookies.get("discord_user"));
@@ -179,6 +164,7 @@ const Home = () => {
       Get_All_Spaces();
     }
   }, []);
+
   const Get_All_Spaces = async () => {
     try {
       const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
@@ -210,8 +196,6 @@ const Home = () => {
       //console.log("passing is logged in : ",isLoggedIn)
       getUser(isLoggedIn);
 
-      console.log(cookieUser && !isLoggedIn, !cookieUser, !isLoggedIn);
-
       if (isLoggedIn) {
         setIsHubModalOpen(true);
       }
@@ -222,10 +206,6 @@ const Home = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const handleFilterMobile = () => {
-    setFilterMobile(true);
-  };
 
   console.log("Discord user ==>", discordl_user);
 
@@ -256,7 +236,7 @@ const Home = () => {
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
               src={
-                spaceData[1]?.bg_img[0] ||
+                spaceData?.[1]?.bg_img?.[0] ||
                 "https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
               }
               // src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
@@ -273,7 +253,7 @@ const Home = () => {
                       loading="lazy"
                       // src="https://s3-alpha-sig.figma.com/img/428a/1085/c0498a1431ddc50d10aee6cfa57dc1e1?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nw3vJFYuswKZG9EO~LG592g48nNw8q0sB4O26nvqudD-J8xmoEUDJ5TikvsJmpmIss1Z6KNxCCUmceB76oL3uo9Rvu7FT9BIOhhCkYTsNhmOwWcowwlh9nYEfOlmF69~EZ7nhUp~HWPCkaZF8mIfvGEZs5LFMkQk9-o1hlpHpOaa3v793kfTobDhHxm1U4bbELCWKdulkzr~-zyOZv4BgVGajeLJxh1sHAmP6IQreVLF3KVYfLNZZwfpiFX5P4g-dq1TzGfs9jdRzazh850Fa7of7bOqzD2yrvSxa5GZjvnPnGX6nWKKHrAUZQFzrN5s~UudbsrAx51VF20b~Ig6Xg__"
                       src={
-                        spaceData[1]?.logo[0] ||
+                        spaceData?.[1]?.logo?.[0] ||                   
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8OzZiYJ7WJ5lp4Nf9y6aRHhRFFhfAbXj4xQ&s"
                       }
                       alt="ICP HUB India Logo"
@@ -282,14 +262,14 @@ const Home = () => {
                   </div>
                   <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
                     <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
-                      {spaceData[1]?.name || "ALL ICP HUBS "}
+                      {spaceData?.[1]?.name || "ALL ICP HUBS "}
                     </div>
                     <input
                       className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
                       type="text"
                       placeholder="add your info..."
                       value={
-                        spaceData[1]?.description ||
+                        spaceData?.[1]?.description ||
                         "Start building on #Web3 Today | #ICP #WorldComputer"
                       }
                       writable="false"
@@ -302,8 +282,7 @@ const Home = () => {
               <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
                 <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
                   <a
-                    // href="https://x.com"
-                    href={spaceData[1]?.urls?.twitter[0] || "https://x.com"}
+                   href={spaceData?.[1]?.urls?.twitter?.[0] || "https://x.com"}
                     target="_blank"
                     className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
                   >
@@ -312,7 +291,7 @@ const Home = () => {
                   <a
                     // href="https://discord.com"
                     href={
-                      spaceData[1]?.urls?.discord[0] || "https://discord.com"
+                      spaceData?.[1]?.urls?.discord[0] || "https://discord.com"
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -323,7 +302,7 @@ const Home = () => {
                   <a
                     // href="https://www.linkedin.com"
                     href={
-                      spaceData[1]?.urls?.telegram[0] ||
+                      spaceData?.[1]?.urls?.telegram[0] ||
                       "https://www.linkedin.com"
                     }
                     target="_blank"
@@ -337,35 +316,7 @@ const Home = () => {
           </div>
         </div>
         <div className="h-0.5 bg-[#9173FF]"></div>
-        {/* <div className="flex flex-wrap gap-10 my-6 px-7 w-full text-xl text-white whitespace-nowrap max-md:mt-10 max-md:mr-2 max-md:max-w-full">
-          <div className="flex items-center flex-1 gap-3 font-medium"> */}
-        {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
-              <LuFilter style={{ fontSize: "30px", color: "white" }} />
-              <span className="my-auto">Sorting</span>
-            </button> */}
-        {/* <button className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50">
-              <MdOutlineStarBorder
-                style={{ fontSize: "30px", color: "white" }}
-              />
-              <span className="my-auto">Newest</span>
-            </button>
-          </div> */}
-        {/* <div className="flex flex-col  pb-3 leading-none">
-            <input
-              type="text"
-              id="searchInput"
-              className="overflow-hidden self-stretch px-4 py-2 rounded-3xl bg-white bg-opacity-20 text-white"
-              placeholder="Search"
-            />
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/085a2850ffba14b649faa1413a9e4c4e326930be68c485bdaef028a572f18c69?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114"
-              alt=""
-              className="object-contain  self-end -mt-8 mr-5 w-5 aspect-square max-md:mr-2.5"
-            />
-          </div> */}
-        {/* </div>
-        <div className="h-0.5 bg-[#9173FF]"></div> */}
+ 
         <FilterProvider>
           <div className="flex flex-grow   rounded-md ">
             <div className="w-full h-full">
