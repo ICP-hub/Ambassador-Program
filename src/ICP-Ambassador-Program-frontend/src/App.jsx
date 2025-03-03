@@ -14,6 +14,7 @@ import TaskRedemption from "./Components/pages/MissionSinglePage";
 import AccessDenied from "./Components/pages/AccessDenied";
 import NotFound from "./Components/pages/NotFound";
 import ReferalPage from "./Components/pages/referalPage/ReferalPage";
+import Leaderboard from "./Components/pages/leaderboardpage/Leaderboard";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -78,6 +79,10 @@ function App() {
             element={user ? <TaskRedemption /> : <AccessDenied />}
           />
           <Route path="*" element={<NotFound />} />
+
+          <Route path="/leaderboard" element={<Leaderboard />} />
+
+
         </Routes>
       </BrowserRouter>
     </>
