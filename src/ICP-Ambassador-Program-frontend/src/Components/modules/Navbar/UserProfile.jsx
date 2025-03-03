@@ -70,6 +70,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
       // const maxXP = xpPoints === 0 ? 99 : Math.pow(10, user.xp_points.toString().length) - 1;
       const maxXP =
         Math.pow(10, Math.max(2, user.xp_points.toString().length)) - 1;
+
       const percentage = (xpPoints / maxXP) * 100;
 
       setPoints(maxXP);
@@ -123,7 +124,6 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
               <div className="flex items-center  space-x-4">
                 <div className="bg-[#503a8b] rounded-full size-20 overflow-hidden shadow-2xl">
                   <img
-                    // src="https://s3-alpha-sig.figma.com/img/4f6f/31c6/bd17e030a4e340e85d148b82ba300180?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mJJy-sq7coOiM~UlVCcircsfNS2meOlw~jPf4Vb9oyzunN~YfV6HgNfLKuNnlEaly6CeYROoShnurmHh5YDCgYLxAI05cT7XeYyd2IwOwtPTLZXl8Pyq7Y0kFhpp4Itu5bRKpqh2H5IGZiVC-nT2YMa63GmRGLxuhgzn7EL6vakt4y7UcyUPTgx60wH8zz6koqOwdoi6stSUvuwZarqm~k56r0flqZSLHxm2QFJzOpP3TGcry3xD-SSSnYj0cZVAcJ1SiduQmTtrI3Gs2jt2VFiao-Dpt9X2pDHXJ1gEx3UE3MMC2N4WSWvC2yvBeG0-yCWzN7QY96vt7lbTEc29nQ__"
                     src={settingProfile}
                     alt="Avatar"
                   />
@@ -152,6 +152,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                         fill="#9173FF"
                       />
                     </svg>
+
 
                     <span className="bg-[#654db0] p-[6.5px] rounded-[4px] w-full">
                       {/* Connect {conversionRate} */}
@@ -229,9 +230,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="text-center h-[150px]">
-                          No rewards earned yet
-                        </td>
+                        <td colSpan="3" className="text-center h-[150px]">No rewards earned yet</td>
                       </tr>
                     )}
                   </tbody>

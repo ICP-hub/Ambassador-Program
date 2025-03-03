@@ -24,6 +24,7 @@ import awtar from "../../../../public/icons/Avatar.png";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 
+
 const Navbar = ({onProfileClick}) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
@@ -102,6 +103,7 @@ const Navbar = ({onProfileClick}) => {
         {discordl_user ? (
           <>
             <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
+
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/")}
@@ -127,6 +129,7 @@ const Navbar = ({onProfileClick}) => {
                 </button>
               </div>
             </div>
+
             <div className="lg:block" onClick={handleProfileToggle}>
               <div className="text-black py-1 rounded-md text-sm font-semibold cursor-pointer">
                 {discordl_user.avatar ? (
