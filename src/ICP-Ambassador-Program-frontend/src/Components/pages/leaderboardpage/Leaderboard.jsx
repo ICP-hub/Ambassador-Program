@@ -3,6 +3,7 @@ import bgImg from "../../../../public/leaderboardBg.png";
 import { IoSearch } from "react-icons/io5";
 import ParentComponent from "../ParentComponent";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import background from "../../../../public/rewardBgImg.png";
 
 const Leaderboard = () => {
   const ranks = [
@@ -25,7 +26,7 @@ const Leaderboard = () => {
       const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
       console.log("Leaderboard:", leaderboard_res.Ok);
 
-      setLeaderboard(leaderboard_res.Ok); // Set the leaderboard data
+      setLeaderboard(leaderboard_res.Ok);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     }
@@ -34,6 +35,7 @@ const Leaderboard = () => {
   useEffect(() => {
     getLeaderboard();
   }, []);
+
 
   // Filter the leaderboard based on the selected rank
   const filteredLeaderboard = leaderboard.filter(
@@ -47,7 +49,8 @@ const Leaderboard = () => {
           <div
             className="relative w-full  h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
             style={{
-              backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
+              backgroundImage: `url(${background})`,
+              // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
             }}
           >
             <img src={bgImg} alt="logo" className="h-full w-full relative " />
@@ -77,6 +80,7 @@ const Leaderboard = () => {
             </button>
           ))}
         </div>
+
 
         <div className="h-[2px] bg-[#9173FF]/50 w-full "></div>
 
