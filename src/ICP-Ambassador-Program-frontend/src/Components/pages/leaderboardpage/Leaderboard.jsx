@@ -17,6 +17,7 @@ const Leaderboard = () => {
 
   const [leaderboard, setLeaderboard] = useState([]);
   const [selectedRank, setSelectedRank] = useState("All"); // State to track the selected rank
+  const [searchQuery, setSearchQuery] = useState(""); // State to track the search query
 
   const getLeaderboard = async () => {
     try {
@@ -36,11 +37,12 @@ const Leaderboard = () => {
     getLeaderboard();
   }, []);
 
-
-  // Filter the leaderboard based on the selected rank
-  const filteredLeaderboard = leaderboard.filter(
-    (row) => selectedRank === "All" || row.rank === selectedRank
-  );
+  // Filter the leaderboard based on the selected rank and search query
+  const filteredLeaderboard = leaderboard.filter((row) => {
+    const matchesRank = selectedRank === "All" || row.rank === selectedRank;
+    const matchesSearch = row.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRank && matchesSearch;
+  });
 
   const [leaderboard, setLeaderboard] = useState(data);
 
@@ -70,7 +72,7 @@ const Leaderboard = () => {
       <div className="w-[93%] mt-2 rounded-[45px] bg-[#1E0F33] flex flex-col items-center justify-center ">
         <div className="w-full p-6">
           <div
-            className="relative w-full  h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
+            className="relative w-full h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
             style={{
               backgroundImage: `url(${background})`,
             }}
@@ -82,6 +84,8 @@ const Leaderboard = () => {
                 type="text"
                 placeholder="Search..."
                 className="w-full px-2 py-1 rounded-md bg-[#9173FF]/50 text-white outline-none"
+                value={searchQuery} // Bind search input to state
+                onChange={(e) => setSearchQuery(e.target.value)} // Update the search query state
               />
             </div>
           </div>
@@ -145,9 +149,9 @@ const Leaderboard = () => {
                 </table>
               </div>
             ) : (
-              // If no data found for the selected rank
+              // If no data found for the search query and selected rank
               <div className="w-full h-[200px] flex items-center justify-center text-white">
-                <p>No data to display for this rank.</p>
+                <p>No data to display for this search query.</p>
               </div>
             )
           ) : (

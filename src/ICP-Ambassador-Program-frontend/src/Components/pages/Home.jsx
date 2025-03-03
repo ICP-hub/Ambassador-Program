@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../modules/Navbar/Navbar";
-import Filter from "../modules/Filter/Filter";
 import Contests from "../modules/Contests/Contests";
 import { FilterProvider } from "../Context/FilterContext";
 import HubConnectionModal from "../modules/Navbar/HubConnectionModel";
-import FilterMobile from "../modules/Filter/FilterMobile";
 import Cookies from "js-cookie";
-import { MdOutlineTune } from "react-icons/md";
 import { ICP_Ambassador_Program_backend } from "../../../../declarations/ICP_Ambassador_Program_backend";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../redux/user/userSlice";
 import ReactModal from "react-modal";
 import ReferralModal from "../modules/Navbar/ReferralModal";
-import Footer from "../footer/Footer";
-import icpbanner from "../.../../../../public/icpbanner.png";
-import xicon from "../.../../../../public/icons/xicon.png";
-import linkedinicon from "../.../../../../public/icons/linkedin.png";
-import discordicon from "../.../../../../public/icons/discord.png";
-import awtar from "../../../public/icons/Avatar.png";
-import UserProfile from "../modules/Navbar/UserProfile";
-import WalletSidebar from "../wallet/walletSidebar";
-import Setting from "./Setting";
-import { WalletPage } from "./walletPage/WalletPage";
 import { BsTwitterX } from "react-icons/bs";
-import { FaLinkedinIn } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
-import { LuFilter } from "react-icons/lu";
-import { MdOutlineStarBorder } from "react-icons/md";
 import ParentComponent from "./ParentComponent";
 import { LiaTelegram } from "react-icons/lia";
 import defaulBanner from "../../../public/defaultBanner.jpg";
@@ -55,15 +38,6 @@ const Home = () => {
     if (Cookies.get("discord_user")) {
       try {
         const user = JSON.parse(Cookies.get("discord_user"));
-        //console.log(JSON.parse(Cookies.get('discord_user')))
-        const email = user ? user.email : undefined;
-        //console.log("user ==>",user)
-        //setDiscord_user(user);
-        //console.log("Discord user ==>",discordl_user)
-        // if (email) {
-        //   setUserEmail(email);
-        // }
-
         if (user && user.id) {
           getUser_Details(user.id);
         }
@@ -79,21 +53,16 @@ const Home = () => {
       const details = await ICP_Ambassador_Program_backend.get_user_data(
         userId
       );
-      //console.log("Details from backend ==>",details)
       const user = JSON.parse(Cookies.get("discord_user"));
-      //console.log("Discord user from cookies ==>", user);
 
       const updatedDetails = {
         ...details[0],
         avatar: user.avatar,
       };
 
-      //console.log("user_details in home page ==>",updatedDetails)
       dispatch(updateUser(updatedDetails));
       setDiscord_user(updatedDetails);
       setUser(updatedDetails);
-      // dispatch(updateUser(details[0]))
-      // setDiscord_user(details[0])
     } catch (e) {
       console.log("Error ==>", e);
     }
@@ -102,8 +71,6 @@ const Home = () => {
 
   const getUser = async (loggedIn) => {
     try {
-      //console.log(userId)
-
       const user = JSON.parse(Cookies.get("discord_user"));
       const details = await ICP_Ambassador_Program_backend.get_user_data(
         user.id
@@ -181,9 +148,6 @@ const Home = () => {
 
       setSpaces(spacesObject);
 
-      //console.log(space)
-
-      //console.log("Transformed Spaces Object:", spacesObject);
     } catch (e) {
       console.log("Error ==> ", e);
     }
@@ -195,15 +159,11 @@ const Home = () => {
       setUser(cookieUser ? JSON.parse(cookieUser) : null);
 
       const isLoggedIn = Cookies.get("isLoggedIn");
-      //console.log("passing is logged in : ",isLoggedIn)
       getUser(isLoggedIn);
 
       if (isLoggedIn) {
         setIsHubModalOpen(true);
       }
-
-      //setIsHubModalOpen(true);
-      // setLoading(false);
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -223,22 +183,14 @@ const Home = () => {
 
   return (
     <ParentComponent>
-      {/* No need of wallet-side bar */}
-      {/* {openWallet && (
-          <WalletSidebar
-            onClose={handleCloseWallet}
-            user={user}
-            isOpen={openWallet}
-            setDiscord_user={setDiscord_user}
-          />
-        )} */}
 
       <div className="w-[93%] mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
         <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
-              src={spaceData?.[1]?.bg_img?.[0] || defaulBanner}
-              // src="https://st.depositphotos.com/3148167/53962/i/450/depositphotos_539628450-stock-photo-internet-computer-icp-cryptocurrency-internet.jpg"
+              src={
+                spaceData?.[1]?.bg_img?.[0] || defaulBanner
+              }
               alt="icp banner"
               className="w-full rounded-3xl"
             />
@@ -250,8 +202,9 @@ const Home = () => {
                   <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
                     <img
                       loading="lazy"
-                      // src="https://s3-alpha-sig.figma.com/img/428a/1085/c0498a1431ddc50d10aee6cfa57dc1e1?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nw3vJFYuswKZG9EO~LG592g48nNw8q0sB4O26nvqudD-J8xmoEUDJ5TikvsJmpmIss1Z6KNxCCUmceB76oL3uo9Rvu7FT9BIOhhCkYTsNhmOwWcowwlh9nYEfOlmF69~EZ7nhUp~HWPCkaZF8mIfvGEZs5LFMkQk9-o1hlpHpOaa3v793kfTobDhHxm1U4bbELCWKdulkzr~-zyOZv4BgVGajeLJxh1sHAmP6IQreVLF3KVYfLNZZwfpiFX5P4g-dq1TzGfs9jdRzazh850Fa7of7bOqzD2yrvSxa5GZjvnPnGX6nWKKHrAUZQFzrN5s~UudbsrAx51VF20b~Ig6Xg__"
-                      src={spaceData?.[1]?.logo?.[0] || defaultHubLogo}
+                      src={
+                        spaceData?.[1]?.logo?.[0] || defaultHubLogo
+                      }
                       alt="ICP HUB India Logo"
                       className="object-contain rounded-3xl aspect-square w-[100px]"
                     />
@@ -270,7 +223,6 @@ const Home = () => {
                       }
                       writable="false"
                       disabled
-                      // value="Start building on #Web3 Today | #ICP #WorldComputer"
                     />
                   </div>
                 </div>
@@ -285,7 +237,6 @@ const Home = () => {
                     <BsTwitterX style={{ fontSize: "40px", color: "white" }} />
                   </a>
                   <a
-                    // href="https://discord.com"
                     href={
                       spaceData?.[1]?.urls?.discord[0] || "https://discord.com"
                     }
@@ -296,7 +247,6 @@ const Home = () => {
                     <FaDiscord style={{ fontSize: "50px", color: "white" }} />
                   </a>
                   <a
-                    // href="https://www.linkedin.com"
                     href={
                       spaceData?.[1]?.urls?.telegram[0] ||
                       "https://www.linkedin.com"
@@ -317,7 +267,6 @@ const Home = () => {
             <div className="w-full h-full">
               <Contests
                 openWallet={openWallet}
-                // onCloseWallet={handleCloseWallet}
                 user_details={user}
                 setDiscord_user={setDiscord_user}
                 isDrawerOpen={isDrawerOpen}
