@@ -86,11 +86,10 @@ const Leaderboard = () => {
           {ranks.map((rank, index) => (
             <button
               key={index}
-              className={`w-[187px] py-1 text-lg font-medium rounded-md transition ${
-                rank === selectedRank
-                  ? "bg-[#9173FF]/80 text-white"
-                  : "bg-[#9173FF]/20 text-gray-300"
-              } hover:bg-[#9173FF]`}
+              className={`w-[175px] py-1 text-lg font-medium rounded-md transition ${rank === selectedRank
+                ? "bg-[#9173FF]/80 text-white"
+                : "bg-[#9173FF]/20 text-gray-300"
+                } hover:bg-[#9173FF]`}
               onClick={() => setSelectedRank(rank)} // Set the selected rank on button click
             >
               {rank}

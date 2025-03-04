@@ -18,7 +18,6 @@ import {
   canisterId,
   createActor as createLedgerActor,
 } from "../../../../../declarations/ledger";
-// import {A} from '@dfinity/agent'
 import { Principal } from "@dfinity/principal";
 import bgImage from "../../../../public/rewardBgImg.png";
 import { useSelector } from "react-redux";
@@ -26,6 +25,7 @@ import Navbar from "../../modules/Navbar/Navbar";
 import Footer from "../../footer/Footer";
 
 export const WalletPage = () => {
+  const user = useSelector((state) => state.user.value);
   const [hub, setHub] = useState("");
   const [amount, setAmount] = useState(0);
   const [sendAmount, setSendAmount] = useState(0);
@@ -34,9 +34,19 @@ export const WalletPage = () => {
   const [ledger, setLedger] = useState(null);
   const [receiver, setReceiver] = useState("");
   const [principal, setPrincipal] = useState(null);
-  const user = useSelector((state) => state.user.value);
+  
+
+
+  const [balance, setBalance] = useState(0);
 
   const [updatedUser, setUpdatedUser] = useState(user);
+
+  useEffect(() => {
+    // If user data is available in Redux, update state immediately
+    if (user) {
+      setUpdatedUser(user);
+    }
+  }, [user]);
 
   useEffect(() => {
     setUpdatedUser(user);
@@ -151,7 +161,8 @@ export const WalletPage = () => {
   function calculatePoints(usd, conversionRate) {
     return (usd * 100) / conversionRate;
   }
-  async function withdraw() {
+  async function withdraw(event) {
+    event.preventDefault();
     try {
       console.log("Amount : ", amount);
       console.log("Receiver : ", receiver, Principal.fromText(receiver));
@@ -186,6 +197,7 @@ export const WalletPage = () => {
       if (withdrawRes?.Ok) {
         toast.success(withdrawRes?.Ok);
         getUser();
+        window.location.reload();
       } else {
         toast.error(
           "Cannot withdraw now, please try after some time or try reducing amount"
@@ -196,69 +208,7 @@ export const WalletPage = () => {
       toast.error("Something went wrong while withdrawing points");
     }
   }
-  function checkPrincipal() {
-    try {
-      let p = Principal.fromText(receiver);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
-  async function send() {
-    try {
-      // console.log("withdraw",user?.redeem_points,amount)
-      // if(amount>parseInt(user?.redeem_points)){
-      // console.log(sendAmount,receiver)
-      if (!checkPrincipal(receiver)) {
-        toast.error("Invalid principal");
-        return;
-      }
-      if (sendAmount == 0 || sendAmount == "") {
-        toast.error("Invalid amount");
-        return;
-      }
-      const balance = await ledger?.icrc1_balance_of({
-        owner: Principal.fromText(principal),
-        subaccount: [],
-      });
 
-      console.log(
-        sendAmount,
-        receiver,
-        principal,
-        balance,
-        user?.wallet[0]?.toText(),
-        "subacc : ",
-        user?.hub
-      );
-      const finalAmount = parseFloat(sendAmount) * Math.pow(10, 8);
-      const fees = Math.pow(10, 4);
-      if (finalAmount + fees > parseInt(balance)) {
-        toast.error("Insufficient balance");
-        return;
-      }
-      const transaction = {
-        to: { owner: Principal.fromText(receiver), subaccount: [] },
-        fee: [fees],
-        memo: [],
-        from_subaccount: [],
-        created_at_time: [],
-        amount: finalAmount,
-      };
-      console.log("final transaction : ", transaction);
-      const transactionRes = await ledger.icrc1_transfer(transaction);
-      console.log(transactionRes);
-      if (transactionRes?.Ok) {
-        toast.success("TRansaction successful");
-      } else {
-        toast.error("Transaction failed due to some reason");
-      }
-      // }
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
-    }
-  }
   return (
     <>
       <Navbar />
@@ -274,27 +224,32 @@ export const WalletPage = () => {
             className="flex  flex-col justify-center items-center px-20 py-12 mt-2 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[701px] max-md:px-5 max-md:max-w-full"
           >
             <WalletBalance
+              balance={balance}
+              setBalance={setBalance}
               user={user}
               login={login}
               ledger={ledger}
               logout={logout}
             />
             <WithdrawForm
+              balance={balance}
               setAmount={setAmount}
               setReceiver={setReceiver}
               withdraw={withdraw}
             />
           </div>
+
           {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
-          {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full"> */}
-          {/* <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   "> */}
-          {/* <TransactionHeader /> */}
-          {/* <div className="w-full "> */}
-          {/* <TransactionTableBody /> */}
-          {/* </div> */}
-          {/* <TransactionPagination /> */}
-          {/* </section> */}
-          {/* </div> */}
+          {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full">
+            <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   ">
+              <TransactionHeader />
+              <div className="w-full ">
+                <TransactionTableBody />
+              </div>
+              <TransactionPagination />
+            </section>
+          </div> */}
+          
         </div>
       </div>
       <Footer />

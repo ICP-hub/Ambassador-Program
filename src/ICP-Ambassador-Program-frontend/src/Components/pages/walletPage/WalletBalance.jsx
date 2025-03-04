@@ -3,7 +3,7 @@ import walletIcon from "../../../../public/icons/smartwallet.png";
 import { RiWallet3Fill } from "react-icons/ri";
 import {ICP_Ambassador_Program_backend} from "../../../../../declarations/ICP_Ambassador_Program_backend/index";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
-export const WalletBalance = ({ user,login, ledger, logout }) => {
+export const WalletBalance = ({balance, setBalance, user,login, ledger, logout }) => {
   
   // console.log("User in wallet modal : ", user);
   const [conversionRate, setConversionRate] = useState();
@@ -20,6 +20,10 @@ export const WalletBalance = ({ user,login, ledger, logout }) => {
       console.log("err fetching hub details : ", error);
     }
   };
+
+  useEffect(() => {
+    setBalance((parseInt(user.redeem_points) * conversionRate)/100)
+  }, [conversionRate]);
 
   useEffect(() => {
     if(user){
