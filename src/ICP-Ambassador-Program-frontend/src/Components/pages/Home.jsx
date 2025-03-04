@@ -164,14 +164,10 @@ const Home = () => {
       if (isLoggedIn) {
         setIsHubModalOpen(true);
       }
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
-
-  console.log("Discord user ==>", discordl_user);
-
-  console.log(spaceData, "spacedata");
 
   if (loading) {
     return (

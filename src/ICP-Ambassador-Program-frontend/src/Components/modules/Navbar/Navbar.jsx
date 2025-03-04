@@ -21,7 +21,7 @@ import { updateUser } from "../../redux/user/userSlice";
 import { FaUserCircle } from "react-icons/fa";
 import atlaslogo from "../../../../public/icons/Atlas logo.png";
 import awtar from "../../../../public/icons/Avatar.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 import UserProfile from "./UserProfile";
 
 
@@ -36,6 +36,12 @@ const Navbar = ({onProfileClick}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const nav = useNavigate();
+
+  const location = useLocation(); // This hook gives you the current route's pathname
+
+  const isMissionPage = location.pathname === '/';
+  const isLeaderboardPage = location.pathname === '/leaderboard';
+  const isReferralPage = location.pathname === '/referal';
 
   const handleProfileToggle = () => {
     setIsDrawerOpen((prev) => !prev);
@@ -107,7 +113,7 @@ const Navbar = ({onProfileClick}) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/")}
-                  className="px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-80 max-md:px-5"
+                  className={`px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isMissionPage ? '80' : '20'} max-md:px-5`}
                 >
                   Missons
                 </button>
@@ -115,7 +121,7 @@ const Navbar = ({onProfileClick}) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/leaderboard")}
-                  className="px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
+                  className={`px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isLeaderboardPage ? '80' : '20'} max-md:px-5`}
                 >
                   Leaderboard
                 </button>
@@ -123,7 +129,7 @@ const Navbar = ({onProfileClick}) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/referal")}
-                  className="px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-20 max-md:px-5"
+                  className={`px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isReferralPage ? '80' : '20'} max-md:px-5`}
                 >
                   Referrals
                 </button>

@@ -67,12 +67,12 @@ const ReferalPage = () => {
       });
   };
 
-  console.log("users", users);
-  console.log("user", user);
 
   useEffect(() => {
-    getUserRefered();
-    getRefers();
+    if (user) {
+      getUserRefered();
+      getRefers();
+    }
   }, []);
   return (
     <ParentComponent>
@@ -92,20 +92,25 @@ const ReferalPage = () => {
                 {baseReferral + user.discord_id}
               </a>
             </div>
-            <div className="flex justify-end w-[14%] flex-wrap gap-4">
+            <div className="flex justify-end w-[15%] flex-wrap gap-4">
               <button
                 onClick={copyToClipboard}
                 className="rounded-lg text-white bg-[#9173FF]/50 px-4 py-1.5"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
-              <button className="rounded-lg border-[#9173FF] text-white bg-[#1E0F33] px-4 py-1.5">
+              <button
+                onClick={copyToClipboard}
+                className="rounded-lg border-[#9173FF] text-white bg-[#1E0F33] px-4 py-1.5">
                 Share
               </button>
             </div>
           </div>
           <div className="mt-6 w-full justify-between flex gap-6">
             <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[25%] h-[306px] flex flex-col justify-end items-center ">
+              <h1 className="text-[100px] text-white font-semibold mb-6 ">
+                {userRefered.length}
+              </h1>
               <h2 className="text-4xl text-white font-semibold mb-4 ">
                 Your Referrals
               </h2>

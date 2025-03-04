@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-const ReferralBoard = (userRefered) => {
+const ReferralBoard = ({userRefered}) => {
   const data = [
     {
       user: "Username",
@@ -43,7 +43,7 @@ const ReferralBoard = (userRefered) => {
                 >
                   <td className="p-3">{row?.username}</td>
                   {/* <td className="p-3">{row?.dateAdded}</td> */}
-                  <td className="p-3">{row?.rank}</td>
+                  <td className="p-3">{Object.keys(row?.rank)}</td>
                   <td className="p-3">{parseInt(row?.xp_points)}</td>
                 </tr>
               ))

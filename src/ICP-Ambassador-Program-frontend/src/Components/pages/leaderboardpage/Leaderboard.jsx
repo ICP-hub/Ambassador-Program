@@ -21,17 +21,18 @@ const Leaderboard = () => {
 
   const getLeaderboard = async () => {
     try {
-      console.log(
-        "Space ID in leaderboard :",
-        JSON.parse(localStorage.getItem("spaceData"))[0]
-      );
-      const space_id = JSON.parse(localStorage.getItem("spaceData"))[0];
-
-      const leaderboard_res =
-        await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
-      console.log("Leaderboard:", leaderboard_res.Ok);
-
-      setLeaderboard(leaderboard_res.Ok);
+      const spaceData = JSON.parse(localStorage.getItem("spaceData"));
+      if (!spaceData || spaceData.length === 0) {
+        throw new Error("No space data found in localStorage.");
+      }
+        const space_id = spaceData[0];
+        const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+        if (leaderboard_res && leaderboard_res.Ok) {
+        console.log("Leaderboard:", leaderboard_res.Ok);
+        setLeaderboard(leaderboard_res.Ok); // Update state with leaderboard data
+      } else {
+        console.error("No leaderboard data received.");
+      }
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     }
