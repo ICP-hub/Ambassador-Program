@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { FaTwitter, FaLink, FaTextHeight, FaImage } from "react-icons/fa";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
+import cardDefaultImg from "../../../../public/cardDefaultImg.jpg";
 
 const Card = ({ contest, hub }) => {
   //console.log(hub)
@@ -102,8 +103,7 @@ const Card = ({ contest, hub }) => {
       } else {
         toast.error("Please login to view the details");
       }
-    }
-    else if (status === "Expired") {
+    } else if (status === "Expired") {
       toast.error("Contest is expired");
     } else {
       toast.error("Contest is not active yet");
@@ -140,15 +140,32 @@ const Card = ({ contest, hub }) => {
 
   return (
     <div
-      className="text-white p-4 mb-2 font-poppins min-w-[350px]"
-      onClick={() => handleCard(getStatus(contest?.start_date, contest?.end_date), updatedContest)}
+      className="text-white p-4 mb-2 font-poppins min-w-[350px] rounded-xl "
+      onClick={() =>
+        handleCard(
+          getStatus(contest?.start_date, contest?.end_date),
+          updatedContest
+        )
+      }
     >
-      <div className=" custom-gradient h-[427px] rounded-xl  relative">
+      <div
+        style={{
+          backgroundImage: `url(${
+            img?.length > 0
+              ? img[0]
+              : //  "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
+                cardDefaultImg
+          })`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className=" custom-gradient h-[427px] rounded-xl  relative"
+      >
         <span className="absolute top-3 left-3  bg-[#4a0295]  text-white text-xs   px-2 py-1 rounded border border-white">
           {getStatus(contest?.start_date, contest?.end_date)}
         </span>
 
-        {img?.length > 0 ? (
+        {/* {img?.length > 0 ? (
           <img
             src={img[0]}
             alt={title}
@@ -160,8 +177,8 @@ const Card = ({ contest, hub }) => {
             alt={title}
             className="h-[272px] w-full rounded-t-xl "
           />
-        )}
-        <div className="px-4">
+        )} */}
+        <div className="rounded-b-xl absolute bottom-0 bg-gradient-to-b from-[#9173FF] to-[#574599] opacity-90 w-full h-[150px] left-0  px-4">
           <div className="mt-4 text-white text-2xl  ">
             {title?.length > 50 ? `${title?.substring(0, 50)}...` : title}
           </div>
@@ -170,7 +187,11 @@ const Card = ({ contest, hub }) => {
               {parseInt(contest?.reward) + " "}points{" "}
             </span>
             <span className="border border-white bg-[#FFFFFF33]  text-white text-xs px-3 py-1 rounded">
-              {(parseInt(contest?.pool) / (10**6)) / parseInt(contest.total_user_rewarded) + " " + DEFAULT_CURRENCY}
+              {parseInt(contest?.pool) /
+                10 ** 6 /
+                parseInt(contest.total_user_rewarded) +
+                " " +
+                DEFAULT_CURRENCY}
             </span>
           </div>
         </div>

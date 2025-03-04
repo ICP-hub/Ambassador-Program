@@ -147,7 +147,6 @@ const Home = () => {
       });
 
       setSpaces(spacesObject);
-
     } catch (e) {
       console.log("Error ==> ", e);
     }
@@ -179,14 +178,11 @@ const Home = () => {
 
   return (
     <ParentComponent>
-
       <div className="w-[93%] mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
         <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
-              src={
-                spaceData?.[1]?.bg_img?.[0] || defaulBanner
-              }
+              src={spaceData?.[1]?.bg_img?.[0] || defaulBanner}
               alt="icp banner"
               className="w-full rounded-3xl"
             />
@@ -198,15 +194,13 @@ const Home = () => {
                   <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
                     <img
                       loading="lazy"
-                      src={
-                        spaceData?.[1]?.logo?.[0] || defaultHubLogo
-                      }
+                      src={spaceData?.[1]?.logo?.[0] || defaultHubLogo}
                       alt="ICP HUB India Logo"
                       className="object-contain rounded-3xl aspect-square w-[100px]"
                     />
                   </div>
                   <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
-                    <div className="self-start ml-5 text-4xl font-semibold max-md:ml-2.5 max-md:text-3xl">
+                    <div className="self-start ml-5 text-4xl uppercase font-semibold max-md:ml-2.5 max-md:text-3xl">
                       {spaceData?.[1]?.name || "ALL ICP HUBS "}
                     </div>
                     <input
