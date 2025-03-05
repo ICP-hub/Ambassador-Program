@@ -21,11 +21,10 @@ import { updateUser } from "../../redux/user/userSlice";
 import { FaUserCircle } from "react-icons/fa";
 import atlaslogo from "../../../../public/icons/Atlas logo.png";
 import awtar from "../../../../public/icons/Avatar.png";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 
-
-const Navbar = ({onProfileClick}) => {
+const Navbar = ({ onProfileClick }) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
@@ -39,9 +38,10 @@ const Navbar = ({onProfileClick}) => {
 
   const location = useLocation(); // This hook gives you the current route's pathname
 
-  const isMissionPage = location.pathname === '/' || location.pathname === '/home';
-  const isLeaderboardPage = location.pathname === '/leaderboard';
-  const isReferralPage = location.pathname === '/referal';
+  const isMissionPage =
+    location.pathname === "/" || location.pathname === "/home";
+  const isLeaderboardPage = location.pathname === "/leaderboard";
+  const isReferralPage = location.pathname === "/referal";
 
   const handleProfileToggle = () => {
     setIsDrawerOpen((prev) => !prev);
@@ -53,7 +53,7 @@ const Navbar = ({onProfileClick}) => {
         const user = JSON.parse(Cookies.get("discord_user"));
 
         if (user && user.id) {
-          getUser(user.id,user.avatar);
+          getUser(user.id, user.avatar);
         }
       } catch (error) {
         console.error("Error parsing discord_user cookie:", error);
@@ -61,7 +61,7 @@ const Navbar = ({onProfileClick}) => {
     }
   }, []);
 
-  const getUser = async (userId,avatar) => {
+  const getUser = async (userId, avatar) => {
     try {
       const details = await ICP_Ambassador_Program_backend.get_user_data(
         userId
@@ -100,7 +100,7 @@ const Navbar = ({onProfileClick}) => {
   }, []);
 
   return (
-    <div className="py-2 h-[110px] px-10 z-50 w-[98%] rounded-b-xl flex justify-between items-center mx-3 bg-[#1F1035]">
+    <div className="py-2 h-[110px] px-12 z-50 w-[99%] rounded-b-xl flex justify-between items-center mx-3  bg-[#1F1035]/30">
       <div className="flex items-center gap-5  " onClick={() => nav("/")}>
         <img src={atlaslogo} alt="atlas" className="h-14" />
       </div>
@@ -109,11 +109,12 @@ const Navbar = ({onProfileClick}) => {
         {discordl_user ? (
           <>
             <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
-
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/")}
-                  className={`px-9 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isMissionPage ? '80' : '20'} max-md:px-5`}
+                  className={`px-9 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                    isMissionPage ? "80" : "20"
+                  } max-md:px-5`}
                 >
                   Missons
                 </button>
@@ -121,7 +122,9 @@ const Navbar = ({onProfileClick}) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/leaderboard")}
-                  className={`px-16 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isLeaderboardPage ? '80' : '20'} max-md:px-5`}
+                  className={`px-16 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                    isLeaderboardPage ? "80" : "20"
+                  } max-md:px-5`}
                 >
                   Leaderboard
                 </button>
@@ -129,7 +132,9 @@ const Navbar = ({onProfileClick}) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/referal")}
-                  className={`px-12 py-2.5 text-white rounded-xl bg-[#9173FF] bg-opacity-${isReferralPage ? '80' : '20'} max-md:px-5`}
+                  className={`px-12 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                    isReferralPage ? "80" : "20"
+                  } max-md:px-5`}
                 >
                   Referrals
                 </button>

@@ -6,15 +6,15 @@ const ReferalEarnings = ({ user }) => {
   return (
     <div className="flex w-full items-center gap-6 justify-between">
       <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[25%] h-[341px] flex flex-col justify-between ">
-        <h2 className="text-4xl text-white font-semibold mb-10 ">
+        <h2 className="text-3xl text-white font-semibold mb-10 ">
           Your Referral Earnings
         </h2>
         <div className="">
-          <h3 className="text-3xl mb-4 text-white font-semibold">
+          <h3 className="text-2xl mb-4 text-white font-semibold">
             {parseInt(user?.xp_points)} points
           </h3>
-          <div className="py-1 px-2 bg-[#1E0F33] w-[137px] h-[46px] flex items-center justify-center rounded-lg ">
-            <h4 className="text-lg font-medium text-white">0.00 USD</h4>
+          <div className="py-1 px-2 bg-[#1E0F33] w-[117px] h-[36px] flex items-center justify-center rounded-lg ">
+            <h4 className="text-base font-normal text-white">0.00 USD</h4>
           </div>
         </div>
       </div>
@@ -27,10 +27,10 @@ const ReferalEarnings = ({ user }) => {
       >
         <div className="p-6 flex flex-col items-end w-full">
           <div className="flex justify-between items-center w-full">
-            <h2 className="text-[#9173FF] text-3xl font-medium ">
+            <h2 className="text-[#9173FF] text-2xl font-medium ">
               Current referral points rate
             </h2>
-            <p className="text-[#9173FF] font-semibold text-4xl ">+5%</p>
+            <p className="text-[#9173FF] font-semibold text-3xl ">+5%</p>
           </div>
           <div className="flex items-center justify-end mt-4 border-4 rounded-lg border-[#9173FF] w-full">
             <p className="text-[#9173FF] font-medium pr-4 text-base">

@@ -159,7 +159,7 @@ const Card = ({ contest, hub }) => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className=" custom-gradient h-[427px] rounded-xl  relative"
+        className=" custom-gradient h-[400px] rounded-xl  relative"
       >
         <span className="absolute top-3 left-3  bg-[#4a0295]  text-white text-xs   px-2 py-1 rounded border border-white">
           {getStatus(contest?.start_date, contest?.end_date)}
@@ -178,15 +178,15 @@ const Card = ({ contest, hub }) => {
             className="h-[272px] w-full rounded-t-xl "
           />
         )} */}
-        <div className="rounded-b-xl absolute bottom-0 bg-gradient-to-b from-[#9173FF] to-[#574599] opacity-90 w-full h-[150px] left-0  px-4">
-          <div className="mt-4 text-white text-2xl  ">
-            {title?.length > 50 ? `${title?.substring(0, 50)}...` : title}
+        <div className="rounded-b-xl absolute bottom-0 bg-gradient-to-b from-[#9173FF] to-[#574599] opacity-95 w-full h-[140px] left-0  px-4">
+          <div className="mt-4 text-white text-xl font-medium line-clamp-2 break-all ">
+            {title?.length > 50 ? `${title?.substring(0, 60)}...` : title}
           </div>
           <div className="mt-2 flex justify-end items-center space-x-2 bottom-4 absolute right-4">
-            <span className="  border border-white text-white text-xs  px-3 py-1 rounded">
+            <span className="  border border-[#D9D9D9] text-white text-xs  px-3 py-1 rounded">
               {parseInt(contest?.reward) + " "}points{" "}
             </span>
-            <span className="border border-white bg-[#FFFFFF33]  text-white text-xs px-3 py-1 rounded">
+            <span className="border border-[#FFFFFF] bg-[#FFFFFF]/20  text-white text-xs px-3 py-1 rounded">
               {parseInt(contest?.pool) /
                 10 ** 6 /
                 parseInt(contest.total_user_rewarded) +

@@ -31,9 +31,9 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="flex flex-col pb-10 bg-gradient-to-b from-[#1E0F33]/60 to-[#9173FF]/10">
+      <div className="flex flex-col pb-10 bg-gradient-to-b from-[#1E0F33]/80 to-[#9173FF]/10">
         <div
-          className={`py-2 sticky top-0 z-50 h-[7rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/60 `}
+          className={`py-2 sticky top-0 z-50 h-[7rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/30 `}
         >
           <div className="flex items-center gap-5 ml-6 ">
             <img src={atlaslogo} alt="atlas" className="h-[2.6rem] " />
@@ -76,7 +76,7 @@ const LandingPage = () => {
         </div>
         <div className="w-full px-3 ">
           <div className=" mb-6  pb-10  w-full rounded-xl bg-gradient-to-b from-[#1E0F33]/60 to-[#9173FF]/40  ">
-            <div className="font-medium text-5xl flex justify-center items-center mt-10">
+            <div className="font-medium text-4xl flex justify-center items-center mt-10">
               <h2 className="text-white mt-10">
                 ICP HUB IS{" "}
                 <span className="text-[#9173FF]">Everywhere for Everyone</span>
@@ -127,7 +127,7 @@ const LandingPage = () => {
                 className="rounded-2xl w-full flex justify-between"
               >
                 <div className="w-[35%] flex flex-col justify-end px-5 mb-4 py-6">
-                  <h2 className="font-medium  text-4xl text-white ">
+                  <h2 className="font-semibold  text-4xl text-white ">
                     Earn rewards by being ICP Ambassador
                   </h2>
                 </div>
@@ -140,7 +140,7 @@ const LandingPage = () => {
                         className="w-[18px] h-[10px] mt-2.5"
                       />
 
-                      <h3 className="text-white text-2xl font-normal">
+                      <h3 className="text-white text-2xl font-medium">
                         Signup for Atlas with your Discord and join Atlas Server
                       </h3>
                     </div>
@@ -167,7 +167,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-normal
+                        className="text-white text-2xl font-medium
                   "
                       >
                         Complete Quests and earn points
@@ -188,7 +188,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-normal
+                        className="text-white text-2xl font-medium
                   "
                       >
                         Invite friends and earn points{" "}
@@ -209,7 +209,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-normal
+                        className="text-white text-2xl font-medium
                   "
                       >
                         Get new levels, complete in leaderboard and earn points{" "}
@@ -230,7 +230,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-normal
+                        className="text-white text-2xl font-medium
                   "
                       >
                         Redeem your rewards as you progress further{" "}
