@@ -39,7 +39,7 @@ const Navbar = ({onProfileClick}) => {
 
   const location = useLocation(); // This hook gives you the current route's pathname
 
-  const isMissionPage = location.pathname === '/';
+  const isMissionPage = location.pathname === '/' || location.pathname === '/home';
   const isLeaderboardPage = location.pathname === '/leaderboard';
   const isReferralPage = location.pathname === '/referal';
 

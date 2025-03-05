@@ -1,36 +1,21 @@
-import React, { useState,useEffect } from 'react';
-import {ICP_Ambassador_Program_backend} from '../../../../../declarations/ICP_Ambassador_Program_backend'
-import { Principal } from '@dfinity/principal';
+import React, { useState, useEffect } from 'react';
+import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend'
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
-import { DISCORD_CLIENT_SECRET } from '../../auth/authdata';
 import axios from 'axios';
-const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
-    console.log("Spaces ==>",spaces)
-    const [referralCode, setReferralCode] = useState('');
-    const [selectedHub, setSelectedHub] = useState([]);
-    const [verified,setVerified] = useState(false)
-    const [joined,setJoined]=useState(false)
-    const [verifying,setVerifying]=useState(false)
-    const url="https://bondex.kaifoundry.com/api/icp/v1"
-    async function verifyGuildJoined(){
-        try {
-            setVerifying(true)
-            let token=Cookies.get('token')
-            // const res=await fetch(`https://discord.com/api/guilds/${guildID}/members/search`, {
-            //     headers: {
-            //     //   Authorization: `Bearer ${token}`,
-            //     Authorization:`Bot ${bot}`
-            //     },
-            //   });
-            //   console.log('res from joinguild : ',await res.json())
+import { DISCORD_INVITE_URL } from '../../../../../../DevelopmentConfig';
+const HubConnectionModal = ({ isOpen, onClose, spaces, setLoading }) => {
+  console.log("Spaces ==>", spaces)
+  // const [referralCode, setReferralCode] = useState('');
+  const [selectedHub, setSelectedHub] = useState([]);
+  const [verified, setVerified] = useState(false)
+  const [joined, setJoined] = useState(false)
+  const [verifying, setVerifying] = useState(false)
+  const url = "https://bondex.kaifoundry.com/api/icp/v1"
 
-      //   if(true){
-      //     toast.success("Server member Verified!")
-      //     setVerified(true)
-      //   }else{
-      //     toast.error("You have not joined the server")
-      //   }
+  async function verifyGuildJoined() {
+    try {
+      setVerifying(true);
       const user = Cookies.get("discord_user");
       let user_parsed = JSON.parse(user);
       const res = await axios.get(`${url}/userExists?id=${user_parsed.id}`);
@@ -50,7 +35,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
 
   const handleSubmit = () => {
     localStorage.setItem("selectedHub", selectedHub);
-    localStorage.setItem("referralCode", referralCode);
+    // localStorage.setItem("referralCode", referralCode);
     let referrer = Cookies.get("ref");
     const user = JSON.parse(Cookies.get("discord_user"));
     console.log("user ==>", user);
@@ -117,7 +102,7 @@ const HubConnectionModal = ({ isOpen, onClose,spaces,setLoading }) => {
               <button
                 className="bg-black text-white px-4 py-2 rounded"
                 onClick={() => {
-                  window.open("https://discord.gg/yRjCXnZkGn");
+                  window.open(DISCORD_INVITE_URL, "_blank");
                   setJoined(true);
                 }}
               >

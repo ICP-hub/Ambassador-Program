@@ -115,7 +115,7 @@ const Home = () => {
         setIsHubModalOpen(true);
         //console.log("user not found")
       }
-      setLoading(false);
+        setLoading(false);
     } catch (e) {
       console.log("Error ==>", e);
       setLoading(false);
