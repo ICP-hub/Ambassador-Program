@@ -28,6 +28,7 @@ import { MdOutlineCloudUpload } from "react-icons/md";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
+import cardDefaultImg from "../../../../public/cardDefaultImg.jpg";
 
 const auth = getAuth(app);
 
@@ -762,7 +763,8 @@ const CardDetails = () => {
                   // <span>No Image</span>
                   // </div>
                   <img
-                    src="https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
+                    // src="https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
+                    src={cardDefaultImg}
                     alt={title}
                     className="lg:w-44 lg:h-44 sm:w-44 sm:h-24 object-cover rounded-lg"
                   />

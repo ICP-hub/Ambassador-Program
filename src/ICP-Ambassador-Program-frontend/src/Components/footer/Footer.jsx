@@ -18,7 +18,7 @@ export default function Footer() {
         <Link to="#" className="grow shrink w-[107px]">
           Contact Us
         </Link>
-        <Link to={"https://twitter.com"} target="_blank">
+        <Link to={"https://x.com"} target="_blank">
           <BsTwitterX className="w-6 h-6" />
         </Link>
       </div>

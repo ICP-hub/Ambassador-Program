@@ -1,5 +1,6 @@
 import React from "react";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
+import bgImage from "../../../../public/rewardBgImg.png";
 
 const ReferalEarnings = ({ user }) => {
   return (
@@ -19,9 +20,10 @@ const ReferalEarnings = ({ user }) => {
       </div>
       <div
         style={{
-          backgroundImage: `url(https://s3-alpha-sig.figma.com/img/1e1d/8ca7/3c08c53bbaf67f97adfcb10cb09224dd?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=eIfqinmWMzuJdTas6QVj241u1FCRUSUF-a9qPRhwWiD2r4rGaK~7GbfdhmSjuXIKQDSweWfInwNEfOi9zr4fzWTTfmxglY5qTgmnQXoRSAfWlADjtuFhYoLC6ZI7PKy~GMqlQ7a1dYuyhEnIP4Mlwpf5zlwvsVxKfXB5LwJEbJzOeK-WBwhsv5WutgwT079t5y2LPwYOR0EnWTNLsarhAl6CeiOJLYCkcoCRuSo6TX4h4czeItFA9pin-nfgpy2GKKjbSwiZy16QUGbq-kINguFVLWE5zWuUJcNrdHBpHrhGsBQ5wikb47ZI5efLTv9WwVDZxTsOOGDNbI3qgSJbqA__)`,
+          backgroundImage: `url(${bgImage})`,
+          // backgroundImage: `url(https://s3-alpha-sig.figma.com/img/1e1d/8ca7/3c08c53bbaf67f97adfcb10cb09224dd?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=eIfqinmWMzuJdTas6QVj241u1FCRUSUF-a9qPRhwWiD2r4rGaK~7GbfdhmSjuXIKQDSweWfInwNEfOi9zr4fzWTTfmxglY5qTgmnQXoRSAfWlADjtuFhYoLC6ZI7PKy~GMqlQ7a1dYuyhEnIP4Mlwpf5zlwvsVxKfXB5LwJEbJzOeK-WBwhsv5WutgwT079t5y2LPwYOR0EnWTNLsarhAl6CeiOJLYCkcoCRuSo6TX4h4czeItFA9pin-nfgpy2GKKjbSwiZy16QUGbq-kINguFVLWE5zWuUJcNrdHBpHrhGsBQ5wikb47ZI5efLTv9WwVDZxTsOOGDNbI3qgSJbqA__)`,
         }}
-        className="w-[75%] h-[341px] rounded-2xl flex items-end "
+        className="w-[75%] h-[341px]  rounded-2xl flex items-end "
       >
         <div className="p-6 flex flex-col items-end w-full">
           <div className="flex justify-between items-center w-full">
