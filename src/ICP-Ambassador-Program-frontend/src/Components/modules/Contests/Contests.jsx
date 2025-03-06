@@ -171,11 +171,11 @@ const Contests = ({
                   <span className="my-auto">Sorting</span>
                 </button> */}
           <button
-            className="flex gap-2 px-5 py-2.5 rounded-xl bg-violet-500 bg-opacity-50"
+            className="flex gap-2 px-5 py-2 rounded-xl bg-[#9173FF] bg-opacity-50"
             onClick={sortNewest}
           >
-            <MdOutlineStarBorder style={{ fontSize: "30px", color: "white" }} />
-            <span className="my-auto">Newest</span>
+            <MdOutlineStarBorder style={{ fontSize: "26px", color: "white" }} />
+            <span className="my-auto text-lg">Newest</span>
           </button>
         </div>
         {/* <div className="flex flex-col  pb-3 leading-none">

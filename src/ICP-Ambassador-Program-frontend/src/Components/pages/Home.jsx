@@ -179,7 +179,7 @@ const Home = () => {
   return (
     <ParentComponent>
       <div className="w-[93%] mx-12 bg-[#1E0F33] mt-1 rounded-xl pb-4">
-        <div className="flex flex-col px-7 py-10  w-full justify-center   max-md:px-5 max-md:max-w-full">
+        <div className="flex flex-col px-7 py-7  w-full justify-center   max-md:px-5 max-md:max-w-full">
           <div className="flex shrink-0 justify-center w-full rounded-3xl bg-blend-color h-[212px] max-md:mr-0.5">
             <img
               src={spaceData?.[1]?.bg_img?.[0] || defaulBanner}
@@ -191,20 +191,20 @@ const Home = () => {
             <div className="flex gap-5 max-md:flex-col">
               <div className="flex flex-col w-[82%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-wrap grow gap-4 max-md:mt-10 max-md:max-w-full">
-                  <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[111px] w-[111px]">
+                  <div className="flex flex-col justify-center items-center px-1.5 rounded-3xl bg-zinc-300 h-[100px] w-[100px]">
                     <img
                       loading="lazy"
                       src={spaceData?.[1]?.logo?.[0] || defaultHubLogo}
                       alt="ICP HUB India Logo"
-                      className="object-contain rounded-3xl aspect-square w-[100px]"
+                      className="object-contain rounded-3xl aspect-square "
                     />
                   </div>
                   <div className="flex flex-col grow shrink-0 self-start mt-2.5 text-white basis-0 w-fit max-md:max-w-full">
-                    <div className="self-start ml-5 text-4xl uppercase font-semibold max-md:ml-2.5 max-md:text-3xl">
+                    <div className="self-start ml-5 text-3xl uppercase font-semibold max-md:ml-2.5 max-md:text-2xl">
                       {spaceData?.[1]?.name || "ALL ICP HUBS "}
                     </div>
                     <input
-                      className="px-5 py-2 mt-4 text-xl font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
+                      className="px-5 py-1.5 mt-3 text-lg font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
                       type="text"
                       placeholder="add your info..."
                       value={
@@ -218,13 +218,13 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex   flex-col ml-5 w-[18%] max-md:ml-0 max-md:w-full">
-                <div className="flex justify-end grow gap-2.5 mt-12 max-md:mt-10">
+                <div className="flex justify-end grow gap-2.5 mt-10 max-md:mt-8">
                   <a
                     href={spaceData?.[1]?.urls?.twitter?.[0] || "https://x.com"}
                     target="_blank"
-                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[58px] w-[58px]"
                   >
-                    <BsTwitterX style={{ fontSize: "40px", color: "white" }} />
+                    <BsTwitterX style={{ fontSize: "35px", color: "white" }} />
                   </a>
                   <a
                     href={
@@ -232,9 +232,9 @@ const Home = () => {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[58px] w-[58px]"
                   >
-                    <FaDiscord style={{ fontSize: "50px", color: "white" }} />
+                    <FaDiscord style={{ fontSize: "40px", color: "white" }} />
                   </a>
                   <a
                     href={
@@ -242,9 +242,9 @@ const Home = () => {
                       "https://www.linkedin.com"
                     }
                     target="_blank"
-                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                    className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[58px] w-[58px]"
                   >
-                    <LiaTelegram style={{ fontSize: "50px", color: "white" }} />
+                    <LiaTelegram style={{ fontSize: "40px", color: "white" }} />
                   </a>
                 </div>
               </div>

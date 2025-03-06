@@ -25,9 +25,10 @@ const Leaderboard = () => {
       if (!spaceData || spaceData.length === 0) {
         throw new Error("No space data found in localStorage.");
       }
-        const space_id = spaceData[0];
-        const leaderboard_res = await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
-        if (leaderboard_res && leaderboard_res.Ok) {
+      const space_id = spaceData[0];
+      const leaderboard_res =
+        await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+      if (leaderboard_res && leaderboard_res.Ok) {
         console.log("Leaderboard:", leaderboard_res.Ok);
         setLeaderboard(leaderboard_res.Ok); // Update state with leaderboard data
       } else {
@@ -57,7 +58,7 @@ const Leaderboard = () => {
 
   return (
     <ParentComponent>
-      <div className="w-[93%] mt-1 rounded-[45px] bg-[#1E0F33] flex flex-col items-center justify-center ">
+      <div className="w-[93%] mt-1 rounded-[35px] bg-[#1E0F33] flex flex-col items-center justify-center ">
         <div className="w-full p-6">
           <div
             className="relative w-full h-[341px] bg-cover bg-center rounded-3xl overflow-hidden"
@@ -87,10 +88,11 @@ const Leaderboard = () => {
           {ranks.map((rank, index) => (
             <button
               key={index}
-              className={`w-[175px] py-1 text-lg font-medium rounded-md transition ${rank === selectedRank
-                ? "bg-[#9173FF]/80 text-white"
-                : "bg-[#9173FF]/20 text-gray-300"
-                } hover:bg-[#9173FF]`}
+              className={`w-[175px] py-1 text-lg font-medium rounded-md transition ${
+                rank === selectedRank
+                  ? "bg-[#9173FF]/80 text-white"
+                  : "bg-[#9173FF]/20 text-gray-300"
+              } hover:bg-[#9173FF]`}
               onClick={() => setSelectedRank(rank)} // Set the selected rank on button click
             >
               {rank}
@@ -105,7 +107,7 @@ const Leaderboard = () => {
             filteredLeaderboard.length > 0 ? ( // Check if there is filtered data
               <div className="w-full h-fit min-h-[200px] overflow-y-scroll scrollbar-hide bg-gradient-to-b from-[#D9D9D9]/5 to-[#9173FF]/3 rounded-2xl overflow-x-auto">
                 <table className="w-full text-center text-white">
-                  <thead className="text-[#9173FF] font-semibold text-3xl ">
+                  <thead className="text-[#9173FF] font-medium text-2xl ">
                     <tr>
                       <th className="p-3">Position</th>
                       <th className="p-3">User</th>
@@ -117,7 +119,7 @@ const Leaderboard = () => {
                     {filteredLeaderboard.map((row, index) => (
                       <tr
                         key={index}
-                        className="border-b text-2xl font-medium border-[#9173FF]/10"
+                        className="border-b text-xl font-medium border-[#9173FF]/10"
                       >
                         <td className="p-3">{index + 1}</td>
                         <td className="p-3">{row.name}</td>

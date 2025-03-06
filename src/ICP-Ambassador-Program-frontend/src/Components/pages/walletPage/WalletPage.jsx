@@ -34,8 +34,6 @@ export const WalletPage = () => {
   const [ledger, setLedger] = useState(null);
   const [receiver, setReceiver] = useState("");
   const [principal, setPrincipal] = useState(null);
-  
-
 
   const [balance, setBalance] = useState(0);
 
@@ -211,36 +209,37 @@ export const WalletPage = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="mb-5 mx-12  ">
-        <div className="flex overflow-hidden w-full flex-col items-center">
-          <div
-            style={{
-              backgroundImage: `url(${bgImage})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
-            }}
-            className="flex  flex-col justify-center items-center px-20 py-12 mt-2 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[701px] max-md:px-5 max-md:max-w-full"
-          >
-            <WalletBalance
-              balance={balance}
-              setBalance={setBalance}
-              user={user}
-              login={login}
-              ledger={ledger}
-              logout={logout}
-            />
-            <WithdrawForm
-              balance={balance}
-              setAmount={setAmount}
-              setReceiver={setReceiver}
-              withdraw={withdraw}
-            />
-          </div>
+      <div className="flex w-full px-2 flex-col items-center pb-5 bg-gradient-to-b from-[#1E0F33]/90 to-[#9173FF]/20">
+        <Navbar />
+        <div className=" mx-12 w-[93%] ">
+          <div className="flex overflow-hidden w-full flex-col items-center">
+            <div
+              style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
+              }}
+              className="flex  flex-col justify-center items-center px-20 py-12 mt-1 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[650px] max-md:px-5 max-md:max-w-full"
+            >
+              <WalletBalance
+                balance={balance}
+                setBalance={setBalance}
+                user={user}
+                login={login}
+                ledger={ledger}
+                logout={logout}
+              />
+              <WithdrawForm
+                balance={balance}
+                setAmount={setAmount}
+                setReceiver={setReceiver}
+                withdraw={withdraw}
+              />
+            </div>
 
-          {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
-          {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full">
+            {/* This Commented temporarly Need to be used later [DO NOT REMOVE] */}
+            {/* <div className="bg-gradient-to-b from-[#13091F]/20 to-[#522785]/10 rounded-xl my-6 w-full">
             <section className="flex flex-col items-center justify-between  px-16 pt-9 pb-5 mt-5 w-full rounded-3xl   ">
               <TransactionHeader />
               <div className="w-full ">
@@ -249,7 +248,7 @@ export const WalletPage = () => {
               <TransactionPagination />
             </section>
           </div> */}
-          
+          </div>
         </div>
       </div>
       <Footer />

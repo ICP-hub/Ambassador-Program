@@ -67,7 +67,6 @@ const ReferalPage = () => {
       });
   };
 
-
   useEffect(() => {
     if (user) {
       getUserRefered();
@@ -76,18 +75,18 @@ const ReferalPage = () => {
   }, []);
   return (
     <ParentComponent>
-      <div className="w-full flex flex-col items-center px-12">
+      <div className="w-[93%] flex flex-col items-center ">
         <div className="bg-[#1E0F33] w-full mt-1  rounded-xl p-6 ">
           <ReferalEarnings user={user} />
           <div className="mt-6 bg-[#9173FF]/20 h-[119px] px-6 rounded-2xl flex items-center  w-full ">
-            <h2 className="font-semibold w-[16%] text-xl text-white">
+            <h2 className="font-semibold w-[16%] text-lg text-white">
               Your Referral Code:
             </h2>
             <div className="border-b border-[#9173FF] w-[70%] flex items-center justify-center px-4 ">
               <a
                 href={baseReferral + user.discord_id}
                 target="_blank"
-                className="text-white text-xl line-clamp-1 break-all cursor-pointer"
+                className="text-white text-lg line-clamp-1 break-all cursor-pointer"
               >
                 {baseReferral + user.discord_id}
               </a>
@@ -101,17 +100,18 @@ const ReferalPage = () => {
               </button>
               <button
                 onClick={copyToClipboard}
-                className="rounded-lg border-[#9173FF] text-white bg-[#1E0F33] px-4 py-1.5">
+                className="rounded-lg border-[#9173FF] font-medium text-white bg-[#1E0F33] px-4 py-1.5"
+              >
                 Share
               </button>
             </div>
           </div>
           <div className="mt-6 w-full justify-between flex gap-6">
             <div className="p-4 rounded-2xl bg-[#D9D9D9]/10 w-[25%] h-[306px] flex flex-col justify-end items-center ">
-              <h1 className="text-[100px] text-white font-semibold mb-6 ">
+              <h1 className="text-5xl text-white font-semibold mb-16 ">
                 {userRefered.length}
               </h1>
-              <h2 className="text-4xl text-white font-semibold mb-4 ">
+              <h2 className="text-3xl text-white font-semibold mb-4 ">
                 Your Referrals
               </h2>
             </div>

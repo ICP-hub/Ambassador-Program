@@ -1,32 +1,32 @@
 import React, { useState } from "react";
 
-const ReferralBoard = ({userRefered}) => {
-  const data = [
-    {
-      user: "Username",
-      dateAdded: "01/01/2025",
-      rank: "Master",
-      points: "151",
-    },
-    {
-      user: "Username",
-      dateAdded: "02/01/2025",
-      rank: "Grand Master",
-      points: "148",
-    },
-    {
-      user: "Username",
-      dateAdded: "03/01/2025",
-      rank: "Grand Master",
-      points: "123",
-    },
-  ];
+const ReferralBoard = ({ userRefered }) => {
+  // const data = [
+  //   {
+  //     user: "Username",
+  //     dateAdded: "01/01/2025",
+  //     rank: "Master",
+  //     points: "151",
+  //   },
+  //   {
+  //     user: "Username",
+  //     dateAdded: "02/01/2025",
+  //     rank: "Grand Master",
+  //     points: "148",
+  //   },
+  //   {
+  //     user: "Username",
+  //     dateAdded: "03/01/2025",
+  //     rank: "Grand Master",
+  //     points: "123",
+  //   },
+  // ];
 
   return (
     <div className="w-full  mx-auto p-4">
       <div className=" rounded-lg overflow-hidden">
         <table className="w-full text-center  text-white">
-          <thead className="bg-transparent font-semibold  text-3xl text-[#9173FF] ">
+          <thead className="bg-transparent font-light  text-2xl text-[#9173FF] ">
             <tr>
               <th className="p-3">User</th>
               {/* <th className="p-3">Date Added</th> */}
@@ -51,7 +51,7 @@ const ReferralBoard = ({userRefered}) => {
               <tr>
                 <td
                   colSpan="3"
-                  className="p-3 text-center pt-10 font-medium text-2xl"
+                  className="p-3 text-center pt-10 font-medium text-xl"
                 >
                   You haven't referred anyone yet.
                 </td>

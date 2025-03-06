@@ -360,7 +360,6 @@ export default function TaskRedemption() {
         };
       }
       if (task?.id == "SendTwitterPost") {
-
         // if (!authenticate && twitterUser == "") {
         //   setLoading(false);
         //   toast.error(
@@ -368,14 +367,13 @@ export default function TaskRedemption() {
         //   );
         //   return;
         // }
-        if (!authenticate && !sessionStorage.getItem('twitterUser')) {
+        if (!authenticate && !sessionStorage.getItem("twitterUser")) {
           setLoading(false);
           toast.error(
             "Please authenticate using Twitter for submitting a post"
           );
           return;
-      }
-      
+        }
 
         const regex = /^https:\/\/x\.com\/[^/]+\/[^/]+\/[^/]+$/;
         console.log("regex test : ", regex.test(task.content), task.content);
@@ -385,7 +383,11 @@ export default function TaskRedemption() {
           toast.error("Invalid post link format");
           return;
         }
-        if (!task.content?.includes(twitterUser || sessionStorage.getItem('twitterUser'))) {
+        if (
+          !task.content?.includes(
+            twitterUser || sessionStorage.getItem("twitterUser")
+          )
+        ) {
           console.log("user check : ", twitterUser);
           setLoading(false);
           toast.error("Someone else's post cannot be submitted");
@@ -785,7 +787,7 @@ export default function TaskRedemption() {
   };
   return (
     <ParentComponent>
-      <div className="mt-1 rounded-xl  sm:flex sm:flex-col md:flex-row  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6 flex gap-6 w-[92%]">
+      <div className="mt-1 rounded-xl  sm:flex sm:flex-col md:flex-row  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6 flex gap-6 w-[93%]">
         <div className="w-[65%]">
           <div className="flex items-center justify-between">
             <div className="flex gap-2 items-center">
@@ -799,7 +801,8 @@ export default function TaskRedemption() {
               <a
                 href={current_space[1].urls.website[0]}
                 target="_blank"
-                className=" flex items-center border-2 ml-4 border-white gap-2 text-white  px-4 py-2 rounded-xl text-sm">
+                className=" flex items-center border ml-4 border-white gap-2 text-white  font-semibold px-4 py-1.5 hover:bg-gray-300 rounded-xl text-sm"
+              >
                 <FaPlus size={16} /> Follow
               </a>
             </div>
@@ -829,7 +832,9 @@ export default function TaskRedemption() {
             </div>
           </div>
           <div className="w-full my-4 border-2 border-gray-500"></div>
-          <h1 className="text-3xl  font-semibold ">Do task to redeem rewards</h1>
+          <h1 className="text-3xl  font-semibold ">
+            Do task to redeem rewards
+          </h1>
           <p className=" rounded-xl   my-4 p-2 flex gap-4  bg-[#3722534d] text-[#9173FF]">
             <svg
               width="22"
@@ -899,7 +904,9 @@ export default function TaskRedemption() {
                           </span>
                           {task.title}
                         </span>
-                        <p className="text-[#A0A0A0] text-sm">{task.description}</p>
+                        <p className="text-[#A0A0A0] text-sm">
+                          {task.description}
+                        </p>
                         {/* <div className="text-sm  flex items-center gap-1 mt-2 mb-4 font-semibold">
                     <svg
                       width="16"
@@ -964,8 +971,9 @@ export default function TaskRedemption() {
                                       </div>
                                     ) : (
                                       <div
-                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? "" : "opacity-40"
-                                          }`}
+                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                          task.content ? "" : "opacity-40"
+                                        }`}
                                         style={{ backgroundColor: bgColor }}
                                         onClick={() => {
                                           submitTask(task.task_id);
@@ -997,8 +1005,9 @@ export default function TaskRedemption() {
                                         </div>
                                       ) : (
                                         <div
-                                          className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${task.content ? "" : "opacity-40"
-                                            }`}
+                                          className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                            task.content ? "" : "opacity-40"
+                                          }`}
                                           style={{ backgroundColor: bgColor }}
                                           onClick={() => {
                                             submitTask(task.task_id);
@@ -1106,7 +1115,8 @@ export default function TaskRedemption() {
                                               <div className="flex gap-2">
                                                 <AttachFileIcon />
                                                 <span>
-                                                  {typeof task.image === "object"
+                                                  {typeof task.image ===
+                                                  "object"
                                                     ? task.image.name
                                                     : task.image}
                                                 </span>
@@ -1146,7 +1156,11 @@ export default function TaskRedemption() {
                                             type="file"
                                             className="hidden w-full"
                                             onChange={(e) => {
-                                              onFileChange(e, task.task_id, task);
+                                              onFileChange(
+                                                e,
+                                                task.task_id,
+                                                task
+                                              );
                                             }}
                                             ref={fileInputRef}
                                           />
@@ -1184,7 +1198,9 @@ export default function TaskRedemption() {
                                           !task.uploading && (
                                             <div
                                               className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
-                                              style={{ backgroundColor: bgColor }}
+                                              style={{
+                                                backgroundColor: bgColor,
+                                              }}
                                               onClick={() => {
                                                 // handleSendImage(task.task_id, task);
                                                 submitTask(task.task_id);
@@ -1251,7 +1267,10 @@ export default function TaskRedemption() {
         {/* Reward Section */}
         <div className="w-[35%] rounded-lg space-y-5">
           <div className="flex items-center justify-end">
-            <button onClick={() => nav('/')} className="flex items-center  text-xl justify-end gap-2 font-semibold bg-[#FFFFFF33]  border-2 ml-4 border-[#FFFFFF33]  text-white m-4  px-4 py-1 rounded-xl">
+            <button
+              onClick={() => nav("/")}
+              className="flex items-center  text-xl justify-end gap-2 font-semibold bg-[#FFFFFF33]  border-2 ml-4 border-[#FFFFFF33]  text-white m-4  px-4 py-1 rounded-xl"
+            >
               <FaRegArrowAltCircleLeft size={16} /> Back
             </button>
           </div>
@@ -1260,6 +1279,5 @@ export default function TaskRedemption() {
         </div>
       </div>
     </ParentComponent>
-
   );
 }
