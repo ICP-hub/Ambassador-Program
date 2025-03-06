@@ -49,7 +49,7 @@ const DiscordCallback = () => {
       // const user=JSON.parse(userData);
       getUser(userData.id);
 
-      navigate("/");
+      navigate("/home");
       window.location.reload();
       // setTimeout(() => {
       //     navigate('/');

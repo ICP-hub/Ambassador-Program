@@ -349,7 +349,7 @@ pub fn get_user_reward_history(discord_id: String) -> Result<RewardHistory, Stri
 
 // create leaderboard for user by hubs
 #[query]
-pub fn get_leaderboard(hub: String) -> Result<Vec<LeaderboardEntry>, String> {
+pub fn get_leaderboard(hub: String, offset: usize, limit: usize) -> Result<Vec<LeaderboardEntry>, String> {
     // check if the hub exists
     let hub_exists = SPACE_MAP.with(|map| map.borrow().contains_key(&hub));
     if !hub_exists {
@@ -357,7 +357,7 @@ pub fn get_leaderboard(hub: String) -> Result<Vec<LeaderboardEntry>, String> {
     }
 
     let mut leaderboard: Vec<LeaderboardEntry> = vec![];
-    
+
     USER_PROFILE_MAP.with(|map| {
         let borrowed_map = map.borrow();
         for (_, user) in borrowed_map.iter() {
@@ -372,5 +372,14 @@ pub fn get_leaderboard(hub: String) -> Result<Vec<LeaderboardEntry>, String> {
     });
 
     leaderboard.sort_by(|a, b| b.points.cmp(&a.points));
-    Ok(leaderboard)
+
+    // Apply pagination: slice the sorted leaderboard
+    let paginated_leaderboard = leaderboard
+        .iter()
+        .skip(offset)
+        .take(limit)
+        .cloned()
+        .collect();
+
+    Ok(paginated_leaderboard)
 }

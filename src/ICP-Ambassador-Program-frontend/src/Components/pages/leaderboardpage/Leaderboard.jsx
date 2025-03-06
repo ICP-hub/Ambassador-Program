@@ -18,6 +18,7 @@ const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [selectedRank, setSelectedRank] = useState("All"); // State to track the selected rank
   const [searchQuery, setSearchQuery] = useState(""); // State to track the search query
+  const [pagination, setPagination] = useState({offset: 0,limit: 100});
 
   const getLeaderboard = async () => {
     try {
@@ -27,7 +28,7 @@ const Leaderboard = () => {
       }
       const space_id = spaceData[0];
       const leaderboard_res =
-        await ICP_Ambassador_Program_backend.get_leaderboard(space_id);
+        await ICP_Ambassador_Program_backend.get_leaderboard(space_id, pagination.offset, pagination.limit);
       if (leaderboard_res && leaderboard_res.Ok) {
         console.log("Leaderboard:", leaderboard_res.Ok);
         setLeaderboard(leaderboard_res.Ok); // Update state with leaderboard data
