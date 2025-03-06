@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { CiSearch } from "react-icons/ci";
-import { AiFillThunderbolt } from "react-icons/ai";
-import { HiSignal } from "react-icons/hi2";
-import { FaWallet } from "react-icons/fa6";
-import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
-import { BiLogoTelegram } from "react-icons/bi";
-import { IoNotificationsOutline, IoChevronUpOutline } from "react-icons/io5";
-import LoginModel from "./LoginModel";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaDiscord } from "react-icons/fa";
-import Sidebar from "./SideBar";
+import { React, useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
-import ProfileDrawer from "./ProfileDrawer";
-import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
+import { CiSearch } from "react-icons/ci";
+import { FaXTwitter } from "react-icons/fa6";
+import { BiLogoTelegram } from "react-icons/bi";
+import { FaUserCircle, FaDiscord } from "react-icons/fa";
+import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import Cookies from "js-cookie";
-import { HiMenu } from "react-icons/hi";
-import WalletSidebar from "../../wallet/walletSidebar";
+import Sidebar from "./SideBar";
+import LoginModel from "./LoginModel";
+import UserProfile from "./UserProfile";
+import awtar from "../../../../public/icons/Avatar.png";
+import atlaslogo from "../../../../public/icons/Atlas_logo.svg";
+import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/user/userSlice";
-import { FaUserCircle } from "react-icons/fa";
-import atlaslogo from "../../../../public/icons/Atlas logo.png";
-import awtar from "../../../../public/icons/Avatar.png";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import UserProfile from "./UserProfile";
+
 
 const Navbar = ({ onProfileClick }) => {
   const [isModelOpen, setModelOpen] = useState(false);

@@ -20,12 +20,12 @@ const Home = () => {
   const [isHubModalOpen, setIsHubModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterMobile, setFilterMobile] = useState(false);
   const [refModal, openRefModal] = useState(false);
   const [openWallet, setOpenWallet] = useState(false);
   const [discordl_user, setDiscord_user] = useState();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [spaceData, setSpaceData] = useState();
+  const [space, setSpaces] = useState("");
 
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -34,69 +34,26 @@ const Home = () => {
     setIsDrawerOpen(false);
   };
 
-  useEffect(() => {
-    if (Cookies.get("discord_user")) {
-      try {
-        const user = JSON.parse(Cookies.get("discord_user"));
-        if (user && user.id) {
-          getUser_Details(user.id);
-        }
-      } catch (error) {
-        console.error("Error parsing discord_user cookie:", error);
-      }
-    }
-  }, []);
-
-  const getUser_Details = async (userId) => {
-    try {
-      //console.log(userId)
-      const details = await ICP_Ambassador_Program_backend.get_user_data(
-        userId
-      );
-      const user = JSON.parse(Cookies.get("discord_user"));
-
-      const updatedDetails = {
-        ...details[0],
-        avatar: user.avatar,
-      };
-
-      dispatch(updateUser(updatedDetails));
-      setDiscord_user(updatedDetails);
-      setUser(updatedDetails);
-    } catch (e) {
-      console.log("Error ==>", e);
-    }
-  };
-  const [space, setSpaces] = useState("");
-
-  const getUser = async (loggedIn) => {
+  const fetchData = async () => {
     try {
       const user = JSON.parse(Cookies.get("discord_user"));
-      const details = await ICP_Ambassador_Program_backend.get_user_data(
-        user.id
-      );
-      console.log(details, "dd");
-      if (details && details?.length !== 0) {
-        dispatch(updateUser(details[0]));
-        console.log("dispatching user");
+      if (user && user.id) {
+        const details = await ICP_Ambassador_Program_backend.get_user_data(user.id);
+        const updatedDetails = {
+          ...details[0],
+          avatar: user.avatar,
+        };
+        dispatch(updateUser(updatedDetails));
+        setDiscord_user(updatedDetails);
+        setUser(updatedDetails);
+
         const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
-
         if (spaces?.Ok) {
-          console.log("getuser spaces:", spaces);
-
           const space_id = Cookies.get("selectedHub");
-          console.log("Space ID from cookies:", space_id);
-
-          // Matching the ID inside spaces.Ok
           const matchedSpace = spaces.Ok.find((space) => space[0] === space_id);
-
           if (matchedSpace) {
-            console.log("Matched Space:", matchedSpace);
             setSpaceData(matchedSpace);
             localStorage.setItem("spaceData", JSON.stringify(matchedSpace));
-            // Store matched space wherever required
-          } else {
-            console.log("No matching space found.");
           }
 
           for (let i = 0; i < spaces?.Ok?.length; i++) {
@@ -107,65 +64,20 @@ const Home = () => {
             }
           }
         }
-        // registered=true
-      } else {
-        if (loggedIn) {
-          setIsHubModalOpen(true);
-        }
-        setIsHubModalOpen(true);
-        //console.log("user not found")
       }
-        setLoading(false);
     } catch (e) {
       console.log("Error ==>", e);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (Cookies.get("discord_user")) {
-      const user = JSON.parse(Cookies.get("discord_user"));
-      //console.log("user ==>",user)
-      if (user) {
-        Get_All_Spaces();
-      }
+      fetchData();
     } else {
-      Get_All_Spaces();
+      setLoading(false);
     }
-  }, []);
-
-  const Get_All_Spaces = async () => {
-    try {
-      const spaces = await ICP_Ambassador_Program_backend.get_all_spaces();
-      //console.log("Spaces ==>",spaces.Ok);
-      const spacesObject = spaces.Ok.map((space) => {
-        const [spaceId, details] = space;
-        return {
-          space_id: spaceId,
-          name: details.name,
-        };
-      });
-
-      setSpaces(spacesObject);
-    } catch (e) {
-      console.log("Error ==> ", e);
-    }
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const cookieUser = Cookies.get("discord_user");
-      setUser(cookieUser ? JSON.parse(cookieUser) : null);
-
-      const isLoggedIn = Cookies.get("isLoggedIn");
-      getUser(isLoggedIn);
-
-      if (isLoggedIn) {
-        setIsHubModalOpen(true);
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
