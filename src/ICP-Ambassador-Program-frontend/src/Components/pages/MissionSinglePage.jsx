@@ -1,26 +1,12 @@
-import xicon from "../.../../../../public/icons/xicon.png";
-import linkedinicon from "../.../../../../public/icons/linkedin.png";
-import discordicon from "../.../../../../public/icons/discord.png";
-import icpbanner from "../.../../../../public/icpbanner.png";
-import icpindia from "../.../../../../public/icons/icpIndiaImage.png";
 import MissionCard from "../modules/Navbar/Slider";
-
 import { FaPlus } from "react-icons/fa6";
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { FaXTwitter } from "react-icons/fa6";
-import { MdOutlineArrowOutward } from "react-icons/md";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import app from "../modules/Contests/firebase_config";
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
-import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 // import upload_background from '../../../assets/images/upload_background.png'
@@ -29,22 +15,18 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { FaLink, FaTextHeight } from "react-icons/fa";
 import { FaFileUpload } from "react-icons/fa";
-import { RiLoopLeftLine } from "react-icons/ri";
 import DoneIcon from "@mui/icons-material/Done";
 import { BiSolidSend } from "react-icons/bi";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { IoIosSend } from "react-icons/io";
-import {
-  FaRegArrowAltCircleLeft,
-  FaRegArrowAltCircleRight,
-} from "react-icons/fa";
+import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 import NoContest from "./NoContest";
 import { LiaTelegram } from "react-icons/lia";
 import { FaDiscord } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
 import ParentComponent from "./ParentComponent";
+import { ThreeDots } from "react-loader-spinner";
 const auth = getAuth(app);
 export default function TaskRedemption() {
   const adminRegex = /^[A-Za-z0-9\s]+$/;
@@ -268,6 +250,7 @@ export default function TaskRedemption() {
 
   async function submitTask(taskid) {
     try {
+      setSubmittingTasks((prev) => ({ ...prev, [taskid]: true }));
       let task = {};
       for (let i = 0; i < tasks?.length; i++) {
         if (taskid == tasks[i]?.task_id) {
@@ -284,6 +267,7 @@ export default function TaskRedemption() {
       if (task?.id == "SendText") {
         if (task?.content == "") {
           setLoading(false);
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           toast.error("Cannot submit empty text");
           return;
         }
@@ -297,6 +281,7 @@ export default function TaskRedemption() {
       if (task?.id == "SendImage") {
         if (task?.image == "") {
           toast.error("cannot send empty image");
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           setLoading(false);
           return;
         }
@@ -326,6 +311,7 @@ export default function TaskRedemption() {
       }
       if (task?.id == "SendUrl") {
         if (task?.content == "") {
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           setLoading(false);
           toast.error("Cannot submit empty url");
           return;
@@ -350,6 +336,7 @@ export default function TaskRedemption() {
           toast.error(
             "Please authenticate using Twitter for submitting a post"
           );
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           return;
         }
 
@@ -359,6 +346,7 @@ export default function TaskRedemption() {
         if (!testResult) {
           setLoading(false);
           toast.error("Invalid post link format");
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           return;
         }
         if (
@@ -369,6 +357,7 @@ export default function TaskRedemption() {
           console.log("user check : ", twitterUser);
           setLoading(false);
           toast.error("Someone else's post cannot be submitted");
+          setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
           return;
         }
         newTask = {
@@ -412,6 +401,8 @@ export default function TaskRedemption() {
       setLoading(false);
       toast.error("Something went wrong");
       console.log(err);
+    } finally {
+      setSubmittingTasks((prev) => ({ ...prev, [taskid]: false }));
     }
   }
 
@@ -765,8 +756,8 @@ export default function TaskRedemption() {
   };
   return (
     <ParentComponent>
-      <div className="mt-1 rounded-xl  sm:flex sm:flex-col md:flex-row  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6 flex gap-6 w-[93%]">
-        <div className="w-[65%]">
+      <div className="mt-1 flex rounded-xl flex-wrap  bg-gradient-to-b from-[#1E0F33] to-[#35245d] text-white p-6  gap-6 w-[93%]">
+        <div className="w-full md3:w-[60%]">
           <div className="flex items-center justify-between">
             <div className="flex gap-2 items-center">
               <img
@@ -788,32 +779,32 @@ export default function TaskRedemption() {
               <a
                 href={current_space?.[1].urls.twitter[0]}
                 target="_blank"
-                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[56px] w-[56px]"
               >
-                <BsTwitterX style={{ fontSize: "40px", color: "white" }} />
+                <BsTwitterX style={{ fontSize: "32px", color: "white" }} />
               </a>
               <a
                 href={current_space?.[1].urls.discord[0]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[56px] w-[56px]"
               >
-                <FaDiscord style={{ fontSize: "50px", color: "white" }} />
+                <FaDiscord style={{ fontSize: "38px", color: "white" }} />
               </a>
               <a
                 href={current_space?.[1].urls.telegram[0]}
                 target="_blank"
-                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
+                className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[56px] w-[56px]"
               >
-                <LiaTelegram style={{ fontSize: "50px", color: "white" }} />
+                <LiaTelegram style={{ fontSize: "38px", color: "white" }} />
               </a>
             </div>
           </div>
-          <div className="w-full my-4 border-2 border-gray-500"></div>
-          <h1 className="text-3xl  font-semibold ">
+          <div className="w-full my-4 border-2 border-[#FFFFFF]/20"></div>
+          <h1 className="text-3xl w-full font-semibold ">
             Do task to redeem rewards
           </h1>
-          <p className=" rounded-xl   my-4 p-2 flex gap-4  bg-[#3722534d] text-[#9173FF]">
+          <p className=" rounded-xl w-full  my-4 p-2 flex gap-4  bg-[#3722534d] text-[#9173FF]">
             <svg
               width="22"
               height="24"
@@ -835,7 +826,7 @@ export default function TaskRedemption() {
 
           {/* Tasks */}
           {tasks.length > 0 ? (
-            <div className="my-10 mx-5 space-y-4 ">
+            <div className="my-5 px-4 space-y-4 w-full ">
               {tasks.map((task, index) => {
                 const taskType = task.id;
                 const { icon: IconComponent, color: bgColor } =
@@ -844,12 +835,12 @@ export default function TaskRedemption() {
                 return (
                   <div key={index} className="flex gap-4">
                     <div className="flex flex-col items-center mt-3">
-                      <div className="bg-[#1E0F33] p-1.5 rounded-lg size-10">
+                      <div className="bg-[#1E0F33] p-1.5 rounded-lg size-8">
                         {task.submitted && (
                           <svg
-                            width="28"
-                            height="26"
-                            viewBox="0 0 28 26"
+                            width="24"
+                            height="22"
+                            viewBox="0 0 30 28"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
@@ -869,20 +860,22 @@ export default function TaskRedemption() {
                     </div>
 
                     <div className="bg-[#1E0F33] p-4 rounded-lg flex w-[90%]">
-                      <div>
-                        <span className="text-lg font-medium flex  gap-4 mb-4">
+                      <div className="w-full">
+                        <div className="text-lg font-medium flex line-clamp-2 break-all gap-4 mb-2">
                           {" "}
                           <span
-                            className="w-7 h-7 flex justify-center items-center rounded-full"
+                            className="w-7 h-7 flex justify-center  items-center rounded-full"
                             style={{ backgroundColor: bgColor }}
                           >
                             {IconComponent ? (
-                              <IconComponent className="text-[15px]" />
+                              <IconComponent className="" />
                             ) : null}
                           </span>
-                          {task.title}
-                        </span>
-                        <p className="text-[#A0A0A0] text-sm">
+                          <p className="w-[98%] line-clamp-2 break-all">
+                            {task.title}
+                          </p>
+                        </div>
+                        <p className="text-[#A0A0A0] line-clamp-2 break-all pl-11 text-sm">
                           {task.description}
                         </p>
                         {/* <div className="text-sm  flex items-center gap-1 mt-2 mb-4 font-semibold">
@@ -917,7 +910,7 @@ export default function TaskRedemption() {
                             style={{
                               backgroundColor: "#1E0F33",
                               color: "white",
-                              width: "600px",
+                              width: "100%",
                               height: "auto",
                               borderRadius: "10px",
                               boxShadow: "none",
@@ -927,14 +920,14 @@ export default function TaskRedemption() {
                           >
                             <AccordionDetails>
                               {/* {!task.submitted ? ( */}
-                              <form className="flex flex-col gap-3 mt-3">
+                              <form className="flex flex-col gap-3 ml-4 mt-1">
                                 {task.id === "SendText" && (
                                   <>
                                     <div className="border border-[#FFFFFF14] m-2 rounded-md custom-quill w-full">
                                       {/* <div ref={editorRef} className="p-2" style={{ height: '200px' }}></div> */}
                                       <textarea
                                         rows={2}
-                                        className="w-full py-2 px-3 mt-2  bg-[#1E0F33]"
+                                        className="w-full py-2 px-3 mt-2 line-clamp-2 break-all bg-[#1E0F33]"
                                         onChange={(e) =>
                                           handleInputChange(e, task.task_id)
                                         }
@@ -943,13 +936,27 @@ export default function TaskRedemption() {
                                       />
                                     </div>
                                     {task.submitted ? (
-                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center rounded-md ml-2 w-full items-center py-2">
                                         <DoneIcon />
                                         <div>Completed</div>
                                       </div>
+                                    ) : submittingTasks[task.task_id] ? (
+                                      <div
+                                        style={{ backgroundColor: bgColor }}
+                                        className="text-white w-full py-2 flex justify-center items-center gap-2 ml-2 rounded-md"
+                                      >
+                                        <ThreeDots
+                                          visible={true}
+                                          height="30"
+                                          width="40"
+                                          color="white"
+                                          radius="9"
+                                          ariaLabel="three-dots-loading"
+                                        />
+                                      </div>
                                     ) : (
                                       <div
-                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                        className={`text-white w-full py-2 flex justify-center items-center gap-2 ml-2 rounded-md cursor-pointer ${
                                           task.content ? "" : "opacity-40"
                                         }`}
                                         style={{ backgroundColor: bgColor }}
@@ -973,17 +980,31 @@ export default function TaskRedemption() {
                                         onChange={(e) =>
                                           handleInputChange(e, task.task_id)
                                         }
-                                        className="outline-none p-3 text-white  bg-[#1E0F33] border border-[#FFFFFF14] rounded text-black"
+                                        className="outline-none p-3 text-white ml-2  bg-[#1E0F33] border border-[#FFFFFF14] rounded "
                                         value={task.content}
                                       />
                                       {task.submitted ? (
-                                        <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                        <div className="bg-[#1DB954] text-white flex gap-2 justify-center rounded-md ml-2 w-full items-center py-2">
                                           <DoneIcon />
                                           <div>Completed</div>
                                         </div>
+                                      ) : submittingTasks[task.task_id] ? (
+                                        <div
+                                          style={{ backgroundColor: bgColor }}
+                                          className="text-white w-full py-2 mt-3 flex justify-center items-center gap-2 ml-2 rounded-md"
+                                        >
+                                          <ThreeDots
+                                            visible={true}
+                                            height="30"
+                                            width="40"
+                                            color="white"
+                                            radius="9"
+                                            ariaLabel="three-dots-loading"
+                                          />
+                                        </div>
                                       ) : (
                                         <div
-                                          className={`text-white w-full py-2 flex justify-center items-center gap-2 rounded-md cursor-pointer ${
+                                          className={`text-white w-full py-2 mt-3 flex justify-center items-center gap-2 ml-2 rounded-md cursor-pointer ${
                                             task.content ? "" : "opacity-40"
                                           }`}
                                           style={{ backgroundColor: bgColor }}
@@ -1009,7 +1030,7 @@ export default function TaskRedemption() {
                                         onChange={(e) =>
                                           handleInputChange(e, task.task_id)
                                         }
-                                        className="outline-none p-3 text-white  bg-[#1E0F33] border border-[#FFFFFF14] rounded w-full text-black"
+                                        className="outline-none p-3  bg-[#1E0F33] border border-[#FFFFFF14] ml-2 rounded w-full text-white"
                                       />
                                       {/* {!authenticate ?(
                                          <button className='w-8 h-8   bg-white flex justify-center items-center rounded-full curso-pointer' onClick={(e)=>{Check_authentication(e)}}>
@@ -1023,14 +1044,28 @@ export default function TaskRedemption() {
                                        )} */}
                                     </div>
                                     {task?.submitted ? (
-                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2">
+                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center rounded-md ml-2 w-full items-center py-2">
                                         <DoneIcon />
                                         <div>Completed</div>
                                         {/* <p className='text-green-500 text-sm font-semibold '>Authenticated</p> */}
                                       </div>
+                                    ) : submittingTasks[task.task_id] ? (
+                                      <div
+                                        style={{ backgroundColor: bgColor }}
+                                        className="text-white w-full py-2 mt-3 flex justify-center items-center gap-2 ml-2 rounded-md"
+                                      >
+                                        <ThreeDots
+                                          visible={true}
+                                          height="30"
+                                          width="40"
+                                          color="white"
+                                          radius="9"
+                                          ariaLabel="three-dots-loading"
+                                        />
+                                      </div>
                                     ) : !authenticate ? (
                                       <div
-                                        className="text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center "
+                                        className="text-white py-2 gap-2 rounded-md flex cursor-pointer ml-2 justify-center items-center "
                                         onClick={Check_authentication}
                                         style={{ backgroundColor: bgColor }}
                                       >
@@ -1042,7 +1077,7 @@ export default function TaskRedemption() {
                                       </div>
                                     ) : (
                                       <div
-                                        className="text-white py-2 gap-2 rounded-md flex cursor-pointer justify-center items-center "
+                                        className="text-white py-2 gap-2 rounded-md ml-2 flex cursor-pointer justify-center items-center "
                                         onClick={() => submitTask(task.task_id)}
                                         style={{ backgroundColor: bgColor }}
                                       >
@@ -1146,7 +1181,7 @@ export default function TaskRedemption() {
                                             !task.uploading &&
                                             !task.submitted && (
                                               <div
-                                                className="w-full flex justify-center cursor-pointer items-center gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                                className="w-full flex justify-center cursor-pointer items-center ml-2 gap-2 text-md font-semibold py-2 text-white rounded-md"
                                                 style={{
                                                   backgroundColor: bgColor,
                                                 }}
@@ -1165,15 +1200,54 @@ export default function TaskRedemption() {
                                             style={{ backgroundColor: bgColor }}
                                           >
                                             <div className="flex justify-center items-center">
-                                              <div className="h-6 w-8 animate-spin rounded-full border border-white rounded-md" />
+                                              <div className="h-6 w-8 animate-spin rounded-full border border-white " />
                                             </div>
                                             Uploading...
                                           </div>
                                         )}
 
-                                        {task.image &&
+                                        {submittingTasks[task.task_id] ? (
+                                          <div
+                                            className="w-full flex justify-center items-center gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                            style={{ backgroundColor: bgColor }}
+                                          >
+                                            <ThreeDots
+                                              visible={true}
+                                              height="30"
+                                              width="40"
+                                              color="white"
+                                              radius="9"
+                                              ariaLabel="three-dots-loading"
+                                            />
+                                          </div>
+                                        ) : (
+                                          // Show Confirm Button Only if Image is Selected and Not Submitted
+                                          task.image &&
                                           !task.submitted &&
                                           !task.uploading && (
+                                            <div
+                                              className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                              style={{
+                                                backgroundColor: bgColor,
+                                              }}
+                                              onClick={() => {
+                                                setSubmittingTasks((prev) => ({
+                                                  ...prev,
+                                                  [task.task_id]: true,
+                                                })); // Set loading state immediately
+                                                submitTask(task.task_id);
+                                              }}
+                                            >
+                                              <DoneIcon />
+                                              <div>Confirm</div>
+                                            </div>
+                                          )
+                                        )}
+
+                                        {/* {task.image &&
+                                          !task.submitted &&
+                                          !task.uploading &&
+                                          !submittingTasks[task.task_id] && (
                                             <div
                                               className="w-full flex justify-center items-center cursor-pointer gap-2 text-md font-semibold py-2 text-white rounded-md"
                                               style={{
@@ -1187,10 +1261,26 @@ export default function TaskRedemption() {
                                               <DoneIcon />
                                               <div>Confirm</div>
                                             </div>
-                                          )}
+                                          )} */}
+
+                                        {/* {submittingTasks[task.task_id] && (
+                                          <div
+                                            className="w-full flex justify-center items-center gap-2 text-md font-semibold py-2 text-white rounded-md"
+                                            style={{ backgroundColor: bgColor }}
+                                          >
+                                            <ThreeDots
+                                              visible={true}
+                                              height="30"
+                                              width="40"
+                                              color="white"
+                                              radius="9"
+                                              ariaLabel="three-dots-loading"
+                                            />
+                                          </div>
+                                        )} */}
 
                                         {task.submitted && (
-                                          <div className="bg-[#1DB954]  text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                          <div className="bg-[#1DB954]  text-white flex gap-2 justify-center ml-2 w-full items-center py-2 rounded-md">
                                             <DoneIcon />
                                             <div>Completed</div>
                                           </div>
@@ -1201,15 +1291,29 @@ export default function TaskRedemption() {
                                 )}
                                 {task.id === "TwitterFollow" && (
                                   <div className="flex flex-col gap-4">
-                                    <div className="text-white text-md max-w-[95%] overflow-clip">{`Task description :\n\n ${task.description}`}</div>
+                                    <div className="text-white text-md w-full ml-2 line-clamp-2 break-all overflow-clip">{`Task description :\n\n ${task.description}`}</div>
                                     {task.submitted ? (
-                                      <div className="bg-[#1DB954] text-white flex gap-2 justify-center items-center py-2 rounded-md">
+                                      <div className="bg-[#1DB954] text-white w-full ml-2 flex gap-2 justify-center items-center py-2 rounded-md">
                                         <DoneIcon />
                                         <div>Completed</div>
                                       </div>
+                                    ) : submittingTasks[task.task_id] ? (
+                                      <div
+                                        style={{ backgroundColor: bgColor }}
+                                        className="text-white w-full py-2 mt-3 flex justify-center items-center gap-2 ml-2 rounded-md"
+                                      >
+                                        <ThreeDots
+                                          visible={true}
+                                          height="30"
+                                          width="40"
+                                          color="white"
+                                          radius="9"
+                                          ariaLabel="three-dots-loading"
+                                        />
+                                      </div>
                                     ) : (
                                       <div
-                                        className="w-full text-white py-2 rounded-md flex gap-2 justify-center items-center text-lg"
+                                        className="w-full text-white py-2 rounded-md flex gap-2 ml-2 line-clamp-2 break-all justify-center items-center text-lg"
                                         style={{ backgroundColor: bgColor }}
                                         onClick={() => submitTask(task.task_id)}
                                       >
@@ -1219,14 +1323,14 @@ export default function TaskRedemption() {
                                     )}
                                   </div>
                                 )}
-                                <div className="flex items-center justify-center">
-                                  {/* <button
+                                {/* <div className="flex items-center justify-center"> */}
+                                {/* <button
                               type="submit"
                               className="w-2/3 flex justify-center items-center max-w-full text-black rounded bg-white text-sm font-semibold h-9 m-3"
                           >
                               Submit <MdOutlineArrowOutward className="ml-3" size={24} />
                           </button> */}
-                                </div>
+                                {/* </div> */}
                               </form>
                             </AccordionDetails>
                           </Accordion>
@@ -1243,7 +1347,7 @@ export default function TaskRedemption() {
         </div>
 
         {/* Reward Section */}
-        <div className="w-[35%] rounded-lg space-y-5">
+        <div className="w-full md3:w-[37%] rounded-lg space-y-5">
           <div className="flex items-center justify-end">
             <button
               onClick={() => nav("/")}
