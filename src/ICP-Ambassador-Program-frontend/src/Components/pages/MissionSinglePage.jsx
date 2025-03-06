@@ -60,28 +60,6 @@ export default function TaskRedemption() {
 
   const current_space = JSON.parse(localStorage.getItem("spaceData"));
 
-  console.log("Space Data : ", current_space[1]);
-
-  // const [expanded, setExpanded] = useState({});
-
-  // useEffect(() => {
-  //   if (tasks && tasks.length > 0) {
-  //     const initialExpandedState = tasks.reduce((acc, task) => {
-  //       // Set each task's state as expanded (true) by default
-  //       acc[task.task_id] = true;
-  //       return acc;
-  //     }, {});
-  //     setExpanded(initialExpandedState);
-  //   }
-  // }, [tasks]);
-
-  // const handleAccordionChange = (taskId) => {
-  //   setExpanded((prevExpanded) => ({
-  //     ...prevExpanded,
-  //     [taskId]: !prevExpanded[taskId], // Toggle the specific task's expanded state
-  //   }));
-  // };
-
   function formatTimestamp(timestamp) {
     const date = new Date(Number(timestamp)); // Convert string to number
     const monthName = date.toLocaleString("en-US", { month: "long" }); // Full month name
@@ -799,7 +777,7 @@ export default function TaskRedemption() {
               />
               <h2 className="text-3xl font-semibold">{icons.platform}</h2>
               <a
-                href={current_space[1].urls.website[0]}
+                href={current_space?.[1].urls.website[0]}
                 target="_blank"
                 className=" flex items-center border ml-4 border-white gap-2 text-white  font-semibold px-4 py-1.5 hover:bg-gray-300 rounded-xl text-sm"
               >
@@ -808,14 +786,14 @@ export default function TaskRedemption() {
             </div>
             <div className="flex gap-2">
               <a
-                href={current_space[1].urls.twitter[0]}
+                href={current_space?.[1].urls.twitter[0]}
                 target="_blank"
                 className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
               >
                 <BsTwitterX style={{ fontSize: "40px", color: "white" }} />
               </a>
               <a
-                href={current_space[1].urls.discord[0]}
+                href={current_space?.[1].urls.discord[0]}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
@@ -823,7 +801,7 @@ export default function TaskRedemption() {
                 <FaDiscord style={{ fontSize: "50px", color: "white" }} />
               </a>
               <a
-                href={current_space[1].urls.telegram[0]}
+                href={current_space?.[1].urls.telegram[0]}
                 target="_blank"
                 className="flex items-center justify-center shrink-0 rounded-md bg-[#9173FF] bg-opacity-20 h-[63px] w-[63px]"
               >
