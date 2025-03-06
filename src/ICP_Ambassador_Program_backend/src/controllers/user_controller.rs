@@ -8,7 +8,6 @@ use crate::types::UserReferDetails;
 
 use super::transfer_amount;
     
-//--
 #[update]
 pub fn create_user(
     discord_id: String,
@@ -29,14 +28,14 @@ pub fn create_user(
     let ref_user_id:String;
     match referred_by{
         Some(val)=>ref_user_id=val,
-        None=>ref_user_id=String::from("")
+        _none=>ref_user_id=String::from("")
     }
     if ref_user_id!=String::from(""){
         let referred_by_user=USER_PROFILE_MAP.with(|map| map.borrow().get(&ref_user_id));
 
         match referred_by_user{
             Some(_) => {},
-            None => return Err("Invalid referrer".to_string())
+            _none => return Err("Invalid referrer".to_string())
         }
 
         let add_ref_result=add_referral(ref_user_id.clone(), discord_id.clone());
@@ -70,7 +69,7 @@ fn add_referral(referrer: String, user: String)->Result<(),String> {
 
     match ref_user {
         Some(val)=>ref_user_val=val,
-        None=> return Err("invalid referral".to_string())
+        _none=> return Err("invalid referral".to_string())
     };
     if ref_user_val.direct_refers.len()>=10{
         return Err("user already referred 10 users!".to_string());
@@ -80,7 +79,7 @@ fn add_referral(referrer: String, user: String)->Result<(),String> {
 
     match parent_benefactors {
         Some(val)=>parent_banefactor_val=val.benefactors,
-        None => parent_banefactor_val=vec![]
+        _none => parent_banefactor_val=vec![]
     };
 
     if parent_banefactor_val.len()>4{
@@ -102,15 +101,6 @@ fn add_referral(referrer: String, user: String)->Result<(),String> {
     return Ok(());
 }
 
-// func to get all benefactors of a user (Currently not used)
-// #[update]
-// pub fn get_all_user_benefactors(id:String)->Result<Benefactors,String>{
-//     let benefactors=REFERRAL_BENEFICIARY_MAP.with(|map| map.borrow().get(&id));
-//     match benefactors{
-//         Some(val)=>return Ok(val),
-//         None=>return Err("No benefactors found!".to_string())
-//     }
-// }
 
 #[query]
 pub fn get_user_data(id:String)->Option<UserProfile>{
@@ -177,7 +167,7 @@ pub fn add_wallet(id:String)->Result<String,String>{
 
     match user{
         Some(val)=>user_mut=val,
-        None=>return Err(String::from("No user found with this id"))
+        _none=>return Err(String::from("No user found with this id"))
     }
     user_mut.wallet=Some(caller());
     USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id, user_mut));
@@ -192,7 +182,7 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
     let wallet=receiver;
     match user{
         Some(val)=>user_mut=val,
-        None=>return Err(String::from("User not found"))
+        _none=>return Err(String::from("User not found"))
     }
     // match user_mut.wallet {
     //     Some(val)=>wallet=val,
@@ -217,7 +207,7 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
                 Err(e)=>return Err(e)
             }
         },
-        None=>return Err(String::from("Invalid hub for the user"))
+        _none=>return Err(String::from("Invalid hub for the user"))
     }
     user_mut.redeem_points-=points;
     USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(id,user_mut));
@@ -226,7 +216,7 @@ pub async fn withdraw_points(id:String,receiver:Principal,points:u64)->Result<St
     let mut funds_val:FundEntry;
     match funds{
         Some(val)=>funds_val=val,
-        None=>return Err(String::from("No funds found for the hub"))
+        _none=>return Err(String::from("No funds found for the hub"))
     }
     funds_val.balance-=amount;
     funds_val.locked-=amount;
@@ -243,7 +233,7 @@ pub fn get_user_refers(discord_id: String) -> Result<Vec<UserReferDetails>, Stri
 
     match user {
         Some(val) => user_profile = val,
-        None => return Err("User not found".to_string()),
+        _none => return Err("User not found".to_string()),
     }
 
     let mut refer_details: Vec<UserReferDetails> = Vec::new();

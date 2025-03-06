@@ -40,14 +40,6 @@ pub enum AdminRole{
     Moderator,
     Editor
 }
-// pub enum ModeratorRole{
-// Moderator
-// }
-// pub enum EditorRole{
-//     Editor
-// }
-
-// spaces
 
 #[derive(Clone, Debug,CandidType,Deserialize,Serialize)]
 pub struct SpaceURLs{

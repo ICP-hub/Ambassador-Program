@@ -106,49 +106,6 @@ export const WalletPage = () => {
       console.log(error);
     }
   }
-  async function login() {
-    try {
-      const authClient = await AuthClient.create();
-
-      await authClient.login({
-        identityProvider:
-          process.env.DFX_NETWORK === "ic"
-            ? "https://identity.ic0.app/"
-            : `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943`,
-        onError: (error) => console.log(error),
-        onSuccess: async () => {
-          if (updatedUser?.wallet?.length == 0) {
-            let backendActor = createActor(
-              process.env.CANISTER_ID_ICP_AMBASSADOR_PROGRAM_BACKEND,
-              { agentOptions: { identity: authClient?.getIdentity() } }
-            );
-            let updateWalletRes = await backendActor.add_wallet(
-              updatedUser?.discord_id
-            );
-            if (updateWalletRes?.Ok) {
-              toast.success(updateWalletRes?.Ok);
-            } else {
-              throw new Error(updateWalletRes?.Err);
-            }
-          }
-          let ledgerActor = createLedgerActor(canisterId, {
-            agentOptions: {
-              identity: authClient.getIdentity(),
-            },
-          });
-          console.log(
-            "user connected with principal : ",
-            authClient.getIdentity().getPrincipal().toText()
-          );
-          setPrincipal(authClient.getIdentity().getPrincipal().toText());
-          setLedger(ledgerActor);
-        },
-      });
-    } catch (error) {
-      toast.error("Something went wring while connecting wallet");
-      console.log(error);
-    }
-  }
 
   async function logout() {
     await authClient?.logout();
@@ -218,7 +175,6 @@ export const WalletPage = () => {
                 backgroundImage: `url(${bgImage})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
-                // backgroundImage: `url(https://cdn.builder.io/api/v1/image/assets/TEMP/6d49702b2ce6c35ecb5b45303490eb65fa79cd0b7030bbe3192750c86bcf43c6?placeholderIfAbsent=true&apiKey=91e67b5675284a9cb9ba95a2fcd0d114)`,
               }}
               className="flex  flex-col justify-center items-center px-20 py-12 mt-1 w-full rounded-3xl bg-blend-luminosity  lg:min-h-[650px] max-md:px-5 max-md:max-w-full"
             >
@@ -226,7 +182,6 @@ export const WalletPage = () => {
                 balance={balance}
                 setBalance={setBalance}
                 user={user}
-                login={login}
                 ledger={ledger}
                 logout={logout}
               />

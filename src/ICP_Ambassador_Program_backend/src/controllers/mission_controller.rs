@@ -63,7 +63,7 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
             }
             space_val=value;
         },
-        None => return Err(Errors::NoSpaceFound)
+        none => return Err(Errors::NoSpaceFound)
     }
 
     let id=format!("{}_{}",space_id,space_val.mission_count);
@@ -95,7 +95,7 @@ pub fn create_draft_mission(space_id:String)->Result<(),Errors>{
             MISSION_MAP.with(|map| map.borrow_mut().insert(new_mission.mission_id.clone(), new_mission));
             return Ok(())
         },
-        None => return Err(Errors::ErrUpdatingMissionCount)
+        _none => return Err(Errors::ErrUpdatingMissionCount)
     }
 
     
@@ -179,65 +179,4 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,Errors>{
     }
     return Ok(mission_list)
 }
-
-#[query]
-pub fn get_all_space_missions_open(space_id: String) -> Result<Vec<Mission>, Errors> {
-    let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
-    let space_val: Space;
-
-    match space {
-        Some(value) => space_val = value,
-        None => return Err(Errors::NoSpaceFound),
-    }
-
-    let mut count = 0;
-    let mut mission_list: Vec<Mission> = vec![];
-
-    while count < space_val.mission_count {
-        let id = format!("{}_{}", space_id, count);
-
-        let mission = MISSION_MAP.with(|map| map.borrow().get(&id));
-
-        if let Some(mut value) = mission {
-            if value.status == MissionStatus::Draft {
-                count += 1;
-                continue;
-            }
-            if value.end_date.is_empty() {
-                mission_list.push(value);
-            } else {
-                match value.end_date.parse::<u64>() {
-                    Ok(end_date_ms) => {
-                        let current_time_ms = ic_cdk::api::time() / 1_000_000;
-                        if current_time_ms < end_date_ms {
-                            mission_list.push(value);
-                        } else {
-                            value.status = MissionStatus::Expired;
-                            MISSION_MAP.with(|map| map.borrow_mut().insert(id.clone(), value.clone()));
-                        }
-                    }
-                    Err(_) => {
-                        ic_cdk::println!("Invalid end_date for mission ID: {}", id);
-                        continue;
-                    }
-                }
-            }
-        }
-        count += 1;
-    }
-
-    Ok(mission_list)
-}
-
-
-// func to get all missions (currently not used)
-// #[query]
-// pub fn get_mission(mission_id:String)-> Result<Mission,Errors>{
-//     let mission=MISSION_MAP.with(|map| map.borrow().get(&mission_id));
-//     match mission {
-//         Some(value) => return Ok(value),
-//         None => return Err(Errors::MissionNotFound)
-//     }
-// }
-
 
