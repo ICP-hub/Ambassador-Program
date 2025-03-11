@@ -115,7 +115,7 @@ const Home = () => {
         setIsHubModalOpen(true);
         //console.log("user not found")
       }
-        setLoading(false);
+      setLoading(false);
     } catch (e) {
       console.log("Error ==>", e);
       setLoading(false);
@@ -204,7 +204,7 @@ const Home = () => {
                       {spaceData?.[1]?.name || "ALL ICP HUBS "}
                     </div>
                     <input
-                      className="px-5 py-1.5 mt-3 text-lg font-medium rounded-xl bg-violet-500 bg-opacity-20 max-md:pr-5 max-md:max-w-full"
+                      className="px-5 py-1.5 mt-3 text-lg font-medium rounded-xl bg-violet-500 bg-opacity-20 md:w-[85%] max-md:pr-5 lg:w-full"
                       type="text"
                       placeholder="add your info..."
                       value={
