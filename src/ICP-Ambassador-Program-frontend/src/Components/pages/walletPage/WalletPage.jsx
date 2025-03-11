@@ -36,6 +36,7 @@ export const WalletPage = () => {
   const [principal, setPrincipal] = useState(null);
 
   const [balance, setBalance] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [updatedUser, setUpdatedUser] = useState(user);
 
@@ -126,7 +127,7 @@ export const WalletPage = () => {
         "Points : ",
         Math.round(calculatePoints(amount, conversion / 10))
       );
-
+      setIsLoading(true);
       console.log("Type of receiver : ", typeof Principal.fromText(receiver));
 
       const points = Math.round(calculatePoints(amount, conversion / 10));
@@ -152,6 +153,7 @@ export const WalletPage = () => {
       if (withdrawRes?.Ok) {
         toast.success(withdrawRes?.Ok);
         getUser();
+        setIsLoading(false);
         window.location.reload();
       } else {
         toast.error(
@@ -161,6 +163,8 @@ export const WalletPage = () => {
     } catch (error) {
       console.log("The Error : ", error);
       toast.error("Something went wrong while withdrawing points");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -190,6 +194,8 @@ export const WalletPage = () => {
                 setAmount={setAmount}
                 setReceiver={setReceiver}
                 withdraw={withdraw}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             </div>
 

@@ -17,7 +17,6 @@ import { updateUser } from "../../redux/user/userSlice";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-
 const Navbar = ({ onProfileClick }) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
