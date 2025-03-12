@@ -7,10 +7,13 @@ import {
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
+import cardDefaultImg from "../../../../public/cardDefaultImg.jpg";
 
 const MissionCard = ({ updatedContest }) => {
   const [activeIndex, setActiveIndex] = useState(2);
   const totalSlides = 5; // Adjust based on your content
+
+  console.log(" updatedContest ==>", updatedContest);
 
   const prevSlide = () => {
     setActiveIndex((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
@@ -61,7 +64,7 @@ const MissionCard = ({ updatedContest }) => {
   }
 
   return (
-    <div className="w-[400px] h-[520px] ml-14 bg-[#1E0F33] text-white p-5 rounded-md">
+    <div className="w-full h-[520px]  bg-[#1E0F33] text-white p-5 rounded-md">
       {/* Time Remaining */}
       <div className="flex justify-between font-semibold items-center mb-3">
         <span className="text-gray-400 text-sm">Time Remaining</span>
@@ -78,13 +81,29 @@ const MissionCard = ({ updatedContest }) => {
             {parseInt(updatedContest.reward)} Points
           </button>
           <button className="border border-gray-500  bg-[#FFFFFF33] px-3 py-1 rounded-md text-sm">
-            {(parseInt(updatedContest.pool) / (10**6))/ (parseInt(updatedContest.total_user_rewarded))} {DEFAULT_CURRENCY}
+            {parseInt(updatedContest.pool) /
+              10 ** 6 /
+              parseInt(updatedContest.total_user_rewarded)}{" "}
+            {DEFAULT_CURRENCY}
           </button>
         </div>
       </div>
 
       {/* Mission Box */}
-      <div className="relative w-full h-[350px] bg-gradient-to-b from-[#9173FF] to-[#3b2c6f] rounded-xl flex items-start p-3">
+      <div
+        style={{
+          backgroundImage: `url(${
+            updatedContest?.img?.length > 0
+              ? updatedContest?.img[0]
+              : //  "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
+                cardDefaultImg
+          })`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          baackgroundRepeat: "no-repeat",
+        }}
+        className="relative w-full h-[380px] min-w-[300px] bg-gradient-to-b from-[#9173FF] to-[#3b2c6f] rounded-xl flex items-start p-3"
+      >
         <span className="bg-[#4A0295] border border-white px-3 py-1 text-xs rounded-lg">
           {getStatus(parseInt(updatedContest.end_date))}
         </span>

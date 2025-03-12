@@ -1,6 +1,14 @@
 import React from "react";
+import { ThreeDots } from "react-loader-spinner";
 
-export const WithdrawForm = ({ balance, setAmount, setReceiver, withdraw }) => {
+export const WithdrawForm = ({
+  balance,
+  setAmount,
+  setReceiver,
+  withdraw,
+  isLoading,
+}) => {
+  console.log("isLoading : ", isLoading);
   return (
     <section className="flex flex-col items-center mt-6">
       <h2 className="text-4xl font-medium text-white max-md:text-3xl">
@@ -51,12 +59,25 @@ export const WithdrawForm = ({ balance, setAmount, setReceiver, withdraw }) => {
         <p className="px-5 py-1.5 mt-6 text-sm text-center text-white font-normal rounded-3xl bg-[#9173FF]/40  w-[165px]">
           Fee: 0.01 USD
         </p>
-        <button
-          className="px-14 py-2 mt-6 text-xl font-medium text-white whitespace-nowrap rounded-xl border-2 border-white border-solid w-[187px] max-md:px-5"
-          onClick={(e) => withdraw(e)}
-        >
-          Confirm
-        </button>
+        {isLoading ? (
+          <div className=" py-2 mt-6 text-xl font-medium flex justify-center  rounded-xl border-2 border-white border-solid w-[187px] max-md:px-5">
+            <ThreeDots
+              visible={true}
+              height="30"
+              width="40"
+              color="white"
+              radius="9"
+              ariaLabel="three-dots-loading"
+            />
+          </div>
+        ) : (
+          <button
+            className="px-14 py-2 mt-6 text-xl font-medium text-white whitespace-nowrap rounded-xl border-2 border-white border-solid w-[187px] max-md:px-5"
+            onClick={(e) => withdraw(e)}
+          >
+            Confirm
+          </button>
+        )}
       </form>
     </section>
   );

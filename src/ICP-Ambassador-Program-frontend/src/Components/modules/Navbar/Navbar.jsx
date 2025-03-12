@@ -17,7 +17,6 @@ import { updateUser } from "../../redux/user/userSlice";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-
 const Navbar = ({ onProfileClick }) => {
   const [isModelOpen, setModelOpen] = useState(false);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
@@ -94,19 +93,22 @@ const Navbar = ({ onProfileClick }) => {
   }, []);
 
   return (
-    <div className="py-2 h-[110px] px-12 z-50 w-[99%] rounded-b-xl flex justify-between items-center mx-3  bg-[#1F1035]/30">
-      <div className="flex items-center gap-5  " onClick={() => nav("/")}>
+    <div className="py-2 h-[110px] px-12 z-50 w-[99%] gap-2 rounded-b-xl flex justify-between items-center mx-3  bg-[#1F1035]/30">
+      <div
+        className="flex items-center gap-5 min-w-[280px] w-[40%] dlg:max-w-[50%]  "
+        onClick={() => nav("/")}
+      >
         <img src={atlaslogo} alt="atlas" className="h-14" />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
         {discordl_user ? (
           <>
-            <div className="flex flex-wrap gap-3 self-stretch my-auto max-md:max-w-full">
+            <div className="flex gap-2 md:gap-3 self-stretch my-auto max-md:max-w-full">
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/")}
-                  className={`px-9 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                  className={`px-2 md:px-4 dlg:px-10 py-1 dlg:py-2 text-sm lg:text-base text-white font-normal md:font-medium dlg:font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
                     isMissionPage ? "80" : "20"
                   } max-md:px-5`}
                 >
@@ -116,7 +118,7 @@ const Navbar = ({ onProfileClick }) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/leaderboard")}
-                  className={`px-16 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                  className={`px-2 md:px-4 dlg:px-10 py-1  dlg:py-2 text-sm lg:text-base text-white font-normal md:font-medium  dlg:font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
                     isLeaderboardPage ? "80" : "20"
                   } max-md:px-5`}
                 >
@@ -126,7 +128,7 @@ const Navbar = ({ onProfileClick }) => {
               <div className="flex flex-col">
                 <button
                   onClick={() => nav("/referal")}
-                  className={`px-12 py-2.5 text-white font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
+                  className={`px-2 md:px- dlg:px-10 py-1  dlg:py-2 text-sm lg:text-base text-white font-normal md:font-medium  dlg:font-semibold rounded-xl bg-[#9173FF] bg-opacity-${
                     isReferralPage ? "80" : "20"
                   } max-md:px-5`}
                 >
@@ -135,19 +137,19 @@ const Navbar = ({ onProfileClick }) => {
               </div>
             </div>
 
-            <div className="lg:block" onClick={handleProfileToggle}>
+            <div className="lg:block " onClick={handleProfileToggle}>
               <div className="text-black py-1 rounded-md text-sm font-semibold cursor-pointer">
                 {discordl_user.avatar ? (
                   <img
                     src={`https://cdn.discordapp.com/avatars/${discordl_user.discord_id}/${discordl_user.avatar}.png`}
                     alt="User Avatar"
-                    className="w-10 h-10 rounded-full"
+                    className="min-w-9 min-h-9 md:w-11 md:h-11 dlg:w-[70px] dlg:h-[70px] rounded-full"
                   />
                 ) : (
                   <img
                     src={awtar}
                     alt="awtaricon"
-                    className="w-[72px] h-[72px] "
+                    className="min-w-10 min-h-10 md:w-12 md:h-12 dlg:w-[70px] dlg:h-[70px] "
                   />
                 )}
               </div>
