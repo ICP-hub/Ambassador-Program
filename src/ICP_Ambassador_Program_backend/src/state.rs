@@ -123,7 +123,12 @@ pub struct UserProfile {
    pub xp_points: u64,     
    pub redeem_points: u64, 
    pub level: UserLevel,
-   pub referred_by:Option<String>   
+   pub referred_by:Option<String>,
+
+   // Newly added fields
+   pub twitter_username: Option<String>,
+   pub telegram_username: Option<String>,             
+   pub profile_picture: Option<String>,
 }
 
 // Implement the Storable trait for UserProfile

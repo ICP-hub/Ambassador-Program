@@ -3,13 +3,8 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   FormLabel,
-  Radio,
-  RadioGroup,
-  TextField,
   Typography,
   IconButton
 } from '@mui/material';
@@ -17,7 +12,6 @@ import DateTime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import moment from 'moment-timezone';
 import SortDescription from '../Content/sortDescription';
-import { AutocompleteSearchInput } from '../autoCompleteInputSearch/AutoCompleteSearchInput';
 import Rewards from '../reward/reward';
 import TaskSidebar from './task/TaskSidebar';
 import { ApiTask, ImageTask, SendURL, TwitterFollowTask, TwitterTask } from './task/TaskList';
@@ -29,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Principal } from '@dfinity/principal';
 import { formatTokenMetaData, stringToSubaccountBytes } from '../../../utils/utils';
+
 const ItemTypes = {
   TASK: 'task',
 };

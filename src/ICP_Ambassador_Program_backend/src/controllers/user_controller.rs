@@ -67,6 +67,9 @@ pub fn create_user(
         level: UserLevel::Initiate,
         direct_refers: vec![],
         referred_by: Some(ref_user_id),
+        twitter_username: None,
+        telegram_username: None,
+        profile_picture: None,
     };
     USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(discord_id, new_user));
 

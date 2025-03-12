@@ -34,6 +34,11 @@ const Spaces = ({setLoading}) => {
     try {
       setLoading(true)
       console.log(newSpace)
+      if(newSpace.name == ""){
+        toast.error("Fill out all fields");
+        setLoading(false);
+        return
+      }
       let res = await actor?.backendActor?.create_space(newSpace)
       console.log("space creation response : ",res)
       if(res!=undefined && res!=null ){

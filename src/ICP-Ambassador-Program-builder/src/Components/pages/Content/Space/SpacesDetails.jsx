@@ -12,23 +12,13 @@ import {
   Paper,
   Avatar,
   Button,
-  IconButton,
-  Box,
-  Menu,
-  MenuItem,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updateMission } from "../../../../redux/mission/missionSlice";
 import toast from "react-hot-toast";
-
 import TaskIcon from "@mui/icons-material/Task";
 import { useAuthClient } from "../../../../utils/useAuthClient";
-import { Principal } from "@dfinity/principal";
 import { formatDate } from "../../../../utils/formatDate";
 import { FaEdit } from "react-icons/fa";
 import { DEFAULT_CURRENCY } from '../../../../../../../DevelopmentConfig';
@@ -36,10 +26,7 @@ import { DEFAULT_CURRENCY } from '../../../../../../../DevelopmentConfig';
 
 const SpacesDetails = ({ setLoading }) => {
   const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [expireFilter, setExpireFilter] = useState(true);
 
-  const [anchorEl, setAnchorEl] = useState(null);
   const spaces = useSelector((state) => state.spaces.value);
   const actors = useSelector((state) => state.actor.value);
   const [missionList, setMissionList] = useState([]);
@@ -84,7 +71,7 @@ const SpacesDetails = ({ setLoading }) => {
       console.log("create draft mission response : ", res);
       if (res?.Ok == null && res != undefined && res != null) {
         toast.success("Mission added as a draft successfully");
-        
+
         setLoading(false);
         // window.location.reload();
         navigate("/slug_url/mission");

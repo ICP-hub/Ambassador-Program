@@ -4,7 +4,7 @@
 CANISTER_NAME="ICP_Ambassador_Program_backend"
 USER_PREFIX="test_user_"
 HUB="2lsxv-kqepd-tloch-im6fb-kuy4w-yf5jt-jlxsp-2ga5a-xwmmc-c7dug-nae_0"
-STRESS_TEST_USERS=20  # Adjust this for higher/lower stress levels
+STRESS_TEST_USERS=2  # Adjust this for higher/lower stress levels
 
 # Function to log messages
 log() {

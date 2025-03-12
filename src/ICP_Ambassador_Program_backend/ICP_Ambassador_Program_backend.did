@@ -146,12 +146,15 @@ type Tasks = variant {
 type UserLevel = variant { GrandMaster; Initiate; Knight; Padawan; Master };
 type UserProfile = record {
   hub : text;
+  telegram_username : opt text;
   username : text;
   redeem_points : nat64;
+  profile_picture : opt text;
   xp_points : nat64;
   referred_by : opt text;
   direct_refers : vec text;
   level : UserLevel;
+  twitter_username : opt text;
   discord_id : text;
   wallet : opt principal;
 };

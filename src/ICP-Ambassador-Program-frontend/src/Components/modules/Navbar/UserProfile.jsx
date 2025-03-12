@@ -4,10 +4,9 @@ import { CiWallet } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { FaDiscord } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { ICP_Ambassador_Program_backend } from "../../../../../declarations/ICP_Ambassador_Program_backend";
-import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
+import { DEFAULT_CURRENCY, DISCORD_SERVER_URL } from "../../../../../../DevelopmentConfig";
 import { formatDate } from "../../utils/formatDate";
 import { motion, AnimatePresence } from "framer-motion";
 import settingProfile from "../../../../public/icons/settingProfile.png";
@@ -165,7 +164,7 @@ const UserProfile = ({ onWalletClick, onProfileClick, isDrawerOpen }) => {
                   <button className="bg-[#503A8b] text-white px-2 py-2 rounded-lg flex items-center">
                     <a
                       target="_blank"
-                      href="https://discord.com/channels/1309834458777653279/1309834458777653282"
+                      href={DISCORD_SERVER_URL} 
                     >
                       <FaDiscord className="text-white text-2xl cursor-pointer" />
                     </a>

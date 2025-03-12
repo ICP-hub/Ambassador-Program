@@ -64,15 +64,17 @@ const BalanceList = () => {
     try {
       setLoading(true);
 
+      if(amount<=0){
+        toast.error("Invalid Amount");
+        setLoading(false);
+        return
+      }
+
       await transferApprove(amount, spaces?.space_id, actor?.ledgerActor);
 
       let finalAmount = Math.pow(10, 6) * Number(amount);
       console.log("final amount : ", finalAmount);
       console.log(spaces);
-      // if(finalAmount>balance){
-      //   toast.error("Ca")
-      //   return
-      // }
       let res = await actor?.backendActor?.add_funds(
         spaces?.space_id,
         finalAmount
@@ -82,10 +84,12 @@ const BalanceList = () => {
       if (res?.Ok) {
         toast.success("amount added");
         getFundDetails();
+        setLoading(false);
       } else {
-        toast.error("" + res?.Err);
+        toast.error("Insufficient Balance in Wallet");
+        setLoading(false);
       }
-      setLoading(false);
+      
     } catch (err) {
       setLoading(false);
       console.log("error adding funds : ", err);

@@ -1,26 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-
-// old==
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAACtejymJqAc7ArH1gbIR95vIYxuiCzSw",
-//   authDomain: "twitter-login-dd01f.firebaseapp.com",
-//   projectId: "twitter-login-dd01f",
-//   storageBucket: "twitter-login-dd01f.firebasestorage.app",
-//   messagingSenderId: "513704027008",
-//   appId: "1:513704027008:web:3b272401189fe1c77d5765",
-//   measurementId: "G-GJXQ06C9S9"
-// };
-
-// Rajnish==
+import { TWITTER_API_KEY, TWITTER_AUTH_DOMAIN, TWITTER_PROJECT_ID, TWITTER_STORAGE_BUCKET, TWITTER_MESSAGING_SENDER_ID, TWITTER_APP_ID } from '../../auth/authdata';
 const firebaseConfig = {
-  apiKey: "AIzaSyA8do_8bXX7CqDh7V4FVxMxNusFEEy6oig",
-  authDomain: "atlas-be30e.firebaseapp.com",
-  projectId: "atlas-be30e",
-  storageBucket: "atlas-be30e.firebasestorage.app",
-  messagingSenderId: "277046515585",
-  appId: "1:277046515585:web:bfea502a2c35963213ba80"
+  apiKey: TWITTER_API_KEY,
+  authDomain: TWITTER_AUTH_DOMAIN,
+  projectId: TWITTER_PROJECT_ID,
+  storageBucket: TWITTER_STORAGE_BUCKET,
+  messagingSenderId: TWITTER_MESSAGING_SENDER_ID,
+  appId: TWITTER_APP_ID
 };
 
 // Initialize Firebase

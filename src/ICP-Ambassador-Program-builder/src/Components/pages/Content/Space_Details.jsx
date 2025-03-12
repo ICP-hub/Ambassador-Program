@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
-// import upload_backgroud from '../../../assets/images/upload_background.png'
-import RichTextEditor from "./TextEditor";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import SortDescription from "./sortDescription";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,20 +11,8 @@ const Space_Details = ({ setLoading }) => {
   const actor = useSelector((state) => state.actor.value);
   const [logoImage, setLogoImage] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState(null);
-  const [chain, setchain] = useState(spaces?.chain || "EVM");
-  const [spaceName, setSpaceName] = useState(spaces?.name);
-  const [slug, setSlug] = useState(spaces?.slug);
   const [description, setDescription] = useState(spaces?.description);
-  const [shortDescription, setShortDescription] = useState(
-    spaces?.shor_description?.[0] || ""
-  );
-  const [websitURl, setWebsitURl] = useState("");
-  const [twitterURL, setTwitterURL] = useState("");
-  const [gitURL, setGitURL] = useState("");
-  const [midumURL, setMidumURL] = useState("");
-  const [telegramURL, setTelegramURL] = useState("");
-  const [discordURL, setDiscordURL] = useState("");
-  const [backgroundColor, setBackgroundColor] = useState("");
+  const [shortDescription, setShortDescription] = useState(spaces?.shor_description?.[0] || "");
   const [updatedSpace, setUpdatedSpace] = useState(spaces);
   const [logoMetadata, setLogoMetadata] = useState(null);
   const [bgMetadata, setBgMetadata] = useState(null);
@@ -89,31 +71,17 @@ const Space_Details = ({ setLoading }) => {
     });
   }
 
-  // async function uploadLogo(){
-  //     const fileContent=await fileToUint8Array(logoImage)
-  //     const imageData = {
-  //         image_title: logoMetadata.title,
-  //         name: logoMetadata.name,
-  //         content: [fileContent], // This is the field expected by the backend
-  //         content_type: logoMetadata.contentType // Ensure this matches backend expectations
-  //       };
-  //     let res= await actor?.backendActor?.upload_profile_image(process.env.CANISTER_ID_IC_ASSET_HANDLER,imageData)
-  //     let url="not found"
-  //     if(res?.Ok){
-  //         let id=res?.Ok
-  //         const protocol = process.env.DFX_NETWORK === "ic" ? "https" : "http";
-  //         const domain = process.env.DFX_NETWORK === "ic" ? "raw.icp0.io" : "localhost:4943";
-  //         url=`${protocol}://${process.env.CANISTER_ID_IC_ASSET_HANDLER}.${domain}/f/${id}`
-
-  //     }
-  //     console.log(res,url)
-
-  // }
-
   async function editSpace() {
     try {
       setLoading(true);
       let newspace = updatedSpace;
+
+      if(newspace.name == ""){
+        toast.error("Space name can't be empty");
+        setLoading(false);
+        return;
+      }
+
       if (bgMetadata) {
         let newBGImg = await uploadImgAndReturnURL(bgMetadata, backgroundImage);
         newspace = { ...newspace, bg_img: [newBGImg] };
