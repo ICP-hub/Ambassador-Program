@@ -91,6 +91,7 @@ type Space = record {
   name : text;
   slug : text;
   urls : SpaceURLs;
+  super_admins : vec principal;
   description : text;
   mission_count : nat16;
   bg_css : opt text;
@@ -191,6 +192,7 @@ service : {
   register_admin : () -> (Result_1);
   reject_submission : (text) -> (Result);
   update_space : (Space) -> (Result_1);
+  update_user_profile : (text, text, text) -> (Result);
   upload_profile_image : (text, ProfileImageData) -> (Result);
   withdraw_points : (text, principal, nat64) -> (Result);
 }

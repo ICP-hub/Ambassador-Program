@@ -181,7 +181,11 @@ pub struct Space{
     pub mission_count:u16,
     pub conversion:u16,
     pub moderators:Vec<Principal>,
-    pub editors:Vec<Principal>
+    pub editors:Vec<Principal>,
+    // additional fields
+    pub super_admins:Vec<Principal>
+
+
 }
 
 impl Storable for Space{

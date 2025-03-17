@@ -6,7 +6,7 @@ use crate::types::UserReferDetails;
 use crate::{
     state::{FundEntry, Space},
     Benefactors, UserLevel, UserProfile, ICRC_DECIMALS, REFERRAL_BENEFICIARY_MAP, SPACE_FUND_MAP,
-    SPACE_MAP, USER_PROFILE_MAP,
+    SPACE_MAP, USER_PROFILE_MAP
 };
 
 use super::transfer_amount;
@@ -275,4 +275,30 @@ pub fn get_user_refers(discord_id: String) -> Result<Vec<UserReferDetails>, Stri
     }
 
     Ok(refer_details)
+}
+
+#[update]
+pub fn update_user_profile(discord_id: String, username: String, category: String) -> Result<String, String> {
+    let user = USER_PROFILE_MAP.with(|map| map.borrow().get(&discord_id));
+    
+    let mut user_mut: UserProfile = match user {
+        Some(val) => val,
+        None => return Err(String::from("No user found with this ID")),
+    };
+
+    // Update or remove the corresponding field
+    match category.as_str() {
+        "twitter" => {
+            user_mut.twitter_username = if username.is_empty() { None } else { Some(username) };
+        }
+        "telegram" => {
+            user_mut.telegram_username = if username.is_empty() { None } else { Some(username) };
+        }
+        _ => return Err(String::from("Invalid category provided")), // Handle invalid categories
+    }
+
+    // Save changes
+    USER_PROFILE_MAP.with(|map| map.borrow_mut().insert(discord_id, user_mut));
+
+    Ok(String::from("User profile updated"))
 }

@@ -8,8 +8,12 @@ import { LiaEdit } from "react-icons/lia";
 import ParentComponent from "./ParentComponent";
 import Navbar from "../modules/Navbar/Navbar";
 import Footer from "../footer/Footer";
+import toast from "react-hot-toast";
+import { ICP_Ambassador_Program_backend } from "../../../../declarations/ICP_Ambassador_Program_backend";
 
+// get_user_data
 const Setting = () => {
+  const [userId, setUserId] = useState();
   const [userName, setuserName] = useState("");
   const [url, setUrl] = useState({
     xUrl: "",
@@ -31,12 +35,44 @@ const Setting = () => {
     if (url[platform].trim() !== "") {
       setUrlState((prev) => ({ ...prev, [platform]: true }));
     }
+
+    // call backend to save the username
+
   };
 
-  const handleRemove = (platform) => {
-    setUrlState((prev) => ({ ...prev, [platform]: false }));
-    setUrl((prev) => ({ ...prev, [platform]: "" }));
+
+  const handleRemove = async (platform) => {
+    try {
+      if (platform === "discordUrl") {
+        toast.error("Discord username cannot be removed");
+        return;
+      }
+
+      setUrlState((prev) => ({ ...prev, [platform]: false }));
+      setUrl((prev) => ({ ...prev, [platform]: "" }));
+
+      let username = "";
+      let category;
+
+
+      if (platform === "xUrl") {
+        category = "twitter";
+      }
+      else if (platform === "telegramUrl") {
+        category = "telegram";
+      }
+
+      const resp = await ICP_Ambassador_Program_backend.update_user_profile(userId, username, category);
+      console.log("delete resp : ", resp);
+
+      get_user_data(userId);
+
+
+    } catch (error) {
+      console.log(error);
+    }
   };
+
 
   function getCookie(name) {
     const cookies = document.cookie.split("; ");
@@ -49,19 +85,58 @@ const Setting = () => {
     return null;
   }
 
+  const get_user_data = async (id) => {
+    try {
+      const resp = await ICP_Ambassador_Program_backend.get_user_data(id);
+      console.log("User data :", resp[0]);
+
+      setUrl((prev) => ({
+        ...prev,
+        xUrl: resp[0].twitter_username,
+        telegramUrl: resp[0].telegram_username,
+      }));
+
+      setUrlState((prev) => ({
+        ...prev,
+        xUrl: true,
+        telegramUrl: true,
+      }));
+
+
+
+    }
+    catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     const discordUser = getCookie("discord_user");
 
     if (discordUser) {
       try {
         const user = JSON.parse(discordUser);
-        console.log("Discord Username:", user.username);
+        console.log("Discord Username:", user.id);
+        setUserId(user.id);
         setuserName(user.username);
+        setUrl((prev) => ({
+          ...prev, discordUrl: user.username,
+        }));
+        setUrlState((prev) => ({
+          ...prev,
+          discordUrl: true,
+        }));
+
+        get_user_data(user.id);
+
+
       } catch (error) {
         console.error("Invalid JSON in cookie:", error);
       }
     }
   }, []);
+
+
 
   return (
     <>
@@ -145,7 +220,7 @@ const SocialInput = ({
   handleRemove,
 }) => {
   return (
-    <div className="flex gap-6 items-center">
+    <div className="flex gap-6 items-center w-[60%]">
       <div className="flex justify-center items-center bg-[#9173FF]/30 md:w-[40px] md:h-[40px] dlg:w-[70px] dlg:h-[70px] rounded-md">
         {icon}
       </div>

@@ -53,6 +53,7 @@ pub fn create_space(space: CreateSpace) -> Result<Option<Space>, Errors> {
         conversion: space.conversion,
         moderators: Vec::new(),
         editors: Vec::new(),
+        super_admins: Vec::new(),
     };
 
     let inserted = SPACE_MAP.with(|map| map.borrow_mut().insert(space_id, new_space));
