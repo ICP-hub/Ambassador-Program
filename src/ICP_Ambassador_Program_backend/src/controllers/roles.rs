@@ -11,8 +11,8 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
 
     // Ensure only the owner of the space can add moderators or editors
     let mut space = get_space_by_id(space_id.clone())?;
-    if space.owner != caller {
-        return Err("Only the owner of the space can add moderators or editors".to_string());
+    if space.owner != caller && !space.super_admins.contains(&caller) {
+        return Err("Only the owner or super admins can add moderators or editors".to_string());
     }
 
     // add space to the user's admin spaces
@@ -31,9 +31,12 @@ pub fn add_role_to_space(space_id: String, user_principal: Principal, role: Role
                 space.editors.push(user_principal);
             }
         },
-        // Role::SuperAdmin => {
-        //     return Err("Super Admin role is not allowed".to_string());
-        // }
+        Role::SuperAdmin => {
+            // return Err("Super Admin role is not allowed".to_string());
+            if !space.super_admins.contains(&user_principal) {
+                space.super_admins.push(user_principal);
+            }
+        }
     }
 
     SPACE_MAP.with(|map| map.borrow_mut().insert(space_id.clone(), space));
@@ -58,6 +61,10 @@ pub fn check_moderator(principal: Principal , space_id: String) -> Result<(), St
         return Ok(());
     }
 
+    if space.super_admins.contains(&principal){
+        return Ok(());
+    }
+
     if space.moderators.contains(&principal){
         return Ok(());
     }
@@ -70,6 +77,10 @@ pub fn check_editor(principal: Principal , space_id: String) -> Result<(), Strin
     let space = get_space_by_id(space_id)?;
 
     if space.owner == principal {
+        return Ok(());
+    }
+
+    if space.super_admins.contains(&principal){
         return Ok(());
     }
 

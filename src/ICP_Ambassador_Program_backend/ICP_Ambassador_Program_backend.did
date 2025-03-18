@@ -81,7 +81,7 @@ type Reward = record {
 };
 type RewardCurrency = variant { ICP; CKBTC; CKETH };
 type RewardHistory = record { user : text; rewards : vec Reward };
-type Role = variant { Editor; Moderator };
+type Role = variant { Editor; SuperAdmin; Moderator };
 type Space = record {
   editors : vec principal;
   owner : principal;

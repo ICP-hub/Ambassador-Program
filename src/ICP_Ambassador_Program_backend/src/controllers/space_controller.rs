@@ -126,7 +126,7 @@ pub async fn add_funds(id: String, amount: u64) -> Result<String, String> {
         Some(val) => {
             space_val = val;
             let caller = caller();
-            if space_val.owner != caller && !space_val.editors.contains(&caller) {
+            if space_val.owner != caller && !space_val.super_admins.contains(&caller) && !space_val.editors.contains(&caller) {
                 return Err(String::from("Not authorized to add funds"));
             }
             ic_cdk::println!("Caller is authorized to add funds");

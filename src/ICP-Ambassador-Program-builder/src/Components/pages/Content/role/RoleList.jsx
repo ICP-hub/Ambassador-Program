@@ -55,7 +55,7 @@ const RoleList = () => {
           console.log("Roles list fetched successfully!");
           const editors = res.Ok.editors || [];
           const moderators = res.Ok.moderators || [];
-          // const super_admins = res.Ok.super_admins || [];
+          const super_admins = res.Ok.super_admins || [];
 
           const editorObjects = editors.map((editorId, index) => ({
             id: `editor_${index}`,
@@ -69,13 +69,13 @@ const RoleList = () => {
             role: "Moderator",
           }));
 
-          // const superAdminObjects = super_admins.map((superAdminId, index) => ({
-          //   id: `super_admin_${index}`,
-          //   wallet: superAdminId.toText(),
-          //   role: "Super Admin",
-          // }));
+          const superAdminObjects = super_admins.map((superAdminId, index) => ({
+            id: `super_admin_${index}`,
+            wallet: superAdminId.toText(),
+            role: "Super Admin",
+          }));
 
-          const rolesList = [...editorObjects, ...moderatorObjects];
+          const rolesList = [...editorObjects, ...moderatorObjects, ...superAdminObjects];
 
           console.log("rolesList: ", rolesList);
 
@@ -193,7 +193,7 @@ const RoleList = () => {
                   >
                     <MenuItem value="Editor">Editor</MenuItem>
                     <MenuItem value="Moderator">Moderator</MenuItem>
-                    {/* <MenuItem value="SuperAdmin">Super Admin</MenuItem> */}
+                    <MenuItem value="SuperAdmin">Super Admin</MenuItem>
                   </Select>
                 </DialogContentText>
               </DialogContent>
