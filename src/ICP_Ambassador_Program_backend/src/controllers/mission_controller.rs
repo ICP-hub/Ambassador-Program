@@ -180,3 +180,30 @@ pub fn get_all_space_missions(space_id:String)->Result<Vec<Mission>,Errors>{
     return Ok(mission_list)
 }
 
+
+#[update(guard = check_anonymous)]
+pub fn delete_mission(mission_id: String) -> Result<(), Errors> {
+    let mission = MISSION_MAP.with(|map| map.borrow().get(&mission_id));
+    
+    match mission {
+        Some(mission) => {
+            // Check if caller is editor
+            if !check_editor(caller(), mission.space_id.clone()).is_ok() {
+                return Err(Errors::NotAuthorized);
+            }
+
+            // If mission had locked funds, unlock them
+            if mission.pool > 0 {
+                let unlock_result = unlock_funds(mission.space_id.clone(), mission.pool);
+                if let Err(e) = unlock_result {
+                    return Err(Errors::FailedToUnlockFunds);
+                }
+            }
+
+            // Remove mission from map
+            MISSION_MAP.with(|map| map.borrow_mut().remove(&mission_id));
+            Ok(())
+        },
+        None => Err(Errors::NoMissionFound)
+    }
+}
