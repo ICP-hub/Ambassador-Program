@@ -250,7 +250,11 @@ pub enum Errors{
     NotAuthorized,
     InvalidInput,
     NoMissionFound,
-    FailedToUnlockFunds
+    FailedToUnlockFunds,
+    UnreadSubmissionsExist,
+    NotAllowed,
+    MissionNotExpired,
+    InvalidExpiryDate
 }
 
 

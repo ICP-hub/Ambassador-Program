@@ -39,6 +39,7 @@ export default function TaskRedemption() {
   const [authenticate, setAuth] = useState(false);
   const [twitterUser, setTwitterUser] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [submittingTasks, setSubmittingTasks] = useState("");
 
   const current_space = JSON.parse(localStorage.getItem("spaceData"));
 
@@ -940,7 +941,7 @@ export default function TaskRedemption() {
                                         <DoneIcon />
                                         <div>Completed</div>
                                       </div>
-                                    ) : submittingTasks[task.task_id] ? (
+                                    ) : submitTask[task.task_id] ? (
                                       <div
                                         style={{ backgroundColor: bgColor }}
                                         className="text-white w-full py-2 flex justify-center items-center gap-2 ml-2 rounded-md"
