@@ -31,12 +31,26 @@ const Setting = () => {
     setUrl((prev) => ({ ...prev, [platform]: value }));
   };
 
-  const handleConnect = (platform) => {
-    if (url[platform].trim() !== "") {
-      setUrlState((prev) => ({ ...prev, [platform]: true }));
-    }
+  const handleConnect = async (platform) => {
+    try {
+      if (url[platform].trim() !== "") {
+        setUrlState((prev) => ({ ...prev, [platform]: true }));
+      }
 
-    // call backend to save the username
+      let username = url[platform];
+      let category = platform === "xUrl" ? "twitter" : "telegram";
+
+      console.log("category : ", category, username);
+
+      const resp = await ICP_Ambassador_Program_backend.update_user_profile(userId, username, category);
+      console.log("resp : ", resp);
+
+      setTimeout(() => {
+        get_user_data(userId);
+      }, 4000);
+    } catch (error) {
+      console.log(error);
+    }
 
   };
 
@@ -65,7 +79,9 @@ const Setting = () => {
       const resp = await ICP_Ambassador_Program_backend.update_user_profile(userId, username, category);
       console.log("delete resp : ", resp);
 
-      get_user_data(userId);
+      setTimeout(() => {
+        get_user_data(userId);
+      }, 4000);
 
 
     } catch (error) {
@@ -88,7 +104,7 @@ const Setting = () => {
   const get_user_data = async (id) => {
     try {
       const resp = await ICP_Ambassador_Program_backend.get_user_data(id);
-      console.log("User data :", resp[0]);
+      console.log("User data :", resp[0].twitter_username.length);
 
       setUrl((prev) => ({
         ...prev,
@@ -96,13 +112,19 @@ const Setting = () => {
         telegramUrl: resp[0].telegram_username,
       }));
 
-      setUrlState((prev) => ({
-        ...prev,
-        xUrl: true,
-        telegramUrl: true,
-      }));
+      if (resp[0].twitter_username.length > 0) {
+        setUrlState((prev) => ({
+          ...prev,
+          xUrl: true,
+        }));
+      }
 
-
+      if (resp[0].telegram_username.length > 0) {
+        setUrlState((prev) => ({
+          ...prev,
+          telegramUrl: true,
+        }));
+      }
 
     }
     catch (e) {
