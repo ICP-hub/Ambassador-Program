@@ -39,6 +39,7 @@ export default function TaskRedemption() {
   const [authenticate, setAuth] = useState(false);
   const [twitterUser, setTwitterUser] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [submittingTasks, setSubmittingTasks] = useState("");
 
   const [submittingTasks, setSubmittingTasks] = useState({});
 

@@ -13,11 +13,15 @@ type CreateSpace = record {
 };
 type Errors = variant {
   AlreadyEditor;
+  UnreadSubmissionsExist;
   ErrorUpdatingAdmin;
   InvalidInput;
+  NotAllowed;
   NoSpaceFound;
   ErrUpdatingMissionCount;
   NoSubmissionFound;
+  InvalidExpiryDate;
+  NoMissionFound;
   NotRegisteredAsAdmin;
   NotASpaceModerator;
   NotAuthorized;
@@ -32,10 +36,12 @@ type Errors = variant {
   NotOwnerOrSuperAdmin;
   MissionNotFound;
   MissionInActive;
+  MissionNotExpired;
   AlreadyAdmin;
   AlreadySuperAdmin;
   NotRegisteredAsEditor;
   NoUserFound;
+  FailedToUnlockFunds;
 };
 type FundEntry = record { balance : nat64; locked : nat64; space_id : text };
 type LeaderboardEntry = record { name : text; rank : text; points : nat64 };
@@ -174,6 +180,7 @@ service : {
   create_draft_mission : (text) -> (Result_1);
   create_space : (CreateSpace) -> (Result_3);
   create_user : (text, text, text, opt text) -> (Result);
+  delete_mission : (text) -> (Result_1);
   deposit_icp_to_canister : (nat64) -> (Result_4);
   edit_mission : (Mission) -> (Result_2);
   get_admin : () -> (Result_5) query;
