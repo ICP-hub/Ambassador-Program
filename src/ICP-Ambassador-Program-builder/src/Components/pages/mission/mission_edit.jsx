@@ -187,11 +187,6 @@ const MissionEdit = () => {
 
   const handlesave = async (action) => {
     try {
-      // if((parseFloat(pool)+0.0001)>=(spaceBalance)){
-      //   console.log(pool,spaceBalance)
-      //   toast.error("Insufficient space balance, please add more funds")
-      //   return
-      // }
       const draft_data = {
         Title: title,
         Image: logoImage,
@@ -281,15 +276,13 @@ const MissionEdit = () => {
         }
       }
 
-      // ------------ Rewatd pool calculations -----------------
       let poolamount = parseInt(pool * Math.pow(10, 6)) //token pool
-      // let minPoolForOneUser=parseInt(spaces.conversion)*Math.pow(10,6)
-      // console.log("minimum pool calc : ",poolamount,minPoolForOneUser,Math.abs(poolamount/minPoolForOneUser))
-      // if(poolamount<minPoolForOneUser){
-      //   setLoading(false)
-      //   toast.error("pool amount should be increased or points per user should be decreased to reward these points")
-      //   return
-      // }
+
+      if(pool/participantsCount2 < 0.03){
+        toast.error("Reward amount per user should be atleast 0.03")
+        setLoading(false)
+        return
+      }
 
       const pointsPerUser = calculatePointsPerUser(participantsCount2, poolamount / (10 ** 6), parseInt(spaces.conversion) / 10);
 
@@ -449,9 +442,6 @@ const MissionEdit = () => {
       const updatedTasks = prevTasks.map((task) =>
         task.id === field ? { ...task, [value]: taskId } : task
       );
-      // console.log(`Updated Task ID: ${taskId}, Field: ${field}, New Value: ${value}`);
-      // console.log('Updated Task:', updatedTasks.find(task => task.id === field));
-
       return updatedTasks;
     });
   };
@@ -468,26 +458,13 @@ const MissionEdit = () => {
     setTasks(updatedTasks);
   };
 
-  const handleSelectedCohosts = (selectedCohosts) => {
-    //console.log("Selected Cohosts:", selectedCohosts);
-    setSpace(selectedCohosts)
-  };
-
   const handleDescriptionChange = (newDescription) => {
     setDescription(newDescription)
   }
 
   const handleRewardsChange = (updatedRewards) => {
     setRewardsData(updatedRewards);
-    //console.log('Updated Rewards:', updatedRewards);
   };
-
-
-  // const handleParticipantsChange = (updatedParticipantsCount) => {
-  //   setParticipantsCount(updatedParticipantsCount);
-
-  //   //console.log('Updated Participants Count:', updatedParticipantsCount);
-  // };
 
   if (loading) {
     return (

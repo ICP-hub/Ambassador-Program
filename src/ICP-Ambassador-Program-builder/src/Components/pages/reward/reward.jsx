@@ -1,56 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {
-  MenuItem,
-  Select,
   FormControl,
   TextField,
   Box,
   Typography,
-  IconButton,
-  Button,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { DEFAULT_CURRENCY } from "../../../../../../DevelopmentConfig";
 
 const Rewards = ({
-  spaceBal,
-  onRewardsChange,
-  onParticipantsChange,
   initialReward,
   pool,
   setPool,
-  conv,
-
-
   participantsCount,
   setParticipantsCount
 }) => {
-  const [rewards, setRewards] = useState(initialReward);
   const [rewardPerUser, setRewardPerUser] = useState(pool/participantsCount || 0);
-
-  // const handleAddReward = () => {
-  //   const updatedRewards = [...rewards, { tokenAmount: "", rewardType: "" }];
-  //   setRewards(updatedRewards);
-  //   onRewardsChange(updatedRewards);
-  // };
-
-  // const handleRemoveReward = (index) => {
-  //   const updatedRewards = rewards.filter((_, i) => i !== index);
-  //   setRewards(updatedRewards);
-  //   onRewardsChange(updatedRewards);
-  // };
-
-  // const handleRewardChange = (index, field, value) => {
-  //   const updatedRewards = [...rewards];
-  //   updatedRewards[index][field] = value;
-  //   setRewards(updatedRewards);
-  //   onRewardsChange(updatedRewards);
-  // };
-
-  // const handleParticipantsChange = (e) => {
-  //   setRewards(e.target.value);
-  //   onParticipantsChange(e.target.value);
-  // };
 
   useEffect(() => {
     if (rewardPerUser && participantsCount) {
