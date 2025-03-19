@@ -70,9 +70,11 @@ const BalanceList = () => {
         return
       }
 
-      await transferApprove(amount, spaces?.space_id, actor?.ledgerActor);
+      const transfer_amount = Number(amount-0.01);
 
-      let finalAmount = Math.pow(10, 6) * Number(amount);
+      await transferApprove(transfer_amount, spaces?.space_id, actor?.ledgerActor);
+
+      let finalAmount = Math.pow(10, 6) * Number(transfer_amount);
       console.log("final amount : ", finalAmount);
       console.log(spaces);
       let res = await actor?.backendActor?.add_funds(

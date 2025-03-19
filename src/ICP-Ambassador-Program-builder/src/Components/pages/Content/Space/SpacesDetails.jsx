@@ -107,17 +107,17 @@ const SpacesDetails = ({ setLoading }) => {
           <div className="flex gap-3 items-center">
             <div className="font-semibold text-md mr-8">Space name: {spaces?.name}</div>
             {(permissions.moderator || permissions.superAdmin) && (
-              <Button onClick={() => handleNavigation("/space_details")} variant="outlined">EDIT</Button>
+              <Button sx={{ backgroundColor: 'black', color: 'white' }} onClick={() => handleNavigation("/space_details")} variant="outlined">EDIT</Button>
             )}
             {(permissions.owner || permissions.superAdmin) && (
-              <Button onClick={() => handleNavigation("/slug_url/role")} variant="contained">ROLES</Button>
+              <Button sx={{ backgroundColor: 'black', color: 'white' }} onClick={() => handleNavigation("/slug_url/role")} variant="contained">ROLES</Button>
             )}
             {(permissions.editor || permissions.superAdmin) && (
-              <Button onClick={() => handleNavigation("/slug_url/balance")} variant="contained">BALANCE</Button>
+              <Button sx={{ backgroundColor: 'black', color: 'white' }} onClick={() => handleNavigation("/slug_url/balance")} variant="contained">BALANCE</Button>
             )}
           </div>
           {(permissions.editor || permissions.superAdmin) && (
-            <Button onClick={createDraftMission} variant="contained">CREATE MISSION</Button>
+            <Button sx={{ backgroundColor: 'black', color: 'white' }} onClick={createDraftMission} variant="contained">CREATE MISSION</Button>
           )}
         </div>
 

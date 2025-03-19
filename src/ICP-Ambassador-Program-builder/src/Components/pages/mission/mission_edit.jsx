@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Principal } from '@dfinity/principal';
 import { formatTokenMetaData, stringToSubaccountBytes } from '../../../utils/utils';
+import { ICP_Ambassador_Program_backend } from '../../../../../declarations/ICP_Ambassador_Program_backend';
 
 const ItemTypes = {
   TASK: 'task',
@@ -112,11 +113,17 @@ const MissionEdit = () => {
       : moment().tz(timezone)
   );
 
+  const [isExpired, setIsExpired] = useState(false);
+
+  useEffect(() => {
+    if (moment().isAfter(endDate)) {
+      setIsExpired(true);
+    }
+  }, []);
+
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState(mission?.title)
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [missionType, setMissionType] = useState('');
+  const [title, setTitle] = useState(mission?.title);
   const [space, setSpace] = useState([])
   const [description, setDescription] = useState(mission?.description)
   const [rewardsData, setRewardsData] = useState(parseInt(mission?.reward));
@@ -128,7 +135,40 @@ const MissionEdit = () => {
 
   const [participantsCount2, setParticipantsCount2] = useState(parseInt(mission?.max_users_rewarded) || 0);
 
-  // Change in this file
+  const deleteMission = async () => {
+    try {
+
+      const res = await ICP_Ambassador_Program_backend.delete_mission(mission?.mission_id );
+
+      console.log("delete mission response : ", res);
+
+      if(res.Ok){
+        toast.success("Mission deleted successfully")
+        nav('/slug_url/mission');
+      }
+      if(res.Err){
+
+        const obj = res.Err
+
+        const keys = Object.keys(obj)
+
+        console.log("keys : ", keys[0]);
+
+        if(keys[0] == "UnreadSubmissionsExist"){
+          toast.error("Unread submissions exist for this mission. Please mark them as read before deleting the mission");
+          nav('/slug_url/mission');
+        }else{
+        toast.error("Some error occurred")
+        console.log("error deleting mission : ", res.Err);
+        }
+      }
+
+      // nav('/slug_url/mission');
+      
+    } catch (error) {
+      console.log("error deleting mission : ", error)
+    }
+  };
 
   async function getBalance() {
     try {
@@ -600,6 +640,7 @@ const MissionEdit = () => {
             </Button>
             <Button variant="contained" onClick={() => handlesave("save")}>Save as Draft</Button>
             <Button variant="contained" onClick={() => handlesave("publish")}>Publish</Button>
+            <Button disabled={!isExpired} onClick={() => deleteMission()} variant="contained" sx={{ backgroundColor: 'red', color: 'white' }} >Delete Mission</Button>
           </div>
 
 

@@ -254,7 +254,7 @@ pub enum Errors{
     UnreadSubmissionsExist,
     NotAllowed,
     MissionNotExpired,
-    InvalidExpiryDate
+    InvalidExpiryDate,
 }
 
 

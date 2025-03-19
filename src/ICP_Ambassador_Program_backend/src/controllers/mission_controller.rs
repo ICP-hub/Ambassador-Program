@@ -66,7 +66,7 @@ pub fn create_draft_mission(space_id: String) -> Result<(), Errors> {
             }
             space_val = value;
         }
-        none => return Err(Errors::NoSpaceFound),
+        _none => return Err(Errors::NoSpaceFound),
     }
 
     let id = format!("{}_{}", space_id, space_val.mission_count);
@@ -74,7 +74,7 @@ pub fn create_draft_mission(space_id: String) -> Result<(), Errors> {
 
     let new_mission: Mission = Mission {
         mission_id: id,
-        space_id: space_id,
+        space_id,
         description: String::from(""),
         start_date: String::from(""),
         end_date: String::from(""),
@@ -159,10 +159,8 @@ pub fn edit_mission(mission: Mission) -> Result<(), String> {
 #[query]
 pub fn get_all_space_missions(space_id: String) -> Result<Vec<Mission>, Errors> {
     let space = SPACE_MAP.with(|map| map.borrow().get(&space_id));
-    let space_val: Space;
-
     match space {
-        Some(value) => space_val = value,
+        Some(_value) => {}
         None => return Err(Errors::NoSpaceFound),
     }
 
