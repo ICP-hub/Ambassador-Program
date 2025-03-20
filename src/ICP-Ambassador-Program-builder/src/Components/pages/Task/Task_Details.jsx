@@ -192,18 +192,18 @@ const Task_Details = ({setLoading}) => {
                         }
                         <div className="flex justify-between mt-8">
                             <button
-                                className="px-4 py-2 bg-black text-white rounded  font-semibold mr-2"
+                                className="px-4 py-2 bg-green-600 text-white rounded  font-semibold mr-2"
                                 onClick={approveSubmission}
                             >
                                 Approve
                             </button>
                             <button
-                                className="px-4 py-2 bg-black text-white rounded font-semibold "
+                                className="px-4 py-2 bg-red-600 text-white rounded font-semibold "
                                 onClick={rejectSubmission}
                             >
                                 Reject
                             </button>
-                            <button className='px-4 py-2 bg-black text-white rounded font-semibold' onClick={handleClose}>
+                            <button className='px-4 py-2 bg-blue-600 text-white rounded font-semibold' onClick={handleClose}>
                                 See later
                             </button>
                         </div>

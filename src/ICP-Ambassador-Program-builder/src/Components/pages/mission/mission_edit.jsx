@@ -147,13 +147,9 @@ const MissionEdit = () => {
         nav('/slug_url/mission');
       }
       if(res.Err){
-
         const obj = res.Err
-
         const keys = Object.keys(obj)
-
         console.log("keys : ", keys[0]);
-
         if(keys[0] == "UnreadSubmissionsExist"){
           toast.error("Unread submissions exist for this mission. Please mark them as read before deleting the mission");
           nav('/slug_url/mission');
@@ -162,9 +158,6 @@ const MissionEdit = () => {
         console.log("error deleting mission : ", res.Err);
         }
       }
-
-      // nav('/slug_url/mission');
-      
     } catch (error) {
       console.log("error deleting mission : ", error)
     }

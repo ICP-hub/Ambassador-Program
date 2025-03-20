@@ -154,7 +154,7 @@ const SpacesDetails = ({ setLoading }) => {
                     <TableCell align="center">{Object.keys(row?.status)[0]}</TableCell>
                     <TableCell align="center">{formatDate(row?.end_date)}</TableCell>
                     <TableCell align="center">
-                      <Button variant="outlined" onClick={() => handleTasks(row)}>View Tasks</Button>
+                      <Button sx={{ borderColor: 'black', color: 'black' }} variant="outlined" onClick={() => handleTasks(row)}>View Tasks</Button>
                     </TableCell>
                   </TableRow>
                 ))
