@@ -29,18 +29,27 @@ npm install
 /src/ICP-Ambassador-Program-frontend/src/Components/auth/authdata.js
 ```
 
-Put your Discord `Client ID` and `Client Secret` in the `authdata.js` file as follows : 
+Put your Discord `Client ID`,`Client Secret` and `Twitter API Firebase's config` in the `authdata.js` file as follows : 
 ```bash
 export const DISCORD_CLIENT_ID="sample_client_id"
 export const DISCORD_CLIENT_SECRET="sample_client_secret"
+
+export const TWITTER_API_KEY = "sample_api_key";
+export const TWITTER_AUTH_DOMAIN = "sample_auth_domain";
+export const TWITTER_PROJECT_ID = "sample_project_id";
+export const TWITTER_STORAGE_BUCKET = "sample_storage_bucket";
+export const TWITTER_MESSAGING_SENDER_ID = "sample_messaging_sender_id";
+export const TWITTER_APP_ID = "sample_app_id";
 ```
 Replace `sample_client_id` and `sample_client_secret` with your Discord `Client ID` and `Client Secret` respectively.
+
+Replace `sample_api_key`, `sample_auth_domain`, `sample_project_id`, `sample_storage_bucket`, `sample_messaging_sender_id`, `sample_app_id` with your Twitter API Firebase's config.
 
 Before running the project, you must update the configuration files with your own values.
 
 *Open the configuration file `(e.g., DevelopmentConfig.js)`.*
 
-Replace the placeholder values with your actual values for `BASE_URL`, `DISCORD_CLIENT_ID`, and any other constants:
+Replace the placeholder values with your actual values for `BASE_URL`, `DISCORD_INVITE_URL`, and any other constants:
 
 ## Ledger Canister Integration
 
@@ -68,6 +77,8 @@ dfx start --background
 
 # Build your project
 ./build.sh
+# or 
+./extract.sh
 
 # Deploy pulled dependencies on the local replica
 dfx deps deploy
@@ -100,6 +111,8 @@ If you have made changes to your backend canister, you need to generate a new ca
 
 ```bash
 ./build.sh
+# or
+./extract.sh
 
 dfx deploy
 ```
@@ -121,19 +134,20 @@ To deploy your project to the Internet Computer, you need to run the following c
 
 ```bash
 # Deploys your canisters to the Internet Computer and generates your candid interface
+
 dfx deploy --network ic
 ```
 
 > [!NOTE]
-## Granting Permissions for Canister Calls
-If you encounter a permission error while calling a canister from the command line, you can grant the necessary permissions to the principal using the following commands:
-
-```bash
-# Grant "Prepare" permission to the principal
-dfx canister --network ic call <canister_id> grant_permission '(record { permission = variant { Prepare }; to_principal = principal "<principal_id>" })'
-
-# Grant "Commit" permission to the principal
-dfx canister --network ic call <canister_id> grant_permission '(record { permission = variant { Commit }; to_principal = principal "<principal_id>" })'
+> ## Granting Permissions for Canister Calls
+> If you encounter a permission error while calling a canister from the command line, you can grant the necessary permissions to the principal using the following commands:
+>
+>```bash
+># Grant "Prepare" permission to the principal
+>dfx canister --network ic call <canister_id> grant_permission '(record { permission = variant { Prepare }; to_principal = principal "<principal_id>" })'
+>
+># Grant "Commit" permission to the principal
+>dfx canister --network ic call <canister_id> grant_permission '(record { permission = variant { Commit }; to_principal = principal "<principal_id>" })'
 ```
 **Notes:**
 - Replace <canister_id> with the ID of the target canister.

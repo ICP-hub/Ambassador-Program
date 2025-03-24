@@ -236,7 +236,7 @@ const TwitterFollowTask=({task,onDelete,onUpdateField})=>{
         onChange={handleTitleChange} 
       />
       <TextField 
-        label="Twitter acoount" 
+        label="Twitter Username" 
         placeholder="Twitter account username to follow..." 
         size="small" 
         value={account} 
