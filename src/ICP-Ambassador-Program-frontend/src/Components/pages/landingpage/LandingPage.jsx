@@ -33,14 +33,18 @@ const LandingPage = () => {
     <>
       <div className="flex flex-col pb-10 bg-gradient-to-b from-[#1E0F33]/80 to-[#9173FF]/10">
         <div
-          className={`py-2 sticky top-0 z-50 h-[7rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/30 `}
+          className={`py-2 sticky top-0 z-50 md:h-[5.5rem] dlg:h-[7rem] px-10 rounded-b-xl flex justify-between items-center mx-3  backdrop-blur-lg shadow-lg bg-[#1E0F33]/30 `}
         >
           <div className="flex items-center gap-5 ml-6 ">
-            <img src={atlaslogo} alt="atlas" className="h-[2.6rem] " />
+            <img
+              src={atlaslogo}
+              alt="atlas"
+              className="md:h-[2rem] dlg:h-[2.6rem] "
+            />
           </div>
           <div
             onClick={() => setOpenLoginModal(true)}
-            className="w-[8rem] h-[2.3rem] rounded-lg cursor-pointer flex items-center justify-center bg-[#9173FF]"
+            className="w-[6.5rem] h-[2rem] dlg:w-[8rem] dlg:h-[2.3rem] rounded-lg cursor-pointer flex items-center justify-center bg-[#9173FF]"
           >
             <button className="text-white font-semibold">Join</button>
           </div>
@@ -55,28 +59,33 @@ const LandingPage = () => {
           <div
             style={{
               backgroundImage: `url(${backgrounBanner})`,
-              height: "580px",
+              // height: "580px",
               backgroundPosition: "right center",
               backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
             }}
-            className="flex bg-no-repeat w-full"
+            className="flex md:h-[350px] md2:h-[450px] dlg:h-[580px] bg-no-repeat w-full"
           >
-            <div className="z-10 flex items-end pb-10 pl-20">
+            <div className="z-10 flex items-end pb-6 dlg:pb-10 pl-20">
               <div className="text-white">
-                <h2 className="font-bold text-5xl">Join</h2>
-                <h2 className="font-bold text-5xl">Ambassador</h2>
-                <h2 className="font-bold text-5xl">Program</h2>
-                <p className="font-[380] text-2xl mt-6">
+                <h2 className="font-bold md:text-3xl dlg:text-5xl">Join</h2>
+                <h2 className="font-bold md:text-3xl dlg:text-5xl">
+                  Ambassador
+                </h2>
+                <h2 className="font-bold md:text-3xl dlg:text-5xl">Program</h2>
+                <p className="font-[380] md:text-xl dlg:text-2xl mt-6">
                   Atlas is a community of ambassadors promoting
                 </p>
-                <h3 className="font-medium mt-2 text-3xl">ICP HUBS NETWORK</h3>
+                <h3 className="font-medium mt-2 md:text-xl text-3xl">
+                  ICP HUBS NETWORK
+                </h3>
               </div>
             </div>
           </div>
         </div>
         <div className="w-full px-3 ">
           <div className=" mb-6  pb-10  w-full rounded-xl bg-gradient-to-b from-[#1E0F33]/60 to-[#9173FF]/40  ">
-            <div className="font-medium text-4xl flex justify-center items-center mt-10">
+            <div className="font-medium md:text-2xl md2:text-3xl dlg:text-4xl flex justify-center items-center mt-10">
               <h2 className="text-white mt-10">
                 ICP HUB IS{" "}
                 <span className="text-[#9173FF]">Everywhere for Everyone</span>
@@ -90,22 +99,22 @@ const LandingPage = () => {
                 onClick={() => setOpenLoginModal(true)}
                 className="mt-8 cursor-pointer flex justify-center items-center font-medium  bg-[#9173FF]/50 px-7 py-2 rounded-3xl "
               >
-                <span className="text-white text-3xl mr-2">
+                <span className="text-white md:text-2xl dlg:text-3xl mr-2">
                   <IoArrowForwardCircleOutline />
                 </span>
-                <button className="text-white  text-2xl">
+                <button className="text-white md:text-xl  dlg:text-2xl">
                   Join your local hub
                 </button>
               </div>
             </div>
             <div className="mt-10 flex justify-center items-center ">
-              <h2 className=" flex flex-col items-center mt-6 mb-3 text-white text-4xl font-semibold text-center px-16">
+              <h2 className=" flex flex-col items-center mt-6 mb-3 text-white md:text-2xl dlg:text-4xl font-semibold text-center px-16">
                 <p className="">Atlas offers you to participate in the ICP</p>
                 <p className="">activities, bring over your friends and </p>
                 <p className="">climb up the ladder.</p>
               </h2>
             </div>
-            <div className="flex justify-center gap-6 px-16 w-full  mt-10">
+            <div className="flex justify-center gap-6 px-16 w-full flex-wrap  mt-10">
               {data.map((item, i) => {
                 return (
                   <ReferalCard
@@ -127,20 +136,20 @@ const LandingPage = () => {
                 className="rounded-2xl w-full flex justify-between"
               >
                 <div className="w-[35%] flex flex-col justify-end px-5 mb-4 py-6">
-                  <h2 className="font-semibold  text-4xl text-white ">
+                  <h2 className="font-semibold md:text-2xl dlg:text-3xl dxl:text-4xl text-white ">
                     Earn rewards by being ICP Ambassador
                   </h2>
                 </div>
-                <div className="flex w-[70%] justify-end items-center">
+                <div className="flex w-[65%] justify-end items-center">
                   <div className="flex flex-col justify-center items-center  py-6 px-8">
-                    <div className="flex  items-start justify-center lg:ml-[35%] lg:mr-[5%] gap-6">
+                    <div className="flex  items-start justify-center md:ml-[35%] lg:ml-[35%] lg:mr-[5%] gap-6">
                       <img
                         src={A_icon}
                         alt="atals icon"
                         className="w-[18px] h-[10px] mt-2.5"
                       />
 
-                      <h3 className="text-white text-2xl font-medium">
+                      <h3 className="text-white md:text-sm md2:text-lg dxl:text-2xl font-medium">
                         Signup for Atlas with your Discord and join Atlas Server
                       </h3>
                     </div>
@@ -148,7 +157,7 @@ const LandingPage = () => {
                       <img
                         src={downArrow}
                         alt="arrow icon"
-                        className="w-[34px] h-[34px] "
+                        className="md:w-[24px] md:h-[24px] dxl:w-[34px] dxl:h-[34px] "
                       />
                       {/* <div className="flex justify-center items-center">
                         <BsFillArrowDownCircleFill
@@ -167,7 +176,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-medium
+                        className="text-white md:text-sm md2:text-lg dxl:text-2xl font-medium
                   "
                       >
                         Complete Quests and earn points
@@ -177,7 +186,7 @@ const LandingPage = () => {
                       <img
                         src={downArrow}
                         alt="arrow icon"
-                        className="w-[34px] h-[34px] "
+                        className="md:w-[24px] md:h-[24px] dxl:w-[34px] dxl:h-[34px]  "
                       />
                     </div>
                     <div className="flex items-start ml-[35%] mr-[5%] gap-6">
@@ -188,7 +197,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-medium
+                        className="text-white md:text-sm md2:text-lg dxl:text-2xl font-medium
                   "
                       >
                         Invite friends and earn points{" "}
@@ -198,7 +207,7 @@ const LandingPage = () => {
                       <img
                         src={downArrow}
                         alt="arrow icon"
-                        className="w-[34px] h-[34px] "
+                        className="md:w-[24px] md:h-[24px] dxl:w-[34px] dxl:h-[34px] "
                       />
                     </div>
                     <div className="flex items-start ml-[35%] mr-[5%] gap-6">
@@ -209,7 +218,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-medium
+                        className="text-white md:text-sm md2:text-lg dxl:text-2xl font-medium
                   "
                       >
                         Get new levels, complete in leaderboard and earn points{" "}
@@ -219,7 +228,7 @@ const LandingPage = () => {
                       <img
                         src={downArrow}
                         alt="arrow icon"
-                        className="w-[34px] h-[34px] "
+                        className="md:w-[24px] md:h-[24px] dxl:w-[34px] dxl:h-[34px]  "
                       />
                     </div>
                     <div className="flex items-start ml-[35%] mr-[5%] gap-6">
@@ -230,7 +239,7 @@ const LandingPage = () => {
                       />
 
                       <h3
-                        className="text-white text-2xl font-medium
+                        className="text-white md:text-sm md2:text-lg dxl:text-2xl font-medium
                   "
                       >
                         Redeem your rewards as you progress further{" "}
@@ -242,51 +251,54 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className="font-semibold text-5xl flex justify-center items-center mb my-14">
+        <div className="font-semibold md:text-3xl dlg:text-5xl flex justify-center items-center mb my-14">
           <h2 className="text-white">
             We are <span className="text-[#9173FF]">big and growing</span>
           </h2>
         </div>{" "}
-        <div className="flex w-full items-center justify-center gap-6 px-20 ">
-          <div className="w-full h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5 to-[#9173FF]">
+        <div className="flex w-full items-center justify-center flex-wrap gap-6 px-20 ">
+          <div className="max-w-[418px] sm:w-[45%]  dlg:w-[30%]  h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5 to-[#9173FF]">
             <div className="mt-20">
-              <h2 className="text-white text-[100px] font-medium text-center  ">
+              <h2 className="text-white md:text-[70px] dlx:text-[100px] font-medium text-center  ">
                 20+{" "}
               </h2>
             </div>
             <div className="mt-20">
-              <h2 className="text-white text-2xl font-semibold text-center">
+              <h2 className="text-white md:text-lg dlg:text-xl dxl:text-2xl font-semibold text-center">
                 Around the globe and <br /> growing
               </h2>
             </div>
           </div>
-          <div className="w-full h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5 to-[#9173FF]">
+          <div className="max-w-[418px] sm:w-[45%]  dlg:w-[30%]  h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5 to-[#9173FF]">
             <div className="mt-20">
-              <h2 className="text-white text-[100px] font-medium text-center  ">
+              <h2 className="text-white md:text-[70px] dlx:text-[100px] font-medium text-center  ">
                 1000+{" "}
               </h2>
             </div>
             <div className="mt-20">
-              <h2 className="text-white text-2xl font-semibold text-center">
+              <h2 className="text-white md:text-lg dlg:text-xl dxl:text-2xl font-semibold text-center">
                 Ambassadors supporting <br /> ICP worldwide
               </h2>
             </div>
           </div>
-          <div className="w-full h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5  to-[#9173FF]">
+          <div className="max-w-[418px] sm:w-[45%]  dlg:w-[30%]  h-[500px]  rounded-3xl bg-gradient-to-t from-[#574599]/5  to-[#9173FF]">
             <div className="mt-20">
-              <h2 className="text-white text-[100px] font-medium text-center  ">
-                10+<span className="mt-3 text-[50px]">million</span>
+              <h2 className="text-white md:text-[70px] dlx:text-[100px] font-medium text-center  ">
+                10+
+                <span className="mt-3 md:text-[30px] dlg:text-[40px] dxl:text-[50px]">
+                  million
+                </span>
               </h2>
             </div>
             <div className="mt-20">
-              <h2 className="text-white text-2xl font-semibold text-center">
+              <h2 className="text-white md:text-lg dlg:text-xl dxl:text-2xl font-semibold text-center">
                 Reach of ambassador <br /> program
               </h2>
             </div>
           </div>
         </div>
         <div className="flex flex-col items-center w-full px-20 mb-6 max-md:max-w-full">
-          <div className="font-semibold text-5xl flex justify-center items-center mb-2 mt-10">
+          <div className="font-semibold md:text-3xl dlg:text-5xl flex justify-center items-center mb-2 mt-10">
             <h2 className="text-white">
               Find <span className="text-[#9173FF]">your HUB</span>
             </h2>

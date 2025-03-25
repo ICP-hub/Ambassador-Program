@@ -10,8 +10,8 @@ function HubCard() {
 
   return (
     <div className="flex flex-wrap w-full mt-12 items-center justify-center text-xs leading-none text-center text-white">
-      <div className="flex gap-5">
-        {Array.from({ length: 6 }).map((_, idx) => (
+      <div className="flex justify-center flex-wrap gap-5">
+        {Array.from({ length: 12 }).map((_, idx) => (
           <div key={idx} className="flex gap-3">
             <div>
               <AmbassadorCard {...data[0]} />
@@ -22,7 +22,7 @@ function HubCard() {
           </div>
         ))}
       </div>
-      <div className="flex gap-5">
+      {/* <div className="flex gap-5">
         {Array.from({ length: 6 }).map((_, idx) => (
           <div key={idx} className="flex gap-3">
             <div>
@@ -33,7 +33,7 @@ function HubCard() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
