@@ -109,7 +109,6 @@ const Card = ({ contest, hub }) => {
       toast.error("Contest is not active yet");
     }
   };
-
   function getStatus(startDate, endDate) {
     const currentTime = Date.now(); // Current time in milliseconds
     const timeRemaining = startDate - currentTime; // Time remaining in milliseconds
@@ -154,8 +153,20 @@ const Card = ({ contest, hub }) => {
             img?.length > 0
               ? img[0]
               : //  "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
-                cardDefaultImg
+                // cardDefaultImg
+                "none"
           })`,
+          // backgroundColor: img?.length === 0 ? "#6C54BE" : "transparent",
+          backgroundColor:
+            img?.length === 0 &&
+            contest?.start_date <= Date.now() &&
+            contest?.end_date > Date.now()
+              ? "#8468E9"
+              : contest?.end_date < Date.now()
+              ? "#202020"
+              : "#4a0295",
+
+          // opacity: img?.length === 0 ? 0.65 : 1,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -178,7 +189,7 @@ const Card = ({ contest, hub }) => {
             className="h-[272px] w-full rounded-t-xl "
           />
         )} */}
-        <div className="rounded-b-xl absolute bottom-0 bg-gradient-to-b from-[#9173FF] to-[#574599] opacity-95 w-full h-[140px] left-0  px-4">
+        <div className="rounded-b-xl absolute bottom-0 bg-[#574599]/95 opacity-100 w-full h-[140px] left-0  px-4">
           <div className="mt-4 text-white text-xl font-medium line-clamp-2 break-all ">
             {title?.length > 50 ? `${title?.substring(0, 60)}...` : title}
           </div>
