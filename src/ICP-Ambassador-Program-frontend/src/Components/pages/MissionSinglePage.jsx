@@ -942,7 +942,7 @@ export default function TaskRedemption() {
                                         <DoneIcon />
                                         <div>Completed</div>
                                       </div>
-                                    ) : submitTask[task.task_id] ? (
+                                    ) : submittingTasks[task.task_id] ? (
                                       <div
                                         style={{ backgroundColor: bgColor }}
                                         className="text-white w-full py-2 flex justify-center items-center gap-2 ml-2 rounded-md"
