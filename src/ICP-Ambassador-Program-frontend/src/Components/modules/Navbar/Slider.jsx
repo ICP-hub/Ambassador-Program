@@ -91,16 +91,38 @@ const MissionCard = ({ updatedContest }) => {
 
       {/* Mission Box */}
       <div
+        // style={{
+        //   backgroundImage: `url(${
+        //     updatedContest?.img?.length > 0
+        //       ? updatedContest?.img[0]
+        //       : //  "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
+        //         cardDefaultImg
+        //   })`,
+        //   backgroundSize: "cover",
+        //   backgroundPosition: "center",
+        //   baackgroundRepeat: "no-repeat",
+        // }}
         style={{
           backgroundImage: `url(${
             updatedContest?.img?.length > 0
               ? updatedContest?.img[0]
               : //  "https://robots.net/wp-content/uploads/2023/11/what-is-blockchain-used-for-1698982380.jpg"
-                cardDefaultImg
+                // cardDefaultImg
+                "none"
           })`,
+          // backgroundColor: img?.length === 0 ? "#6C54BE" : "transparent",
+          backgroundColor:
+            updatedContest?.img?.length === 0 &&
+            updatedContest?.start_date <= Date.now() &&
+            updatedContest?.end_date > Date.now()
+              ? "#8468E9"
+              : updatedContest?.end_date < Date.now()
+              ? "#202020"
+              : "#4a0295",
+
+          // opacity: img?.length === 0 ? 0.65 : 1,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          baackgroundRepeat: "no-repeat",
         }}
         className="relative w-full h-[380px] min-w-[300px] bg-gradient-to-b from-[#9173FF] to-[#3b2c6f] rounded-xl flex items-start p-3"
       >
